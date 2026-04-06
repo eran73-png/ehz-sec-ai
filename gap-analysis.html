@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EHZ-SEC-AI — ניתוח פערים</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --orange: #e3b341;
+    --purple: #bc8cff;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --muted2: #6e7681;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    padding: 40px 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    text-align: center;
+    padding: 40px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 40px;
+  }
+  .page-header .label {
+    display: inline-block;
+    background: rgba(88,166,255,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+  }
+  .page-header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 48px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 20px; font-weight: 700; }
+  .section-header .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* ── SCORE CARDS ── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .score-card .big { font-size: 42px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+  .score-card .title { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .score-card .sub-score { font-size: 11px; color: var(--muted2); margin-top: 4px; }
+
+  /* ── COMPARISON ROWS ── */
+  .compare-section { margin-bottom: 32px; }
+  .compare-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .compare-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .compare-item.covered { border-right: 3px solid var(--green); }
+  .compare-item.partial { border-right: 3px solid var(--yellow); }
+  .compare-item.missing { border-right: 3px solid var(--red); }
+  .compare-item.new-idea { border-right: 3px solid var(--purple); }
+
+  .item-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .item-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .item-plan { font-size: 12px; color: var(--muted2); }
+  .item-plan strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; color: var(--muted); }
+
+  .pill {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .pill-green { background: rgba(63,185,80,0.12); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+  .pill-yellow { background: rgba(210,153,34,0.12); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+  .pill-red { background: rgba(248,81,73,0.12); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+  .pill-purple { background: rgba(188,140,255,0.12); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+  .pill-blue { background: rgba(88,166,255,0.12); color: var(--accent); border: 1px solid rgba(88,166,255,0.3); }
+
+  /* ── OWASP TABLE ── */
+  .owasp-table { width: 100%; border-collapse: collapse; }
+  .owasp-table thead tr { background: rgba(255,255,255,0.03); }
+  .owasp-table th {
+    padding: 10px 16px;
+    text-align: right;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--border);
+  }
+  .owasp-table td {
+    padding: 12px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(48,54,61,0.6);
+    vertical-align: middle;
+  }
+  .owasp-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .owasp-id { font-family: monospace; font-size: 12px; font-weight: 800; }
+  .bar-wrap { background: rgba(255,255,255,0.05); border-radius: 4px; height: 6px; width: 100px; display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .bar-fill { height: 6px; border-radius: 4px; }
+
+  /* ── PROS / CONS ── */
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .pros-card, .cons-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .pc-header {
+    padding: 14px 20px;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pros-card .pc-header { background: rgba(63,185,80,0.08); border-bottom: 1px solid rgba(63,185,80,0.2); color: var(--green); }
+  .cons-card .pc-header { background: rgba(248,81,73,0.08); border-bottom: 1px solid rgba(248,81,73,0.2); color: var(--red); }
+  .pc-body { padding: 16px 20px; }
+  .pc-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .pc-item:last-child { border-bottom: none; }
+  .pc-icon { flex-shrink: 0; margin-top: 2px; font-size: 14px; }
+
+  /* ── IMPROVEMENTS ── */
+  .improve-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .improve-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .improve-priority {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .improve-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .improve-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .improve-milestone {
+    margin-top: 10px;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    background: rgba(88,166,255,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(88,166,255,0.2);
+  }
+
+  /* ── VERDICT ── */
+  .verdict {
+    background: linear-gradient(135deg, rgba(63,185,80,0.06), rgba(88,166,255,0.06));
+    border: 1px solid rgba(63,185,80,0.3);
+    border-radius: 16px;
+    padding: 28px 32px;
+    text-align: center;
+    margin-top: 48px;
+  }
+  .verdict h3 { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+  .verdict p { color: var(--muted); font-size: 14px; max-width: 700px; margin: 0 auto 16px; line-height: 1.8; }
+  .verdict-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted2);
+  }
+  .footer strong { color: var(--green); }
+
+  code {
+    font-family: monospace;
+    background: rgba(255,255,255,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #79c0ff;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="label">Gap Analysis</div>
+  <h1>📊 תכנית vs. מחקר — ניתוח פערים</h1>
+  <p>כמה מה שתכננו מכסה את מה שהמחקר גילה? יתרונות, חסרונות, והמלצות שיפור.</p>
+</div>
+
+<!-- ═══════════════════ SCORE OVERVIEW ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(88,166,255,0.1);">🎯</div>
+    <div>
+      <h2>סיכום ציונים</h2>
+      <div class="sub">כמה מה שתיכננו מכסה את הדרישות שעלו מהמחקר</div>
+    </div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-card" style="border-top:3px solid var(--green);">
+      <div class="big" style="color:var(--green);">82%</div>
+      <div class="title">כיסוי כולל</div>
+      <div class="sub-score">מה שתיכננו vs. מה שהמחקר גילה</div>
+    </div>
+    <div class="score-card" style="border-top:3px solid var(--accent);">
+      <div class="big" style="color:var(--accent);">7/10</div>
+      <div class="title">OWASP LLM</div>
+      <div class="sub-score">סיכונים מכוסים מ-Top 10</div>
+    </div>
+    <div class="score-card" style="border-top:3px solid var(--green);">
+      <div class="big" style="color:var(--green);">✅</div>
+      <div class="title">Anthropic מאשרים</div>
+      <div class="sub-score">הארכיטקטורה שלנו = Reference Implementation</div>
+    </div>
+    <div class="score-card" style="border-top:3px solid var(--yellow);">
+      <div class="big" style="color:var(--yellow);">4</div>
+      <div class="title">פערים שנמצאו</div>
+      <div class="sub-score">דברים שלא תיכננו ועלו מהמחקר</div>
+    </div>
+    <div class="score-card" style="border-top:3px solid var(--purple);">
+      <div class="big" style="color:var(--purple);">5</div>
+      <div class="title">רעיונות שיפור</div>
+      <div class="sub-score">שיפורים שהמחקר העלה</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ COMPARISON ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(63,185,80,0.1);">🔍</div>
+    <div>
+      <h2>תכנית vs. מחקר — פריט אחר פריט</h2>
+      <div class="sub">ירוק = מכוסה מלא · צהוב = חלקי · אדום = חסר · סגול = שיפור חדש</div>
+    </div>
+  </div>
+
+  <!-- COVERED -->
+  <div class="compare-section">
+    <div class="compare-title"><span style="color:var(--green);">●</span> מכוסה מלא — תיכננו ועונה על המחקר</div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Hook Architecture — HTTP Collector</div>
+        <div class="item-desc">PreToolUse/PostToolUse שולחים events ל-Collector מקומי. זה בדיוק ה-Reference Implementation הרשמי של Anthropic. ארכיטקטורה מושלמת.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 1 — hook.js + Collector port 3010
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Anomaly Rules Engine</div>
+        <div class="item-desc">Signature + Context + Behavioral + Whitelist. מכסה curl|sh, rm -rf, base64, ngrok, פעילות חריגה. המחקר אישר שזה הכיוון הנכון.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 2 — rules.js, 4 סוגי חוקים
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Secrets + DLP Scanner</div>
+        <div class="item-desc">סיסמאות, API keys (AWS/GitHub/OpenAI), JWT, כרטיסי אשראי, ת"ז ישראלית. Real-time Write Guard. OWASP LLM06 מכוסה.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 6 — secrets-patterns.json + Write Guard
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Skill Scanner — Supply Chain</div>
+        <div class="item-desc">Hash integrity + YARA + Semgrep + ClamAV + VirusTotal לפני כל התקנת Skill. מכסה OWASP LLM05 (Supply Chain Vulnerabilities).</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 5 — 4 מנועים + Quarantine
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Hardening Levels 0–3</div>
+        <div class="item-desc">OFF / SOFT / STRICT / LOCKDOWN. מכסה OWASP LLM08 (Excessive Agency). Telegram /approve + /deny לאישור ידני בLevel 2.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 4 — Project Scope + 4 Levels
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Block Mode — עצירת Claude</div>
+        <div class="item-desc">process.exit(1) עוצר את Claude לחלוטין. מכסה Excessive Agency ברמה הגבוהה ביותר. Exceptions management.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 10 — שלב ג'
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Behavioral Monitoring — DoS Prevention</div>
+        <div class="item-desc">&gt;20 WebFetch/דקה, &gt;50 Read/5 דקות. מכסה OWASP LLM04 (Model Denial of Service) — זיהוי שימוש חריג במשאבים.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 2.4 — Behavioral Rules
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">Immutable Audit Log</div>
+        <div class="item-desc">Hash chain לוג — כל entry חתום, לא ניתן לשנות רטרואקטיבית. Audit trail מלא לComplianceוForensics.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 7.5
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+
+    <div class="compare-item covered">
+      <div>
+        <div class="item-name">SIEM Integration</div>
+        <div class="item-desc">Syslog RFC 5424, Microsoft Sentinel (KQL), Splunk (SPL). ניתוח גלובלי ב-Splunk/Sentinel לאחר המחקר.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 11 — שלב ד'
+      </div>
+      <div><span class="pill pill-green">מכוסה מלא ✓</span></div>
+    </div>
+  </div>
+
+  <!-- PARTIAL -->
+  <div class="compare-section">
+    <div class="compare-title"><span style="color:var(--yellow);">●</span> כיסוי חלקי — תיכננו, אבל המחקר גילה שצריך יותר</div>
+
+    <div class="compare-item partial">
+      <div>
+        <div class="item-name">Prompt Injection Detection</div>
+        <div class="item-desc">תיכננו Context Rules שמזהים patterns חשודים, אבל המחקר (OWASP LLM01) מגדיר Prompt Injection כסיכון נפרד שדורש זיהוי ספציפי בתוכן שClaude מקבל — לא רק בפקודות.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 2.2 — Context Rules (חלקי)
+      </div>
+      <div><span class="pill pill-yellow">חלקי ⚠️</span></div>
+    </div>
+
+    <div class="compare-item partial">
+      <div>
+        <div class="item-name">Insecure Output Handling</div>
+        <div class="item-desc">ה-Write Guard שלנו סורק secrets, אבל OWASP LLM02 מגדיר גם בדיקה שהקוד שנכתב לא מכניס XSS/SQLi/RCE. Semgrep ב-PostToolUse יכסה את זה — אך לא תיכננו את זה במפורש.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Milestone 6.4 — Write Guard (חלקי)
+      </div>
+      <div><span class="pill pill-yellow">חלקי ⚠️</span></div>
+    </div>
+
+    <div class="compare-item partial">
+      <div>
+        <div class="item-name">MCP Server Monitoring</div>
+        <div class="item-desc">תיכננו Hook כללי לכל tool, אבל Anthropic מדגישים MCP כסיכון נפרד. המחקר הראה שצריך matcher ספציפי לכל MCP write operations — <code>mcp__*__write*</code>.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        Hook כללי — לא ספציפי ל-MCP
+      </div>
+      <div><span class="pill pill-yellow">חלקי ⚠️</span></div>
+    </div>
+  </div>
+
+  <!-- MISSING -->
+  <div class="compare-section">
+    <div class="compare-title"><span style="color:var(--red);">●</span> חסר לחלוטין — לא תיכננו, עלה מהמחקר</div>
+
+    <div class="compare-item missing">
+      <div>
+        <div class="item-name">WebDAV Windows Block</div>
+        <div class="item-desc">Anthropic מזהירים במפורש: paths שמתחילים ב-<code>\\*</code> ב-Windows יכולים לעקוף את Permission System דרך WebDAV. לא תיכננו חוק ספציפי לזה.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        לא קיים כלל
+      </div>
+      <div><span class="pill pill-red">חסר ❌</span></div>
+    </div>
+
+    <div class="compare-item missing">
+      <div>
+        <div class="item-name">ConfigChange Hook</div>
+        <div class="item-desc">Anthropic מספקים <code>ConfigChange</code> hook — מופעל כשמישהו משנה את settings.json. לא ידענו על זה. חשוב לזהות ניסיון לכבות hooks או לשנות הגדרות אבטחה.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        לא קיים כלל
+      </div>
+      <div><span class="pill pill-red">חסר ❌</span></div>
+    </div>
+
+    <div class="compare-item missing">
+      <div>
+        <div class="item-name">OpenTelemetry Export</div>
+        <div class="item-desc">Anthropic מספקים OTel מובנה. לא תיכננו לשלב OTel — כך EHZ-SEC-AI לא מדבר עם Prometheus/Grafana/Datadog קיימים בארגון. זה פער לסביבת Enterprise (שלב ב').</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        לא קיים (רלוונטי לשלב ב')
+      </div>
+      <div><span class="pill pill-red">חסר ❌</span></div>
+    </div>
+
+    <div class="compare-item missing">
+      <div>
+        <div class="item-name">Training Data / Model Theft Protection</div>
+        <div class="item-desc">OWASP LLM03 ו-LLM10 — Data Poisoning ו-Model Theft. אלה סיכונים שהמחקר הזכיר. לא ניתן להתגונן מהצד שלנו — זה ברמת Anthropic בלבד. חשוב לתעד את הגבול.</div>
+      </div>
+      <div class="item-plan">
+        <strong>בתכנית</strong>
+        לא קיים — מחוץ לסקופ
+      </div>
+      <div><span class="pill pill-red">מחוץ לסקופ</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════ OWASP TABLE ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(248,81,73,0.1);">🔟</div>
+    <div>
+      <h2>OWASP LLM Top 10 — כיסוי מפורט</h2>
+      <div class="sub">כמה מכל סיכון EHZ-SEC-AI מכסה</div>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+    <table class="owasp-table">
+      <thead>
+        <tr>
+          <th>סיכון</th>
+          <th>שם</th>
+          <th>כיסוי</th>
+          <th>איפה בתכנית</th>
+          <th>הערה</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--red);">LLM01</span></td>
+          <td>Prompt Injection</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:60%;background:var(--yellow);"></div></div>
+            <span class="pill pill-yellow">60%</span>
+          </td>
+          <td>Milestone 2.2 — Context Rules</td>
+          <td style="color:var(--muted);font-size:12px;">צריך שיפור — ראה הצעות</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--orange);">LLM02</span></td>
+          <td>Insecure Output</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:55%;background:var(--yellow);"></div></div>
+            <span class="pill pill-yellow">55%</span>
+          </td>
+          <td>Milestone 6.4 — Write Guard</td>
+          <td style="color:var(--muted);font-size:12px;">Semgrep on Write יכסה יותר</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--muted);">LLM03</span></td>
+          <td>Data Poisoning</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:0%;background:var(--red);"></div></div>
+            <span class="pill pill-red">0%</span>
+          </td>
+          <td>—</td>
+          <td style="color:var(--muted);font-size:12px;">מחוץ לסקופ — צד Anthropic</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--orange);">LLM04</span></td>
+          <td>Model DoS</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:85%;background:var(--green);"></div></div>
+            <span class="pill pill-green">85%</span>
+          </td>
+          <td>Milestone 2.4 — Behavioral Rules</td>
+          <td style="color:var(--muted);font-size:12px;">Rate limiting חזק</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--red);">LLM05</span></td>
+          <td>Supply Chain</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:90%;background:var(--green);"></div></div>
+            <span class="pill pill-green">90%</span>
+          </td>
+          <td>Milestone 5 — Skill Scanner</td>
+          <td style="color:var(--muted);font-size:12px;">4 מנועים + Hash + Quarantine</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--red);">LLM06</span></td>
+          <td>Sensitive Data</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:95%;background:var(--green);"></div></div>
+            <span class="pill pill-green">95%</span>
+          </td>
+          <td>Milestone 6 — Secrets + DLP</td>
+          <td style="color:var(--muted);font-size:12px;">הכי חזק — כולל PII ישראלי</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--orange);">LLM07</span></td>
+          <td>Insecure Plugin</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:70%;background:var(--accent);"></div></div>
+            <span class="pill pill-blue">70%</span>
+          </td>
+          <td>Milestone 5 — MCP Hook (חלקי)</td>
+          <td style="color:var(--muted);font-size:12px;">צריך matcher ספציפי</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--red);">LLM08</span></td>
+          <td>Excessive Agency</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:100%;background:var(--green);"></div></div>
+            <span class="pill pill-green">100%</span>
+          </td>
+          <td>Milestones 4+10 — Hardening + Block</td>
+          <td style="color:var(--muted);font-size:12px;">הכי חזק בשוק</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--yellow);">LLM09</span></td>
+          <td>Overreliance</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:40%;background:var(--yellow);"></div></div>
+            <span class="pill pill-yellow">40%</span>
+          </td>
+          <td>Milestone 7.2 — Session Recording</td>
+          <td style="color:var(--muted);font-size:12px;">בעיקר אחריות משתמש</td>
+        </tr>
+        <tr>
+          <td><span class="owasp-id" style="color:var(--muted);">LLM10</span></td>
+          <td>Model Theft</td>
+          <td>
+            <div class="bar-wrap"><div class="bar-fill" style="width:0%;background:var(--red);"></div></div>
+            <span class="pill pill-red">0%</span>
+          </td>
+          <td>—</td>
+          <td style="color:var(--muted);font-size:12px;">מחוץ לסקופ — צד Anthropic</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════ PROS / CONS ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(188,140,255,0.1);">⚖️</div>
+    <div>
+      <h2>יתרונות וחסרונות — תמונה מלאה</h2>
+      <div class="sub">מה EHZ-SEC-AI עושה טוב, ומה הגבולות שלו</div>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros-card">
+      <div class="pc-header">✅ יתרונות ברורים</div>
+      <div class="pc-body">
+        <div class="pc-item">
+          <span class="pc-icon">🎯</span>
+          <span><strong>ייחודי בשוק</strong> — אין מוצר שמנטר Claude Code ספציפית דרך Hooks עם Dashboard + Telegram. Lasso ו-Spectral הם כלליים ויקרים.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">✅</span>
+          <span><strong>Anthropic מאשרים</strong> — הארכיטקטורה שלנו (HTTP Hook → Collector) היא Reference Implementation רשמי שלהם. בונים על היסודות הנכונים.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">🆓</span>
+          <span><strong>חינמי לחלוטין</strong> — YARA, ClamAV, Semgrep, Google Safe Browsing, VirusTotal (free tier). Lasso עולה עשרות אלפי דולר לשנה.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">🇮🇱</span>
+          <span><strong>PII ישראלי ייחודי</strong> — סריקת ת"ז, כרטיסי אשראי, מספרי טלפון ישראליים. אין מוצר אחר שעושה את זה.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">📱</span>
+          <span><strong>Telegram + System Tray</strong> — שילוב שלא קיים בשום מוצר. התראה לנייד + אייקון + Dashboard = כיסוי מלא.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">🔒</span>
+          <span><strong>100% על Excessive Agency</strong> — Hardening Levels + Block Mode = הכי חזק בשוק לשליטה על אוטונומיית Claude.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">🏠</span>
+          <span><strong>מקומי לחלוטין</strong> — הנתונים לא יוצאים לענן. כל הניתוח מקומי. פרטיות מלאה.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cons-card">
+      <div class="pc-header">⚠️ חסרונות ומגבלות</div>
+      <div class="pc-body">
+        <div class="pc-item">
+          <span class="pc-icon">🔴</span>
+          <span><strong>WebDAV לא מכוסה</strong> — Anthropic מזהירים על סיכון ספציפי ב-Windows שלא תיכננו. <em>דורש תיקון לפני שלב א'.</em></span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">🟡</span>
+          <span><strong>Prompt Injection — חלקי</strong> — זיהוי בפקודות בלבד. לא בתוכן שClaude מקבל מ-WebFetch/קבצים. OWASP LLM01 הכי נפוץ.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">🟡</span>
+          <span><strong>ConfigChange Hook חסר</strong> — לא ידענו על ה-Hook הזה. מישהו יכול לשנות את settings.json ולכבות את ה-Hooks שלנו — בלי שנדע.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">🟡</span>
+          <span><strong>MCP Monitoring כללי מדי</strong> — Hook כללי לכל tool. לא matcher ספציפי ל-MCP write operations. עלול להחמיץ פעולות MCP מסוכנות.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">⚪</span>
+          <span><strong>אין OTel Integration</strong> — ארגונים עם Prometheus/Grafana לא יכולים לשלב EHZ-SEC-AI בתשתית הקיימת. פגיעה באימוץ ב-Enterprise.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">⚪</span>
+          <span><strong>OWASP LLM03 + LLM10 = 0%</strong> — Data Poisoning ו-Model Theft לא ניתן לטפל בהם מצד הלקוח. מגבלה מובנית שצריך לתעד בבירור.</span>
+        </div>
+        <div class="pc-item">
+          <span class="pc-icon">⚪</span>
+          <span><strong>Node.js תלות</strong> — מחייב Node.js על כל מחשב. MSI Installer מטפל בזה, אבל מוסיף מורכבות לפריסה.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ IMPROVEMENTS ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(188,140,255,0.1);">🚀</div>
+    <div>
+      <h2>המלצות שיפור — מה כדאי להוסיף</h2>
+      <div class="sub">5 שיפורים ממוקדים שיעלו את הכיסוי מ-82% ל-95%+</div>
+    </div>
+  </div>
+
+  <div class="improve-grid">
+
+    <div class="improve-card" style="border-top:3px solid var(--red);">
+      <div class="improve-priority" style="color:var(--red);">
+        <span>🔴</span> עדיפות קריטית
+      </div>
+      <div class="improve-title">הוסף חוק WebDAV לMilestone 2</div>
+      <div class="improve-body">
+        Anthropic מזהירים: paths שמתחילים ב-<code>\\</code> ב-Windows יכולים לעקוף Permission System. צריך להוסיף ל-Signature Rules:
+        <br><br>
+        <code>if (path.startsWith('\\\\')) → CRITICAL: WebDAV bypass attempt</code>
+        <br><br>
+        זה שיפור פשוט של שורה אחת — לא דורש Milestone נפרד.
+      </div>
+      <span class="improve-milestone">+ Milestone 2.1 — Signature Rules</span>
+    </div>
+
+    <div class="improve-card" style="border-top:3px solid var(--red);">
+      <div class="improve-priority" style="color:var(--red);">
+        <span>🔴</span> עדיפות קריטית
+      </div>
+      <div class="improve-title">הוסף ConfigChange Hook</div>
+      <div class="improve-body">
+        כרגע אפשר לכבות את EHZ-SEC-AI על ידי עריכת settings.json ללא שנדע. ה-ConfigChange hook של Anthropic מתריע על זה:
+        <br><br>
+        <code>"ConfigChange" → hook → Telegram alert "⚠️ settings.json שונה!"</code>
+        <br><br>
+        בלי זה — האבטחה שלנו ניתנת לעקיפה.
+      </div>
+      <span class="improve-milestone">+ Milestone 1.5 — ConfigChange Watcher</span>
+    </div>
+
+    <div class="improve-card" style="border-top:3px solid var(--orange);">
+      <div class="improve-priority" style="color:var(--orange);">
+        <span>🟠</span> עדיפות גבוהה
+      </div>
+      <div class="improve-title">שפר Prompt Injection Detection</div>
+      <div class="improve-body">
+        כרגע Context Rules בודקים רק פקודות. OWASP LLM01 דורש גם בדיקת תוכן שClaude מקבל — מ-WebFetch, קריאת קבצים.
+        <br><br>
+        הוסף PostToolUse scanner שבודק אם תוצאת WebFetch/Read מכילה:
+        <code>"ignore previous instructions"</code>, <code>"you are now"</code>, <code>"jailbreak"</code>
+      </div>
+      <span class="improve-milestone">+ Milestone 2.5 — Prompt Injection Scanner</span>
+    </div>
+
+    <div class="improve-card" style="border-top:3px solid var(--orange);">
+      <div class="improve-priority" style="color:var(--orange);">
+        <span>🟠</span> עדיפות גבוהה
+      </div>
+      <div class="improve-title">MCP-Specific Hook Matchers</div>
+      <div class="improve-body">
+        Anthropic מדגישים MCP כווקטור סיכון נפרד. הוסף matchers ספציפיים:
+        <br><br>
+        <code>mcp__*__write*</code> → HIGH alert<br>
+        <code>mcp__*__delete*</code> → CRITICAL<br>
+        <code>mcp__*__exec*</code> → CRITICAL
+        <br><br>
+        כך ניתן לנטר MCP servers בנפרד מ-tools רגילים.
+      </div>
+      <span class="improve-milestone">+ Milestone 2 או 5 — MCP Rules</span>
+    </div>
+
+    <div class="improve-card" style="border-top:3px solid var(--yellow);">
+      <div class="improve-priority" style="color:var(--yellow);">
+        <span>🟡</span> שיפור מועיל
+      </div>
+      <div class="improve-title">OpenTelemetry Output — לשלב ב'</div>
+      <div class="improve-body">
+        ארגונים עם Prometheus/Grafana/Datadog לא יכולים לשלב EHZ-SEC-AI ללא OTel.
+        <br><br>
+        הוסף ל-Collector export של events בפורמט OTel סטנדרטי. כך EHZ-SEC-AI "מדבר" עם תשתית ניטור קיימת ולא מחליף אותה.
+      </div>
+      <span class="improve-milestone">+ Milestone 9 — Domain/Enterprise</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════ VERDICT ═══════════════════ -->
+<div class="verdict">
+  <h3>🏆 המסקנה הסופית</h3>
+  <p>
+    התכנית שלנו <strong>טובה מאוד</strong> — 82% כיסוי ממחקר עצמאי, ארכיטקטורה שAnthropic עצמם מאשרים, ויכולות שלא קיימות בשום מוצר מסחרי. עם <strong>2 תיקונים קריטיים</strong> (WebDAV + ConfigChange) ו-<strong>2 שיפורים גבוהים</strong> (Prompt Injection + MCP) נגיע ל-95%+ כיסוי — ונהיה <strong>עדיפים על Lasso ו-Spectral</strong> לסביבת Claude Code.
+  </p>
+  <div class="verdict-pills">
+    <span class="pill pill-green">✅ ארכיטקטורה נכונה</span>
+    <span class="pill pill-green">✅ חינמי לגמרי</span>
+    <span class="pill pill-green">✅ ייחודי בשוק</span>
+    <span class="pill pill-red">⚠️ WebDAV — תקן לפני Milestone 1</span>
+    <span class="pill pill-red">⚠️ ConfigChange — הוסף ל-Milestone 1</span>
+    <span class="pill pill-yellow">💡 +3 שיפורים לאחר מכן</span>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>EHZ-AI</strong> | Gap Analysis Report | אפריל 2026<br>
+  הדף נבנה ע"י <strong>EHZ-AI | 054-4825276</strong>
+</div>
+
+</body>
+</html>

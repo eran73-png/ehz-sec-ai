@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EHZ-SEC-AI — מחקר אבטחה</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --panel: #111827;
+    --border: #1e2d45;
+    --accent: #0ea5e9;
+    --accent2: #6366f1;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --orange: #f97316;
+    --purple: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --muted2: #94a3b8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    padding: 32px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 4px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #e2e8f0, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  .header p { color: var(--muted2); font-size: 14px; }
+  .header-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .header-meta span { display: flex; align-items: center; gap: 5px; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    margin-top: 40px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Summary boxes */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .stat-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+  .stat-box .num {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-box .label { font-size: 11px; color: var(--muted2); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Product cards */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .product-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .product-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .product-logo {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .product-name { font-weight: 800; font-size: 15px; }
+  .product-tag {
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 10px; margin-top: 2px; display: inline-block;
+  }
+  .product-body { padding: 16px 20px; }
+  .product-desc { font-size: 12px; color: var(--muted2); line-height: 1.8; margin-bottom: 12px; }
+  .feature-list { list-style: none; }
+  .feature-list li {
+    font-size: 12px; color: var(--muted2);
+    padding: 3px 0; display: flex; align-items: flex-start; gap: 6px; line-height: 1.5;
+  }
+  .feature-list li::before { content: '✓'; color: var(--green); flex-shrink: 0; font-weight: 700; margin-top: 1px; }
+  .product-footer {
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tag-free { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .tag-paid { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .tag-partial { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+  .tag-builtin { background: rgba(14,165,233,0.12); color: var(--accent); border: 1px solid rgba(14,165,233,0.3); }
+
+  /* OWASP */
+  .owasp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .owasp-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .owasp-num {
+    font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    font-family: monospace; margin-bottom: 4px;
+  }
+  .owasp-name { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .owasp-desc { font-size: 11px; color: var(--muted2); line-height: 1.6; }
+  .owasp-ehz {
+    margin-top: 8px;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(14,165,233,0.08);
+    border: 1px solid rgba(14,165,233,0.2);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Anthropic hooks */
+  .hook-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+  .hook-table th {
+    text-align: right; padding: 8px 12px;
+    color: var(--muted); font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .hook-table td { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--muted2); vertical-align: top; }
+  .hook-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* OTel */
+  .otel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .otel-item {
+    background: rgba(14,165,233,0.05);
+    border: 1px solid rgba(14,165,233,0.15);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 12px;
+  }
+  .otel-metric { font-family: monospace; color: var(--accent); font-weight: 700; font-size: 11px; margin-bottom: 4px; }
+  .otel-desc { color: var(--muted2); font-size: 11px; line-height: 1.5; }
+
+  /* Comparison table */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .compare-table th {
+    padding: 10px 14px; text-align: right;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 2px solid var(--border);
+    font-weight: 700; color: var(--muted);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .compare-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--muted2); vertical-align: middle; }
+  .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .c-yes { color: var(--green); font-weight: 700; }
+  .c-no { color: var(--red); font-weight: 700; }
+  .c-partial { color: var(--yellow); font-weight: 700; }
+  .c-ehz { color: var(--accent); font-weight: 800; }
+
+  /* Code block */
+  pre {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 11px;
+    color: var(--muted2);
+    line-height: 1.8;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Courier New', monospace;
+    margin-top: 10px;
+  }
+  pre .kw { color: #7dd3fc; }
+  pre .str { color: #86efac; }
+  pre .cm { color: #64748b; }
+  pre .fn { color: #c084fc; }
+
+  /* Insights */
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .insight-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .insight-icon { font-size: 26px; margin-bottom: 8px; }
+  .insight-title { font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+  .insight-body { font-size: 12px; color: var(--muted2); line-height: 1.7; }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-critical { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .badge-high { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+  .badge-medium { background: rgba(245,158,11,0.15); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-info { background: rgba(14,165,233,0.12); color: var(--accent); border: 1px solid rgba(14,165,233,0.2); }
+  .badge-green { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+
+  .note-box {
+    background: rgba(14,165,233,0.07);
+    border: 1px solid rgba(14,165,233,0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--accent);
+    margin: 16px 0;
+  }
+  .warn-box {
+    background: rgba(245,158,11,0.07);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 12px;
+    color: var(--yellow);
+    margin: 16px 0;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0 16px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  code { font-family: monospace; background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px; font-size: 11px; color: #7dd3fc; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">Security Research Report</div>
+  <h1>🛡 מחקר אבטחה — Claude Code</h1>
+  <p>מוצרים קיימים בשוק · המלצות Anthropic · OWASP LLM Top 10 · יחס ל-EHZ-SEC-AI</p>
+  <div class="header-meta">
+    <span>📅 אפריל 2026</span>
+    <span>🔬 מקורות: docs.anthropic.com · OWASP · מחקר שוק</span>
+    <span>✍️ הוכן ע"י EHZ-AI</span>
+  </div>
+</div>
+
+<!-- SUMMARY STATS -->
+<div class="summary-grid">
+  <div class="stat-box" style="border-top:3px solid var(--red);">
+    <div class="num" style="color:var(--red);">10</div>
+    <div class="label">סיכוני OWASP LLM</div>
+  </div>
+  <div class="stat-box" style="border-top:3px solid var(--orange);">
+    <div class="num" style="color:var(--orange);">7+</div>
+    <div class="label">מוצרי אבטחה בשוק</div>
+  </div>
+  <div class="stat-box" style="border-top:3px solid var(--accent);">
+    <div class="num" style="color:var(--accent);">3</div>
+    <div class="label">מנגנוני הגנה מובנים ב-Claude</div>
+  </div>
+  <div class="stat-box" style="border-top:3px solid var(--green);">
+    <div class="num" style="color:var(--green);">1</div>
+    <div class="label">מוצר ייעודי לבדיקות Hooks</div>
+  </div>
+  <div class="stat-box" style="border-top:3px solid var(--purple);">
+    <div class="num" style="color:var(--purple);">0</div>
+    <div class="label">מוצרים בדיוק כמו EHZ-SEC-AI</div>
+  </div>
+</div>
+
+<div class="note-box">
+  🎯 <strong>מסקנה ראשית:</strong> אין מוצר ייחודי בשוק שמנטר Claude Code דרך Hooks בזמן אמת עם Dashboard + Telegram + Hardening Levels. EHZ-SEC-AI ממלא פער אמיתי.
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PART 1 — ANTHROPIC -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-title">חלק א׳ — מה אומר Anthropic עצמם על אבטחה</div>
+
+<div class="card" style="border-top:3px solid #0ea5e9;">
+  <div class="card-title" style="color:var(--accent);">🏛 עמדת Anthropic — עקרונות יסוד</div>
+  <div style="font-size:13px;color:var(--muted2);line-height:1.9;margin-bottom:16px;">
+    Anthropic מפרסמים תיעוד מלא באתר <a href="https://code.claude.com/docs/en/security" target="_blank">code.claude.com/docs/en/security</a>.
+    הגישה שלהם: <strong style="color:var(--text);">Permission-based Architecture</strong> — Claude Code מבצע קריאה בלבד כברירת מחדל. כל פעולה נוספת (כתיבה, פקודות) דורשת אישור מפורש.
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
+
+    <div style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:14px;">
+      <div style="font-weight:800;color:var(--green);margin-bottom:8px;font-size:13px;">🔒 הגנות מובנות</div>
+      <ul style="list-style:none;font-size:12px;color:var(--muted2);line-height:2;">
+        <li>✅ Sandboxed Bash — בידוד filesystem+network</li>
+        <li>✅ Write restriction — רק בתיקיית הפרויקט</li>
+        <li>✅ Command blocklist — curl/wget חסומים כברירת מחדל</li>
+        <li>✅ Fail-closed — פקודה לא מוכרת → דורשת אישור</li>
+        <li>✅ Isolated WebFetch context — מנגנון נגד Prompt Injection</li>
+        <li>✅ Command injection detection — פקודות חשודות → אישור ידני</li>
+      </ul>
+    </div>
+
+    <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:14px;">
+      <div style="font-weight:800;color:var(--red);margin-bottom:8px;font-size:13px;">⚠️ מה Anthropic לא עושים</div>
+      <ul style="list-style:none;font-size:12px;color:var(--muted2);line-height:2;">
+        <li>❌ אין Dashboard לניטור אירועים</li>
+        <li>❌ אין התראות Telegram/מייל על פעילות</li>
+        <li>❌ אין סריקת סיסמאות/secrets אוטומטית</li>
+        <li>❌ אין Hardening Levels מוגדרים</li>
+        <li>❌ אין Skill Scanner לפני התקנה</li>
+        <li>❌ אין Block Mode אוטומטי</li>
+      </ul>
+    </div>
+
+    <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:14px;">
+      <div style="font-weight:800;color:var(--yellow);margin-bottom:8px;font-size:13px;">📋 Best Practices לפי Anthropic</div>
+      <ul style="list-style:none;font-size:12px;color:var(--muted2);line-height:2;">
+        <li>📌 בדוק כל פקודה לפני אישור</li>
+        <li>📌 אל תעביר תוכן לא מהימן ישירות ל-Claude</li>
+        <li>📌 השתמש ב-VM לסקריפטים מחיצוניים</li>
+        <li>📌 הפעל Hooks לניטור ובקרה</li>
+        <li>📌 אל תאפשר WebDAV ב-Windows (סיכון אבטחה)</li>
+        <li>📌 דווח על פעילות חשודה דרך /feedback</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOOKS -->
+<div class="card" style="border-top:3px solid var(--accent2);">
+  <div class="card-title" style="color:var(--purple);">⚙️ Hooks — המנגנון הרשמי לאבטחה</div>
+  <div style="font-size:12px;color:var(--muted2);margin-bottom:14px;">
+    Anthropic מספקים מנגנון Hooks ב-<a href="https://code.claude.com/docs/en/hooks" target="_blank">code.claude.com/docs/en/hooks</a> — זהו <strong style="color:var(--text);">הבסיס הרשמי של EHZ-SEC-AI</strong>. הם מספקים אפילו דוגמת קוד רשמית ב-GitHub.
+  </div>
+
+  <table class="hook-table">
+    <thead>
+      <tr>
+        <th>סוג Hook</th>
+        <th>מתי רץ</th>
+        <th>יכולות</th>
+        <th>שימוש אבטחתי</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--red);font-weight:700;font-family:monospace;">PreToolUse</td>
+        <td>לפני ביצוע Tool</td>
+        <td><span class="badge badge-critical">allow</span> <span class="badge badge-critical">deny</span> <span class="badge badge-medium">ask</span> <span class="badge badge-info">defer</span></td>
+        <td>חסימת פקודות מסוכנות לפני ביצוע</td>
+      </tr>
+      <tr>
+        <td style="color:var(--green);font-weight:700;font-family:monospace;">PostToolUse</td>
+        <td>אחרי ביצוע Tool</td>
+        <td>לוגים, Feedback ל-Claude</td>
+        <td>ניטור, סריקת קבצים שנכתבו</td>
+      </tr>
+      <tr>
+        <td style="color:var(--yellow);font-weight:700;font-family:monospace;">PostToolUseFailure</td>
+        <td>כשTool נכשל</td>
+        <td>לוגים, התראות</td>
+        <td>זיהוי ניסיונות כושלים</td>
+      </tr>
+      <tr>
+        <td style="color:var(--accent);font-weight:700;font-family:monospace;">HTTP Hook</td>
+        <td>כל אירוע</td>
+        <td>שליחה ל-endpoint חיצוני</td>
+        <td style="color:var(--accent);font-weight:700;">← זה בדיוק EHZ-SEC-AI!</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:14px;">
+    <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px;">קוד רשמי מ-Anthropic — HTTP Hook לשרת חיצוני (בדיוק הארכיטקטורה של EHZ-SEC-AI):</div>
+    <pre><span class="cm">// settings.json — Hook עם HTTP endpoint</span>
+{
+  <span class="str">"hooks"</span>: {
+    <span class="str">"PreToolUse"</span>: [{
+      <span class="str">"matcher"</span>: <span class="str">"Bash"</span>,
+      <span class="str">"hooks"</span>: [{
+        <span class="str">"type"</span>: <span class="str">"http"</span>,
+        <span class="str">"url"</span>: <span class="str">"http://localhost:3010/hooks/pre-tool-use"</span>,  <span class="cm">← EHZ Collector</span>
+        <span class="str">"timeout"</span>: 30,
+        <span class="str">"headers"</span>: { <span class="str">"Authorization"</span>: <span class="str">"Bearer $CCSM_TOKEN"</span> }
+      }]
+    }]
+  }
+}</pre>
+  </div>
+
+  <div class="note-box" style="margin-top:14px;font-size:12px;">
+    🐙 <strong>Reference Implementation רשמי:</strong> Anthropic פרסמו
+    <a href="https://github.com/anthropics/claude-code/blob/main/examples/hooks/bash_command_validator_example.py" target="_blank">bash_command_validator_example.py</a>
+    — Hook שחוסם grep ו-find ומאלץ שימוש ב-ripgrep. מדגים בדיוק את Pattern שבו EHZ-SEC-AI משתמש.
+  </div>
+</div>
+
+<!-- OTEL -->
+<div class="card" style="border-top:3px solid var(--green);">
+  <div class="card-title" style="color:var(--green);">📊 OpenTelemetry — ניטור רשמי ל-Enterprise</div>
+  <div style="font-size:12px;color:var(--muted2);margin-bottom:6px;">
+    Anthropic מספקים תמיכה מלאה ב-OpenTelemetry דרך <code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code>. מתאים לארגונים עם Prometheus / Grafana / Splunk / Datadog.
+  </div>
+
+  <div class="otel-grid">
+    <div class="otel-item">
+      <div class="otel-metric">claude_code.session.count</div>
+      <div class="otel-desc">מספר Sessions שנפתחו</div>
+    </div>
+    <div class="otel-item">
+      <div class="otel-metric">claude_code.token.usage</div>
+      <div class="otel-desc">שימוש ב-Tokens (input/output/cache)</div>
+    </div>
+    <div class="otel-item">
+      <div class="otel-metric">claude_code.cost.usage</div>
+      <div class="otel-desc">עלות ב-USD לכל session</div>
+    </div>
+    <div class="otel-item">
+      <div class="otel-metric">claude_code.lines_of_code.count</div>
+      <div class="otel-desc">שורות קוד שנוספו/הוסרו</div>
+    </div>
+    <div class="otel-item">
+      <div class="otel-metric">claude_code.tool_result</div>
+      <div class="otel-desc">אירוע לכל tool שהושלם (success/fail + duration)</div>
+    </div>
+    <div class="otel-item">
+      <div class="otel-metric">claude_code.tool_decision</div>
+      <div class="otel-desc">כל החלטת accept/reject של tool</div>
+    </div>
+    <div class="otel-item">
+      <div class="otel-metric">OTEL_LOG_TOOL_DETAILS=1</div>
+      <div class="otel-desc">הפעלה: פרמטרים מלאים של כל tool (פקודות Bash, נתיבי קבצים)</div>
+    </div>
+    <div class="otel-item">
+      <div class="otel-metric">OTEL_LOG_USER_PROMPTS=1</div>
+      <div class="otel-desc">תיעוד תוכן הפרומפטים (כבוי כברירת מחדל)</div>
+    </div>
+  </div>
+
+  <div class="warn-box" style="margin-top:14px;">
+    ⚠️ <strong>הבדל מ-EHZ-SEC-AI:</strong> OpenTelemetry = מוכוון ROI ועלויות, לא אבטחה. אין זיהוי אנומליות, אין Hardening Levels, אין Secrets Scanner. EHZ-SEC-AI משלים את הפער הזה.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PART 2 — OWASP -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-title">חלק ב׳ — OWASP Top 10 סיכוני LLM (2024)</div>
+
+<div style="font-size:12px;color:var(--muted2);margin-bottom:16px;">
+  OWASP פרסמו רשימת 10 הסיכונים הקריטיים ליישומי LLM. לכל סיכון — כיצד EHZ-SEC-AI מטפל בו.
+</div>
+
+<div class="owasp-grid">
+
+  <div class="owasp-item" style="border-top:3px solid var(--red);">
+    <div class="owasp-num" style="color:var(--red);">LLM01</div>
+    <div class="owasp-name">Prompt Injection</div>
+    <div class="owasp-desc">תוקף מחדיר הוראות זדוניות דרך קלט לגרום לLLM לבצע פעולות לא מורשות.</div>
+    <div class="owasp-ehz">🛡 EHZ-SEC-AI: זיהוי context חשוד ב-PreToolUse Hook</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--orange);">
+    <div class="owasp-num" style="color:var(--orange);">LLM02</div>
+    <div class="owasp-name">Insecure Output Handling</div>
+    <div class="owasp-desc">אי-ולידציה של פלט LLM מאפשרת RCE, XSS, SQL Injection במערכות downstream.</div>
+    <div class="owasp-ehz">🛡 EHZ-SEC-AI: PostToolUse סריקת קוד שנכתב</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--yellow);">
+    <div class="owasp-num" style="color:var(--yellow);">LLM03</div>
+    <div class="owasp-name">Training Data Poisoning</div>
+    <div class="owasp-desc">זיהום נתוני אימון גורם לתגובות שפוגעות באבטחה, דיוק, התנהגות אתית.</div>
+    <div class="owasp-ehz">🔵 מחוץ לסקופ — בצד Anthropic</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--orange);">
+    <div class="owasp-num" style="color:var(--orange);">LLM04</div>
+    <div class="owasp-name">Model Denial of Service</div>
+    <div class="owasp-desc">הצפת המערכת בפעולות עתירות משאבים גורמת לשיבוש ועלויות.</div>
+    <div class="owasp-ehz">🛡 EHZ-SEC-AI: Behavioral Rules — >20 WebFetch/min → ALERT</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--red);">
+    <div class="owasp-num" style="color:var(--red);">LLM05</div>
+    <div class="owasp-name">Supply Chain Vulnerabilities</div>
+    <div class="owasp-desc">תלות ברכיבים/שירותים/datasets פגומים פוגעת בשלמות המערכת.</div>
+    <div class="owasp-ehz">🛡 EHZ-SEC-AI: Skill Scanner — Hash + YARA לפני כל התקנה</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--red);">
+    <div class="owasp-num" style="color:var(--red);">LLM06</div>
+    <div class="owasp-name">Sensitive Information Disclosure</div>
+    <div class="owasp-desc">חשיפת מידע סודי בפלטים יוצרת סיכונים משפטיים ותחרותיים.</div>
+    <div class="owasp-ehz">🛡 EHZ-SEC-AI: Secrets Scanner — סיסמאות, API keys, כרטיסי אשראי, ת"ז</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--orange);">
+    <div class="owasp-num" style="color:var(--orange);">LLM07</div>
+    <div class="owasp-name">Insecure Plugin Design</div>
+    <div class="owasp-desc">Plugins שמטפלים בקלט לא מהימן ללא הגבלות גישה מאפשרים RCE.</div>
+    <div class="owasp-ehz">🛡 EHZ-SEC-AI: MCP Hook monitoring + Skill pre-install scan</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--red);">
+    <div class="owasp-num" style="color:var(--red);">LLM08</div>
+    <div class="owasp-name">Excessive Agency</div>
+    <div class="owasp-desc">אוטונומיה בלתי מוגבלת מובילה לתוצאות לא מכוונות שפוגעות בפרטיות ואמינות.</div>
+    <div class="owasp-ehz">🛡 EHZ-SEC-AI: Hardening Levels 0-3 + Block Mode (Milestone 10)</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--yellow);">
+    <div class="owasp-num" style="color:var(--yellow);">LLM09</div>
+    <div class="owasp-name">Overreliance</div>
+    <div class="owasp-desc">אמון עיוור בפלטי LLM יכול להוביל לפגיעויות אבטחה והחלטות שגויות.</div>
+    <div class="owasp-ehz">🔵 אחריות משתמש + Session Recording (Milestone 7)</div>
+  </div>
+
+  <div class="owasp-item" style="border-top:3px solid var(--muted);">
+    <div class="owasp-num" style="color:var(--muted);">LLM10</div>
+    <div class="owasp-name">Model Theft</div>
+    <div class="owasp-desc">גישה לא מורשית למודלים קנייניים מסכנת יתרון תחרותי ומדליפה מידע.</div>
+    <div class="owasp-ehz">🔵 מחוץ לסקופ — בצד Anthropic/API</div>
+  </div>
+
+</div>
+
+<div style="margin-top:16px;padding:14px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;font-size:12px;color:var(--muted2);">
+  <strong style="color:var(--green);">סיכום OWASP:</strong> EHZ-SEC-AI מטפל ב-7 מתוך 10 סיכוני OWASP LLM. 3 הנותרים (LLM03, LLM09 חלקי, LLM10) הם ברמת Anthropic/API ומחוץ לשליטת הלקוח.
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PART 3 — MARKET PRODUCTS -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-title">חלק ג׳ — מוצרים קיימים בשוק</div>
+
+<div class="product-grid">
+
+  <!-- Lasso Security -->
+  <div class="product-card" style="border-top:3px solid #f97316;">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(249,115,22,0.12);">🔍</div>
+      <div>
+        <div class="product-name">Lasso Security</div>
+        <span class="product-tag tag-paid">Enterprise / Paid</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">פלטפורמת אבטחת AI לארגונים. מגלה Shadow AI, מנטרת agents, ומגנה בזמן אמת. לקוחות: DHS ו-Fortune 500.</div>
+      <ul class="feature-list">
+        <li>Discover — מזהה כל מודל AI ואפליקציה בארגון</li>
+        <li>Assess — הערכת סיכונים ופגיעויות</li>
+        <li>Test — Red Teaming אוטומטי</li>
+        <li>Enforce — Guardrails התנהגותיים</li>
+        <li>Protect — זיהוי כוונה זדונית בזמן אמת (&lt;50ms)</li>
+        <li>DLP — מניעת דליפת מידע</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 lasso.security</span>
+      <span style="color:var(--orange);">Enterprise pricing</span>
+    </div>
+  </div>
+
+  <!-- Spectral / Check Point -->
+  <div class="product-card" style="border-top:3px solid #ef4444;">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(239,68,68,0.12);">🔑</div>
+      <div>
+        <div class="product-name">Spectral (Check Point)</div>
+        <span class="product-tag tag-paid">Paid — חלק מ-CloudGuard</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">כלי סריקת secrets וסיסמאות בקוד. Developer-first. מזהה credentials, API keys, misconfigurations לפני שמגיעים ל-repo.</div>
+      <ul class="feature-list">
+        <li>Secrets sprawl prevention — מניעת פיזור סיסמאות</li>
+        <li>API security monitoring</li>
+        <li>Software Composition Analysis (SCA)</li>
+        <li>Code vulnerability detection</li>
+        <li>Real-time scanning בזמן coding</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 spectralops.io</span>
+      <span style="color:var(--red);">Paid — CloudGuard suite</span>
+    </div>
+  </div>
+
+  <!-- YARA -->
+  <div class="product-card" style="border-top:3px solid var(--green);">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(16,185,129,0.12);">🔎</div>
+      <div>
+        <div class="product-name">YARA</div>
+        <span class="product-tag tag-free">חינמי / Open Source</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">כלי זיהוי malware מבוסס חוקים. משמש ב-SOC, AV חברות, ומחקר אבטחה. מאפשר כתיבת חוקים מותאמים לזיהוי קוד/קבצים חשודים.</div>
+      <ul class="feature-list">
+        <li>Pattern matching מדויק על קבצים</li>
+        <li>חוקים קהילתיים לאלפי סוגי malware</li>
+        <li>ניתן להפעיל מ-CLI / Python / Node.js</li>
+        <li>מהירות גבוהה — סריקת Skills לפני התקנה</li>
+        <li>LoL (Living off the Land) rules</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 virustotal.github.io/yara</span>
+      <span class="badge badge-green">חינמי ✓</span>
+    </div>
+  </div>
+
+  <!-- Semgrep -->
+  <div class="product-card" style="border-top:3px solid var(--accent2);">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(99,102,241,0.12);">🧪</div>
+      <div>
+        <div class="product-name">Semgrep</div>
+        <span class="product-tag tag-partial">Community Free / Paid Pro</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">Static Analysis לקוד. מוצא bugs, vulnerabilities, ו-security patterns בקוד שנכתב. תומך ב-30+ שפות. משמש גם לסריקת קוד AI-generated.</div>
+      <ul class="feature-list">
+        <li>סריקת קוד שנכתב על ידי Claude</li>
+        <li>חוקי OWASP Top 10 מובנים</li>
+        <li>זיהוי hardcoded secrets</li>
+        <li>תמיכה ב-JavaScript, Python, TypeScript, Go ועוד</li>
+        <li>CI/CD integration</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 semgrep.dev</span>
+      <span class="badge badge-green">Community Free ✓</span>
+    </div>
+  </div>
+
+  <!-- VirusTotal -->
+  <div class="product-card" style="border-top:3px solid var(--accent);">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(14,165,233,0.12);">🦠</div>
+      <div>
+        <div class="product-name">VirusTotal API</div>
+        <span class="product-tag tag-partial">Free 500/day · API</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">שירות של Google לסריקת קבצים ו-URLs מול 70+ מנועי AV. API חינמי עד 500 בקשות/יום. ניתן לשלב בסריקת Skills לפני התקנה.</div>
+      <ul class="feature-list">
+        <li>70+ מנועי AV במקביל</li>
+        <li>סריקת קבצים, URLs, domains</li>
+        <li>API חינמי — 500 req/day</li>
+        <li>Hash lookup — אם כבר נסרק, תוצאה מיידית</li>
+        <li>ממצאים של קהילת חוקרי אבטחה</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 virustotal.com/api</span>
+      <span class="badge badge-green">Free tier ✓</span>
+    </div>
+  </div>
+
+  <!-- ClamAV -->
+  <div class="product-card" style="border-top:3px solid var(--green);">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(16,185,129,0.12);">🛡</div>
+      <div>
+        <div class="product-name">ClamAV</div>
+        <span class="product-tag tag-free">חינמי / Open Source</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">מנוע AV open source של Cisco. מקומי לחלוטין, ללא גבולות. מסד נתונים מתעדכן אוטומטית. עובד על Windows/Linux.</div>
+      <ul class="feature-list">
+        <li>מקומי — לא שולח קבצים לענן</li>
+        <li>עדכוני מסד נתונים אוטומטיים</li>
+        <li>ללא הגבלת סריקות</li>
+        <li>Node.js binding זמין</li>
+        <li>ניתן לשלב בסריקת Skills</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 clamav.net</span>
+      <span class="badge badge-green">חינמי ✓</span>
+    </div>
+  </div>
+
+  <!-- Google Safe Browsing -->
+  <div class="product-card" style="border-top:3px solid #4285f4;">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(66,133,244,0.12);">🌐</div>
+      <div>
+        <div class="product-name">Google Safe Browsing</div>
+        <span class="product-tag" style="background:rgba(66,133,244,0.12);color:#4285f4;border:1px solid rgba(66,133,244,0.3);">Free 10K/day</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">API של Google לבדיקת URLs מסוכנים — phishing, malware, unwanted software. בשימוש Chrome, Firefox, Safari. 10,000 בקשות/יום חינמי.</div>
+      <ul class="feature-list">
+        <li>בדיקת כל URL שClaude מנסה לגשת אליו</li>
+        <li>Phishing detection בזמן אמת</li>
+        <li>Malware hosting detection</li>
+        <li>10,000 req/day — מספיק לכל שימוש</li>
+        <li>Lookup API — batch בקשות</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 safebrowsing.google.com</span>
+      <span class="badge badge-green">Free tier ✓</span>
+    </div>
+  </div>
+
+  <!-- Claude Code Monitoring Guide -->
+  <div class="product-card" style="border-top:3px solid var(--accent);">
+    <div class="product-header">
+      <div class="product-logo" style="background:rgba(14,165,233,0.12);">📈</div>
+      <div>
+        <div class="product-name">Claude Code ROI Guide</div>
+        <span class="product-tag tag-builtin">רשמי מ-Anthropic</span>
+      </div>
+    </div>
+    <div class="product-body">
+      <div class="product-desc">מדריך רשמי מ-Anthropic לניטור Claude Code. Docker Compose + Prometheus + OpenTelemetry. מוכוון ROI ועלויות — לא אבטחה.</div>
+      <ul class="feature-list">
+        <li>Prometheus + Docker Compose מוכן</li>
+        <li>Cost tracking per session/user</li>
+        <li>Token usage analytics</li>
+        <li>PR/Commit productivity metrics</li>
+        <li>Integration עם Linear</li>
+      </ul>
+    </div>
+    <div class="product-footer">
+      <span style="color:var(--muted2);">🌐 github.com/anthropics/claude-code-monitoring-guide</span>
+      <span class="badge badge-green">חינמי ✓</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- COMPARISON TABLE -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-title">חלק ד׳ — טבלת השוואה — EHZ-SEC-AI מול השוק</div>
+
+<div class="card">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>פיצ'ר</th>
+        <th style="text-align:center;">Lasso</th>
+        <th style="text-align:center;">Spectral</th>
+        <th style="text-align:center;">Semgrep</th>
+        <th style="text-align:center;">OTel Guide</th>
+        <th style="text-align:center;" class="c-ehz">EHZ-SEC-AI</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ניטור Claude Code Hooks</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-partial">⚠️ חלקי</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>Dashboard ניהול בזמן אמת</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-partial">⚠️</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-partial">⚠️ Grafana</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>התראות Telegram</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>Secrets / DLP Scanner</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>Hardening Levels 0-3</td>
+        <td style="text-align:center;" class="c-partial">⚠️</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>Skill Scanner (לפני התקנה)</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>Anomaly Detection Rules</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-partial">⚠️</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>Block Mode (עצירת Claude)</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-yes">✅ Milestone 10</td>
+      </tr>
+      <tr>
+        <td>System Tray</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-no">❌</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+      </tr>
+      <tr>
+        <td>Domain / Active Directory</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-partial">⚠️</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-yes">✅ Milestone 9</td>
+      </tr>
+      <tr>
+        <td>SIEM Integration</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-yes">✅</td>
+        <td style="text-align:center;" class="c-partial">⚠️</td>
+        <td style="text-align:center;" class="c-partial">⚠️</td>
+        <td style="text-align:center;" class="c-yes">✅ Milestone 11</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">מחיר</td>
+        <td style="text-align:center;color:var(--red);">💰 Enterprise</td>
+        <td style="text-align:center;color:var(--red);">💰 Paid</td>
+        <td style="text-align:center;color:var(--yellow);">🆓/💰</td>
+        <td style="text-align:center;color:var(--green);">🆓 חינמי</td>
+        <td style="text-align:center;color:var(--green);font-weight:800;">🆓 חינמי + שלנו</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PART 5 — INSIGHTS -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-title">חלק ה׳ — תובנות ומסקנות</div>
+
+<div class="insight-grid">
+
+  <div class="insight-card" style="border-top:3px solid var(--green);">
+    <div class="insight-icon">🎯</div>
+    <div class="insight-title">EHZ-SEC-AI ממלא פער אמיתי</div>
+    <div class="insight-body">אין מוצר בשוק שמנטר Claude Code ספציפית דרך Hooks. Anthropic מספקים את ה-<em>מנגנון</em> (Hooks API) אבל לא <em>מוצר</em> מלא. EHZ-SEC-AI הוא השכבה שחסרה.</div>
+  </div>
+
+  <div class="insight-card" style="border-top:3px solid var(--accent);">
+    <div class="insight-icon">✅</div>
+    <div class="insight-title">Anthropic מאשרים את הגישה שלנו</div>
+    <div class="insight-body">הארכיטקטורה של EHZ-SEC-AI — HTTP Hook ל-Collector מקומי — היא בדיוק מה שAnthropic מדגימים בתיעוד הרשמי שלהם. אנחנו בכיוון הנכון.</div>
+  </div>
+
+  <div class="insight-card" style="border-top:3px solid var(--yellow);">
+    <div class="insight-icon">⚡</div>
+    <div class="insight-title">OpenTelemetry כאלטרנטיבה משלימה</div>
+    <div class="insight-body">OTel של Anthropic מצוין לניטור ארגוני (עלויות, tokens, ROI) אבל לא לאבטחה. שווה לשקול לשלב OTel + EHZ-SEC-AI — כל אחד עושה משהו אחר.</div>
+  </div>
+
+  <div class="insight-card" style="border-top:3px solid var(--purple);">
+    <div class="insight-icon">🔒</div>
+    <div class="insight-title">7/10 סיכוני OWASP מכוסים</div>
+    <div class="insight-body">EHZ-SEC-AI מטפל ב-70% מסיכוני OWASP LLM Top 10. הנותרים (Data Poisoning, Model Theft) הם ברמת Anthropic ומחוץ לשליטת המשתמש.</div>
+  </div>
+
+  <div class="insight-card" style="border-top:3px solid var(--orange);">
+    <div class="insight-icon">🆚</div>
+    <div class="insight-title">יתרון על פני Lasso ו-Spectral</div>
+    <div class="insight-body">המוצרים הפעידים (Lasso, Spectral) הם Enterprise בתשלום. EHZ-SEC-AI חינמי, מותאם אישית ל-Claude Code, ועם System Tray + Telegram שאין במוצרים אחרים.</div>
+  </div>
+
+  <div class="insight-card" style="border-top:3px solid var(--red);">
+    <div class="insight-icon">⚠️</div>
+    <div class="insight-title">סיכון WebDAV ב-Windows</div>
+    <div class="insight-body">Anthropic מזהירים במפורש: אל תאפשר WebDAV ב-Windows — Claude יכול לבצע network requests לhosts חיצוניים ולעקוף את Permission System. EHZ-SEC-AI צריך לכסות את הסיכון הזה.</div>
+  </div>
+
+</div>
+
+<!-- Recommendations -->
+<div class="section-title">המלצות — כיצד לשפר EHZ-SEC-AI בהתבסס על המחקר</div>
+
+<div class="card">
+  <div class="card-title">📋 5 שיפורים מיידיים שהמחקר חשף</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:8px;">
+
+    <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--red);font-weight:700;margin-bottom:4px;">🔴 חשוב — הוסף לRules</div>
+      <div style="color:var(--muted2);line-height:1.8;">חסימת WebDAV paths ב-Windows (<code>\\*</code> prefix). Anthropic מזהירים במפורש מסיכון זה.</div>
+    </div>
+
+    <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--orange);font-weight:700;margin-bottom:4px;">🟠 שקול שילוב OTel</div>
+      <div style="color:var(--muted2);line-height:1.8;">הוסף תמיכה ב-OpenTelemetry output — כך EHZ-SEC-AI יכול להזין נתונים גם ל-Grafana/Prometheus ארגוניים.</div>
+    </div>
+
+    <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--yellow);font-weight:700;margin-bottom:4px;">🟡 Prompt Injection Detector</div>
+      <div style="color:var(--muted2);line-height:1.8;">OWASP LLM01. הוסף זיהוי patterns של Prompt Injection בתוכן שClaude מקבל (WebFetch results, file reads).</div>
+    </div>
+
+    <div style="background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:4px;">🔵 MCP Hook Monitoring</div>
+      <div style="color:var(--muted2);line-height:1.8;">Anthropic מציינים MCP כסיכון אבטחה. הוסף matcher ל-<code>mcp__*__write*</code> לניטור כל כתיבה דרך MCP servers.</div>
+    </div>
+
+    <div style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--green);font-weight:700;margin-bottom:4px;">🟢 ConfigChange Hook</div>
+      <div style="color:var(--muted2);line-height:1.8;">Anthropic מספקים <code>ConfigChange</code> hook — התראה כשמישהו משנה את settings.json. חשוב לאבטחה ב-Domain.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>EHZ-AI</strong> | Claude Code Security Monitor — Security Research Report<br>
+  מקורות: <a href="https://code.claude.com/docs/en/security" target="_blank">code.claude.com/docs/en/security</a> ·
+  <a href="https://code.claude.com/docs/en/hooks" target="_blank">code.claude.com/docs/en/hooks</a> ·
+  <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank">OWASP LLM Top 10</a> ·
+  Lasso Security · Spectral · YARA · Semgrep · VirusTotal<br>
+  נוצר: אפריל 2026 | הדף נבנה ע"י <strong style="color:#10b981;">EHZ-AI | 054-4825276</strong>
+</div>
+
+</body>
+</html>

