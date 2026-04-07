@@ -610,6 +610,39 @@ body {
       🔒 <b style="color:var(--muted2);">שלב א הוא ניטור בלבד</b> — Claude Code לא נחסם. חסימה תופעל ב-Milestone 10 (Block Mode).
     </div>
   </div>
+
+  <!-- Log Retention -->
+  <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;">
+    <div class="settings-section-title">🗑️ ניהול לוגים</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;" id="retention-info">
+      <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">שמירה</span>
+        <b style="color:var(--text)" id="ret-days">—</b>
+      </div>
+      <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">מקסימום</span>
+        <b style="color:var(--text)" id="ret-max">—</b>
+      </div>
+      <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">סה"כ events</span>
+        <b style="color:var(--accent)" id="ret-total">—</b>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <button onclick="clearLogs(7)"  style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--yellow);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
+        🗑 מחק מעל 7 ימים
+      </button>
+      <button onclick="clearLogs(30)" style="background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);color:var(--orange);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
+        🗑 מחק מעל 30 ימים
+      </button>
+      <button onclick="clearLogs(0)"  style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:var(--red);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
+        ⚠️ מחק הכל
+      </button>
+    </div>
+    <div style="min-height:18px;margin-top:10px;font-size:12px;" id="clear-status"></div>
+  </div>
 </div>
 </div><!-- /view-settings -->
 
@@ -777,7 +810,7 @@ function switchTab(tab) {
     document.getElementById('view-' + t).style.display = t === tab ? '' : 'none';
     document.getElementById('tab-'  + t).classList.toggle('active', t === tab);
   });
-  if (tab === 'settings') loadConfig();
+  if (tab === 'settings') { loadConfig(); loadRetention(); }
   if (tab === 'skills')   loadSkillsRegistry();
 }
 
@@ -880,6 +913,42 @@ function selectLevel(n) {
   [0,1,2,3].forEach(i => {
     document.getElementById('lc' + i).classList.toggle('active-level', i === n);
   });
+}
+
+async function loadRetention() {
+  try {
+    const r = await fetchJSON('/retention');
+    document.getElementById('ret-days').textContent  = r.retention_days + ' יום';
+    document.getElementById('ret-max').textContent   = r.max_events.toLocaleString() + ' events';
+    document.getElementById('ret-total').textContent = r.total_events.toLocaleString();
+  } catch(_) {}
+}
+
+async function clearLogs(days) {
+  const statusEl = document.getElementById('clear-status');
+  const msg = days === 0
+    ? 'למחוק את כל הלוגים?'
+    : `למחוק events ישנים מ-${days} יום?`;
+  if (!confirm(msg)) return;
+
+  statusEl.style.color = 'var(--muted2)';
+  statusEl.textContent = '⟳ מוחק...';
+  try {
+    const body = days > 0 ? { older_than_days: days } : {};
+    const r = await fetch(API + '/events', {
+      method:  'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+    });
+    const data = await r.json();
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = `✅ ${data.msg}`;
+    loadRetention();
+    loadStats();
+  } catch(_) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '❌ שגיאה — Collector לא מגיב';
+  }
 }
 
 async function loadConfig() {

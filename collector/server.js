@@ -20,6 +20,9 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN  || '';
 const TELEGRAM_CHAT  = process.env.TELEGRAM_CHAT_ID || '';
 const DB_PATH        = path.join(__dirname, 'ccsm.db');
 
+const RETENTION_DAYS = 30;
+const MAX_EVENTS     = 10000;
+
 // ─── DB Init ─────────────────────────────────────────────────────────────────
 
 const db = new Datastore({ filename: DB_PATH, autoload: true });
@@ -28,6 +31,34 @@ const db = new Datastore({ filename: DB_PATH, autoload: true });
 db.ensureIndex({ fieldName: 'ts' });
 db.ensureIndex({ fieldName: 'level' });
 db.ensureIndex({ fieldName: 'tool_name' });
+
+// ─── Retention: TTL 30d + FIFO 10k ──────────────────────────────────────────
+
+function enforceRetention() {
+  const cutoff = Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
+
+  // 1. מחק events ישנים מ-30 יום
+  db.remove({ ts: { $lt: cutoff } }, { multi: true }, (err, n1) => {
+    if (n1 > 0) console.log(`[Retention] מחיקת ${n1} events ישנים (>${RETENTION_DAYS} יום)`);
+
+    // 2. FIFO — אם עדיין מעל 10,000 מחק הכי ישנים
+    db.count({}, (err, total) => {
+      if (total <= MAX_EVENTS) return;
+      const excess = total - MAX_EVENTS;
+      db.find({}).sort({ ts: 1 }).limit(excess).exec((err, docs) => {
+        if (err || !docs.length) return;
+        const ids = docs.map(d => d._id);
+        db.remove({ _id: { $in: ids } }, { multi: true }, (err, n2) => {
+          if (n2 > 0) console.log(`[Retention] FIFO — מחיקת ${n2} events עודפים (מעל ${MAX_EVENTS})`);
+        });
+      });
+    });
+  });
+}
+
+// הרץ retention פעם ביום (86400000ms) + מיד בהפעלה
+enforceRetention();
+setInterval(enforceRetention, 24 * 60 * 60 * 1000);
 
 // ─── Telegram ────────────────────────────────────────────────────────────────
 
@@ -203,6 +234,31 @@ app.post('/skills/scan', (req, res) => {
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
+});
+
+// DELETE /events — מחיקה ידנית (עם אפשרות לפי גיל)
+// body: { older_than_days: N } — אם לא נשלח → מוחק הכל
+app.delete('/events', (req, res) => {
+  const days = req.body && req.body.older_than_days;
+  const query = days ? { ts: { $lt: Date.now() - days * 24 * 60 * 60 * 1000 } } : {};
+  db.remove(query, { multi: true }, (err, n) => {
+    if (err) return res.status(500).json({ error: err.message });
+    db.compactDatafile();
+    res.json({ ok: true, deleted: n, msg: `נמחקו ${n} events` });
+  });
+});
+
+// GET /retention — מדיניות שמירה נוכחית
+app.get('/retention', (req, res) => {
+  db.count({}, (err, total) => {
+    const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000);
+    res.json({
+      retention_days: RETENTION_DAYS,
+      max_events:     MAX_EVENTS,
+      total_events:   total || 0,
+      oldest_kept:    cutoff.toISOString(),
+    });
+  });
 });
 
 // GET /health
