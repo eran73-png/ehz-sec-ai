@@ -186,6 +186,7 @@
   .status-active { background: rgba(14,165,233,0.15); color: var(--accent); border: 1px solid rgba(14,165,233,0.3); }
   .status-next { background: rgba(249,115,22,0.1); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
   .status-future { background: rgba(100,116,139,0.1); color: var(--muted); border: 1px solid var(--border); }
+  .status-done { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
 
   /* ── TASKS ── */
   .tasks-grid {
@@ -496,7 +497,7 @@
       <h3>שלב 1 — תשתית בסיסית (Core)</h3>
       <p>Hook + Collector + DB + Telegram · תחנה יחידה</p>
     </div>
-    <div class="phase-status status-active">▶ מתחילים כאן</div>
+    <div class="phase-status status-done">✅ בוצע</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell">
@@ -538,7 +539,7 @@
       <h3>שלב 2 — חוקי Anomaly</h3>
       <p>Rules Engine + Severity + Whitelist</p>
     </div>
-    <div class="phase-status status-next">⏳ אחרי שלב 1</div>
+    <div class="phase-status status-done">✅ בוצע</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell">
@@ -580,7 +581,7 @@
       <h3>שלב 3 — Dashboard</h3>
       <p>ממשק ניהול Web — Checkpoint style</p>
     </div>
-    <div class="phase-status status-future">עתידי</div>
+    <div class="phase-status status-done">✅ בוצע</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell">
@@ -622,7 +623,7 @@
       <h3>שלב 4 — Hardening + Project Scope</h3>
       <p>הגבלת גישה לתיקיית פרויקט, Level 0-3, אישור ידני</p>
     </div>
-    <div class="phase-status status-future">עתידי</div>
+    <div class="phase-status status-active">▶ בתהליך</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell">
