@@ -741,7 +741,7 @@
     <div class="task-cell" style="border-left: 3px solid #22c55e;">
       <div class="task-num" style="color:#22c55e">6.0</div>
       <div class="task-title">Scope Monitor ✅</div>
-      <div class="task-desc">התראה HIGH על גישה לכל כונן (A-Z:) מחוץ ל-allowed_paths — כלל scope #5 ב-rules.js | allowed_paths ב-whitelist.json | בדיקות: 6/6 ✅ — 07.04.2026</div>
+      <div class="task-desc">התראה HIGH על גישה מחוץ ל-allowed_paths — כיסוי מלא:<br>• כוננים A-Z: בכלי קבצים (Read/Write/Edit/Glob/Grep) ✅<br>• כוננים A-Z: בפקודות Bash ✅<br>• UNC //server/share בכלי קבצים ✅<br>• UNC //server/share בפקודות Bash ✅<br>• UNC \servershare → CRITICAL (כלל WebDAV קיים) ✅<br>תוקן: false positive על http:// (lookbehind regex) ✅<br>בדיקות: 7/7 | בוצע: 07.04.2026</div>
     </div>
     <div class="task-cell">
       <div class="task-num">6.1</div>
