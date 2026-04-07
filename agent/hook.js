@@ -122,7 +122,7 @@ async function main() {
     return;
   }
 
-  const hookType = event.hook_type || 'unknown';
+  const hookType = event.hook_event_name || event.hook_type || 'unknown';
   const tool     = event.tool_name || 'unknown';
   const session  = event.session_id || 'unknown';
   const ts       = Date.now();
