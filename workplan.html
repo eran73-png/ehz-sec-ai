@@ -704,8 +704,8 @@
   <div class="phase-header">
     <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#ef4444,#dc2626);">6</div>
     <div class="phase-info">
-      <h3>שלב 6 — Secrets Scanner + DLP</h3>
-      <p>גילוי סיסמאות, API keys, כרטיסי אשראי, ת"ז בקבצי פרויקט</p>
+      <h3>שלב 6 — Secrets Scanner + DLP + File Audit</h3>
+      <p>גילוי סיסמאות, API keys, כרטיסי אשראי, ת"ז — סריקת כל C:/Claude-Repo/ + דוח + Excel</p>
     </div>
     <div class="phase-status status-future">עתידי</div>
   </div>
@@ -724,20 +724,38 @@
     </div>
     <div class="task-cell">
       <div class="task-num">6.3</div>
-      <div class="task-title">Project Full Scan</div>
-      <div class="task-desc">סריקת כל תיקיית פרויקט לפי דרישה + דוח HTML מפורט.</div>
-      <div class="task-tags"><span class="tag">full scan</span></div>
+      <div class="task-title">File Audit Scanner — C:/Claude-Repo/</div>
+      <div class="task-desc">סריקת כל הקבצים ב-C:/Claude-Repo/ (כל סוגי הקבצים). לכל ממצא: נתיב מלא + שורה + סוג + ציון סיכון. ציון לפי קובץ וציון כולל לפרויקט.</div>
+      <div class="task-tags"><span class="tag">full scan</span><span class="tag">all files</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">6.4</div>
+      <div class="task-title">דוח ב-Dashboard — טאב נפרד</div>
+      <div class="task-desc">טאב "File Audit" בדשבורד — עץ תיקיות עם ציוני סיכון (🔴 Critical / 🟠 High / 🟡 Medium / 🟢 Low). לחיצה על קובץ = רשימת ממצאים + שורות.</div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">tab</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">6.5</div>
+      <div class="task-title">Export לאקסל</div>
+      <div class="task-desc">כפתור "Export Excel" — מוריד קובץ .xlsx עם: נתיב, שורה, סוג ממצא, ערך מוסתר (***), ציון סיכון. מוכן לסקירה ידנית.</div>
+      <div class="task-tags"><span class="tag">xlsx</span><span class="tag">export</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">6.6</div>
       <div class="task-title">Real-time Write Guard</div>
       <div class="task-desc">כל קובץ שנכתב עובר סריקה מיידית. מידע רגיש = CRITICAL + חסום commit.</div>
       <div class="task-tags"><span class="tag">write guard</span></div>
     </div>
+    <div class="task-cell">
+      <div class="task-num">6.7</div>
+      <div class="task-title">סריקה שבועית אוטומטית</div>
+      <div class="task-desc">Windows Task Scheduler — כל יום ראשון 08:00. מריץ סריקה מלאה, שומר דוח עם תאריך, שולח סיכום ב-Telegram. מאפשר השוואה בין סריקות.</div>
+      <div class="task-tags"><span class="tag">scheduler</span><span class="tag">weekly</span></div>
+    </div>
   </div>
   <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
     <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
-    <span style="color:var(--muted2);"> כתוב password=Test123 לקובץ → קבל CRITICAL alert → הרץ full scan → ודא דוח מציג ממצאים</span>
+    <span style="color:var(--muted2);"> הרץ File Audit → ראה עץ תיקיות עם ציונים בדשבורד → לחץ Export → קבל קובץ Excel עם כל הממצאים</span>
   </div>
 </div>
 
