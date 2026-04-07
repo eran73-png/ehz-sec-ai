@@ -1,0 +1,54 @@
+{
+  "comment": "EHZ-SEC-AI Whitelist — domains/commands/paths that never trigger alerts",
+
+  "domains": [
+    "github.com",
+    "raw.githubusercontent.com",
+    "npmjs.com",
+    "registry.npmjs.org",
+    "nodejs.org",
+    "anthropic.com",
+    "claude.ai",
+    "api.anthropic.com",
+    "google.com",
+    "googleapis.com",
+    "stackoverflow.com",
+    "microsoft.com",
+    "visualstudio.com",
+    "aka.ms",
+    "ehz-server.duckdns.org",
+    "telegram.org",
+    "api.telegram.org",
+    "localhost",
+    "127.0.0.1"
+  ],
+
+  "commands": [
+    "git ",
+    "npm ",
+    "node ",
+    "echo ",
+    "ls ",
+    "cat ",
+    "pwd",
+    "cd ",
+    "mkdir ",
+    "cp ",
+    "mv ",
+    "grep ",
+    "find ",
+    "which ",
+    "where ",
+    "type ",
+    "dir ",
+    "Get-",
+    "Set-Location",
+    "Write-Host"
+  ],
+
+  "paths": [
+    "C:/Claude-Repo/agents/EHZ-SEC-AI/",
+    "C:/Users/Eran/.claude/",
+    "C:/Users/Eran/AppData/Local/Temp/"
+  ]
+}
