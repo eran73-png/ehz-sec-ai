@@ -488,6 +488,51 @@ body {
 
   <button class="save-btn" id="save-level-btn" onclick="saveLevel()">שמור רמה</button>
   <div class="settings-status" id="settings-status"></div>
+
+  <!-- Legend table -->
+  <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;">
+    <div class="settings-section-title">📖 מה קורה בכל רמה</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border2);">
+          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">רמה</th>
+          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">Telegram</th>
+          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">חוקים נוספים</th>
+          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">שימוש מומלץ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <td style="padding:9px 10px;">⚫ OFF</td>
+          <td style="padding:9px 10px;color:var(--muted);">לא שולח כלום</td>
+          <td style="padding:9px 10px;color:var(--muted);">בסיסיים בלבד</td>
+          <td style="padding:9px 10px;color:var(--muted);">דיבוג / פיתוח</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(16,185,129,0.04);">
+          <td style="padding:9px 10px;">🟢 SOFT</td>
+          <td style="padding:9px 10px;color:var(--green);">HIGH + CRITICAL</td>
+          <td style="padding:9px 10px;color:var(--muted);">בסיסיים בלבד</td>
+          <td style="padding:9px 10px;color:var(--green);">שימוש יומיומי ✓</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <td style="padding:9px 10px;">🟡 STRICT</td>
+          <td style="padding:9px 10px;color:var(--yellow);">HIGH + CRITICAL</td>
+          <td style="padding:9px 10px;color:var(--yellow);">telnet, sudo, chmod, pastebin…</td>
+          <td style="padding:9px 10px;color:var(--muted);">סביבה רגישה</td>
+        </tr>
+        <tr>
+          <td style="padding:9px 10px;">🔴 LOCKDOWN</td>
+          <td style="padding:9px 10px;color:var(--red);">הכל כולל INFO</td>
+          <td style="padding:9px 10px;color:var(--red);">כל פעולה מדווחת</td>
+          <td style="padding:9px 10px;color:var(--muted);">חקירת אירוע</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">
+      ℹ️ <b style="color:var(--muted2);">הערה:</b> כל הרמות מנטרות ושומרות events ב-DB — ההבדל הוא רק <b style="color:var(--muted2);">מה נשלח ל-Telegram</b> ואיזה חוקים פעילים.<br>
+      🔒 <b style="color:var(--muted2);">שלב א הוא ניטור בלבד</b> — Claude Code לא נחסם. חסימה תופעל ב-Milestone 10 (Block Mode).
+    </div>
+  </div>
 </div>
 </div><!-- /view-settings -->
 
