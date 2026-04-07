@@ -170,8 +170,8 @@ function checkScopeRule(event) {
   // Normalize: backslash → forward slash
   const normalized = rawPath.replace(/\\/g, '/');
 
-  // Only check paths on C: drive
-  if (!/^[Cc]:/i.test(normalized)) return null;
+  // Check paths on any drive letter (A-Z:)
+  if (!/^[A-Za-z]:/i.test(normalized)) return null;
 
   const wl = getWhitelist();
   const allowedPaths = wl.allowed_paths || [];
