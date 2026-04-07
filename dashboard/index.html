@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EHZ-SEC-AI — Dashboard</title>
+<style>
+:root {
+  --bg:       #080c14;
+  --panel:    #0d1424;
+  --panel2:   #111827;
+  --border:   #1a2540;
+  --border2:  #243050;
+  --accent:   #0ea5e9;
+  --green:    #10b981;
+  --yellow:   #f59e0b;
+  --red:      #ef4444;
+  --orange:   #f97316;
+  --purple:   #8b5cf6;
+  --text:     #e2e8f0;
+  --muted:    #64748b;
+  --muted2:   #94a3b8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  padding: 24px 20px;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.header-logo {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+.header h1 span { color: var(--accent); }
+.header-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+}
+.status-txt { font-size: 12px; color: var(--muted2); }
+.refresh-btn {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── STAT CARDS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--border2); }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60px; height: 60px;
+  border-radius: 0 12px 0 60px;
+  opacity: 0.08;
+}
+.stat-card.total::before  { background: var(--accent); }
+.stat-card.critical::before { background: var(--red); }
+.stat-card.high::before   { background: var(--orange); }
+.stat-card.sessions::before { background: var(--purple); }
+.stat-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+.stat-value {
+  font-size: 38px; font-weight: 900; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat-card.total    .stat-value { color: var(--accent); }
+.stat-card.critical .stat-value { color: var(--red); }
+.stat-card.high     .stat-value { color: var(--orange); }
+.stat-card.sessions .stat-value { color: var(--purple); }
+.stat-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.stat-icon { position: absolute; top: 16px; left: 16px; font-size: 18px; opacity: 0.5; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.toolbar-title { font-size: 13px; font-weight: 700; color: var(--muted2); flex: 1; }
+.filter-btn {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted2);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover  { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.filter-btn.crit.active  { background: var(--red);    border-color: var(--red); }
+.filter-btn.high.active  { background: var(--orange); border-color: var(--orange); }
+.filter-btn.info.active  { background: var(--muted);  border-color: var(--muted); }
+.auto-badge {
+  font-size: 10px; color: var(--green); border: 1px solid rgba(16,185,129,0.3);
+  padding: 3px 8px; border-radius: 20px; margin-right: auto;
+}
+
+/* ── EVENTS TABLE ── */
+.table-wrap {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.events-table thead tr {
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border2);
+}
+.events-table th {
+  padding: 11px 14px;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.events-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.events-table tbody tr:last-child td { border-bottom: none; }
+.events-table tbody tr { transition: background 0.1s; }
+.events-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+/* Row highlight by level */
+.events-table tbody tr.critical { border-right: 3px solid var(--red); }
+.events-table tbody tr.high     { border-right: 3px solid var(--orange); }
+
+/* Level badge */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.badge.CRITICAL { background: rgba(239,68,68,0.15);   color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+.badge.HIGH     { background: rgba(249,115,22,0.15);  color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+.badge.MEDIUM   { background: rgba(245,158,11,0.15);  color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+.badge.INFO     { background: rgba(100,116,139,0.15); color: var(--muted2); border: 1px solid rgba(100,116,139,0.2); }
+
+/* Hook type chip */
+.chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font-size: 10px;
+  background: rgba(255,255,255,0.06);
+  color: var(--muted2);
+  border: 1px solid var(--border2);
+}
+.chip.pre  { color: var(--accent); border-color: rgba(14,165,233,0.2); background: rgba(14,165,233,0.06); }
+.chip.post { color: var(--purple); border-color: rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); }
+
+/* Reason text */
+.reason { color: var(--muted2); max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+.reason.alert { color: var(--text); font-weight: 500; }
+
+/* Timestamp */
+.ts { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+.empty-state p { font-size: 13px; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── LAST EVENT BAR ── */
+.last-event-bar {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.last-event-bar span { color: var(--muted2); }
+
+/* ── LOADING ── */
+.loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+
+/* Scrollable table */
+.table-scroll { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">🛡</div>
+    <div>
+      <h1>EHZ-SEC-<span>AI</span></h1>
+      <div class="header-sub">Claude Code Security Monitor</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="auto-badge" id="auto-badge">● רענון אוטומטי 5s</div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div class="status-dot" id="status-dot"></div>
+      <span class="status-txt" id="status-txt">מתחבר...</span>
+    </div>
+    <button class="refresh-btn" onclick="loadAll()">⟳ רענן</button>
+  </div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stats-grid">
+  <div class="stat-card total">
+    <div class="stat-label">סה"כ Events</div>
+    <div class="stat-value" id="stat-total">—</div>
+    <div class="stat-sub" id="stat-last">—</div>
+    <div class="stat-icon">📊</div>
+  </div>
+  <div class="stat-card critical">
+    <div class="stat-label">Critical</div>
+    <div class="stat-value" id="stat-critical">—</div>
+    <div class="stat-sub">פעולות חסומות</div>
+    <div class="stat-icon">🚨</div>
+  </div>
+  <div class="stat-card high">
+    <div class="stat-label">High</div>
+    <div class="stat-value" id="stat-high">—</div>
+    <div class="stat-sub">התראות גבוהות</div>
+    <div class="stat-icon">⚠️</div>
+  </div>
+  <div class="stat-card sessions">
+    <div class="stat-label">סשנים</div>
+    <div class="stat-value" id="stat-sessions">—</div>
+    <div class="stat-sub">Claude Code sessions</div>
+    <div class="stat-icon">💻</div>
+  </div>
+</div>
+
+<!-- LAST EVENT -->
+<div class="last-event-bar" id="last-bar" style="display:none">
+  <span>⏱ אחרון:</span>
+  <span id="last-tool"></span>
+  <span id="last-level-badge"></span>
+  <span id="last-reason" style="color:var(--muted);"></span>
+  <span style="margin-right:auto;"></span>
+  <span class="ts" id="last-ts"></span>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <span class="toolbar-title">📋 Events Log</span>
+  <button class="filter-btn active"     onclick="setFilter('ALL')"      id="f-all">הכל</button>
+  <button class="filter-btn crit"       onclick="setFilter('CRITICAL')" id="f-critical">🚨 Critical</button>
+  <button class="filter-btn high"       onclick="setFilter('HIGH')"     id="f-high">⚠️ High</button>
+  <button class="filter-btn info"       onclick="setFilter('INFO')"     id="f-info">ℹ️ Info</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <div class="table-scroll">
+    <table class="events-table">
+      <thead>
+        <tr>
+          <th>רמה</th>
+          <th>Hook</th>
+          <th>כלי</th>
+          <th>סיבה / תיאור</th>
+          <th>Session</th>
+          <th>זמן</th>
+        </tr>
+      </thead>
+      <tbody id="events-tbody">
+        <tr><td colspan="6"><div class="loading">טוען...</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  EHZ-AI | Claude Code Security Monitor | 054-4825276 &nbsp;•&nbsp;
+  Collector: <a href="http://localhost:3010/health" target="_blank" style="color:var(--accent)">localhost:3010</a>
+</div>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────────────────
+const API       = 'http://localhost:3010';
+const LIMIT     = 100;
+const REFRESH_S = 5;
+
+let currentFilter = 'ALL';
+let refreshTimer  = null;
+let lastCount     = 0;
+
+// ── Fetch helpers ────────────────────────────────────────────────────────────
+
+async function fetchJSON(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+// ── Stats ────────────────────────────────────────────────────────────────────
+
+async function loadStats() {
+  try {
+    const s = await fetchJSON('/stats');
+    document.getElementById('stat-total').textContent    = s.total    ?? 0;
+    document.getElementById('stat-critical').textContent = s.critical ?? 0;
+    document.getElementById('stat-high').textContent     = s.high     ?? 0;
+    document.getElementById('stat-sessions').textContent = s.sessions ?? 0;
+
+    if (s.last_ts) {
+      document.getElementById('stat-last').textContent =
+        'אחרון: ' + fmtTs(s.last_ts);
+    }
+
+    // Status dot
+    setOnline(true);
+  } catch(e) {
+    setOnline(false);
+  }
+}
+
+// ── Events ───────────────────────────────────────────────────────────────────
+
+async function loadEvents() {
+  try {
+    const path = currentFilter === 'ALL'
+      ? `/events?limit=${LIMIT}`
+      : `/events?limit=${LIMIT}&level=${currentFilter}`;
+    const data = await fetchJSON(path);
+    renderTable(data.events || []);
+
+    // Last event bar
+    if (data.events && data.events.length > 0) {
+      const e = data.events[0];
+      document.getElementById('last-bar').style.display = 'flex';
+      document.getElementById('last-tool').textContent  = e.tool_name;
+      document.getElementById('last-level-badge').innerHTML = badgeHTML(e.level);
+      document.getElementById('last-reason').textContent    = e.reason || '';
+      document.getElementById('last-ts').textContent        = fmtTs(e.ts);
+    }
+  } catch(e) {
+    setOnline(false);
+  }
+}
+
+async function loadAll() {
+  await Promise.all([loadStats(), loadEvents()]);
+}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+
+function renderTable(events) {
+  const tbody = document.getElementById('events-tbody');
+  if (!events.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">
+      <div class="icon">🔍</div>
+      <p>אין events בתנאי הנבחר</p>
+    </div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = events.map(e => {
+    const rowClass = e.level === 'CRITICAL' ? 'critical' : e.level === 'HIGH' ? 'high' : '';
+    const hookChip = chipHTML(e.hook_type);
+    const reason   = e.reason
+      ? `<span class="reason alert">${esc(e.reason)}</span>`
+      : `<span class="reason">${esc((e.input_summary||'').slice(0,60))}</span>`;
+    const session  = (e.session_id || '').slice(0, 8) + '…';
+
+    return `<tr class="${rowClass}">
+      <td>${badgeHTML(e.level)}</td>
+      <td>${hookChip}</td>
+      <td><code style="font-size:12px;color:var(--accent)">${esc(e.tool_name)}</code></td>
+      <td>${reason}</td>
+      <td><span style="font-size:11px;color:var(--muted);font-family:monospace">${session}</span></td>
+      <td><span class="ts">${fmtTs(e.ts)}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function badgeHTML(level) {
+  return `<span class="badge ${level}">${level}</span>`;
+}
+
+function chipHTML(hookType) {
+  const cls = hookType === 'PreToolUse' ? 'pre' : hookType === 'PostToolUse' ? 'post' : '';
+  const lbl = hookType === 'PreToolUse' ? 'Pre' : hookType === 'PostToolUse' ? 'Post' : hookType || '?';
+  return `<span class="chip ${cls}">${lbl}</span>`;
+}
+
+function fmtTs(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleTimeString('he-IL', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    timeZone: 'Asia/Jerusalem'
+  });
+}
+
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function setOnline(on) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-txt');
+  dot.style.background   = on ? 'var(--green)'  : 'var(--red)';
+  dot.style.boxShadow    = on ? '0 0 8px var(--green)' : '0 0 8px var(--red)';
+  dot.style.animation    = on ? 'pulse 2s infinite' : 'none';
+  txt.textContent        = on ? 'Collector פעיל' : 'Collector לא מגיב';
+  txt.style.color        = on ? 'var(--green)'  : 'var(--red)';
+}
+
+// ── Filter ───────────────────────────────────────────────────────────────────
+
+function setFilter(f) {
+  currentFilter = f;
+  ['ALL','CRITICAL','HIGH','INFO'].forEach(k => {
+    const id = 'f-' + k.toLowerCase();
+    document.getElementById(id)?.classList.toggle('active', k === f);
+  });
+  loadEvents();
+}
+
+// ── Auto-refresh ─────────────────────────────────────────────────────────────
+
+function startRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(loadAll, REFRESH_S * 1000);
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+
+loadAll();
+startRefresh();
+</script>
+</body>
+</html>

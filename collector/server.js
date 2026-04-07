@@ -83,6 +83,7 @@ app.post('/event', (req, res) => {
     session_id:     ev.session_id    || 'unknown',
     level:          ev.level         || 'INFO',
     reason:         ev.reason        || null,
+    rule_type:      ev.rule_type     || null,
     input_summary:  ev.input_summary  || null,
     output_summary: ev.output_summary || null,
     telegram_sent:  false,
@@ -126,11 +127,15 @@ app.get('/stats', (req, res) => {
   db.count({ level: 'CRITICAL' }, (e2, critical) => {
   db.count({ level: 'HIGH' },     (e3, high)     => {
     db.find({}).sort({ ts: -1 }).limit(1).exec((e4, last) => {
-      res.json({
-        total:    total    || 0,
-        critical: critical || 0,
-        high:     high     || 0,
-        last_ts:  last[0]  ? last[0].ts : null,
+      db.find({}, { session_id: 1, _id: 0 }, (e5, docs) => {
+        const sessions = new Set((docs || []).map(d => d.session_id)).size;
+        res.json({
+          total:    total    || 0,
+          critical: critical || 0,
+          high:     high     || 0,
+          sessions: sessions || 0,
+          last_ts:  last[0]  ? last[0].ts : null,
+        });
       });
     });
   });});});
