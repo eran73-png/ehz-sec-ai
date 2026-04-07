@@ -321,10 +321,16 @@
         <span style="color:var(--muted2);">● <span id="cnt-pending">0</span> ממתין</span>
       </div>
     </div>
-    <!-- Last updated -->
-    <div style="text-align:center;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 16px;">
-      <div style="font-size:10px;color:var(--muted2);margin-bottom:3px;">עדכון אחרון</div>
-      <div style="font-size:13px;font-weight:700;color:var(--green);" id="last-updated">אפריל 2026</div>
+    <!-- Last updated + health check -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="text-align:center;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 16px;">
+        <div style="font-size:10px;color:var(--muted2);margin-bottom:3px;">עדכון אחרון</div>
+        <div style="font-size:13px;font-weight:700;color:var(--green);" id="last-updated">אפריל 2026</div>
+      </div>
+      <div style="text-align:center;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:10px;padding:10px 16px;">
+        <div style="font-size:10px;color:var(--muted2);margin-bottom:3px;">בדיקת תקינות</div>
+        <div style="font-size:13px;font-weight:700;color:var(--accent);">✅ 12/12 — 07.04.2026</div>
+      </div>
     </div>
   </div>
 
@@ -1717,38 +1723,38 @@
   <div class="tasks-grid">
     <div class="task-cell">
       <div class="task-num">A-01</div>
-      <div class="task-title">Agent Hook</div>
-      <div class="task-desc">סקריפט hook.js שרץ ב-PreToolUse / PostToolUse. בדיקת חוקים מקומית, שליחה async ל-Collector.</div>
+      <div class="task-title">✅ Agent Hook</div>
+      <div class="task-desc">סקריפט hook.js שרץ ב-PreToolUse / PostToolUse. בדיקת חוקים מקומית, שליחה async ל-Collector. Hardening level aware.</div>
       <div class="task-tags"><span class="tag">Node.js</span><span class="tag">hooks</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">A-02</div>
-      <div class="task-title">Anomaly Rules Engine</div>
-      <div class="task-desc">חוקי זיהוי: curl|sh, rm -rf /, sensitive files, IP URLs, base64 decode, netcat. CRITICAL / HIGH / MEDIUM / LOW.</div>
+      <div class="task-title">✅ Anomaly Rules Engine</div>
+      <div class="task-desc">19 חוקים — curl|sh, rm -rf /, sensitive files, IP URLs, base64, netcat, WebDAV. CRITICAL/HIGH/MEDIUM/INFO. 19/19 tests ✅</div>
       <div class="task-tags"><span class="tag">rules.js</span><span class="tag">regex</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">A-03</div>
-      <div class="task-title">Collector — SQLite</div>
-      <div class="task-desc">Express server port 3010. קבלת events, שמירה ב-SQLite, endpoints לDashboard, Telegram alerts.</div>
-      <div class="task-tags"><span class="tag">Express</span><span class="tag">SQLite</span></div>
+      <div class="task-title">✅ Collector — NeDB</div>
+      <div class="task-desc">Express port 3010. קבלת events, שמירה ב-NeDB (pure JS), /events /stats /config, Telegram alerts. בדיקת תקינות: 12/12 ✅</div>
+      <div class="task-tags"><span class="tag">Express</span><span class="tag">NeDB</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">A-04</div>
-      <div class="task-title">Dashboard — Web UI</div>
-      <div class="task-desc">ממשק Checkpoint-style. ציון אבטחה, timeline, events table, פילטרים לפי severity/tool/תאריך.</div>
-      <div class="task-tags"><span class="tag">HTML</span><span class="tag">Chart.js</span></div>
+      <div class="task-title">✅ Dashboard — Web UI</div>
+      <div class="task-desc">Events table, פילטרים, stats cards, auto-refresh 5s, טאב Settings עם Hardening Level selector (0-3).</div>
+      <div class="task-tags"><span class="tag">HTML</span><span class="tag">vanilla JS</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">A-05</div>
-      <div class="task-title">Telegram Alerts</div>
-      <div class="task-desc">התראה מיידית על CRITICAL/HIGH. כולל machine, user, tool, rule שהופעל.</div>
+      <div class="task-title">✅ Telegram Alerts</div>
+      <div class="task-desc">התראה מיידית על CRITICAL/HIGH. כולל tool, rule, session, timestamp. Hardening level 0 = כבוי.</div>
       <div class="task-tags"><span class="tag">Bot API</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">A-06</div>
-      <div class="task-title">Installer — ccsm install</div>
-      <div class="task-desc">סקריפט התקנה אוטומטי: בדיקת Claude Code, כתיבת hooks לsettings.json, יצירת machine token.</div>
+      <div class="task-title">✅ Hardening Levels + Installer</div>
+      <div class="task-desc">4 רמות (OFF/SOFT/STRICT/LOCKDOWN). setup.ps1 מתקין hooks ב-settings.json. Git dual remote — GitHub + Oracle.</div>
       <div class="task-tags"><span class="tag">CLI</span><span class="tag">PowerShell</span></div>
     </div>
   </div>
