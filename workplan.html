@@ -662,8 +662,8 @@
   <div class="phase-header">
     <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#059669);">5</div>
     <div class="phase-info">
-      <h3>שלב 5 — Skill Security + Pre-Install Scanner</h3>
-      <p>סריקת סקילים לפני הפעלה, Hash integrity, Quarantine</p>
+      <h3>שלב 5 — Skill Security + Pre-Install Scanner + Skills Tab</h3>
+      <p>סריקת סקילים לפני הפעלה, Hash integrity, Quarantine — טאב Skills בדשבורד</p>
     </div>
     <div class="phase-status status-future">עתידי</div>
   </div>
@@ -692,10 +692,22 @@
       <div class="task-desc">סקיל שנכשל → הסגר אוטומטי + לא פועל עד אישור ידני.</div>
       <div class="task-tags"><span class="tag">quarantine</span></div>
     </div>
+    <div class="task-cell">
+      <div class="task-num">5.5</div>
+      <div class="task-title">טאב Skills בדשבורד</div>
+      <div class="task-desc">טאב נפרד "Skills" בדשבורד — טבלה עם כל הסקילים שהותקנו/נסרקו: שם, נתיב, תאריך התקנה, תאריך סריקה אחרון, סטטוס (✅ תקין / ⚠️ חשוד / 🔴 בהסגר). מעקב שינויי hash לאורך זמן.</div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">skills tab</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num">5.6</div>
+      <div class="task-title">היסטוריית סריקות לכל Skill</div>
+      <div class="task-desc">לחיצה על Skill בטאב → היסטוריית כל הסריקות שלו: תאריך, מנוע שסרק, תוצאה, hash. מאפשר לזהות מתי Skill השתנה.</div>
+      <div class="task-tags"><span class="tag">history</span><span class="tag">audit trail</span></div>
+    </div>
   </div>
   <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
     <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
-    <span style="color:var(--muted2);"> הכנס "ignore previous instructions" לסקיל → ודא שנחסם → ודא hash alert על שינוי קובץ</span>
+    <span style="color:var(--muted2);"> התקן Skill → ראה אותו מופיע בטאב Skills → שנה קובץ → ראה hash alert + עדכון סטטוס בטאב</span>
   </div>
 </div>
 
