@@ -298,7 +298,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 28px;
-  max-width: 700px;
+  width: 100%;
 }
 .settings-section-title {
   font-size: 11px;
@@ -312,7 +312,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 .level-card {
   border: 2px solid var(--border2);
@@ -530,10 +530,10 @@ body {
   <div class="settings-section-title">🔒 רמת Hardening — רמת ניטור ואיתור איומים</div>
 
   <!-- כרטיסים + טבלה זה לצד זה -->
-  <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+  <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;">
 
     <!-- כרטיסי בחירה -->
-    <div style="flex:1;min-width:300px;">
+    <div style="flex:1 1 0;min-width:280px;">
       <div class="level-grid">
         <div class="level-card l0" onclick="selectLevel(0)" id="lc0">
           <div class="level-num">Level 0</div>
@@ -575,7 +575,7 @@ body {
     </div>
 
     <!-- טבלת הסבר — צד שמאל -->
-    <div style="flex:1;min-width:260px;">
+    <div style="flex:1 1 0;min-width:260px;">
       <div class="settings-section-title">📖 מה קורה בכל רמה</div>
       <table style="width:100%;border-collapse:collapse;font-size:12px;">
         <thead>
