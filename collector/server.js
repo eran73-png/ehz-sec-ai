@@ -141,6 +141,28 @@ app.get('/stats', (req, res) => {
   });});});
 });
 
+// GET /config — return current hardening level
+app.get('/config', (req, res) => {
+  let hardening;
+  try { hardening = require('../config/hardening'); } catch (_) {}
+  if (!hardening) return res.json({ hardening_level: 1 });
+  const level = hardening.getLevel();
+  const cfg   = hardening.getLevelConfig(level);
+  res.json({ hardening_level: level, name: cfg.name, emoji: cfg.emoji, description: cfg.description });
+});
+
+// POST /config — set hardening level
+app.post('/config', (req, res) => {
+  const { hardening_level } = req.body || {};
+  if (hardening_level === undefined) return res.status(400).json({ error: 'missing hardening_level' });
+  let hardening;
+  try { hardening = require('../config/hardening'); } catch (_) {}
+  if (!hardening) return res.status(500).json({ error: 'hardening module not available' });
+  const newLevel = hardening.setLevel(hardening_level);
+  const cfg      = hardening.getLevelConfig(newLevel);
+  res.json({ ok: true, hardening_level: newLevel, name: cfg.name, emoji: cfg.emoji });
+});
+
 // GET /health
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 

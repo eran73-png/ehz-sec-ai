@@ -22,13 +22,19 @@ const PROJECT_DIR   = path.resolve(__dirname, '..');
 const DISABLE_FILE  = path.join(PROJECT_DIR, '.ccsm-disable');
 const LOG_FILE      = path.join(PROJECT_DIR, 'logs', 'hook.log');
 
-// ─── Rules engine (Milestone 2) ─────────────────────────────────────────────
+// ─── Rules + Hardening (Milestones 2 + 4) ───────────────────────────────────
 
 let checkRules;
-try {
-  checkRules = require('./rules').checkRules;
-} catch (_) {
-  checkRules = () => null; // fallback if rules.js missing
+try { checkRules = require('./rules').checkRules; } catch (_) { checkRules = () => null; }
+
+let hardening;
+try { hardening = require('../config/hardening'); } catch (_) { hardening = null; }
+
+function getHardeningLevel() {
+  return hardening ? hardening.getLevel() : 1;
+}
+function shouldSend(level) {
+  return hardening ? hardening.shouldAlert(level) : ['HIGH','CRITICAL'].includes(level);
 }
 
 // ─── Utils ──────────────────────────────────────────────────────────────────
@@ -85,19 +91,25 @@ async function main() {
   const reason   = match ? match.reason   : null;
   const ruleType = match ? match.ruleType : null;
 
+  const hardeningLevel = getHardeningLevel();
+
   const payload = {
-    ts:             Date.now(),
-    hook_type:      hookType,
-    tool_name:      tool,
-    session_id:     session,
+    ts:               Date.now(),
+    hook_type:        hookType,
+    tool_name:        tool,
+    session_id:       session,
     level,
     reason,
-    rule_type:      ruleType,
-    input_summary:  JSON.stringify(event.tool_input   || {}).slice(0, 500),
-    output_summary: JSON.stringify(event.tool_response || {}).slice(0, 500),
+    rule_type:        ruleType,
+    hardening_level:  hardeningLevel,
+    input_summary:    JSON.stringify(event.tool_input   || {}).slice(0, 500),
+    output_summary:   JSON.stringify(event.tool_response || {}).slice(0, 500),
   };
 
-  try { sendToCollector(payload); } catch (e) { log(`send error: ${e.message}`); }
+  // Only send to collector if hardening level says we should alert on this level
+  if (shouldSend(level, hardeningLevel)) {
+    try { sendToCollector(payload); } catch (e) { log(`send error: ${e.message}`); }
+  }
 
   log(`[${level}] ${hookType} → ${tool}${reason ? ' | ' + reason : ''}`);
 

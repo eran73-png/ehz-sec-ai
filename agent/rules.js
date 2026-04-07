@@ -1,13 +1,21 @@
 'use strict';
 /**
  * EHZ-SEC-AI — Anomaly Rules Engine
- * Milestone 2: Signature + Context + Behavioral + Whitelist
+ * Milestone 2+4: Signature + Context + Behavioral + Whitelist + Hardening Levels
  *
  * exports.checkRules(event) → { level, reason, ruleType } | null
  */
 
 const fs   = require('fs');
 const path = require('path');
+
+// ─── Hardening ───────────────────────────────────────────────────────────────
+let hardening;
+try { hardening = require('../config/hardening'); } catch (_) { hardening = null; }
+
+function getExtraRules() {
+  return hardening ? hardening.getExtraRules() : [];
+}
 
 // ─── Whitelist ───────────────────────────────────────────────────────────────
 
@@ -184,6 +192,13 @@ function checkRules(event) {
   // 3. Context rules
   const contextResult = checkContextRules(event);
   if (contextResult) return contextResult;
+
+  // 4. Extra rules (Hardening Level 2+)
+  for (const rule of getExtraRules()) {
+    if (rule.re.test(inputText)) {
+      return { level: rule.level, reason: rule.reason, ruleType: 'hardening' };
+    }
+  }
 
   return null;
 }

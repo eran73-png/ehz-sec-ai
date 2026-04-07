@@ -231,6 +231,92 @@ body {
 .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
 .empty-state p { font-size: 13px; }
 
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 0;
+}
+.tab-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── SETTINGS ── */
+.settings-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 700px;
+}
+.settings-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.level-card {
+  border: 2px solid var(--border2);
+  border-radius: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  background: var(--panel2);
+}
+.level-card:hover { border-color: var(--accent); }
+.level-card.active-level { border-color: var(--accent); background: rgba(14,165,233,0.08); }
+.level-card.active-level.l0 { border-color: #475569; background: rgba(71,85,105,0.1); }
+.level-card.active-level.l1 { border-color: var(--green); background: rgba(16,185,129,0.08); }
+.level-card.active-level.l2 { border-color: var(--yellow); background: rgba(245,158,11,0.08); }
+.level-card.active-level.l3 { border-color: var(--red); background: rgba(239,68,68,0.08); }
+.level-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.level-emoji { font-size: 20px; }
+.level-name { font-size: 16px; font-weight: 800; }
+.level-desc { font-size: 11px; color: var(--muted2); line-height: 1.5; }
+.level-num { position: absolute; top: 10px; left: 14px; font-size: 10px; color: var(--muted); font-family: monospace; }
+.save-btn {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.save-btn:hover { opacity: 0.85; }
+.save-btn:disabled { opacity: 0.4; cursor: default; }
+.settings-status {
+  font-size: 12px;
+  color: var(--green);
+  margin-top: 10px;
+  min-height: 18px;
+}
+
 /* ── FOOTER ── */
 .footer {
   text-align: center;
@@ -320,9 +406,18 @@ body {
   <span class="ts" id="last-ts"></span>
 </div>
 
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" id="tab-events"   onclick="switchTab('events')">📋 Events</button>
+  <button class="tab-btn"        id="tab-settings" onclick="switchTab('settings')">⚙️ הגדרות</button>
+</div>
+
+<!-- EVENTS TAB -->
+<div id="view-events">
+
 <!-- TOOLBAR -->
 <div class="toolbar">
-  <span class="toolbar-title">📋 Events Log</span>
+  <span class="toolbar-title">Events Log</span>
   <button class="filter-btn active"     onclick="setFilter('ALL')"      id="f-all">הכל</button>
   <button class="filter-btn crit"       onclick="setFilter('CRITICAL')" id="f-critical">🚨 Critical</button>
   <button class="filter-btn high"       onclick="setFilter('HIGH')"     id="f-high">⚠️ High</button>
@@ -349,6 +444,52 @@ body {
     </table>
   </div>
 </div>
+
+</div><!-- /view-events -->
+
+<!-- SETTINGS TAB -->
+<div id="view-settings" style="display:none">
+<div class="settings-panel">
+  <div class="settings-section-title">🔒 רמת Hardening — רמת ניטור ואיתור איומים</div>
+  <div class="level-grid">
+    <div class="level-card l0" onclick="selectLevel(0)" id="lc0">
+      <div class="level-num">Level 0</div>
+      <div class="level-card-header">
+        <span class="level-emoji">⚫</span>
+        <span class="level-name">OFF</span>
+      </div>
+      <div class="level-desc">ניטור בלבד — ללא שליחת Telegram ולא alerts. שימושי לדיבוג.</div>
+    </div>
+    <div class="level-card l1" onclick="selectLevel(1)" id="lc1">
+      <div class="level-num">Level 1</div>
+      <div class="level-card-header">
+        <span class="level-emoji">🟢</span>
+        <span class="level-name">SOFT</span>
+      </div>
+      <div class="level-desc">ברירת מחדל. התראות HIGH ו-CRITICAL בלבד. לא שולח INFO ו-MEDIUM.</div>
+    </div>
+    <div class="level-card l2" onclick="selectLevel(2)" id="lc2">
+      <div class="level-num">Level 2</div>
+      <div class="level-card-header">
+        <span class="level-emoji">🟡</span>
+        <span class="level-name">STRICT</span>
+      </div>
+      <div class="level-desc">חוקים מחמירים נוספים: pastebin, telnet, FTP, chmod 777, sudo, /dev/tcp.</div>
+    </div>
+    <div class="level-card l3" onclick="selectLevel(3)" id="lc3">
+      <div class="level-num">Level 3</div>
+      <div class="level-card-header">
+        <span class="level-emoji">🔴</span>
+        <span class="level-name">LOCKDOWN</span>
+      </div>
+      <div class="level-desc">התראה על כל פעולה כולל INFO. מצב חקירה מלאה — verbose מקסימלי.</div>
+    </div>
+  </div>
+
+  <button class="save-btn" id="save-level-btn" onclick="saveLevel()">שמור רמה</button>
+  <div class="settings-status" id="settings-status"></div>
+</div>
+</div><!-- /view-settings -->
 
 <div class="footer">
   EHZ-AI | Claude Code Security Monitor | 054-4825276 &nbsp;•&nbsp;
@@ -505,6 +646,61 @@ function setFilter(f) {
 function startRefresh() {
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = setInterval(loadAll, REFRESH_S * 1000);
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+
+function switchTab(tab) {
+  document.getElementById('view-events').style.display   = tab === 'events'   ? '' : 'none';
+  document.getElementById('view-settings').style.display = tab === 'settings' ? '' : 'none';
+  document.getElementById('tab-events').classList.toggle('active',   tab === 'events');
+  document.getElementById('tab-settings').classList.toggle('active', tab === 'settings');
+  if (tab === 'settings') loadConfig();
+}
+
+// ── Settings ─────────────────────────────────────────────────────────────────
+
+let selectedLevel = 1;
+
+function selectLevel(n) {
+  selectedLevel = n;
+  [0,1,2,3].forEach(i => {
+    document.getElementById('lc' + i).classList.toggle('active-level', i === n);
+  });
+}
+
+async function loadConfig() {
+  try {
+    const cfg = await fetchJSON('/config');
+    selectLevel(cfg.hardening_level ?? 1);
+    document.getElementById('settings-status').textContent = '';
+  } catch(e) {
+    document.getElementById('settings-status').textContent = '⚠️ לא ניתן לטעון הגדרות — Collector לא מגיב';
+    document.getElementById('settings-status').style.color = 'var(--red)';
+  }
+}
+
+async function saveLevel() {
+  const btn = document.getElementById('save-level-btn');
+  const statusEl = document.getElementById('settings-status');
+  btn.disabled = true;
+  statusEl.textContent = '';
+  try {
+    const r = await fetch(API + '/config', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ hardening_level: selectedLevel }),
+    });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    statusEl.style.color   = 'var(--green)';
+    statusEl.textContent   = `✅ נשמר: ${data.emoji} ${data.name} (Level ${data.hardening_level})`;
+  } catch(e) {
+    statusEl.style.color   = 'var(--red)';
+    statusEl.textContent   = '❌ שגיאה בשמירה — Collector לא מגיב';
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────
