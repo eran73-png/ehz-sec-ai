@@ -356,7 +356,17 @@
     </div>
     <div class="ms-row" data-status="pending" data-num="9" data-name="Domain + Kamatera">
     </div>
-    <div class="ms-row" data-status="pending" data-num="10" data-name="Block Mode">
+    <div class="ms-row" data-status="pending" data-num="10" data-name="Block Mode — חסימה + Popup אישור">
+    </div>
+    <!-- MS10 detail -->
+    <div style="margin:0 0 8px 0; padding:12px 16px; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.25); border-radius:8px; font-size:11px; color:#94a3b8;">
+      <b style="color:#a5b4fc">MS10 — Block Mode: שני שלבים</b><br><br>
+      <b style="color:#e2e8f0">שלב א (Scope Alert — בוצע ב-MS6.0):</b><br>
+      התראת HIGH בלוג בכל גישה לקובץ/תיקייה מחוץ ל-allowed_paths — כל כוננים A-Z:<br><br>
+      <b style="color:#e2e8f0">שלב ב (Popup Client — תכנון):</b><br>
+      Hook מזהה גישה מחוץ לפרויקט → פותח חלון Popup (PowerShell MessageBox)<br>
+      ממתין לתשובה → <code style="color:#86efac">approve</code> = continue:true | <code style="color:#fca5a5">deny</code> = continue:false<br>
+      דורש שינוי hook.js לתמוך ב-continue:false (חסימה אמיתית)
     </div>
     <div class="ms-row" data-status="pending" data-num="11" data-name="SIEM + Network">
     </div>
@@ -731,7 +741,7 @@
     <div class="task-cell" style="border-left: 3px solid #22c55e;">
       <div class="task-num" style="color:#22c55e">6.0</div>
       <div class="task-title">Scope Monitor ✅</div>
-      <div class="task-desc">התראה HIGH על גישה לקבצים מחוץ ל-C:/Claude-Repo בכונן C — כלל scope ב-rules.js + allowed_paths ב-whitelist.json</div>
+      <div class="task-desc">התראה HIGH על גישה לכל כונן (A-Z:) מחוץ ל-allowed_paths — כלל scope #5 ב-rules.js | allowed_paths ב-whitelist.json | בדיקות: 6/6 ✅ — 07.04.2026</div>
     </div>
     <div class="task-cell">
       <div class="task-num">6.1</div>
