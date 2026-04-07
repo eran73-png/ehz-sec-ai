@@ -154,38 +154,79 @@ function checkContextRules(event) {
   return null;
 }
 
-// ─── Rule 5: Scope Check — file access outside project ───────────────────────
+// ─── Rule 5: Scope Check — drive + UNC paths outside project ─────────────────
 
 const FILE_SCOPE_TOOLS = ['Read', 'Write', 'Edit', 'Glob', 'Grep'];
+
+/** Normalize slashes + lowercase for comparison */
+function normPath(p) { return p.replace(/\\/g, '/').toLowerCase(); }
+
+/** Is this a drive path? (C:/ D:\ etc.) */
+function isDrivePath(p) { return /^[a-z]:/i.test(p); }
+
+/** Is this a UNC path? (\\server\share or //server/share) */
+function isUNCPath(p) {
+  const n = normPath(p);
+  return n.startsWith('//') && n.length > 4 && !/^\/\/[./]/.test(n);
+}
+
+/** Is a path inside one of the allowed paths? */
+function isPathAllowed(rawPath, allowedPaths) {
+  const n = normPath(rawPath);
+  return allowedPaths.some(ap => n.startsWith(normPath(ap)));
+}
+
+/** Extract all drive + UNC paths from a Bash command string */
+function extractPathsFromCommand(cmd) {
+  const found = [];
+  // Drive paths: X:/ or X:\
+  const driveRe = /[A-Za-z]:[/\\][^\s"'`;|&<>]*/g;
+  let m;
+  while ((m = driveRe.exec(cmd)) !== null) found.push(m[0]);
+  // UNC paths: \\server\ or //server/
+  const uncRe = /(?:[/\\]{2})([a-zA-Z0-9._-]+)[/\\][^\s"'`;|&<>]*/g;
+  while ((m = uncRe.exec(cmd)) !== null) found.push(m[0]);
+  return [...new Set(found)];
+}
 
 function checkScopeRule(event) {
   const tool  = event.tool_name || '';
   const input = event.tool_input || {};
-
-  if (!FILE_SCOPE_TOOLS.includes(tool)) return null;
-
-  const rawPath = input.file_path || input.path || '';
-  if (!rawPath) return null;
-
-  // Normalize: backslash → forward slash
-  const normalized = rawPath.replace(/\\/g, '/');
-
-  // Check paths on any drive letter (A-Z:)
-  if (!/^[A-Za-z]:/i.test(normalized)) return null;
-
-  const wl = getWhitelist();
+  const wl    = getWhitelist();
   const allowedPaths = wl.allowed_paths || [];
 
-  const isAllowed = allowedPaths.some(ap =>
-    normalized.toLowerCase().startsWith(ap.toLowerCase())
-  );
+  // ── File tools: check file_path / path parameter ──
+  if (FILE_SCOPE_TOOLS.includes(tool)) {
+    const rawPath = input.file_path || input.path || '';
+    if (!rawPath) return null;
 
-  if (!isAllowed) {
-    return {
-      level: 'HIGH',
-      reason: `גישה מחוץ לפרויקט — נתיב: ${rawPath}`,
-      ruleType: 'scope'
-    };
+    // Only check drive paths and UNC paths
+    if (!isDrivePath(rawPath) && !isUNCPath(rawPath)) return null;
+
+    if (!isPathAllowed(rawPath, allowedPaths)) {
+      const label = isUNCPath(rawPath) ? 'UNC' : 'כונן';
+      return {
+        level:    'HIGH',
+        reason:   `גישה מחוץ לפרויקט (${label}) — נתיב: ${rawPath}`,
+        ruleType: 'scope',
+      };
+    }
+  }
+
+  // ── Bash: extract all paths from the command string ──
+  if (tool === 'Bash') {
+    const cmd   = input.command || '';
+    const paths = extractPathsFromCommand(cmd);
+    for (const p of paths) {
+      if (!isPathAllowed(p, allowedPaths)) {
+        const label = isUNCPath(p) ? 'UNC' : 'כונן';
+        return {
+          level:    'HIGH',
+          reason:   `גישה מחוץ לפרויקט (Bash ${label}) — נתיב: ${p}`,
+          ruleType: 'scope',
+        };
+      }
+    }
   }
 
   return null;
