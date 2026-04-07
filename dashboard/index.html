@@ -528,87 +528,92 @@ body {
 <div id="view-settings" style="display:none">
 <div class="settings-panel">
   <div class="settings-section-title">🔒 רמת Hardening — רמת ניטור ואיתור איומים</div>
-  <div class="level-grid">
-    <div class="level-card l0" onclick="selectLevel(0)" id="lc0">
-      <div class="level-num">Level 0</div>
-      <div class="level-card-header">
-        <span class="level-emoji">⚫</span>
-        <span class="level-name">OFF</span>
-      </div>
-      <div class="level-desc">ניטור בלבד — ללא שליחת Telegram ולא alerts. שימושי לדיבוג.</div>
-    </div>
-    <div class="level-card l1" onclick="selectLevel(1)" id="lc1">
-      <div class="level-num">Level 1</div>
-      <div class="level-card-header">
-        <span class="level-emoji">🟢</span>
-        <span class="level-name">SOFT</span>
-      </div>
-      <div class="level-desc">ברירת מחדל. התראות HIGH ו-CRITICAL בלבד. לא שולח INFO ו-MEDIUM.</div>
-    </div>
-    <div class="level-card l2" onclick="selectLevel(2)" id="lc2">
-      <div class="level-num">Level 2</div>
-      <div class="level-card-header">
-        <span class="level-emoji">🟡</span>
-        <span class="level-name">STRICT</span>
-      </div>
-      <div class="level-desc">חוקים מחמירים נוספים: pastebin, telnet, FTP, chmod 777, sudo, /dev/tcp.</div>
-    </div>
-    <div class="level-card l3" onclick="selectLevel(3)" id="lc3">
-      <div class="level-num">Level 3</div>
-      <div class="level-card-header">
-        <span class="level-emoji">🔴</span>
-        <span class="level-name">LOCKDOWN</span>
-      </div>
-      <div class="level-desc">התראה על כל פעולה כולל INFO. מצב חקירה מלאה — verbose מקסימלי.</div>
-    </div>
-  </div>
 
-  <button class="save-btn" id="save-level-btn" onclick="saveLevel()">שמור רמה</button>
-  <div class="settings-status" id="settings-status"></div>
+  <!-- כרטיסים + טבלה זה לצד זה -->
+  <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
 
-  <!-- Legend table -->
-  <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;">
-    <div class="settings-section-title">📖 מה קורה בכל רמה</div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <thead>
-        <tr style="border-bottom:1px solid var(--border2);">
-          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">רמה</th>
-          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">Telegram</th>
-          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">חוקים נוספים</th>
-          <th style="text-align:right;padding:7px 10px;color:var(--muted);font-weight:700;letter-spacing:1px;">שימוש מומלץ</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-          <td style="padding:9px 10px;">⚫ OFF</td>
-          <td style="padding:9px 10px;color:var(--muted);">לא שולח כלום</td>
-          <td style="padding:9px 10px;color:var(--muted);">בסיסיים בלבד</td>
-          <td style="padding:9px 10px;color:var(--muted);">דיבוג / פיתוח</td>
-        </tr>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(16,185,129,0.04);">
-          <td style="padding:9px 10px;">🟢 SOFT</td>
-          <td style="padding:9px 10px;color:var(--green);">HIGH + CRITICAL</td>
-          <td style="padding:9px 10px;color:var(--muted);">בסיסיים בלבד</td>
-          <td style="padding:9px 10px;color:var(--green);">שימוש יומיומי ✓</td>
-        </tr>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-          <td style="padding:9px 10px;">🟡 STRICT</td>
-          <td style="padding:9px 10px;color:var(--yellow);">HIGH + CRITICAL</td>
-          <td style="padding:9px 10px;color:var(--yellow);">telnet, sudo, chmod, pastebin…</td>
-          <td style="padding:9px 10px;color:var(--muted);">סביבה רגישה</td>
-        </tr>
-        <tr>
-          <td style="padding:9px 10px;">🔴 LOCKDOWN</td>
-          <td style="padding:9px 10px;color:var(--red);">הכל כולל INFO</td>
-          <td style="padding:9px 10px;color:var(--red);">כל פעולה מדווחת</td>
-          <td style="padding:9px 10px;color:var(--muted);">חקירת אירוע</td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="margin-top:12px;font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">
-      ℹ️ <b style="color:var(--muted2);">הערה:</b> כל הרמות מנטרות ושומרות events ב-DB — ההבדל הוא רק <b style="color:var(--muted2);">מה נשלח ל-Telegram</b> ואיזה חוקים פעילים.<br>
-      🔒 <b style="color:var(--muted2);">שלב א הוא ניטור בלבד</b> — Claude Code לא נחסם. חסימה תופעל ב-Milestone 10 (Block Mode).
+    <!-- כרטיסי בחירה -->
+    <div style="flex:1;min-width:300px;">
+      <div class="level-grid">
+        <div class="level-card l0" onclick="selectLevel(0)" id="lc0">
+          <div class="level-num">Level 0</div>
+          <div class="level-card-header">
+            <span class="level-emoji">⚫</span>
+            <span class="level-name">OFF</span>
+          </div>
+          <div class="level-desc">ניטור בלבד — ללא שליחת Telegram ולא alerts. שימושי לדיבוג.</div>
+        </div>
+        <div class="level-card l1" onclick="selectLevel(1)" id="lc1">
+          <div class="level-num">Level 1</div>
+          <div class="level-card-header">
+            <span class="level-emoji">🟢</span>
+            <span class="level-name">SOFT</span>
+          </div>
+          <div class="level-desc">ברירת מחדל. התראות HIGH ו-CRITICAL בלבד. לא שולח INFO ו-MEDIUM.</div>
+        </div>
+        <div class="level-card l2" onclick="selectLevel(2)" id="lc2">
+          <div class="level-num">Level 2</div>
+          <div class="level-card-header">
+            <span class="level-emoji">🟡</span>
+            <span class="level-name">STRICT</span>
+          </div>
+          <div class="level-desc">חוקים מחמירים נוספים: pastebin, telnet, FTP, chmod 777, sudo, /dev/tcp.</div>
+        </div>
+        <div class="level-card l3" onclick="selectLevel(3)" id="lc3">
+          <div class="level-num">Level 3</div>
+          <div class="level-card-header">
+            <span class="level-emoji">🔴</span>
+            <span class="level-name">LOCKDOWN</span>
+          </div>
+          <div class="level-desc">התראה על כל פעולה כולל INFO. מצב חקירה מלאה — verbose מקסימלי.</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+        <button class="save-btn" id="save-level-btn" onclick="saveLevel()">שמור רמה</button>
+        <div class="settings-status" id="settings-status"></div>
+      </div>
     </div>
+
+    <!-- טבלת הסבר — צד שמאל -->
+    <div style="flex:1;min-width:260px;">
+      <div class="settings-section-title">📖 מה קורה בכל רמה</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border2);">
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">רמה</th>
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">Telegram</th>
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">שימוש מומלץ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:8px;">⚫ OFF</td>
+            <td style="padding:8px;color:var(--muted);">כלום</td>
+            <td style="padding:8px;color:var(--muted);">דיבוג / פיתוח</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(16,185,129,0.04);">
+            <td style="padding:8px;">🟢 SOFT</td>
+            <td style="padding:8px;color:var(--green);">HIGH + CRITICAL</td>
+            <td style="padding:8px;color:var(--green);">שימוש יומיומי ✓</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:8px;">🟡 STRICT</td>
+            <td style="padding:8px;color:var(--yellow);">HIGH + CRITICAL</td>
+            <td style="padding:8px;color:var(--muted);">סביבה רגישה</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;">🔴 LOCKDOWN</td>
+            <td style="padding:8px;color:var(--red);">הכל כולל INFO</td>
+            <td style="padding:8px;color:var(--muted);">חקירת אירוע</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+        ℹ️ כל הרמות שומרות ב-DB — ההבדל הוא <b style="color:var(--muted2);">מה נשלח ל-Telegram</b>.<br>
+        🔒 <b style="color:var(--muted2);">ניטור בלבד</b> — חסימה תופעל ב-Milestone 10.
+      </div>
+    </div>
+
   </div>
 
   <!-- Log Retention -->
