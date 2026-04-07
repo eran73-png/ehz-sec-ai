@@ -179,13 +179,13 @@ function isPathAllowed(rawPath, allowedPaths) {
 /** Extract all drive + UNC paths from a Bash command string */
 function extractPathsFromCommand(cmd) {
   const found = [];
-  // Drive paths: X:/ or X:\
-  const driveRe = /[A-Za-z]:[/\\][^\s"'`;|&<>]*/g;
+  // Drive paths: X:/ or X:\ — negative lookbehind: not preceded by a letter (avoids http://)
+  const driveRe = /(?<![a-zA-Z])([A-Za-z]:[/\\][^\s"'`;|&<>]*)/g;
   let m;
-  while ((m = driveRe.exec(cmd)) !== null) found.push(m[0]);
-  // UNC paths: \\server\ or //server/
-  const uncRe = /(?:[/\\]{2})([a-zA-Z0-9._-]+)[/\\][^\s"'`;|&<>]*/g;
-  while ((m = uncRe.exec(cmd)) !== null) found.push(m[0]);
+  while ((m = driveRe.exec(cmd)) !== null) found.push(m[1]);
+  // UNC paths: \\server\ or //server/ — exclude http://, https://, ftp://
+  const uncRe = /(?<![a-zA-Z:])([/\\]{2})([a-zA-Z0-9._-]+)[/\\][^\s"'`;|&<>]*/g;
+  while ((m = uncRe.exec(cmd)) !== null) found.push(m[0].replace(/^[^/\\]*/,''));
   return [...new Set(found)];
 }
 
