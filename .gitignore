@@ -7,3 +7,4 @@ node_modules/
 .ccsm-disable
 config/project-scope.json
 config/machine.token
+agent/skill-registry.json

@@ -163,6 +163,48 @@ app.post('/config', (req, res) => {
   res.json({ ok: true, hardening_level: newLevel, name: cfg.name, emoji: cfg.emoji });
 });
 
+// ─── Skills (Milestone 5) ─────────────────────────────────────────────────────
+
+let skillScanner;
+try { skillScanner = require('../agent/skill-scanner'); } catch (_) {}
+
+// GET /skills — last scan results (from registry file)
+app.get('/skills', (req, res) => {
+  if (!skillScanner) return res.status(500).json({ error: 'skill-scanner not available' });
+  try {
+    const registryPath = require('path').join(__dirname, '..', 'agent', 'skill-registry.json');
+    const registry = require('fs').existsSync(registryPath)
+      ? JSON.parse(require('fs').readFileSync(registryPath, 'utf8'))
+      : {};
+    res.json({ skills: registry, count: Object.keys(registry).length });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /skills/scan — run a fresh scan now
+app.post('/skills/scan', (req, res) => {
+  if (!skillScanner) return res.status(500).json({ error: 'skill-scanner not available' });
+  try {
+    const result = skillScanner.scanAllSkills();
+
+    // Send Telegram for CRITICAL or CHANGED skills
+    result.skills.forEach(s => {
+      if (['CRITICAL', 'SUSPICIOUS'].includes(s.status)) {
+        const emoji = s.status === 'CRITICAL' ? '🚨' : '🔶';
+        sendTelegram(`${emoji} <b>EHZ-SEC-AI — Skill Alert</b>\n🔧 Skill: <code>${s.name}</code>\n📌 סטטוס: ${s.status}\n⚡ ${s.findings.map(f=>f.reason).join(', ')}`);
+      }
+      if (s.hash_changed) {
+        sendTelegram(`⚠️ <b>EHZ-SEC-AI — Skill Changed</b>\n🔧 Skill: <code>${s.name}</code>\n📌 Hash השתנה — ייתכן שהסקיל עודכן או שונה`);
+      }
+    });
+
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // GET /health
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 

@@ -231,6 +231,43 @@ body {
 .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
 .empty-state p { font-size: 13px; }
 
+/* ── SKILLS TAB ── */
+.skills-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px; flex-wrap: wrap; gap: 10px;
+}
+.scan-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none; color: #fff; font-size: 12px; font-weight: 700;
+  padding: 8px 18px; border-radius: 8px; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.scan-btn:hover { opacity: 0.85; }
+.scan-btn:disabled { opacity: 0.5; cursor: default; }
+.skills-summary {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.skill-stat {
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 14px; font-size: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.skills-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.skills-table thead tr { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border2); }
+.skills-table th { padding: 10px 14px; text-align: right; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.skills-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+.skills-table tbody tr:last-child td { border-bottom: none; }
+.skills-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+.skill-status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 5px; font-size: 11px; font-weight: 700; }
+.skill-status.OK         { background: rgba(16,185,129,0.12);  color: var(--green);  border: 1px solid rgba(16,185,129,0.3); }
+.skill-status.NEW        { background: rgba(14,165,233,0.12);  color: var(--accent); border: 1px solid rgba(14,165,233,0.3); }
+.skill-status.CHANGED    { background: rgba(245,158,11,0.12);  color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+.skill-status.SUSPICIOUS { background: rgba(249,115,22,0.12);  color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+.skill-status.CRITICAL   { background: rgba(239,68,68,0.12);   color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+.skill-finding { font-size: 11px; color: var(--orange); margin-top: 2px; }
+.scan-note { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.symlink-badge { font-size: 9px; background: rgba(139,92,246,0.12); color: var(--purple); border: 1px solid rgba(139,92,246,0.2); padding: 1px 6px; border-radius: 3px; margin-right: 5px; }
+
 /* ── TABS ── */
 .tabs {
   display: flex;
@@ -409,6 +446,7 @@ body {
 <!-- TABS -->
 <div class="tabs">
   <button class="tab-btn active" id="tab-events"   onclick="switchTab('events')">📋 Events</button>
+  <button class="tab-btn"        id="tab-skills"   onclick="switchTab('skills')">🔍 Skills</button>
   <button class="tab-btn"        id="tab-settings" onclick="switchTab('settings')">⚙️ הגדרות</button>
 </div>
 
@@ -446,6 +484,45 @@ body {
 </div>
 
 </div><!-- /view-events -->
+
+<!-- SKILLS TAB -->
+<div id="view-skills" style="display:none">
+<div class="skills-header">
+  <span style="font-size:13px;font-weight:700;color:var(--muted2);">🔍 Skills Security Scanner</span>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="scan-note" id="skills-last-scan">טרם נסרק</span>
+    <button class="scan-btn" id="scan-btn" onclick="runScan()">▶ סרוק עכשיו</button>
+  </div>
+</div>
+
+<div class="skills-summary" id="skills-summary" style="display:none">
+  <div class="skill-stat">📦 סה"כ: <b id="sk-total">—</b></div>
+  <div class="skill-stat" style="color:var(--green)">✅ תקין: <b id="sk-ok">—</b></div>
+  <div class="skill-stat" style="color:var(--accent)">🆕 חדש: <b id="sk-new">—</b></div>
+  <div class="skill-stat" style="color:var(--yellow)">🔄 שונה: <b id="sk-changed">—</b></div>
+  <div class="skill-stat" style="color:var(--orange)">🔶 חשוד: <b id="sk-suspicious">—</b></div>
+  <div class="skill-stat" style="color:var(--red)">🚨 קריטי: <b id="sk-critical">—</b></div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-scroll">
+    <table class="skills-table">
+      <thead>
+        <tr>
+          <th>סקיל</th>
+          <th>סטטוס</th>
+          <th>ממצאים</th>
+          <th>Hash</th>
+          <th>סריקה אחרונה</th>
+        </tr>
+      </thead>
+      <tbody id="skills-tbody">
+        <tr><td colspan="5"><div class="loading">לחץ "סרוק עכשיו" להפעלת סריקה</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div><!-- /view-skills -->
 
 <!-- SETTINGS TAB -->
 <div id="view-settings" style="display:none">
@@ -696,11 +773,102 @@ function startRefresh() {
 // ── Tabs ─────────────────────────────────────────────────────────────────────
 
 function switchTab(tab) {
-  document.getElementById('view-events').style.display   = tab === 'events'   ? '' : 'none';
-  document.getElementById('view-settings').style.display = tab === 'settings' ? '' : 'none';
-  document.getElementById('tab-events').classList.toggle('active',   tab === 'events');
-  document.getElementById('tab-settings').classList.toggle('active', tab === 'settings');
+  ['events','skills','settings'].forEach(t => {
+    document.getElementById('view-' + t).style.display = t === tab ? '' : 'none';
+    document.getElementById('tab-'  + t).classList.toggle('active', t === tab);
+  });
   if (tab === 'settings') loadConfig();
+  if (tab === 'skills')   loadSkillsRegistry();
+}
+
+// ── Skills ────────────────────────────────────────────────────────────────────
+
+let lastScanResult = null;
+
+async function loadSkillsRegistry() {
+  try {
+    const data = await fetchJSON('/skills');
+    const reg  = data.skills || {};
+    const names = Object.keys(reg);
+    if (!names.length) return;
+
+    // Build fake skill objects from registry for display
+    const skills = names.map(name => ({
+      name,
+      status:       'OK',
+      hash:         reg[name].hash,
+      findings:     [],
+      is_symlink:   false,
+      last_scanned: reg[name].last_scanned,
+    }));
+    renderSkillsTable(skills);
+  } catch(_) {}
+}
+
+async function runScan() {
+  const btn = document.getElementById('scan-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ סורק...';
+  document.getElementById('skills-tbody').innerHTML =
+    '<tr><td colspan="5"><div class="loading">סריקה בתהליך...</div></td></tr>';
+
+  try {
+    const r = await fetch(API + '/skills/scan', { method: 'POST' });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    lastScanResult = data;
+
+    // Update summary
+    const s = data.summary || {};
+    document.getElementById('skills-summary').style.display = 'flex';
+    document.getElementById('sk-total').textContent     = s.total     ?? 0;
+    document.getElementById('sk-ok').textContent        = s.ok        ?? 0;
+    document.getElementById('sk-new').textContent       = s.new       ?? 0;
+    document.getElementById('sk-changed').textContent   = s.changed   ?? 0;
+    document.getElementById('sk-suspicious').textContent= s.suspicious?? 0;
+    document.getElementById('sk-critical').textContent  = s.critical  ?? 0;
+
+    document.getElementById('skills-last-scan').textContent =
+      'סריקה אחרונה: ' + new Date(s.scanned_at).toLocaleTimeString('he-IL', { timeZone: 'Asia/Jerusalem' });
+
+    renderSkillsTable(data.skills || []);
+  } catch(e) {
+    document.getElementById('skills-tbody').innerHTML =
+      '<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>שגיאה בסריקה — Collector לא מגיב</p></div></td></tr>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '▶ סרוק עכשיו';
+  }
+}
+
+function renderSkillsTable(skills) {
+  const tbody = document.getElementById('skills-tbody');
+  if (!skills.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="icon">📦</div><p>לא נמצאו סקילים</p></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = skills.map(s => {
+    const statusHtml = `<span class="skill-status ${s.status}">${statusIcon(s.status)} ${s.status}</span>`;
+    const symlink    = s.is_symlink ? '<span class="symlink-badge">symlink</span>' : '';
+    const findings   = s.findings && s.findings.length
+      ? s.findings.map(f => `<div class="skill-finding">⚡ [${f.level}] ${esc(f.reason)} — ${esc(f.file)}</div>`).join('')
+      : '';
+    const hash       = s.hash ? `<span style="font-family:monospace;font-size:11px;color:var(--muted)">${s.hash}</span>` : '—';
+    const ts         = s.last_scanned ? new Date(s.last_scanned).toLocaleTimeString('he-IL', { timeZone: 'Asia/Jerusalem', hour:'2-digit', minute:'2-digit' }) : '—';
+
+    return `<tr>
+      <td>${symlink}<b style="color:var(--text)">${esc(s.name)}</b></td>
+      <td>${statusHtml}</td>
+      <td>${findings || '<span style="color:var(--muted);font-size:11px;">—</span>'}</td>
+      <td>${hash}</td>
+      <td><span class="ts">${ts}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function statusIcon(status) {
+  return { OK:'✅', NEW:'🆕', CHANGED:'🔄', SUSPICIOUS:'🔶', CRITICAL:'🚨', ERROR:'❌' }[status] || '?';
 }
 
 // ── Settings ─────────────────────────────────────────────────────────────────
