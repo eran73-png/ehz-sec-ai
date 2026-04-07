@@ -154,6 +154,43 @@ function checkContextRules(event) {
   return null;
 }
 
+// ─── Rule 5: Scope Check — file access outside project ───────────────────────
+
+const FILE_SCOPE_TOOLS = ['Read', 'Write', 'Edit', 'Glob', 'Grep'];
+
+function checkScopeRule(event) {
+  const tool  = event.tool_name || '';
+  const input = event.tool_input || {};
+
+  if (!FILE_SCOPE_TOOLS.includes(tool)) return null;
+
+  const rawPath = input.file_path || input.path || '';
+  if (!rawPath) return null;
+
+  // Normalize: backslash → forward slash
+  const normalized = rawPath.replace(/\\/g, '/');
+
+  // Only check paths on C: drive
+  if (!/^[Cc]:/i.test(normalized)) return null;
+
+  const wl = getWhitelist();
+  const allowedPaths = wl.allowed_paths || [];
+
+  const isAllowed = allowedPaths.some(ap =>
+    normalized.toLowerCase().startsWith(ap.toLowerCase())
+  );
+
+  if (!isAllowed) {
+    return {
+      level: 'HIGH',
+      reason: `גישה מחוץ לפרויקט — נתיב: ${rawPath}`,
+      ruleType: 'scope'
+    };
+  }
+
+  return null;
+}
+
 // ─── Main Export ─────────────────────────────────────────────────────────────
 
 /**
@@ -199,6 +236,10 @@ function checkRules(event) {
       return { level: rule.level, reason: rule.reason, ruleType: 'hardening' };
     }
   }
+
+  // 5. Scope check — file access outside project paths
+  const scopeResult = checkScopeRule(event);
+  if (scopeResult) return scopeResult;
 
   return null;
 }

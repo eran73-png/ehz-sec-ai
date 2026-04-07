@@ -50,5 +50,11 @@
     "C:/Claude-Repo/agents/EHZ-SEC-AI/",
     "C:/Users/Eran/.claude/",
     "C:/Users/Eran/AppData/Local/Temp/"
+  ],
+
+  "allowed_paths": [
+    "C:/Claude-Repo",
+    "C:/Users/Eran/.claude",
+    "C:/Users/Eran/AppData/Local/Temp"
   ]
 }
