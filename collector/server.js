@@ -308,149 +308,147 @@ app.get('/audit/export', async (req, res) => {
     const ws = wb.addWorksheet('דוח אבטחה — EHZ-SEC-AI');
     ws.views = [{ rightToLeft: true, showGridLines: false }];
 
-    // ── Title row ──
-    ws.mergeCells('A1:G1');
+    // ── Title row (A:E = 5 cols) ──
+    ws.mergeCells('A1:E1');
     const titleCell = ws.getCell('A1');
     titleCell.value = '🛡️  EHZ-SEC-AI — דוח File Audit';
     titleCell.font  = { bold: true, size: 16, color: { argb: 'FFFFFFFF' } };
     titleCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0D1424' } };
     titleCell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'rightToLeft' };
-    ws.getRow(1).height = 36;
+    ws.getRow(1).height = 38;
 
     // ── Subtitle / scan info ──
-    ws.mergeCells('A2:G2');
+    ws.mergeCells('A2:E2');
     const subCell = ws.getCell('A2');
     subCell.value = `תיקייה: ${s.scan_path || ''}   |   תאריך: ${s.scanned_at ? new Date(s.scanned_at).toLocaleString('he-IL') : ''}`;
     subCell.font  = { size: 10, color: { argb: 'FF94A3B8' } };
     subCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF111827' } };
-    subCell.alignment = { horizontal: 'center', readingOrder: 'rightToLeft' };
+    subCell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'rightToLeft' };
+    ws.getRow(2).height = 20;
 
-    // ── Summary stats row ──
-    ws.mergeCells('A3:G3');
-    ws.getCell('A3').value = '';
-    ws.getRow(3).height = 8;
+    // ── Spacer ──
+    ws.mergeCells('A3:E3');
+    ws.getCell('A3').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0D1424' } };
+    ws.getRow(3).height = 6;
 
-    const statLabels = ['סה"כ קבצים', 'תקין ✅', 'MEDIUM ⚠️', 'HIGH 🔶', 'CRITICAL 🚨', 'דולגו', ''];
-    const statValues = [s.total_files, s.clean, s.medium, s.high, s.critical, s.skipped, ''];
-    const statBgColors = ['FF1E293B','FF064E3B','FF451A03','FF431407','FF450A0A','FF1E293B','FF0D1424'];
-    const statTxtColors= ['FFFFFFFF','FF10B981','FFF59E0B','FFF97316','FFEF4444','FF64748B','FFFFFFFF'];
+    // ── Summary stats — 5 cards matching 5 columns ──
+    const statLabels   = ['סה"כ קבצים', '✅ תקין', '⚠️ MEDIUM', '🔶 HIGH', '🚨 CRITICAL'];
+    const statValues   = [s.total_files, s.clean, s.medium, s.high, s.critical];
+    const statBgColors = ['FF1E293B', 'FF064E3B', 'FF78350F', 'FF431407', 'FF450A0A'];
+    const statTxtColors= ['FFFFFFFF', 'FF10B981', 'FFF59E0B', 'FFF97316', 'FFEF4444'];
+    const statCols     = ['A','B','C','D','E'];
 
-    // Labels row
-    ws.getRow(4).height = 22;
+    ws.getRow(4).height = 20;
+    ws.getRow(5).height = 32;
     statLabels.forEach((lbl, i) => {
-      const col = String.fromCharCode(65 + i); // A-G
-      const cell = ws.getCell(`${col}4`);
-      cell.value = lbl;
-      cell.font  = { bold: true, size: 10, color: { argb: statTxtColors[i] } };
-      cell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: statBgColors[i] } };
-      cell.alignment = { horizontal: 'center', vertical: 'middle' };
-    });
-    // Values row
-    ws.getRow(5).height = 28;
-    statValues.forEach((val, i) => {
-      const col = String.fromCharCode(65 + i);
-      const cell = ws.getCell(`${col}5`);
-      cell.value = val;
-      cell.font  = { bold: true, size: 16, color: { argb: statTxtColors[i] } };
-      cell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: statBgColors[i] } };
-      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      const lCell = ws.getCell(`${statCols[i]}4`);
+      lCell.value = lbl;
+      lCell.font  = { bold: true, size: 9, color: { argb: statTxtColors[i] } };
+      lCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: statBgColors[i] } };
+      lCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      const vCell = ws.getCell(`${statCols[i]}5`);
+      vCell.value = statValues[i];
+      vCell.font  = { bold: true, size: 18, color: { argb: statTxtColors[i] } };
+      vCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: statBgColors[i] } };
+      vCell.alignment = { horizontal: 'center', vertical: 'middle' };
     });
 
     // Spacer
     ws.getRow(6).height = 10;
 
-    // ── Table header ──
+    // ── Table header — 5 columns: קובץ | תיקייה | סיכון | ציון | ממצאים ──
     const HDR_ROW = 7;
-    const headers = ['קובץ', 'תיקייה', 'סיכון', 'ציון', 'ממצא', 'רמה', 'שורה'];
-    const widths  = [40, 25, 10, 7, 38, 10, 7];
-    const keys    = ['A','B','C','D','E','F','G'];
-    headers.forEach((h, i) => {
-      ws.getColumn(keys[i]).width = widths[i];
-      const cell = ws.getCell(`${keys[i]}${HDR_ROW}`);
-      cell.value = h;
+    const COLS = [
+      { key: 'A', header: 'קובץ',     width: 32 },
+      { key: 'B', header: 'תיקייה',   width: 38 },
+      { key: 'C', header: 'סיכון',    width: 12 },
+      { key: 'D', header: 'ציון',     width:  8 },
+      { key: 'E', header: 'ממצאים',   width: 55 },
+    ];
+    COLS.forEach(({ key, header, width }) => {
+      ws.getColumn(key).width = width;
+      const cell = ws.getCell(`${key}${HDR_ROW}`);
+      cell.value = header;
       cell.font  = { bold: true, size: 11, color: { argb: 'FFFFFFFF' } };
       cell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A5F' } };
       cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'rightToLeft' };
-      cell.border = { bottom: { style: 'medium', color: { argb: 'FF0EA5E9' } } };
+      cell.border = {
+        top:    { style: 'thin', color: { argb: 'FF0EA5E9' } },
+        bottom: { style: 'medium', color: { argb: 'FF0EA5E9' } },
+        left:   { style: 'thin', color: { argb: 'FF1E3A5F' } },
+        right:  { style: 'thin', color: { argb: 'FF1E3A5F' } },
+      };
     });
-    ws.getRow(HDR_ROW).height = 22;
+    ws.getRow(HDR_ROW).height = 26;
 
-    // ── Data rows ──
-    const files = (data.all_files || []).sort((a,b) => b.risk_score - a.risk_score);
-    let rowIdx = HDR_ROW + 1;
-    const altBg = ['FFffffff', 'FFF8FAFC'];
-    let fileIdx = 0;
+    // ── Data rows — one row per file ──
+    const files   = (data.all_files || []).sort((a, b) => b.risk_score - a.risk_score);
+    const altBg   = ['FFFFFFFF', 'FFF1F5F9'];
+    let rowIdx    = HDR_ROW + 1;
 
-    files.forEach(f => {
-      const isOK   = f.risk_label === 'OK';
-      const rows   = isOK ? [{ reason: 'תקין', level: 'OK', line: '' }] : f.findings;
-      const rc     = clr[f.risk_label] || clr.OK;
-      const rowBg  = altBg[fileIdx % 2];
-      fileIdx++;
+    files.forEach((f, fileIdx) => {
+      const rc      = clr[f.risk_label] || clr.OK;
+      const rowBg   = altBg[fileIdx % 2];
+      const isOK    = f.risk_label === 'OK';
 
       const shortFile = path.basename(f.path);
-      const shortDir  = f.path.replace(/\\/g,'/').replace('C:/Claude-Repo/','').replace('/'+shortFile,'');
+      const shortDir  = path.dirname(f.path).replace(/\\/g, '/');
 
-      rows.forEach((finding, i) => {
-        const fc = clr[finding.level] || clr.OK;
-        const r  = ws.getRow(rowIdx++);
-        r.height = 18;
+      // Build findings text: "• רמה — סיבה (שורה X)" per finding
+      const findingsText = isOK
+        ? '✓ תקין'
+        : f.findings.map(fn => `${fn.level === 'CRITICAL' ? '🔴' : fn.level === 'HIGH' ? '🟠' : '🟡'} ${fn.reason}  (שורה ${fn.line})`).join('\n');
 
-        // A: filename
-        const aCell = r.getCell('A');
-        aCell.value = i === 0 ? shortFile : '';
-        aCell.font  = { size: 10, bold: i === 0, color: { argb: 'FF1E293B' } };
-        aCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
-        aCell.alignment = { readingOrder: 'rightToLeft', vertical: 'middle' };
+      const r   = ws.getRow(rowIdx++);
+      const numLines = isOK ? 1 : f.findings.length;
+      r.height  = Math.max(20, numLines * 17);
 
-        // B: directory
-        const bCell = r.getCell('B');
-        bCell.value = i === 0 ? shortDir : '';
-        bCell.font  = { size: 9, color: { argb: 'FF64748B' } };
-        bCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
-        bCell.alignment = { readingOrder: 'rightToLeft', vertical: 'middle' };
+      // A: filename
+      const aCell = r.getCell('A');
+      aCell.value = shortFile;
+      aCell.font  = { size: 10, bold: true, color: { argb: isOK ? 'FF047857' : 'FF1E293B' } };
+      aCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+      aCell.alignment = { readingOrder: 'rightToLeft', vertical: 'top', wrapText: false };
+      aCell.border = { bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } }, right: { style: 'thin', color: { argb: 'FFE2E8F0' } } };
 
-        // C: risk label (only first row of file)
-        const cCell = r.getCell('C');
-        cCell.value = i === 0 ? f.risk_label : '';
-        cCell.font  = { bold: true, size: 10, color: { argb: rc.fg } };
-        cCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: i === 0 ? rc.bg : rowBg } };
-        cCell.alignment = { horizontal: 'center', vertical: 'middle' };
+      // B: directory
+      const bCell = r.getCell('B');
+      bCell.value = shortDir;
+      bCell.font  = { size: 9, color: { argb: 'FF64748B' } };
+      bCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+      bCell.alignment = { readingOrder: 'rightToLeft', vertical: 'top', wrapText: false };
+      bCell.border = { bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } }, right: { style: 'thin', color: { argb: 'FFE2E8F0' } } };
 
-        // D: score
-        const dCell = r.getCell('D');
-        dCell.value = i === 0 ? f.risk_score : '';
-        dCell.font  = { bold: true, size: 10, color: { argb: rc.bg } };
-        dCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
-        dCell.alignment = { horizontal: 'center', vertical: 'middle' };
+      // C: risk badge — colored background
+      const cCell = r.getCell('C');
+      cCell.value = f.risk_label;
+      cCell.font  = { bold: true, size: 10, color: { argb: rc.fg } };
+      cCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rc.bg } };
+      cCell.alignment = { horizontal: 'center', vertical: 'middle' };
+      cCell.border = { bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } }, right: { style: 'thin', color: { argb: 'FFE2E8F0' } } };
 
-        // E: reason
-        const eCell = r.getCell('E');
-        eCell.value = finding.reason;
-        eCell.font  = { size: 10, color: { argb: isOK ? 'FF10B981' : 'FF1E293B' } };
-        eCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
-        eCell.alignment = { readingOrder: 'rightToLeft', vertical: 'middle' };
+      // D: score
+      const dCell = r.getCell('D');
+      dCell.value = f.risk_score;
+      dCell.font  = { bold: true, size: 11, color: { argb: isOK ? 'FF10B981' : rc.bg } };
+      dCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+      dCell.alignment = { horizontal: 'center', vertical: 'middle' };
+      dCell.border = { bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } }, right: { style: 'thin', color: { argb: 'FFE2E8F0' } } };
 
-        // F: level badge
-        const fCell = r.getCell('F');
-        fCell.value = finding.level;
-        fCell.font  = { bold: true, size: 9, color: { argb: fc.fg } };
-        fCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: isOK ? 'FF064E3B' : fc.bg } };
-        fCell.alignment = { horizontal: 'center', vertical: 'middle' };
-
-        // G: line number
-        const gCell = r.getCell('G');
-        gCell.value = finding.line || '';
-        gCell.font  = { size: 9, color: { argb: 'FF64748B' } };
-        gCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
-        gCell.alignment = { horizontal: 'center', vertical: 'middle' };
-      });
+      // E: all findings in one cell, one per line
+      const eCell = r.getCell('E');
+      eCell.value = findingsText;
+      eCell.font  = { size: 10, color: { argb: isOK ? 'FF047857' : 'FF1E293B' } };
+      eCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+      eCell.alignment = { readingOrder: 'rightToLeft', vertical: 'top', wrapText: true };
+      eCell.border = { bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } } };
     });
 
-    // Freeze header rows
-    ws.views[0].state      = 'frozen';
-    ws.views[0].xSplit     = 0;
-    ws.views[0].ySplit     = HDR_ROW;
+    // Freeze rows up to header
+    ws.views[0].state       = 'frozen';
+    ws.views[0].xSplit      = 0;
+    ws.views[0].ySplit      = HDR_ROW;
     ws.views[0].topLeftCell = `A${HDR_ROW + 1}`;
 
     // Send
