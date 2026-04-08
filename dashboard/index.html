@@ -654,10 +654,19 @@ body {
 
 <!-- FILE AUDIT TAB -->
 <div id="view-audit" style="display:none">
-<div class="toolbar">
+<div class="toolbar" style="flex-wrap:wrap;gap:8px;">
   <span class="toolbar-title">🗂️ File Audit Scanner</span>
+  <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:280px;">
+    <label style="font-size:11px;color:var(--muted);white-space:nowrap;">נתיב סריקה:</label>
+    <input id="audit-path-input" type="text" value="C:/Claude-Repo"
+      style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);
+             border-radius:6px;padding:5px 10px;font-size:12px;font-family:monospace;"
+      placeholder="C:/Claude-Repo" />
+    <button class="refresh-btn" onclick="resetAuditPath()" title="חזור לברירת מחדל"
+      style="padding:5px 8px;font-size:12px;">↩</button>
+  </div>
   <button class="refresh-btn" onclick="runAuditScan()" id="audit-scan-btn">▶ סרוק עכשיו</button>
-  <a href="http://127.0.0.1:3010/audit/export" style="text-decoration:none">
+  <a id="audit-export-link" href="http://127.0.0.1:3010/audit/export" style="text-decoration:none">
     <button class="refresh-btn" style="color:#10b981;border-color:#10b98144">⬇ Export אקסל</button>
   </a>
 </div>
@@ -665,8 +674,13 @@ body {
 <!-- Summary Cards -->
 <div id="audit-summary-cards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;"></div>
 
-<!-- Last scan info -->
-<div id="audit-meta" style="font-size:11px;color:var(--muted);margin-bottom:12px;"></div>
+<!-- Last scan info + schedule -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+  <div id="audit-meta" style="font-size:11px;color:var(--muted);"></div>
+  <div id="audit-schedule" style="font-size:11px;color:var(--muted);background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;">
+    🕓 סריקה שבועית: <span id="audit-next-run">טוען...</span>
+  </div>
+</div>
 
 <!-- Results Table -->
 <div style="overflow-x:auto;">
@@ -1082,7 +1096,18 @@ function renderAuditTable(files) {
   }).join('');
 }
 
+async function loadAuditSchedule() {
+  try {
+    const r = await fetch(API + '/audit/schedule');
+    const d = await r.json();
+    document.getElementById('audit-next-run').textContent = d.next_run_he || '—';
+  } catch(e) {
+    document.getElementById('audit-next-run').textContent = '—';
+  }
+}
+
 async function loadAuditResults() {
+  loadAuditSchedule();
   try {
     const r = await fetch(API + '/audit');
     const d = await r.json();
@@ -1090,7 +1115,7 @@ async function loadAuditResults() {
     if (d.summary) {
       document.getElementById('audit-meta').textContent =
         'סריקה אחרונה: ' + new Date(d.summary.scanned_at).toLocaleString('he-IL') +
-        ' | תיקייה: ' + d.summary.scan_path;
+        ' | ' + d.summary.total_files + ' קבצים | תיקייה: ' + d.summary.scan_path;
     }
     renderAuditTable(d.files || []);
   } catch(e) {
@@ -1098,12 +1123,22 @@ async function loadAuditResults() {
   }
 }
 
+function resetAuditPath() {
+  document.getElementById('audit-path-input').value = 'C:/Claude-Repo';
+}
+
 async function runAuditScan() {
-  const btn = document.getElementById('audit-scan-btn');
+  const btn      = document.getElementById('audit-scan-btn');
+  const scanPath = (document.getElementById('audit-path-input').value || '').trim() || 'C:/Claude-Repo';
   btn.textContent = '⏳ סורק...';
   btn.disabled = true;
+  document.getElementById('audit-meta').textContent = 'סורק: ' + scanPath + ' ...';
   try {
-    const r = await fetch(API + '/audit/scan', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
+    const r = await fetch(API + '/audit/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scan_path: scanPath })
+    });
     const d = await r.json();
     document.getElementById('audit-summary-cards').innerHTML = auditSummaryCards(d.summary);
     if (d.summary) {

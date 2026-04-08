@@ -60,6 +60,37 @@ function enforceRetention() {
 enforceRetention();
 setInterval(enforceRetention, 24 * 60 * 60 * 1000);
 
+// ─── Weekly Auto-Scan (MS6.7) ────────────────────────────────────────────────
+// בדוק כל דקה אם הגיע זמן הסריקה השבועית (יום ראשון 04:00)
+function checkWeeklyScan() {
+  const now = new Date();
+  // 0=ראשון, שעה 4, דקה 0, פחות מדקה
+  if (now.getDay() === 0 && now.getHours() === 4 && now.getMinutes() === 0) {
+    console.log('[Weekly Scan] Starting automatic weekly scan...');
+    try {
+      if (!fileAuditScanner) return;
+      const result = fileAuditScanner.runFileAudit(fileAuditScanner.DEFAULT_SCAN_PATH);
+      fs.writeFileSync(AUDIT_RESULT_FILE, JSON.stringify(result, null, 2), 'utf8');
+      const critCount = result.files.filter(f => f.risk_label === 'CRITICAL').length;
+      sendTelegram(
+        `📋 <b>EHZ-SEC-AI — סריקה שבועית אוטומטית</b>\n` +
+        `📁 ${result.summary.total_files} קבצים נסרקו\n` +
+        `🚨 CRITICAL: ${result.summary.critical} | HIGH: ${result.summary.high} | MEDIUM: ${result.summary.medium}\n` +
+        `✅ נקי: ${result.summary.clean}`
+      );
+      if (critCount > 0) {
+        result.files.filter(f => f.risk_label === 'CRITICAL').forEach(f => {
+          sendTelegram(`🚨 <b>CRITICAL</b>\n📄 ${f.path}\n⚡ ${f.findings.map(x => x.reason).join(', ')}`);
+        });
+      }
+      console.log(`[Weekly Scan] Done — ${result.summary.total_files} files, ${critCount} CRITICAL`);
+    } catch(e) {
+      console.error('[Weekly Scan] Error:', e.message);
+    }
+  }
+}
+setInterval(checkWeeklyScan, 60 * 1000); // בדוק כל דקה
+
 // ─── Telegram ────────────────────────────────────────────────────────────────
 
 function sendTelegram(text) {
@@ -451,6 +482,25 @@ app.post('/audit/scan', (req, res) => {
 
     res.json(result);
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// GET /audit/schedule — מידע על הסריקה השבועית האוטומטית
+app.get('/audit/schedule', (req, res) => {
+  const now  = new Date();
+  // חשב את יום ראשון הבא השעה 04:00
+  const next = new Date(now);
+  const daysUntilSunday = (7 - now.getDay()) % 7 || 7;
+  next.setDate(now.getDate() + daysUntilSunday);
+  next.setHours(4, 0, 0, 0);
+  res.json({
+    schedule: 'כל יום ראשון 04:00',
+    day_of_week: 'Sunday',
+    hour: 4,
+    minute: 0,
+    next_run: next.toISOString(),
+    next_run_he: next.toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' }),
+    scan_path: fileAuditScanner ? fileAuditScanner.DEFAULT_SCAN_PATH : null,
+  });
 });
 
 // DELETE /events — מחיקה ידנית (עם אפשרות לפי גיל)
