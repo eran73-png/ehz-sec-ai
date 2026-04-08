@@ -94,17 +94,41 @@ const SIGNATURE_RULES = [
 // ─── Rule 2: Secrets / DLP (any tool input/output) ───────────────────────────
 
 const SECRETS_RULES = [
+  // ── Generic secrets ──
   { level: 'HIGH', re: /password\s*[=:]\s*\S{4,}/i,               reason: 'Hardcoded password' },
   { level: 'HIGH', re: /secret\s*[=:]\s*\S{4,}/i,                  reason: 'Hardcoded secret' },
   { level: 'HIGH', re: /api[_-]?key\s*[=:]\s*\S{4,}/i,            reason: 'Hardcoded API key' },
   { level: 'HIGH', re: /token\s*[=:]\s*[A-Za-z0-9._\-]{20,}/i,    reason: 'Hardcoded token' },
-  { level: 'HIGH', re: /AKIA[0-9A-Z]{16}/,                         reason: 'AWS Access Key ID' },
-  { level: 'HIGH', re: /[A-Za-z0-9/+]{40}(?:[A-Za-z0-9/+]{0,3}={0,2})?(?=\s|$)/, reason: 'Possible AWS Secret Key (base64-40)' },
-  { level: 'HIGH', re: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH)\s+PRIVATE\s+KEY/i, reason: 'Private key in content' },
-  { level: 'HIGH', re: /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,       reason: 'JWT token' },
-  { level: 'HIGH', re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'Credit card number pattern (Visa)' },
-  { level: 'HIGH', re: /\b5[1-5][0-9]{14}\b/,                      reason: 'Credit card number pattern (MC)' },
-  { level: 'MEDIUM', re: /\b[0-9]{9}\b/,                           reason: 'Possible Israeli ID number (9 digits)' },
+
+  // ── Cloud & SaaS API keys ──
+  { level: 'CRITICAL', re: /sk-[A-Za-z0-9]{48}/,                   reason: 'OpenAI API key' },
+  { level: 'CRITICAL', re: /sk-ant-[A-Za-z0-9\-_]{40,}/,           reason: 'Anthropic API key' },
+  { level: 'CRITICAL', re: /AKIA[0-9A-Z]{16}/,                     reason: 'AWS Access Key ID' },
+  { level: 'HIGH',     re: /AIza[0-9A-Za-z\-_]{30,}/,              reason: 'Google API key' },
+  { level: 'HIGH',     re: /ghp_[A-Za-z0-9]{36}/,                  reason: 'GitHub Personal Access Token' },
+  { level: 'HIGH',     re: /github_pat_[A-Za-z0-9_]{82}/,          reason: 'GitHub Fine-grained PAT' },
+  { level: 'HIGH',     re: /sk_live_[0-9a-zA-Z]{24}/,              reason: 'Stripe Secret Key (live)' },
+  { level: 'HIGH',     re: /pk_live_[0-9a-zA-Z]{24}/,              reason: 'Stripe Publishable Key (live)' },
+  { level: 'HIGH',     re: /SG\.[A-Za-z0-9._-]{22,}\.[A-Za-z0-9._-]{22,}/, reason: 'SendGrid API key' },
+  { level: 'HIGH',     re: /[A-Za-z0-9/+]{40}(?:[A-Za-z0-9/+]{0,3}={0,2})?(?=\s|$)/, reason: 'Possible AWS Secret Key (base64-40)' },
+
+  // ── Private keys & certificates ──
+  { level: 'CRITICAL', re: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH)\s+PRIVATE\s+KEY/i, reason: 'Private key in content' },
+
+  // ── Tokens ──
+  { level: 'HIGH', re: /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/, reason: 'JWT token' },
+
+  // ── Connection strings with credentials ──
+  { level: 'HIGH', re: /mongodb(\+srv)?:\/\/[^:]+:[^@]+@/i,        reason: 'MongoDB connection string with credentials' },
+  { level: 'HIGH', re: /mysql:\/\/[^:]+:[^@]+@/i,                  reason: 'MySQL connection string with credentials' },
+  { level: 'HIGH', re: /postgres(ql)?:\/\/[^:]+:[^@]+@/i,          reason: 'PostgreSQL connection string with credentials' },
+
+  // ── Israeli PII (6.2) ──
+  { level: 'HIGH',   re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'כרטיס אשראי Visa' },
+  { level: 'HIGH',   re: /\b5[1-5][0-9]{14}\b/,                    reason: 'כרטיס אשראי MasterCard' },
+  { level: 'HIGH',   re: /\b3[47][0-9]{13}\b/,                     reason: 'כרטיס אשראי American Express' },
+  { level: 'MEDIUM', re: /\b05[0-9]{1}[-\s]?[0-9]{7}\b/,          reason: 'מספר פלאפון ישראלי' },
+  { level: 'MEDIUM', re: /\b[0-9]{9}\b/,                           reason: 'מספר ת"ז ישראלי אפשרי (9 ספרות)' },
 ];
 
 // ─── Rule 3: Context Rules (per tool) ────────────────────────────────────────
