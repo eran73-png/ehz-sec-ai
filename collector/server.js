@@ -254,7 +254,7 @@ app.get('/audit', (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /audit/export — export to Excel
+// GET /audit/export — export to Excel (single unified sheet)
 app.get('/audit/export', async (req, res) => {
   try {
     if (!fs.existsSync(AUDIT_RESULT_FILE))
@@ -266,76 +266,163 @@ app.get('/audit/export', async (req, res) => {
     wb.creator    = 'EHZ-SEC-AI';
     wb.created    = new Date();
 
-    // ── Sheet 1: Summary ──
-    const wsSummary = wb.addWorksheet('סיכום');
-    wsSummary.views = [{ rightToLeft: true }];
-    wsSummary.columns = [
-      { header: 'פרמטר', key: 'k', width: 25 },
-      { header: 'ערך',   key: 'v', width: 30 },
-    ];
-    const s = data.summary || {};
-    [
-      ['תיקייה סרוקה',   s.scan_path],
-      ['תאריך סריקה',    s.scanned_at ? new Date(s.scanned_at).toLocaleString('he-IL') : ''],
-      ['סה"כ קבצים',     s.total_files],
-      ['תקין',           s.clean],
-      ['MEDIUM',         s.medium],
-      ['HIGH',           s.high],
-      ['CRITICAL',       s.critical],
-      ['דולגו',          s.skipped],
-    ].forEach(([k,v]) => wsSummary.addRow({ k, v }));
+    const s  = data.summary || {};
+    const clr = {
+      CRITICAL: { bg: 'FFEF4444', fg: 'FFFFFFFF' },
+      HIGH:     { bg: 'FFF97316', fg: 'FFFFFFFF' },
+      MEDIUM:   { bg: 'FFF59E0B', fg: 'FF000000' },
+      OK:       { bg: 'FF10B981', fg: 'FFFFFFFF' },
+    };
 
-    // ── Sheet 2: Findings ──
-    const wsFindings = wb.addWorksheet('ממצאים');
-    wsFindings.views = [{ rightToLeft: true }];
-    wsFindings.columns = [
-      { header: 'קובץ',       key: 'path',      width: 55 },
-      { header: 'סיכון',      key: 'risk_label', width: 12 },
-      { header: 'ציון',       key: 'risk_score', width: 8  },
-      { header: 'רמה',        key: 'level',      width: 10 },
-      { header: 'ממצא',       key: 'reason',     width: 35 },
-      { header: 'שורה',       key: 'line',       width: 8  },
-    ];
+    const ws = wb.addWorksheet('דוח אבטחה — EHZ-SEC-AI');
+    ws.views = [{ rightToLeft: true, showGridLines: false }];
 
-    // Header style
-    wsFindings.getRow(1).eachCell(cell => {
-      cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0D1424' } };
+    // ── Title row ──
+    ws.mergeCells('A1:G1');
+    const titleCell = ws.getCell('A1');
+    titleCell.value = '🛡️  EHZ-SEC-AI — דוח File Audit';
+    titleCell.font  = { bold: true, size: 16, color: { argb: 'FFFFFFFF' } };
+    titleCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0D1424' } };
+    titleCell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'rightToLeft' };
+    ws.getRow(1).height = 36;
+
+    // ── Subtitle / scan info ──
+    ws.mergeCells('A2:G2');
+    const subCell = ws.getCell('A2');
+    subCell.value = `תיקייה: ${s.scan_path || ''}   |   תאריך: ${s.scanned_at ? new Date(s.scanned_at).toLocaleString('he-IL') : ''}`;
+    subCell.font  = { size: 10, color: { argb: 'FF94A3B8' } };
+    subCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF111827' } };
+    subCell.alignment = { horizontal: 'center', readingOrder: 'rightToLeft' };
+
+    // ── Summary stats row ──
+    ws.mergeCells('A3:G3');
+    ws.getCell('A3').value = '';
+    ws.getRow(3).height = 8;
+
+    const statLabels = ['סה"כ קבצים', 'תקין ✅', 'MEDIUM ⚠️', 'HIGH 🔶', 'CRITICAL 🚨', 'דולגו', ''];
+    const statValues = [s.total_files, s.clean, s.medium, s.high, s.critical, s.skipped, ''];
+    const statBgColors = ['FF1E293B','FF064E3B','FF451A03','FF431407','FF450A0A','FF1E293B','FF0D1424'];
+    const statTxtColors= ['FFFFFFFF','FF10B981','FFF59E0B','FFF97316','FFEF4444','FF64748B','FFFFFFFF'];
+
+    // Labels row
+    ws.getRow(4).height = 22;
+    statLabels.forEach((lbl, i) => {
+      const col = String.fromCharCode(65 + i); // A-G
+      const cell = ws.getCell(`${col}4`);
+      cell.value = lbl;
+      cell.font  = { bold: true, size: 10, color: { argb: statTxtColors[i] } };
+      cell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: statBgColors[i] } };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    });
+    // Values row
+    ws.getRow(5).height = 28;
+    statValues.forEach((val, i) => {
+      const col = String.fromCharCode(65 + i);
+      const cell = ws.getCell(`${col}5`);
+      cell.value = val;
+      cell.font  = { bold: true, size: 16, color: { argb: statTxtColors[i] } };
+      cell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: statBgColors[i] } };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
     });
 
-    const colorMap = { CRITICAL: 'FFEF4444', HIGH: 'FFF97316', MEDIUM: 'FFF59E0B', OK: 'FF10B981' };
+    // Spacer
+    ws.getRow(6).height = 10;
 
-    (data.files || [])
-      .sort((a,b) => b.risk_score - a.risk_score)
-      .forEach(f => {
-        if (!f.findings.length) return;
-        f.findings.forEach((finding, i) => {
-          const row = wsFindings.addRow({
-            path:       i === 0 ? f.path : '',
-            risk_label: i === 0 ? f.risk_label : '',
-            risk_score: i === 0 ? f.risk_score : '',
-            level:      finding.level,
-            reason:     finding.reason,
-            line:       finding.line,
-          });
-          // Color risk_label cell
-          if (i === 0) {
-            const labelCell = row.getCell('risk_label');
-            labelCell.font = { bold: true, color: { argb: colorMap[f.risk_label] || 'FFFFFFFF' } };
-          }
-          const levelCell = row.getCell('level');
-          levelCell.font = { color: { argb: colorMap[finding.level] || 'FFFFFFFF' } };
-        });
+    // ── Table header ──
+    const HDR_ROW = 7;
+    const headers = ['קובץ', 'תיקייה', 'סיכון', 'ציון', 'ממצא', 'רמה', 'שורה'];
+    const widths  = [40, 25, 10, 7, 38, 10, 7];
+    const keys    = ['A','B','C','D','E','F','G'];
+    headers.forEach((h, i) => {
+      ws.getColumn(keys[i]).width = widths[i];
+      const cell = ws.getCell(`${keys[i]}${HDR_ROW}`);
+      cell.value = h;
+      cell.font  = { bold: true, size: 11, color: { argb: 'FFFFFFFF' } };
+      cell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A5F' } };
+      cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'rightToLeft' };
+      cell.border = { bottom: { style: 'medium', color: { argb: 'FF0EA5E9' } } };
+    });
+    ws.getRow(HDR_ROW).height = 22;
+
+    // ── Data rows ──
+    const files = (data.all_files || []).sort((a,b) => b.risk_score - a.risk_score);
+    let rowIdx = HDR_ROW + 1;
+    const altBg = ['FFffffff', 'FFF8FAFC'];
+    let fileIdx = 0;
+
+    files.forEach(f => {
+      const isOK   = f.risk_label === 'OK';
+      const rows   = isOK ? [{ reason: 'תקין', level: 'OK', line: '' }] : f.findings;
+      const rc     = clr[f.risk_label] || clr.OK;
+      const rowBg  = altBg[fileIdx % 2];
+      fileIdx++;
+
+      const shortFile = path.basename(f.path);
+      const shortDir  = f.path.replace(/\\/g,'/').replace('C:/Claude-Repo/','').replace('/'+shortFile,'');
+
+      rows.forEach((finding, i) => {
+        const fc = clr[finding.level] || clr.OK;
+        const r  = ws.getRow(rowIdx++);
+        r.height = 18;
+
+        // A: filename
+        const aCell = r.getCell('A');
+        aCell.value = i === 0 ? shortFile : '';
+        aCell.font  = { size: 10, bold: i === 0, color: { argb: 'FF1E293B' } };
+        aCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+        aCell.alignment = { readingOrder: 'rightToLeft', vertical: 'middle' };
+
+        // B: directory
+        const bCell = r.getCell('B');
+        bCell.value = i === 0 ? shortDir : '';
+        bCell.font  = { size: 9, color: { argb: 'FF64748B' } };
+        bCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+        bCell.alignment = { readingOrder: 'rightToLeft', vertical: 'middle' };
+
+        // C: risk label (only first row of file)
+        const cCell = r.getCell('C');
+        cCell.value = i === 0 ? f.risk_label : '';
+        cCell.font  = { bold: true, size: 10, color: { argb: rc.fg } };
+        cCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: i === 0 ? rc.bg : rowBg } };
+        cCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        // D: score
+        const dCell = r.getCell('D');
+        dCell.value = i === 0 ? f.risk_score : '';
+        dCell.font  = { bold: true, size: 10, color: { argb: rc.bg } };
+        dCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+        dCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        // E: reason
+        const eCell = r.getCell('E');
+        eCell.value = finding.reason;
+        eCell.font  = { size: 10, color: { argb: isOK ? 'FF10B981' : 'FF1E293B' } };
+        eCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+        eCell.alignment = { readingOrder: 'rightToLeft', vertical: 'middle' };
+
+        // F: level badge
+        const fCell = r.getCell('F');
+        fCell.value = finding.level;
+        fCell.font  = { bold: true, size: 9, color: { argb: fc.fg } };
+        fCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: isOK ? 'FF064E3B' : fc.bg } };
+        fCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        // G: line number
+        const gCell = r.getCell('G');
+        gCell.value = finding.line || '';
+        gCell.font  = { size: 9, color: { argb: 'FF64748B' } };
+        gCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+        gCell.alignment = { horizontal: 'center', vertical: 'middle' };
       });
+    });
 
-    // ── Sheet 3: All Clean Files ──
-    const wsClean = wb.addWorksheet('קבצים תקינים');
-    wsClean.views = [{ rightToLeft: true }];
-    wsClean.columns = [{ header: 'קובץ', key: 'path', width: 60 }];
-    wsClean.getRow(1).getCell(1).font = { bold: true };
-    (data.all_files || []).filter(f => f.risk_label === 'OK').forEach(f => wsClean.addRow({ path: f.path }));
+    // Freeze header rows
+    ws.views[0].state      = 'frozen';
+    ws.views[0].xSplit     = 0;
+    ws.views[0].ySplit     = HDR_ROW;
+    ws.views[0].topLeftCell = `A${HDR_ROW + 1}`;
 
-    // Send file
+    // Send
     const filename = `EHZ-SEC-AI-FileAudit-${new Date().toISOString().slice(0,10)}.xlsx`;
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
