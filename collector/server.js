@@ -236,6 +236,46 @@ app.post('/skills/scan', (req, res) => {
   }
 });
 
+// ─── File Audit (Milestone 6.3) ──────────────────────────────────────────────
+
+let fileAuditScanner;
+try { fileAuditScanner = require('../agent/file-audit-scanner'); } catch (_) {}
+
+const AUDIT_RESULT_FILE = path.join(__dirname, 'file-audit-result.json');
+
+// GET /audit — last scan results
+app.get('/audit', (req, res) => {
+  try {
+    if (fs.existsSync(AUDIT_RESULT_FILE)) {
+      const data = JSON.parse(fs.readFileSync(AUDIT_RESULT_FILE, 'utf8'));
+      return res.json(data);
+    }
+    res.json({ files: [], summary: null, msg: 'לא נמצאה סריקה קודמת' });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// POST /audit/scan — run scan now
+// body: { scan_path: 'C:/Claude-Repo' } (optional)
+app.post('/audit/scan', (req, res) => {
+  if (!fileAuditScanner) return res.status(500).json({ error: 'file-audit-scanner not available' });
+  try {
+    const scanPath = (req.body && req.body.scan_path) || fileAuditScanner.DEFAULT_SCAN_PATH;
+    const result   = fileAuditScanner.runFileAudit(scanPath);
+
+    // Save result
+    fs.writeFileSync(AUDIT_RESULT_FILE, JSON.stringify(result, null, 2), 'utf8');
+
+    // Telegram alert for CRITICAL files
+    result.files.forEach(f => {
+      if (f.risk_label === 'CRITICAL') {
+        sendTelegram(`🚨 <b>EHZ-SEC-AI — File Audit CRITICAL</b>\n📄 ${f.path}\n⚡ ${f.findings.map(x=>x.reason).join(', ')}`);
+      }
+    });
+
+    res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // DELETE /events — מחיקה ידנית (עם אפשרות לפי גיל)
 // body: { older_than_days: N } — אם לא נשלח → מוחק הכל
 app.delete('/events', (req, res) => {
