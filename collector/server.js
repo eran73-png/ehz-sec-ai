@@ -463,18 +463,55 @@ app.get('/audit/export', async (req, res) => {
 });
 
 // POST /audit/scan — run scan now
-// body: { scan_path: 'C:/Claude-Repo' } (optional)
+// body: { scan_path, incremental } (all optional)
+//   incremental=true → scan only files modified since last scan's scanned_at
 app.post('/audit/scan', (req, res) => {
   if (!fileAuditScanner) return res.status(500).json({ error: 'file-audit-scanner not available' });
   try {
-    const scanPath = (req.body && req.body.scan_path) || fileAuditScanner.DEFAULT_SCAN_PATH;
-    const result   = fileAuditScanner.runFileAudit(scanPath);
+    const body        = req.body || {};
+    const scanPath    = body.scan_path || fileAuditScanner.DEFAULT_SCAN_PATH;
+    const incremental = !!body.incremental;
+
+    // For incremental: read last scan timestamp from saved result
+    let since_iso = null;
+    if (incremental && fs.existsSync(AUDIT_RESULT_FILE)) {
+      try {
+        const prev = JSON.parse(fs.readFileSync(AUDIT_RESULT_FILE, 'utf8'));
+        since_iso  = prev.summary && prev.summary.scanned_at;
+      } catch (_) {}
+    }
+
+    const result = fileAuditScanner.runFileAudit(scanPath, { incremental, since_iso });
+
+    // In incremental mode: merge new findings with previous full results
+    if (incremental && fs.existsSync(AUDIT_RESULT_FILE)) {
+      try {
+        const prev       = JSON.parse(fs.readFileSync(AUDIT_RESULT_FILE, 'utf8'));
+        const prevPaths  = new Set((result.all_files || []).map(f => f.path));
+        // Keep old files that weren't re-scanned
+        const keptFiles  = (prev.all_files || []).filter(f => !prevPaths.has(f.path));
+        const merged     = [...(result.all_files || []), ...keptFiles];
+        result.all_files = merged;
+        result.files     = merged.filter(f => f.findings && f.findings.length > 0);
+        // Update summary totals
+        result.summary.total_files = merged.length;
+        result.summary.clean       = merged.filter(f => f.risk_label === 'OK').length;
+        result.summary.medium      = merged.filter(f => f.risk_label === 'MEDIUM').length;
+        result.summary.high        = merged.filter(f => f.risk_label === 'HIGH').length;
+        result.summary.critical    = merged.filter(f => f.risk_label === 'CRITICAL').length;
+        result.summary.skipped     = merged.filter(f => f.skipped).length;
+        result.summary.incremental_new = (result.all_files.length - keptFiles.length);
+      } catch (_) {}
+    }
 
     // Save result
     fs.writeFileSync(AUDIT_RESULT_FILE, JSON.stringify(result, null, 2), 'utf8');
 
-    // Telegram alert for CRITICAL files
-    result.files.forEach(f => {
+    // Telegram alert for CRITICAL files (only newly scanned)
+    (incremental ? result.all_files.filter(f => {
+      const prevPaths = new Set();
+      return !prevPaths.has(f.path);
+    }) : result.files).forEach(f => {
       if (f.risk_label === 'CRITICAL') {
         sendTelegram(`🚨 <b>EHZ-SEC-AI — File Audit CRITICAL</b>\n📄 ${f.path}\n⚡ ${f.findings.map(x=>x.reason).join(', ')}`);
       }

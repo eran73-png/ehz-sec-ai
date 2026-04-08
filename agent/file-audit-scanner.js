@@ -133,7 +133,7 @@ function scanFile(filePath) {
 
 // ─── Directory Walker ─────────────────────────────────────────────────────────
 
-function walkDir(dirPath, results) {
+function walkDir(dirPath, results, sinceMs) {
   let entries;
   try { entries = fs.readdirSync(dirPath, { withFileTypes: true }); }
   catch (_) { return; }
@@ -144,10 +144,19 @@ function walkDir(dirPath, results) {
     const fullPath = path.join(dirPath, entry.name);
 
     if (entry.isDirectory()) {
-      walkDir(fullPath, results);
+      walkDir(fullPath, results, sinceMs);
     } else if (entry.isFile()) {
       const ext = path.extname(entry.name).toLowerCase();
       if (!SCAN_EXTENSIONS.has(ext)) continue;
+
+      // Incremental mode: skip files not modified since last scan
+      if (sinceMs) {
+        try {
+          const mtime = fs.statSync(fullPath).mtimeMs;
+          if (mtime <= sinceMs) continue;
+        } catch (_) {}
+      }
+
       results.push(scanFile(fullPath));
     }
   }
@@ -155,17 +164,30 @@ function walkDir(dirPath, results) {
 
 // ─── Main Export ──────────────────────────────────────────────────────────────
 
-function runFileAudit(scanPath) {
+/**
+ * @param {string}  scanPath   - תיקייה לסריקה (ברירת מחדל: C:/Claude-Repo)
+ * @param {object}  opts
+ * @param {boolean} opts.incremental - true → סרוק רק קבצים שהשתנו מאז הסריקה האחרונה
+ * @param {string}  opts.since_iso  - ISO timestamp — "מאז מתי" (משמש אם incremental=true)
+ */
+function runFileAudit(scanPath, opts = {}) {
   const targetPath = scanPath || DEFAULT_SCAN_PATH;
   const files      = [];
 
-  walkDir(targetPath, files);
+  let sinceMs = null;
+  if (opts.incremental && opts.since_iso) {
+    sinceMs = new Date(opts.since_iso).getTime();
+  }
+
+  walkDir(targetPath, files, sinceMs);
 
   const withFindings = files.filter(f => f.findings.length > 0);
 
   const summary = {
     scan_path:   targetPath,
     scanned_at:  new Date().toISOString(),
+    incremental: !!sinceMs,
+    since:       sinceMs ? new Date(sinceMs).toISOString() : null,
     total_files: files.length,
     clean:       files.filter(f => f.risk_label === 'OK').length,
     medium:      files.filter(f => f.risk_label === 'MEDIUM').length,

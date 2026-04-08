@@ -665,6 +665,16 @@ body {
     <button class="refresh-btn" onclick="resetAuditPath()" title="חזור לברירת מחדל"
       style="padding:5px 8px;font-size:12px;">↩</button>
   </div>
+  <div style="display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--border2);border-radius:6px;padding:3px 4px;">
+    <button id="scan-mode-full" onclick="setScanMode('full')"
+      style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:#0ea5e9;color:#fff;font-weight:700;">
+      🔍 מלאה
+    </button>
+    <button id="scan-mode-inc" onclick="setScanMode('incremental')"
+      style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:transparent;color:var(--muted2);">
+      ⚡ שינויים בלבד
+    </button>
+  </div>
   <button class="refresh-btn" onclick="runAuditScan()" id="audit-scan-btn">▶ סרוק עכשיו</button>
   <a id="audit-export-link" href="http://127.0.0.1:3010/audit/export" style="text-decoration:none">
     <button class="refresh-btn" style="color:#10b981;border-color:#10b98144">⬇ Export אקסל</button>
@@ -1158,24 +1168,46 @@ function resetAuditPath() {
   document.getElementById('audit-path-input').value = 'C:/Claude-Repo';
 }
 
+let auditScanMode = 'full'; // 'full' | 'incremental'
+function setScanMode(mode) {
+  auditScanMode = mode;
+  const full = document.getElementById('scan-mode-full');
+  const inc  = document.getElementById('scan-mode-inc');
+  if (mode === 'full') {
+    full.style.background = '#0ea5e9'; full.style.color = '#fff'; full.style.fontWeight = '700';
+    inc.style.background  = 'transparent'; inc.style.color = 'var(--muted2)'; inc.style.fontWeight = 'normal';
+  } else {
+    inc.style.background  = '#f59e0b'; inc.style.color = '#000'; inc.style.fontWeight = '700';
+    full.style.background = 'transparent'; full.style.color = 'var(--muted2)'; full.style.fontWeight = 'normal';
+  }
+}
+
 async function runAuditScan() {
-  const btn      = document.getElementById('audit-scan-btn');
-  const scanPath = (document.getElementById('audit-path-input').value || '').trim() || 'C:/Claude-Repo';
-  btn.textContent = '⏳ סורק...';
+  const btn         = document.getElementById('audit-scan-btn');
+  const scanPath    = (document.getElementById('audit-path-input').value || '').trim() || 'C:/Claude-Repo';
+  const incremental = auditScanMode === 'incremental';
+  btn.textContent = incremental ? '⏳ סורק שינויים...' : '⏳ סורק...';
   btn.disabled = true;
-  document.getElementById('audit-meta').textContent = 'סורק: ' + scanPath + ' ...';
+  document.getElementById('audit-meta').textContent = (incremental ? '⚡ סריקת שינויים: ' : '🔍 סריקה מלאה: ') + scanPath + ' ...';
   try {
     const r = await fetch(API + '/audit/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ scan_path: scanPath })
+      body: JSON.stringify({ scan_path: scanPath, incremental })
     });
     const d = await r.json();
     document.getElementById('audit-summary-cards').innerHTML = auditSummaryCards(d.summary);
     if (d.summary) {
       setAuditLastScan(d.summary.scanned_at);
-      document.getElementById('audit-meta').textContent =
-        d.summary.total_files + ' קבצים | תיקייה: ' + d.summary.scan_path;
+      let meta = d.summary.total_files + ' קבצים | תיקייה: ' + d.summary.scan_path;
+      if (d.summary.incremental) {
+        meta += ' | ⚡ נסרקו ' + (d.summary.incremental_new || 0) + ' קבצים חדשים/שונים';
+        if (d.summary.since) {
+          const since = new Date(d.summary.since).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+          meta += ' (מאז ' + since + ')';
+        }
+      }
+      document.getElementById('audit-meta').textContent = meta;
     }
     renderAuditTable(d.files || []);
   } catch(e) {
