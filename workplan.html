@@ -743,53 +743,53 @@
       <div class="task-title">Scope Monitor ✅</div>
       <div class="task-desc">התראה HIGH על גישה מחוץ ל-allowed_paths — כיסוי מלא:<br>• כוננים A-Z: בכלי קבצים (Read/Write/Edit/Glob/Grep) ✅<br>• כוננים A-Z: בפקודות Bash ✅<br>• UNC //server/share בכלי קבצים ✅<br>• UNC //server/share בפקודות Bash ✅<br>• UNC \servershare → CRITICAL (כלל WebDAV קיים) ✅<br>תוקן: false positive על http:// (lookbehind regex) ✅<br>בדיקות: 7/7 | בוצע: 07.04.2026</div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.1</div>
-      <div class="task-title">Secrets Patterns</div>
-      <div class="task-desc">סיסמאות, API keys (OpenAI/AWS/GitHub), JWT, Private Keys, Connection Strings.</div>
-      <div class="task-tags"><span class="tag">secrets</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.1</div>
+      <div class="task-title">Secrets Patterns ✅</div>
+      <div class="task-desc">OpenAI/Anthropic/AWS/Google API keys, GitHub PAT, Stripe, SendGrid, JWT, Private Keys, MongoDB/PostgreSQL credentials, curl|sh, base64|sh. בוצע: 08.04.2026</div>
+      <div class="task-tags"><span class="tag">secrets</span><span class="tag">cloud API keys</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.2</div>
-      <div class="task-title">פרטים אישיים ישראליים</div>
-      <div class="task-desc">ת"ז, כרטיסי אשראי (Visa/MC/Amex), מספרי פלאפון, מספרי חשבון.</div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.2</div>
+      <div class="task-title">פרטים אישיים ישראליים ✅</div>
+      <div class="task-desc">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</div>
       <div class="task-tags"><span class="tag">PII</span><span class="tag">ישראלי</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.3</div>
-      <div class="task-title">File Audit Scanner — C:/Claude-Repo/</div>
-      <div class="task-desc">סריקת כל הקבצים ב-C:/Claude-Repo/ (כל סוגי הקבצים). לכל ממצא: נתיב מלא + שורה + סוג + ציון סיכון. ציון לפי קובץ וציון כולל לפרויקט.</div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.3</div>
+      <div class="task-title">File Audit Scanner ✅</div>
+      <div class="task-desc">סריקת C:/Claude-Repo/ — 412 קבצים, 22 patterns, ציון סיכון לפי קובץ (CRITICAL=40/HIGH=20/MEDIUM=5, max 100). agent/file-audit-scanner.js. בוצע: 08.04.2026</div>
       <div class="task-tags"><span class="tag">full scan</span><span class="tag">all files</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.4</div>
-      <div class="task-title">דוח ב-Dashboard — טאב נפרד</div>
-      <div class="task-desc">טאב "File Audit" בדשבורד — עץ תיקיות עם ציוני סיכון (🔴 Critical / 🟠 High / 🟡 Medium / 🟢 Low). לחיצה על קובץ = רשימת ממצאים + שורות.</div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.4</div>
+      <div class="task-title">דוח ב-Dashboard ✅</div>
+      <div class="task-desc">טאב "🗂️ File Audit" בדשבורד — 5 summary cards, טבלת ממצאים, צבעי סיכון. לחצן "סרוק עכשיו" + Export אקסל. בוצע: 08.04.2026</div>
       <div class="task-tags"><span class="tag">dashboard</span><span class="tag">tab</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.5</div>
-      <div class="task-title">Export לאקסל</div>
-      <div class="task-desc">כפתור "Export Excel" — מוריד קובץ .xlsx עם: נתיב, שורה, סוג ממצא, ערך מוסתר (***), ציון סיכון. מוכן לסקירה ידנית.</div>
-      <div class="task-tags"><span class="tag">xlsx</span><span class="tag">export</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.5</div>
+      <div class="task-title">Export לאקסל ✅</div>
+      <div class="task-desc">גיליון אחד מאוחד: RTL, שורת כותרת כהה, stats cards, טבלת נתונים צבעונית. ExcelJS, frozen headers, מסודר לפי ציון סיכון. בוצע: 09.04.2026</div>
+      <div class="task-tags"><span class="tag">xlsx</span><span class="tag">export</span><span class="tag">RTL</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.6</div>
-      <div class="task-title">Real-time Write Guard</div>
-      <div class="task-desc">כל קובץ שנכתב עובר סריקה מיידית. מידע רגיש = CRITICAL + חסום commit.</div>
-      <div class="task-tags"><span class="tag">write guard</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.6</div>
+      <div class="task-title">Custom Scan Path ✅</div>
+      <div class="task-desc">שדה טקסט בדשבורד לבחירת נתיב סריקה, ברירת מחדל C:/Claude-Repo. כפתור ↩ לאיפוס. הנתיב נשלח ב-POST /audit/scan. בוצע: 09.04.2026</div>
+      <div class="task-tags"><span class="tag">custom path</span><span class="tag">dashboard</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.7</div>
-      <div class="task-title">Custom Scan — בחירת תיקיות</div>
-      <div class="task-desc">בדשבורד: עץ תיקיות אינטראקטיבי לבחירה — סמן ✅ תיקיות לסריקה, בטל ❌ תיקיות לא רלוונטיות. שמירת הגדרת הסריקה כ-preset לשימוש חוזר. תמיכה ב: תיקייה בודדת, רשימת תיקיות, כולל/לא כולל sub-folders.</div>
-      <div class="task-tags"><span class="tag">custom</span><span class="tag">interactive</span><span class="tag">preset</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.7</div>
+      <div class="task-title">סריקה שבועית אוטומטית ✅</div>
+      <div class="task-desc">checkWeeklyScan() פועל כל דקה, מפעיל סריקה כל יום ראשון 04:00. שומר JSON + שולח Telegram סיכום. GET /audit/schedule מחזיר next_run. בוצע: 09.04.2026</div>
+      <div class="task-tags"><span class="tag">scheduler</span><span class="tag">weekly</span><span class="tag">Sunday 04:00</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">6.8</div>
-      <div class="task-title">סריקה שבועית אוטומטית</div>
-      <div class="task-desc">Windows Task Scheduler — כל יום ראשון 08:00. מריץ סריקה לפי ה-preset השמור (או C:/Claude-Repo/ כברירת מחדל), שומר דוח עם תאריך, שולח סיכום ב-Telegram. מאפשר השוואה בין סריקות.</div>
-      <div class="task-tags"><span class="tag">scheduler</span><span class="tag">weekly</span></div>
+      <div class="task-title">Real-time Write Guard</div>
+      <div class="task-desc">כל קובץ שנכתב עובר סריקה מיידית. מידע רגיש = CRITICAL + חסום commit. (נדחה ל-MS7+)</div>
+      <div class="task-tags"><span class="tag">write guard</span><span class="tag">נדחה</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">6.9</div>
