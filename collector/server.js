@@ -254,6 +254,96 @@ app.get('/audit', (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// GET /audit/export — export to Excel
+app.get('/audit/export', async (req, res) => {
+  try {
+    if (!fs.existsSync(AUDIT_RESULT_FILE))
+      return res.status(404).json({ error: 'אין תוצאות סריקה — הפעל סריקה קודם' });
+
+    const data    = JSON.parse(fs.readFileSync(AUDIT_RESULT_FILE, 'utf8'));
+    const ExcelJS = require('exceljs');
+    const wb      = new ExcelJS.Workbook();
+    wb.creator    = 'EHZ-SEC-AI';
+    wb.created    = new Date();
+
+    // ── Sheet 1: Summary ──
+    const wsSummary = wb.addWorksheet('סיכום');
+    wsSummary.views = [{ rightToLeft: true }];
+    wsSummary.columns = [
+      { header: 'פרמטר', key: 'k', width: 25 },
+      { header: 'ערך',   key: 'v', width: 30 },
+    ];
+    const s = data.summary || {};
+    [
+      ['תיקייה סרוקה',   s.scan_path],
+      ['תאריך סריקה',    s.scanned_at ? new Date(s.scanned_at).toLocaleString('he-IL') : ''],
+      ['סה"כ קבצים',     s.total_files],
+      ['תקין',           s.clean],
+      ['MEDIUM',         s.medium],
+      ['HIGH',           s.high],
+      ['CRITICAL',       s.critical],
+      ['דולגו',          s.skipped],
+    ].forEach(([k,v]) => wsSummary.addRow({ k, v }));
+
+    // ── Sheet 2: Findings ──
+    const wsFindings = wb.addWorksheet('ממצאים');
+    wsFindings.views = [{ rightToLeft: true }];
+    wsFindings.columns = [
+      { header: 'קובץ',       key: 'path',      width: 55 },
+      { header: 'סיכון',      key: 'risk_label', width: 12 },
+      { header: 'ציון',       key: 'risk_score', width: 8  },
+      { header: 'רמה',        key: 'level',      width: 10 },
+      { header: 'ממצא',       key: 'reason',     width: 35 },
+      { header: 'שורה',       key: 'line',       width: 8  },
+    ];
+
+    // Header style
+    wsFindings.getRow(1).eachCell(cell => {
+      cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0D1424' } };
+    });
+
+    const colorMap = { CRITICAL: 'FFEF4444', HIGH: 'FFF97316', MEDIUM: 'FFF59E0B', OK: 'FF10B981' };
+
+    (data.files || [])
+      .sort((a,b) => b.risk_score - a.risk_score)
+      .forEach(f => {
+        if (!f.findings.length) return;
+        f.findings.forEach((finding, i) => {
+          const row = wsFindings.addRow({
+            path:       i === 0 ? f.path : '',
+            risk_label: i === 0 ? f.risk_label : '',
+            risk_score: i === 0 ? f.risk_score : '',
+            level:      finding.level,
+            reason:     finding.reason,
+            line:       finding.line,
+          });
+          // Color risk_label cell
+          if (i === 0) {
+            const labelCell = row.getCell('risk_label');
+            labelCell.font = { bold: true, color: { argb: colorMap[f.risk_label] || 'FFFFFFFF' } };
+          }
+          const levelCell = row.getCell('level');
+          levelCell.font = { color: { argb: colorMap[finding.level] || 'FFFFFFFF' } };
+        });
+      });
+
+    // ── Sheet 3: All Clean Files ──
+    const wsClean = wb.addWorksheet('קבצים תקינים');
+    wsClean.views = [{ rightToLeft: true }];
+    wsClean.columns = [{ header: 'קובץ', key: 'path', width: 60 }];
+    wsClean.getRow(1).getCell(1).font = { bold: true };
+    (data.all_files || []).filter(f => f.risk_label === 'OK').forEach(f => wsClean.addRow({ path: f.path }));
+
+    // Send file
+    const filename = `EHZ-SEC-AI-FileAudit-${new Date().toISOString().slice(0,10)}.xlsx`;
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    await wb.xlsx.write(res);
+    res.end();
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // POST /audit/scan — run scan now
 // body: { scan_path: 'C:/Claude-Repo' } (optional)
 app.post('/audit/scan', (req, res) => {
