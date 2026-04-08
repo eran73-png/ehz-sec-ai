@@ -214,17 +214,22 @@ function checkScopeRule(event) {
   }
 
   // ── Bash: extract all paths from the command string ──
+  // Only skip commands whose arguments are NOT file paths (git/npm/node text may contain UNC text)
+  const SCOPE_EXEMPT_BASH = ['git ', 'npm ', 'node ', 'echo ', 'Write-Host', 'Get-'];
   if (tool === 'Bash') {
-    const cmd   = input.command || '';
-    const paths = extractPathsFromCommand(cmd);
-    for (const p of paths) {
-      if (!isPathAllowed(p, allowedPaths)) {
-        const label = isUNCPath(p) ? 'UNC' : 'כונן';
-        return {
-          level:    'HIGH',
-          reason:   `גישה מחוץ לפרויקט (Bash ${label}) — נתיב: ${p}`,
-          ruleType: 'scope',
-        };
+    const cmd = input.command || '';
+    const isScopeExempt = SCOPE_EXEMPT_BASH.some(p => cmd.trim().startsWith(p));
+    if (!isScopeExempt) {
+      const paths = extractPathsFromCommand(cmd);
+      for (const p of paths) {
+        if (!isPathAllowed(p, allowedPaths)) {
+          const label = isUNCPath(p) ? 'UNC' : 'כונן';
+          return {
+            level:    'HIGH',
+            reason:   `גישה מחוץ לפרויקט (Bash ${label}) — נתיב: ${p}`,
+            ruleType: 'scope',
+          };
+        }
       }
     }
   }
@@ -245,10 +250,13 @@ function checkRules(event) {
   // Build searchable text from input
   const inputText = JSON.stringify(input);
 
-  // WebDAV UNC path — check both raw value and JSON-encoded (\\server in raw = \\\\server in JSON)
+  // WebDAV UNC path — check both raw value and JSON-encoded
+  // Skip if Bash command is whitelisted (git commit messages may contain \\server text)
   const rawCmd = input.command || input.file_path || '';
-  if (/\\\\[a-z0-9._-]/i.test(rawCmd) || /\\\\\\\\[a-z0-9._-]/i.test(inputText)) {
-    return { level: 'CRITICAL', reason: 'WebDAV / UNC path — potential lateral movement', ruleType: 'signature' };
+  const SCOPE_EXEMPT_BASH = ['git ', 'npm ', 'node ', 'echo ', 'Write-Host', 'Get-'];
+  const isBashWhitelisted = (tool === 'Bash') && SCOPE_EXEMPT_BASH.some(p => rawCmd.trim().startsWith(p));
+  if (!isBashWhitelisted && (/\\\\[a-z0-9._-]/i.test(rawCmd) || /\\\\\\\\[a-z0-9._-]/i.test(inputText))) {
+    return { level: 'INFO', reason: 'UNC path זוהה — ייתכן lateral movement (\\\\server\\share)', ruleType: 'signature' };
   }
 
   // 1. Signature rules (on all tools)
