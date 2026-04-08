@@ -447,6 +447,7 @@ body {
 <div class="tabs">
   <button class="tab-btn active" id="tab-events"   onclick="switchTab('events')">📋 Events</button>
   <button class="tab-btn"        id="tab-skills"   onclick="switchTab('skills')">🔍 Skills</button>
+  <button class="tab-btn"        id="tab-audit"    onclick="switchTab('audit')">🗂️ File Audit</button>
   <button class="tab-btn"        id="tab-settings" onclick="switchTab('settings')">⚙️ הגדרות</button>
 </div>
 
@@ -651,6 +652,36 @@ body {
 </div>
 </div><!-- /view-settings -->
 
+<!-- FILE AUDIT TAB -->
+<div id="view-audit" style="display:none">
+<div class="toolbar">
+  <span class="toolbar-title">🗂️ File Audit Scanner</span>
+  <button class="refresh-btn" onclick="runAuditScan()" id="audit-scan-btn">▶ סרוק עכשיו</button>
+</div>
+
+<!-- Summary Cards -->
+<div id="audit-summary-cards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;"></div>
+
+<!-- Last scan info -->
+<div id="audit-meta" style="font-size:11px;color:var(--muted);margin-bottom:12px;"></div>
+
+<!-- Results Table -->
+<div style="overflow-x:auto;">
+<table id="audit-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+  <thead>
+    <tr style="background:var(--panel2);color:var(--muted2);">
+      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">קובץ</th>
+      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">סיכון</th>
+      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">ציון</th>
+      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">ממצאים</th>
+    </tr>
+  </thead>
+  <tbody id="audit-tbody"></tbody>
+</table>
+</div>
+<div id="audit-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);">לא נמצאו ממצאים — הפעל סריקה</div>
+</div>
+
 <div class="footer">
   EHZ-AI | Claude Code Security Monitor | 054-4825276 &nbsp;•&nbsp;
   Collector: <a href="http://localhost:3010/health" target="_blank" style="color:var(--accent)">localhost:3010</a>
@@ -811,10 +842,11 @@ function startRefresh() {
 // ── Tabs ─────────────────────────────────────────────────────────────────────
 
 function switchTab(tab) {
-  ['events','skills','settings'].forEach(t => {
+  ['events','skills','audit','settings'].forEach(t => {
     document.getElementById('view-' + t).style.display = t === tab ? '' : 'none';
     document.getElementById('tab-'  + t).classList.toggle('active', t === tab);
   });
+  if (tab === 'audit') { loadAuditResults(); }
   if (tab === 'settings') { loadConfig(); loadRetention(); }
   if (tab === 'skills')   loadSkillsRegistry();
 }
@@ -994,6 +1026,96 @@ async function saveLevel() {
 
 loadAll();
 startRefresh();
+
+// ── File Audit ────────────────────────────────────────────────────────────────
+
+function riskColor(label) {
+  return label === 'CRITICAL' ? 'var(--red)' :
+         label === 'HIGH'     ? 'var(--orange)' :
+         label === 'MEDIUM'   ? 'var(--yellow)' : 'var(--green)';
+}
+
+function auditSummaryCards(s) {
+  if (!s) return '';
+  const cards = [
+    { label: 'קבצים סרוקים', val: s.total_files, color: 'var(--accent)' },
+    { label: '✅ תקין',       val: s.clean,       color: 'var(--green)'  },
+    { label: '⚠️ MEDIUM',    val: s.medium,      color: 'var(--yellow)' },
+    { label: '🔶 HIGH',      val: s.high,        color: 'var(--orange)' },
+    { label: '🚨 CRITICAL',  val: s.critical,    color: 'var(--red)'    },
+  ];
+  return cards.map(c => `
+    <div style="background:var(--panel2);border:1px solid var(--border2);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:22px;font-weight:800;color:${c.color}">${c.val}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${c.label}</div>
+    </div>`).join('');
+}
+
+function renderAuditTable(files) {
+  const tbody = document.getElementById('audit-tbody');
+  const empty = document.getElementById('audit-empty');
+  if (!files || !files.length) {
+    tbody.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Sort by risk_score descending
+  files.sort((a,b) => b.risk_score - a.risk_score);
+
+  tbody.innerHTML = files.map(f => {
+    const shortPath = f.path.replace(/\\/g,'/').replace('C:/Claude-Repo/','');
+    const color = riskColor(f.risk_label);
+    const findings = f.findings.map(x =>
+      `<span style="color:${riskColor(x.level)};margin-left:6px">● ${x.reason} (שורה ${x.line})</span>`
+    ).join('<br>');
+    return `<tr style="border-bottom:1px solid var(--border);transition:background 0.1s" onmouseover="this.style.background='var(--panel2)'" onmouseout="this.style.background=''">
+      <td style="padding:8px 12px;color:var(--muted2);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${f.path}">${shortPath}</td>
+      <td style="padding:8px 12px;text-align:center"><span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700">${f.risk_label}</span></td>
+      <td style="padding:8px 12px;text-align:center;color:${color};font-weight:700">${f.risk_score}</td>
+      <td style="padding:8px 12px;line-height:1.8;font-size:11px">${findings}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function loadAuditResults() {
+  try {
+    const r = await fetch(API + '/audit');
+    const d = await r.json();
+    document.getElementById('audit-summary-cards').innerHTML = auditSummaryCards(d.summary);
+    if (d.summary) {
+      document.getElementById('audit-meta').textContent =
+        'סריקה אחרונה: ' + new Date(d.summary.scanned_at).toLocaleString('he-IL') +
+        ' | תיקייה: ' + d.summary.scan_path;
+    }
+    renderAuditTable(d.files || []);
+  } catch(e) {
+    document.getElementById('audit-meta').textContent = 'שגיאה בטעינה — ' + e.message;
+  }
+}
+
+async function runAuditScan() {
+  const btn = document.getElementById('audit-scan-btn');
+  btn.textContent = '⏳ סורק...';
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + '/audit/scan', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
+    const d = await r.json();
+    document.getElementById('audit-summary-cards').innerHTML = auditSummaryCards(d.summary);
+    if (d.summary) {
+      document.getElementById('audit-meta').textContent =
+        'סריקה אחרונה: ' + new Date(d.summary.scanned_at).toLocaleString('he-IL') +
+        ' | ' + d.summary.total_files + ' קבצים | תיקייה: ' + d.summary.scan_path;
+    }
+    renderAuditTable(d.files || []);
+  } catch(e) {
+    document.getElementById('audit-meta').textContent = 'שגיאת סריקה — ' + e.message;
+  } finally {
+    btn.textContent = '▶ סרוק עכשיו';
+    btn.disabled = false;
+  }
+}
 </script>
 </body>
 </html>
