@@ -918,8 +918,8 @@
       <h3>שלב 7 — ניטור מתקדם</h3>
       <p>FS Watcher, Session Recording, Process Monitor, Git Monitor, Env Vars, Immutable Log</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:33%;background:#10b981;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">2/6 🔄 בביצוע</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:50%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">3/6 🔄 בביצוע</span>
       </div>
     </div>
     <div class="phase-status" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2);">בביצוע</div>
@@ -937,11 +937,16 @@
       <div class="task-desc">תיעוד מלא לפי session_id — כל פעולה עם זמן/רמה/כלי/תיאור. GET /sessions (סיכום) + GET /sessions/:id (timeline מלא). טאב 📼 Sessions בדשבורד עם כרטיסים לחיצים, תיבת הסבר, Export HTML לכל session בנפרד + ייצוא כולל לתחקור. בוצע: 09.04.2026</div>
       <div class="task-tags"><span class="tag">recording</span><span class="tag">export</span><span class="tag">done</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">7.3</div>
-      <div class="task-title">Process Tree Monitor</div>
-      <div class="task-desc">עקוב אחרי child processes של Claude. kill תהליכים חשודים.</div>
-      <div class="task-tags"><span class="tag">process</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">7.3 ✅</div>
+      <div class="task-title">Process Monitor ✅</div>
+      <div class="task-desc">
+        <b>מה זה עושה:</b> כל תוכנה שרצה על המחשב — Claude רואה אותה. כל 30 שניות המערכת שואלת את Windows "אילו תהליכים פועלים עכשיו?" ומשווה לרשימה הקודמת. תהליך שלא היה קודם = event חדש.<br><br>
+        <b>תהליך רגיל</b> (bash, cmd, conhost) → INFO בלבד.<br>
+        <b>תהליך חשוד</b> — אחד מאלה: Python מריץ סקריפט ברקע / PowerShell עם פקודה מוצפנת (-enc) / netcat listener / curl pipe to shell → <b>HIGH + Telegram מיידי</b>.<br><br>
+        <b>דוגמה שנבדקה:</b> הרצת python test_proc.py ברקע → תוך 30 שניות הופיע HIGH בדשבורד + chip ⚙️ PROC אדום. בוצע: 09.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">process</span><span class="tag">anomaly</span><span class="tag">done</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">7.4</div>
