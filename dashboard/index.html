@@ -797,6 +797,17 @@ body {
           <div style="font-size:11px;color:var(--muted);">push לשרת שאינו ברשימה → התראת HIGH</div>
         </div>
       </div>
+      <!-- הסבר -->
+      <div style="font-size:11px;color:var(--muted2);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 13px;margin-bottom:12px;line-height:1.8;">
+        📋 <b style="color:var(--muted2);">מה להוסיף לרשימה?</b><br>
+        כל שרת Git שאתה מורשה לדחוף אליו — hostname או IP:<br>
+        <span style="color:var(--green);">✓ github.com</span> &nbsp;|&nbsp;
+        <span style="color:var(--green);">✓ gitlab.com</span> &nbsp;|&nbsp;
+        <span style="color:var(--green);">✓ bitbucket.org</span> &nbsp;|&nbsp;
+        <span style="color:var(--green);">✓ IP שרת פנימי</span><br>
+        <span style="color:var(--yellow);">⚠️ שרת חדש שהוספת?</span> הוסף אותו כאן כדי לא לקבל התראת HIGH בכל push.
+      </div>
+
       <div id="git-remotes-list" style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;"></div>
       <div style="display:flex;gap:8px;align-items:center;">
         <input id="new-remote-input" type="text" placeholder="hostname או IP (e.g. github.com)" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
