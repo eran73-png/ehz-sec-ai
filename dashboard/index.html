@@ -714,8 +714,17 @@ body {
       </div>
       <div id="tg-info" style="font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border-radius:8px;padding:9px 12px;">
         ℹ️ הגדרות Telegram (Token + Chat ID) נמצאות בקובץ <b style="color:var(--muted2);">collector/server.js</b> — שורות TELEGRAM_TOKEN ו-TELEGRAM_CHAT_ID.<br>
-        כאן ניתן רק להפעיל/לכבות שליחה.<br>
-        📖 אין לך בוט Telegram? <a href="https://core.telegram.org/bots/tutorial" target="_blank" style="color:var(--accent);text-decoration:underline;">מדריך הגדרת בוט — Telegram Docs</a>
+        כאן ניתן רק להפעיל/לכבות שליחה.
+        <div style="margin-top:10px;padding:10px 12px;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:8px;line-height:2;">
+          📱 <b style="color:var(--muted2);">איך יוצרים בוט Telegram (בטלפון או מחשב):</b><br>
+          <span style="color:var(--muted2);">1.</span> פתח Telegram וחפש <b style="color:var(--accent);">@BotFather</b><br>
+          <span style="color:var(--muted2);">2.</span> שלח לו <b style="color:var(--accent);">/newbot</b><br>
+          <span style="color:var(--muted2);">3.</span> תן שם לבוט (לדוגמה: <span style="color:var(--muted2);">MySecurityBot</span>)<br>
+          <span style="color:var(--muted2);">4.</span> BotFather ישלח לך <b style="color:var(--green);">Token</b> — העתק אותו ל-server.js<br>
+          <span style="color:var(--muted2);">5.</span> פתח את הבוט שלך ושלח <b style="color:var(--accent);">/start</b><br>
+          <span style="color:var(--muted2);">6.</span> כדי לקבל את ה-<b style="color:var(--green);">Chat ID</b> — שלח הודעה לבוט ואז פתח בדפדפן:<br>
+          &nbsp;&nbsp;&nbsp;<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:10px;">https://api.telegram.org/bot<span style="color:var(--yellow);">TOKEN</span>/getUpdates</code>
+        </div>
       </div>
       <div style="margin-top:10px;">
         <button onclick="testTelegram()" style="background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.35);color:var(--accent);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">
