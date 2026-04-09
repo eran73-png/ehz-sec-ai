@@ -918,8 +918,8 @@
       <h3>שלב 7 — ניטור מתקדם</h3>
       <p>FS Watcher, Session Recording, Process Monitor, Git Monitor, Env Vars, Immutable Log</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:66%;background:#10b981;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">4/6 🔄 בביצוע</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:83%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">5/6 🔄 בביצוע</span>
       </div>
     </div>
     <div class="phase-status" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2);">בביצוע</div>
@@ -962,11 +962,17 @@
       </div>
       <div class="task-tags"><span class="tag">git</span><span class="tag">env</span><span class="tag">done</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">7.5</div>
-      <div class="task-title">Immutable Audit Log</div>
-      <div class="task-desc">hash chain לוג — כל entry חתום. לא ניתן לשנות רטרואקטיבית.</div>
-      <div class="task-tags"><span class="tag">immutable</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">7.5 ✅</div>
+      <div class="task-title">Immutable Audit Log ✅</div>
+      <div class="task-desc">
+        <b>What it does:</b> Every event saved to the database gets a digital signature (SHA-256 hash). Each signature depends on the previous one — forming a chain.<br><br>
+        <b>Why it matters:</b> If someone edits or deletes an event from the database to hide their tracks — the chain breaks. You can instantly prove the log was tampered with. This is legal evidence.<br><br>
+        <b>Think of it like this:</b> Each event is a link. You cannot change one link without breaking all the links after it.<br><br>
+        <b>In the dashboard:</b> A 🔗 badge in the header shows how many signed events exist. Click it → runs full verification → shows ✅ Chain Valid or ❌ Chain BROKEN with the exact event where tampering occurred.<br><br>
+        <b>Tested:</b> Sent 2 events → verified chain intact → confirmed SHA-256 hash chain working. Done: 09.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">immutable</span><span class="tag">sha256</span><span class="tag">forensics</span><span class="tag">done</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">7.6</div>
