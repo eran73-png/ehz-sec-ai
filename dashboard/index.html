@@ -913,13 +913,13 @@ body {
 
 <!-- Results Table -->
 <div style="overflow-x:auto;">
-<table id="audit-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+<table id="audit-table" dir="ltr" style="width:100%;border-collapse:collapse;font-size:12px;">
   <thead>
     <tr style="background:var(--panel2);color:var(--muted2);">
-      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">File</th>
+      <th style="padding:8px 12px;text-align:left;border-bottom:1px solid var(--border2);">File</th>
       <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">Risk</th>
       <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">Score</th>
-      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">Findings</th>
+      <th style="padding:8px 12px;text-align:left;border-bottom:1px solid var(--border2);">Findings</th>
     </tr>
   </thead>
   <tbody id="audit-tbody"></tbody>
@@ -1737,10 +1737,10 @@ function renderAuditTable(files) {
       `<span style="color:${riskColor(x.level)};margin-left:6px">● ${x.reason} (line ${x.line})</span>`
     ).join('<br>');
     return `<tr style="border-bottom:1px solid var(--border);transition:background 0.1s" onmouseover="this.style.background='var(--panel2)'" onmouseout="this.style.background=''">
-      <td style="padding:8px 12px;color:var(--muted2);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${f.path}">${shortPath}</td>
+      <td style="padding:8px 12px;color:var(--muted2);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left" title="${f.path}">${shortPath}</td>
       <td style="padding:8px 12px;text-align:center"><span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700">${f.risk_label}</span></td>
       <td style="padding:8px 12px;text-align:center;color:${color};font-weight:700">${f.risk_score}</td>
-      <td style="padding:8px 12px;line-height:1.8;font-size:11px">${findings}</td>
+      <td style="padding:8px 12px;line-height:1.8;font-size:11px;text-align:left">${findings}</td>
     </tr>`;
   }).join('');
 }
