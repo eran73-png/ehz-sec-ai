@@ -1274,15 +1274,34 @@ async function loadDomains() {
     const r = await fetch(API + '/domains');
     const d = await r.json();
     const list = d.allowed_domains || [];
-    document.getElementById('domains-list').innerHTML = list.length
-      ? list.map(dom => `
-          <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;">
-            <span style="font-size:14px;">🌐</span>
-            <span style="flex:1;font-size:12px;color:var(--text);">${dom}</span>
-            <button onclick="removeDomain('${dom}')"
-              style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">✕</button>
-          </div>`).join('')
-      : '<div style="color:var(--muted);padding:12px;text-align:center;">אין דומיינים מורשים</div>';
+    if (!list.length) {
+      document.getElementById('domains-list').innerHTML =
+        '<div style="color:var(--muted);padding:12px;text-align:center;">אין דומיינים מורשים</div>';
+      return;
+    }
+    // Fetch reputation for all domains in parallel (MS6.10)
+    const repMap = {};
+    await Promise.all(list.map(async dom => {
+      try {
+        const r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(dom));
+        if (r2.ok) repMap[dom] = await r2.json();
+      } catch(_) {}
+    }));
+
+    document.getElementById('domains-list').innerHTML = list.map(dom => {
+      const rep = repMap[dom];
+      const repBadge = rep
+        ? `<span style="background:${rep.color}22;color:${rep.color};border:1px solid ${rep.color}55;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;flex-shrink:0;cursor:help" title="${(rep.reasons||[]).join('\n')}">${rep.score} ${rep.label}</span>`
+        : '';
+      return `
+        <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;">
+          <span style="font-size:14px;">🌐</span>
+          <span style="flex:1;font-size:12px;color:var(--text);">${dom}</span>
+          ${repBadge}
+          <button onclick="removeDomain('${dom}')"
+            style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">✕</button>
+        </div>`;
+    }).join('');
   } catch(e) {
     document.getElementById('domains-list').innerHTML = '<div style="color:var(--red)">שגיאה: ' + e.message + '</div>';
   }
