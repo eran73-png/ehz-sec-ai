@@ -816,6 +816,63 @@ app.get('/retention', (req, res) => {
   });
 });
 
+// ─── Sessions (MS7.2) ────────────────────────────────────────────────────────
+
+// GET /sessions — רשימת sessions מסוכמת
+app.get('/sessions', (req, res) => {
+  const limit = parseInt(req.query.limit) || 50;
+
+  // שלוף את כל ה-events (רק שדות נחוצים) — ללא FSWatcher
+  db.find({ session_id: { $ne: 'fsw' } }, { session_id:1, ts:1, tool_name:1, level:1, reason:1 })
+    .sort({ ts: -1 })
+    .exec((err, docs) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      // אגרגציה לפי session_id
+      const sessionMap = {};
+      const LEVEL_ORDER = { CRITICAL:4, HIGH:3, MEDIUM:2, INFO:1 };
+
+      for (const d of docs) {
+        const sid = d.session_id || 'unknown';
+        if (!sessionMap[sid]) {
+          sessionMap[sid] = {
+            session_id: sid,
+            first_ts:   d.ts,
+            last_ts:    d.ts,
+            count:      0,
+            max_level:  'INFO',
+            tools:      new Set(),
+          };
+        }
+        const s = sessionMap[sid];
+        if (d.ts < s.first_ts) s.first_ts = d.ts;
+        if (d.ts > s.last_ts)  s.last_ts  = d.ts;
+        s.count++;
+        s.tools.add(d.tool_name);
+        if ((LEVEL_ORDER[d.level] || 0) > (LEVEL_ORDER[s.max_level] || 0)) {
+          s.max_level = d.level;
+        }
+      }
+
+      // המר ל-array, מיין לפי last_ts desc
+      const sessions = Object.values(sessionMap)
+        .sort((a, b) => b.last_ts - a.last_ts)
+        .slice(0, limit)
+        .map(s => ({ ...s, tools: [...s.tools] }));
+
+      res.json({ sessions, total: sessions.length });
+    });
+});
+
+// GET /sessions/:id — timeline מלא של session בודד
+app.get('/sessions/:id', (req, res) => {
+  const sid = req.params.id;
+  db.find({ session_id: sid }).sort({ ts: 1 }).exec((err, docs) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ session_id: sid, events: docs, count: docs.length });
+  });
+});
+
 // GET /health
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
