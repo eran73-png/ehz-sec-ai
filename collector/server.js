@@ -835,6 +835,8 @@ const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'pri
 
 // קבצים שנכתבו ע"י Claude בשניות האחרונות — למנוע כפילות עם Write Guard
 const recentHookWrites = new Map(); // path → timestamp
+// debounce — למנוע events כפולים על אותו קובץ תוך 3 שניות
+const fswDebounce = new Map(); // path → timeout handle
 let fswActive = false;
 
 function markHookWrite(filePath) {
@@ -844,7 +846,7 @@ function wasRecentHookWrite(filePath) {
   const key = filePath.toLowerCase().replace(/\\/g, '/');
   const ts = recentHookWrites.get(key);
   if (!ts) return false;
-  if (Date.now() - ts < 8000) return true; // פחות מ-8 שניות — כנראה Claude
+  if (Date.now() - ts < 8000) return true;
   recentHookWrites.delete(key);
   return false;
 }
@@ -864,30 +866,50 @@ function startFSWatcher() {
       // אם נכתב ע"י Claude לאחרונה — לא מייצר event כפול
       if (wasRecentHookWrite(fullPath)) return;
 
-      // בדוק אם קובץ רגיש
-      const nameLower = filename.toLowerCase();
-      const isSensitive = FSW_SENSITIVE.some(s => nameLower.includes(s));
-      const level  = isSensitive ? 'HIGH' : 'INFO';
-      const reason = isSensitive
-        ? `🔍 FSW: קובץ רגיש שונה מחוץ ל-Claude — ${filename}`
-        : `🔍 FSW: ${eventType} — ${filename}`;
-
-      db.insert({
-        ts:            Date.now(),
-        hook_type:     'FSWatcher',
-        tool_name:     'FSWatcher',
-        session_id:    'fsw',
-        level,
-        reason,
-        rule_type:     'fsw',
-        hardening_level: 1,
-        input_summary: fullPath,
-        output_summary: '',
-      });
-
-      if (isSensitive) {
-        sendTelegram(`🔍 <b>EHZ-SEC-AI — FSWatcher</b>\n📄 קובץ רגיש שונה:\n<code>${filename}</code>`);
+      // debounce — אותו קובץ תוך 3 שניות = event אחד בלבד
+      const debounceKey = fullPath.toLowerCase();
+      if (fswDebounce.has(debounceKey)) {
+        clearTimeout(fswDebounce.get(debounceKey));
       }
+      fswDebounce.set(debounceKey, setTimeout(() => {
+        fswDebounce.delete(debounceKey);
+
+        const nameLower = filename.toLowerCase();
+        const isSensitive = FSW_SENSITIVE.some(s => nameLower.includes(s));
+        // rename = קובץ חדש שהועתק/נוצר מבחוץ → HIGH
+        // change = קובץ קיים שונה → INFO (אלא אם רגיש)
+        const isNewFile = eventType === 'rename';
+        let level, reason;
+
+        if (isSensitive) {
+          level  = 'HIGH';
+          reason = `🔍 FSW: קובץ רגיש ${isNewFile ? 'הועתק לפרויקט' : 'שונה'} — ${filename}`;
+        } else if (isNewFile) {
+          level  = 'HIGH';
+          reason = `📥 FSW: קובץ חדש הועתק לפרויקט — ${filename}`;
+        } else {
+          level  = 'INFO';
+          reason = `🔍 FSW: שינוי — ${filename}`;
+        }
+
+        db.insert({
+          ts:            Date.now(),
+          hook_type:     'FSWatcher',
+          tool_name:     'FSWatcher',
+          session_id:    'fsw',
+          level,
+          reason,
+          rule_type:     'fsw',
+          hardening_level: 1,
+          input_summary: fullPath,
+          output_summary: eventType,
+        });
+
+        if (level === 'HIGH') {
+          const emoji = isSensitive ? '🔑' : '📥';
+          sendTelegram(`${emoji} <b>EHZ-SEC-AI — FSWatcher</b>\n${reason}\n<code>${filename}</code>`);
+        }
+      }, 3000)); // 3 שניות debounce
     });
 
     watcher.on('error', e => console.error('[FSW] Error:', e.message));
