@@ -977,6 +977,79 @@ function startFSWatcher() {
   }
 }
 
+// ─── Process Monitor (MS7.3) ─────────────────────────────────────────────────
+
+const { exec } = require('child_process');
+
+// תבניות תהליכים חשודים — CommandLine שמכיל אחד מאלה
+const PROC_SUSPICIOUS = [
+  /\bnc\b.*-[lv]/i,          // netcat listener
+  /\bncat\b/i,
+  /powershell.*-en[co]/i,     // powershell encoded command
+  /python.*\.(py)\s/i,        // python מריץ סקריפט
+  /curl.*\|\s*(ba)?sh/i,      // curl pipe to shell
+  /wget.*-O.*\|\s*sh/i,
+  /mshta\b/i,                 // mshta — לעיתים בשימוש זדוני
+  /regsvr32.*\/s.*\/u/i,
+];
+
+let procBaseline = new Set(); // PIDs שנראו בהפעלה
+
+function getProcessList(cb) {
+  const cmd = `powershell -NoProfile -Command "Get-CimInstance Win32_Process | Select-Object ProcessId,Name,CommandLine,ParentProcessId | ConvertTo-Json -Compress"`;
+  exec(cmd, { timeout: 10000 }, (err, stdout) => {
+    if (err || !stdout) return cb([]);
+    try {
+      const list = JSON.parse(stdout);
+      cb(Array.isArray(list) ? list : [list]);
+    } catch(_) { cb([]); }
+  });
+}
+
+function startProcessMonitor() {
+  // snapshot ראשוני — baseline
+  getProcessList(procs => {
+    procs.forEach(p => procBaseline.add(p.ProcessId));
+    console.log(`[EHZ-SEC-AI] ProcessMonitor: baseline ${procBaseline.size} processes`);
+
+    // סריקה כל 30 שניות
+    setInterval(() => {
+      getProcessList(current => {
+        for (const p of current) {
+          if (procBaseline.has(p.ProcessId)) continue; // תהליך ישן
+          procBaseline.add(p.ProcessId);
+
+          const cmdLine = (p.CommandLine || '').trim();
+          const isSuspicious = PROC_SUSPICIOUS.some(re => re.test(cmdLine));
+          if (!isSuspicious && !cmdLine) continue; // תהליך חדש ללא CommandLine — לא מעניין
+
+          const level  = isSuspicious ? 'HIGH' : 'INFO';
+          const reason = isSuspicious
+            ? `⚙️ PROC: תהליך חשוד — ${p.Name} (PID ${p.ProcessId})`
+            : `⚙️ PROC: תהליך חדש — ${p.Name} (PID ${p.ProcessId})`;
+
+          db.insert({
+            ts:            Date.now(),
+            hook_type:     'ProcessMonitor',
+            tool_name:     'ProcessMonitor',
+            session_id:    'proc',
+            level,
+            reason,
+            rule_type:     'process',
+            hardening_level: 1,
+            input_summary: cmdLine.slice(0, 200),
+            output_summary: `PID:${p.ProcessId} Parent:${p.ParentProcessId}`,
+          });
+
+          if (isSuspicious) {
+            sendTelegram(`⚙️ <b>EHZ-SEC-AI — Process Monitor</b>\n🚨 תהליך חשוד:\n<code>${p.Name} (PID ${p.ProcessId})</code>\n<code>${cmdLine.slice(0,150)}</code>`);
+          }
+        }
+      });
+    }, 30000);
+  });
+}
+
 // ─── Start ───────────────────────────────────────────────────────────────────
 
 app.listen(PORT, '127.0.0.1', () => {
@@ -986,6 +1059,9 @@ app.listen(PORT, '127.0.0.1', () => {
 
   // הפעל FSWatcher
   startFSWatcher();
+
+  // הפעל Process Monitor
+  startProcessMonitor();
 
   // Startup Telegram ping
   if (TELEGRAM_TOKEN && TELEGRAM_CHAT) {

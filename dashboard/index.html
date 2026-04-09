@@ -218,6 +218,7 @@ body {
 .chip.pre  { color: var(--accent); border-color: rgba(14,165,233,0.2); background: rgba(14,165,233,0.06); }
 .chip.post { color: var(--purple); border-color: rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); }
 .chip.fsw  { color: #06b6d4; border-color: rgba(6,182,212,0.25); background: rgba(6,182,212,0.08); }
+.chip.proc { color: #f43f5e; border-color: rgba(244,63,94,0.25);  background: rgba(244,63,94,0.08); }
 
 /* Reason text */
 .reason { color: var(--muted2); max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
@@ -487,6 +488,7 @@ body {
     <option>WebSearch</option><option>WebFetch</option><option>Write</option>
     <option>Edit</option><option>Bash</option><option>Read</option>
     <option>FSWatcher</option>
+    <option>ProcessMonitor</option>
   </select>
   <span id="search-count" style="font-size:11px;color:var(--muted);white-space:nowrap;"></span>
 </div>
@@ -956,7 +958,8 @@ function badgeHTML(level) {
 }
 
 function chipHTML(hookType, toolName) {
-  if (toolName === 'FSWatcher') return `<span class="chip fsw">👁️ FSW</span>`;
+  if (toolName === 'FSWatcher')     return `<span class="chip fsw">👁️ FSW</span>`;
+  if (toolName === 'ProcessMonitor') return `<span class="chip proc">⚙️ PROC</span>`;
   const cls = hookType === 'PreToolUse' ? 'pre' : hookType === 'PostToolUse' ? 'post' : '';
   const lbl = hookType === 'PreToolUse' ? 'Pre' : hookType === 'PostToolUse' ? 'Post' : hookType || '?';
   return `<span class="chip ${cls}">${lbl}</span>`;
