@@ -684,10 +684,25 @@ body {
 <div id="view-sessions" style="display:none">
 <div class="toolbar">
   <span class="toolbar-title">📼 Session Recording</span>
-  <span style="font-size:11px;color:var(--muted)">תיעוד מלא של כל שיחה עם Claude</span>
   <button class="refresh-btn" onclick="loadSessions()">🔄 רענן</button>
+  <button class="refresh-btn" onclick="exportAllSessions()" style="color:#10b981;border-color:rgba(16,185,129,0.3);">📄 ייצא הכל</button>
 </div>
-<div id="sessions-list" style="display:flex;flex-direction:column;gap:10px;margin-top:4px;"></div>
+
+<!-- הסבר -->
+<div style="background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.15);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;">
+  <div style="font-size:22px;flex-shrink:0;">ℹ️</div>
+  <div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">מה מתועד כאן?</div>
+    <div style="font-size:12px;color:var(--muted2);line-height:1.7;">
+      כל שיחה עם Claude Code מתועדת כ-<b>Session</b> — קבוצת פעולות תחת אותו מזהה שיחה.<br>
+      <b>מתועד:</b> אילו כלים הופעלו (Read/Edit/Bash...), על אילו קבצים, מתי, ואיזו רמת סיכון.<br>
+      <b>לא מתועד:</b> טקסט הפרומפט או התשובות — רק הפעולות בפועל.<br>
+      <b>שימוש לתחקור:</b> לחץ ▼ לפתיחת timeline מלא · לחץ 📄 לייצוא HTML של session בודד.
+    </div>
+  </div>
+</div>
+
+<div id="sessions-list" style="display:flex;flex-direction:column;gap:10px;"></div>
 </div><!-- /view-sessions -->
 
 <!-- FILE AUDIT TAB -->
@@ -1098,7 +1113,11 @@ function renderSessionCard(s) {
           ${tools ? '| ' + esc(tools) : ''}
         </div>
       </div>
-      <div style="color:var(--muted);font-size:12px;" id="sess-arrow-${sid8}">▼</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button onclick="event.stopPropagation();exportSession('${s.session_id}')"
+          style="font-size:10px;padding:3px 8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:#10b981;border-radius:4px;cursor:pointer;">📄 ייצא</button>
+        <div style="color:var(--muted);font-size:12px;" id="sess-arrow-${sid8}">▼</div>
+      </div>
     </div>
     <div id="sess-timeline-${s.session_id}" style="display:none;border-top:1px solid var(--border);padding:10px 18px;">
       <p style="color:var(--muted);font-size:12px;">טוען timeline...</p>
@@ -1142,6 +1161,111 @@ async function toggleSession(sid) {
   } catch(e) {
     panel.innerHTML = '<p style="color:var(--red);font-size:12px;">שגיאה</p>';
   }
+}
+
+function buildSessionHTML(sid, events, summary) {
+  const dur = summary ? Math.round((summary.last_ts - summary.first_ts)/1000) : 0;
+  const durStr = dur < 60 ? `${dur}s` : `${Math.floor(dur/60)}m ${dur%60}s`;
+  const rows = events.map(e => `
+    <tr style="border-bottom:1px solid #1e2d45;">
+      <td style="padding:6px 10px;color:#64748b;white-space:nowrap;font-family:monospace;font-size:12px;">${new Date(e.ts).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</td>
+      <td style="padding:6px 10px;"><span style="padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;background:${e.level==='CRITICAL'?'rgba(239,68,68,0.2)':e.level==='HIGH'?'rgba(249,115,22,0.2)':'rgba(100,116,139,0.2)'};color:${e.level==='CRITICAL'?'#ef4444':e.level==='HIGH'?'#f97316':'#94a3b8'}">${e.level}</span></td>
+      <td style="padding:6px 10px;font-family:monospace;color:#0ea5e9;font-size:12px;">${e.tool_name||''}</td>
+      <td style="padding:6px 10px;color:#94a3b8;font-size:12px;max-width:380px;">${(e.reason||e.input_summary||'').slice(0,100)}</td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8">
+<title>EHZ-SEC-AI — Session ${sid.slice(0,8)}</title>
+<style>
+  body{background:#080c14;color:#e2e8f0;font-family:'Segoe UI',Arial,sans-serif;padding:32px;direction:rtl;}
+  h1{font-size:22px;margin-bottom:4px;} .sub{color:#64748b;font-size:13px;margin-bottom:24px;}
+  .meta{display:flex;gap:24px;margin-bottom:24px;flex-wrap:wrap;}
+  .m{background:#111827;border:1px solid #1e2d45;border-radius:8px;padding:12px 18px;}
+  .ml{font-size:11px;color:#64748b;margin-bottom:2px;} .mv{font-size:16px;font-weight:700;color:#0ea5e9;}
+  table{width:100%;border-collapse:collapse;} th{text-align:right;padding:8px 10px;font-size:11px;color:#64748b;border-bottom:2px solid #1e2d45;font-weight:500;}
+  tr:hover{background:rgba(255,255,255,0.02);}
+  .footer{margin-top:32px;font-size:11px;color:#475569;text-align:center;}
+</style></head><body>
+<h1>📼 EHZ-SEC-AI — Session Report</h1>
+<div class="sub">Session ID: ${sid}</div>
+<div class="meta">
+  <div class="m"><div class="ml">סה"כ פעולות</div><div class="mv">${events.length}</div></div>
+  <div class="m"><div class="ml">משך</div><div class="mv">${durStr}</div></div>
+  <div class="m"><div class="ml">רמה מקסימלית</div><div class="mv" style="color:${summary?.max_level==='CRITICAL'?'#ef4444':summary?.max_level==='HIGH'?'#f97316':'#94a3b8'}">${summary?.max_level||'—'}</div></div>
+  <div class="m"><div class="ml">התחלה</div><div class="mv" style="font-size:13px;">${new Date(summary?.first_ts||0).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div></div>
+  <div class="m"><div class="ml">סיום</div><div class="mv" style="font-size:13px;">${new Date(summary?.last_ts||0).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div></div>
+</div>
+<table><thead><tr><th>זמן</th><th>רמה</th><th>כלי</th><th>תיאור</th></tr></thead>
+<tbody>${rows}</tbody></table>
+<div class="footer">EHZ-AI | Claude Code Security Monitor | יוצא ${new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div>
+</body></html>`;
+}
+
+async function exportSession(sid) {
+  try {
+    const [sessionData, allData] = await Promise.all([
+      fetchJSON('/sessions/' + encodeURIComponent(sid)),
+      fetchJSON('/sessions?limit=200')
+    ]);
+    const summary = (allData.sessions||[]).find(s => s.session_id === sid);
+    const html = buildSessionHTML(sid, sessionData.events||[], summary);
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `session-${sid.slice(0,8)}-${new Date().toISOString().slice(0,10)}.html`;
+    a.click();
+  } catch(e) { alert('שגיאה בייצוא: ' + e.message); }
+}
+
+async function exportAllSessions() {
+  try {
+    const data = await fetchJSON('/sessions?limit=200');
+    const sessions = data.sessions || [];
+    if (!sessions.length) { alert('אין sessions לייצוא'); return; }
+
+    // שלוף timeline לכל session
+    const allTimelines = await Promise.all(
+      sessions.map(s => fetchJSON('/sessions/' + encodeURIComponent(s.session_id)))
+    );
+
+    let allHTML = `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8">
+<title>EHZ-SEC-AI — כל ה-Sessions</title>
+<style>
+  body{background:#080c14;color:#e2e8f0;font-family:'Segoe UI',Arial,sans-serif;padding:32px;direction:rtl;}
+  h1{font-size:24px;margin-bottom:4px;} .sub{color:#64748b;font-size:13px;margin-bottom:32px;}
+  .sess-block{margin-bottom:40px;border:1px solid #1e2d45;border-radius:10px;overflow:hidden;}
+  .sess-header{background:#111827;padding:14px 18px;font-size:14px;font-weight:700;}
+  .sess-meta{color:#64748b;font-size:12px;margin-top:4px;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:right;padding:7px 10px;font-size:11px;color:#64748b;border-bottom:1px solid #1e2d45;background:#0d1424;}
+  td{padding:6px 10px;font-size:12px;border-bottom:1px solid rgba(30,45,69,0.5);}
+  .footer{margin-top:32px;font-size:11px;color:#475569;text-align:center;}
+</style></head><body>
+<h1>📼 EHZ-SEC-AI — Session Recording Report</h1>
+<div class="sub">${sessions.length} sessions · יוצא ${new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div>`;
+
+    sessions.forEach((s, i) => {
+      const events = allTimelines[i]?.events || [];
+      const dur = Math.round((s.last_ts - s.first_ts)/1000);
+      const durStr = dur < 60 ? `${dur}s` : `${Math.floor(dur/60)}m ${dur%60}s`;
+      allHTML += `<div class="sess-block">
+        <div class="sess-header">📼 ${s.session_id.slice(0,8)}…
+          <span style="font-size:12px;font-weight:400;margin-right:12px;padding:2px 8px;border-radius:3px;background:${s.max_level==='CRITICAL'?'rgba(239,68,68,0.2)':s.max_level==='HIGH'?'rgba(249,115,22,0.2)':'rgba(100,116,139,0.2)'};color:${s.max_level==='CRITICAL'?'#ef4444':s.max_level==='HIGH'?'#f97316':'#94a3b8'}">${s.max_level}</span>
+          <div class="sess-meta">${events.length} פעולות · ${durStr} · ${new Date(s.first_ts).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div>
+        </div>
+        <table><thead><tr><th>זמן</th><th>רמה</th><th>כלי</th><th>תיאור</th></tr></thead><tbody>
+        ${events.map(e=>`<tr><td style="color:#64748b;font-family:monospace;">${new Date(e.ts).toLocaleTimeString('he-IL',{timeZone:'Asia/Jerusalem'})}</td><td style="color:${e.level==='CRITICAL'?'#ef4444':e.level==='HIGH'?'#f97316':'#94a3b8'}">${e.level}</td><td style="color:#0ea5e9;font-family:monospace;">${e.tool_name||''}</td><td style="color:#94a3b8;">${(e.reason||e.input_summary||'').slice(0,100)}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    });
+
+    allHTML += `<div class="footer">EHZ-AI | Claude Code Security Monitor | 054-4825276</div></body></html>`;
+
+    const blob = new Blob([allHTML], {type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `sessions-report-${new Date().toISOString().slice(0,10)}.html`;
+    a.click();
+  } catch(e) { alert('שגיאה בייצוא: ' + e.message); }
 }
 
 // ── Skills ────────────────────────────────────────────────────────────────────
