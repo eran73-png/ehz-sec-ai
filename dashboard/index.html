@@ -445,10 +445,11 @@ body {
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab-btn active" id="tab-events"   onclick="switchTab('events')">📋 Events</button>
-  <button class="tab-btn"        id="tab-skills"   onclick="switchTab('skills')">🔍 Skills</button>
-  <button class="tab-btn"        id="tab-audit"    onclick="switchTab('audit')">🗂️ File Audit</button>
-  <button class="tab-btn"        id="tab-settings" onclick="switchTab('settings')">⚙️ הגדרות</button>
+  <button class="tab-btn active" id="tab-events"    onclick="switchTab('events')">📋 Events</button>
+  <button class="tab-btn"        id="tab-skills"    onclick="switchTab('skills')">🔍 Skills</button>
+  <button class="tab-btn"        id="tab-audit"     onclick="switchTab('audit')">🗂️ File Audit</button>
+  <button class="tab-btn"        id="tab-projects"  onclick="switchTab('projects')">📁 Projects</button>
+  <button class="tab-btn"        id="tab-settings"  onclick="switchTab('settings')">⚙️ הגדרות</button>
 </div>
 
 <!-- EVENTS TAB -->
@@ -720,6 +721,20 @@ body {
 <div id="audit-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);">לא נמצאו ממצאים — הפעל סריקה</div>
 </div>
 
+<!-- PROJECTS TAB -->
+<div id="view-projects" style="display:none">
+<div class="toolbar">
+  <span class="toolbar-title">📁 Projects Explorer — C:/Claude-Repo</span>
+  <button class="refresh-btn" onclick="loadProjects()">↺ רענן</button>
+</div>
+
+<div id="projects-meta" style="font-size:11px;color:var(--muted);margin-bottom:14px;"></div>
+
+<div id="projects-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+  <div style="text-align:center;padding:40px;color:var(--muted);grid-column:1/-1;">טוען...</div>
+</div>
+</div><!-- /view-projects -->
+
 <div class="footer">
   EHZ-AI | Claude Code Security Monitor | 054-4825276 &nbsp;•&nbsp;
   Collector: <a href="http://localhost:3010/health" target="_blank" style="color:var(--accent)">localhost:3010</a>
@@ -880,13 +895,14 @@ function startRefresh() {
 // ── Tabs ─────────────────────────────────────────────────────────────────────
 
 function switchTab(tab) {
-  ['events','skills','audit','settings'].forEach(t => {
+  ['events','skills','audit','projects','settings'].forEach(t => {
     document.getElementById('view-' + t).style.display = t === tab ? '' : 'none';
     document.getElementById('tab-'  + t).classList.toggle('active', t === tab);
   });
-  if (tab === 'audit') { loadAuditResults(); }
+  if (tab === 'audit')    { loadAuditResults(); }
   if (tab === 'settings') { loadConfig(); loadRetention(); }
-  if (tab === 'skills')   loadSkillsRegistry();
+  if (tab === 'skills')   { loadSkillsRegistry(); }
+  if (tab === 'projects') { loadProjects(); }
 }
 
 // ── Skills ────────────────────────────────────────────────────────────────────
@@ -1216,6 +1232,144 @@ async function runAuditScan() {
     btn.textContent = '▶ סרוק עכשיו';
     btn.disabled = false;
   }
+}
+
+// ── Projects Explorer (MS6.11 + MS6.12) ──────────────────────────────────────
+
+let projectsExpanded = new Set(); // paths of expanded folders
+
+function folderIcon(name) {
+  const n = name.toLowerCase();
+  if (n.includes('agent'))    return '🤖';
+  if (n.includes('security') || n.includes('sec')) return '🔒';
+  if (n.includes('video'))    return '🎬';
+  if (n.includes('game'))     return '🎮';
+  if (n.includes('server'))   return '🖥️';
+  if (n.includes('backup'))   return '💾';
+  if (n.includes('oracle') || n.includes('cloud')) return '☁️';
+  if (n.includes('research')) return '🔬';
+  if (n.includes('tool'))     return '🛠️';
+  if (n.includes('health'))   return '💚';
+  if (n.includes('pilates') || n.includes('renovation')) return '🏢';
+  if (n.includes('local'))    return '💻';
+  if (n.includes('personal')) return '👤';
+  if (n.includes('job'))      return '💼';
+  if (n.includes('skill'))    return '⚡';
+  return '📁';
+}
+
+function timeAgo(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor(diff / 60000);
+  if (d > 30) return 'לפני חודש+';
+  if (d > 0)  return `לפני ${d} ימים`;
+  if (h > 0)  return `לפני ${h} שעות`;
+  return `לפני ${m} דקות`;
+}
+
+function renderProjectCard(node) {
+  const expanded = projectsExpanded.has(node.path);
+  const hasChildren = node.children && node.children.length > 0;
+  const icon = folderIcon(node.name);
+  const shortPath = node.path.replace('C:/Claude-Repo/', '');
+
+  const childrenHTML = hasChildren && expanded
+    ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:4px;">
+        ${node.children.map(c => `
+          <div style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:5px;background:var(--panel);font-size:11px;color:var(--muted2);">
+            <span>${folderIcon(c.name)}</span>
+            <span style="flex:1;font-weight:600;color:var(--text);">${c.name}</span>
+            <span style="color:var(--muted);font-size:10px;">${c.files}f ${c.folders}d</span>
+          </div>`).join('')}
+       </div>` : '';
+
+  const noteVal = (node.note || '').replace(/"/g, '&quot;');
+
+  return `<div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.2s;"
+    onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <span style="font-size:22px;line-height:1;">${icon}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${node.name}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px;">${shortPath || 'root'}</div>
+      </div>
+      ${hasChildren ? `<button onclick="toggleProject('${node.path}')"
+        style="border:1px solid var(--border2);background:transparent;color:var(--muted2);border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer;">
+        ${expanded ? '▲' : '▼'} ${node.children.length}
+      </button>` : ''}
+    </div>
+
+    <div style="display:flex;gap:6px;font-size:10px;">
+      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📄 ${node.files} קבצים</span>
+      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📁 ${node.folders} תיקיות</span>
+      ${node.last_mod ? `<span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted);">🕐 ${timeAgo(node.last_mod)}</span>` : ''}
+    </div>
+
+    ${childrenHTML}
+
+    <!-- Note (MS6.12) -->
+    <div id="note-display-${btoa(node.path).replace(/[^a-z0-9]/gi,'')}"
+      style="font-size:11px;color:var(--muted2);font-style:italic;${node.note ? '' : 'display:none'}">
+      💬 ${node.note}
+    </div>
+    <div style="display:flex;gap:5px;align-items:center;">
+      <input id="note-input-${btoa(node.path).replace(/[^a-z0-9]/gi,'')}" type="text"
+        value="${noteVal}" placeholder="✏️ הוסף הערה לתיקייה..."
+        style="flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:4px 8px;font-size:11px;display:none;"
+        onkeydown="if(event.key==='Enter') saveNote('${node.path}',this.value)" />
+      <button onclick="toggleNoteEdit('${node.path}')"
+        style="border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer;">✏️</button>
+    </div>
+  </div>`;
+}
+
+function toggleProject(p) {
+  if (projectsExpanded.has(p)) projectsExpanded.delete(p);
+  else projectsExpanded.add(p);
+  loadProjects(true); // re-render without fetch
+}
+
+let _projectsData = null;
+
+async function loadProjects(reuseCache) {
+  if (!reuseCache || !_projectsData) {
+    try {
+      const r = await fetch(API + '/projects');
+      _projectsData = await r.json();
+    } catch(e) {
+      document.getElementById('projects-grid').innerHTML =
+        '<div style="color:var(--red);padding:20px;">שגיאה: ' + e.message + '</div>';
+      return;
+    }
+  }
+  const d = _projectsData;
+  document.getElementById('projects-meta').textContent =
+    d.count + ' תיקיות ב-' + d.root;
+  document.getElementById('projects-grid').innerHTML =
+    (d.tree || []).map(renderProjectCard).join('');
+}
+
+function toggleNoteEdit(p) {
+  const key = btoa(p).replace(/[^a-z0-9]/gi,'');
+  const inp = document.getElementById('note-input-' + key);
+  inp.style.display = inp.style.display === 'none' ? '' : 'none';
+  if (inp.style.display !== 'none') inp.focus();
+}
+
+async function saveNote(p, note) {
+  try {
+    await fetch(API + '/projects/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: p, note: note.trim() })
+    });
+    _projectsData = null; // invalidate cache
+    loadProjects();
+  } catch(e) { alert('שגיאה: ' + e.message); }
 }
 </script>
 </body>

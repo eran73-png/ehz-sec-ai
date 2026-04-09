@@ -538,6 +538,91 @@ app.get('/audit/schedule', (req, res) => {
   });
 });
 
+// ─── Projects Explorer (Milestone 6.11) ──────────────────────────────────────
+
+const PROJECTS_ROOT    = 'C:/Claude-Repo';
+const PROJECTS_NOTES_FILE = path.join(__dirname, 'projects-notes.json');
+const EXCLUDE_PROJ = new Set(['node_modules', '.git', 'backups', 'dist', 'build', '__pycache__']);
+
+function readNotes() {
+  try { return JSON.parse(fs.readFileSync(PROJECTS_NOTES_FILE, 'utf8')); } catch(_) { return {}; }
+}
+
+function getFolderStats(dirPath) {
+  let files = 0, folders = 0, lastMod = 0;
+  try {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    for (const e of entries) {
+      if (EXCLUDE_PROJ.has(e.name)) continue;
+      if (e.isDirectory()) { folders++; }
+      else {
+        files++;
+        try {
+          const m = fs.statSync(path.join(dirPath, e.name)).mtimeMs;
+          if (m > lastMod) lastMod = m;
+        } catch(_) {}
+      }
+    }
+  } catch(_) {}
+  return { files, folders, lastMod };
+}
+
+function buildProjectTree(rootPath, depth = 0) {
+  const notes = readNotes();
+  let entries;
+  try { entries = fs.readdirSync(rootPath, { withFileTypes: true }); }
+  catch(_) { return []; }
+
+  const dirs = entries
+    .filter(e => e.isDirectory() && !EXCLUDE_PROJ.has(e.name))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  return dirs.map(e => {
+    const fullPath = path.join(rootPath, e.name).replace(/\\/g, '/');
+    const stats    = getFolderStats(fullPath);
+    const node = {
+      name:     e.name,
+      path:     fullPath,
+      files:    stats.files,
+      folders:  stats.folders,
+      last_mod: stats.lastMod ? new Date(stats.lastMod).toISOString() : null,
+      note:     notes[fullPath] || '',
+      children: [],
+    };
+    if (depth < 1) {
+      node.children = buildProjectTree(fullPath, depth + 1);
+    }
+    return node;
+  });
+}
+
+// GET /projects — עץ תיקיות C:/Claude-Repo (רמה 0-1)
+app.get('/projects', (req, res) => {
+  try {
+    const tree = buildProjectTree(PROJECTS_ROOT);
+    res.json({ root: PROJECTS_ROOT, tree, count: tree.length });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// GET /projects/notes — כל ההערות
+app.get('/projects/notes', (req, res) => {
+  res.json(readNotes());
+});
+
+// POST /projects/notes — שמור הערה לתיקייה
+// body: { path, note }
+app.post('/projects/notes', (req, res) => {
+  try {
+    const { path: p, note } = req.body || {};
+    if (!p) return res.status(400).json({ error: 'path required' });
+    const notes = readNotes();
+    if (note === '' || note == null) { delete notes[p]; }
+    else { notes[p] = note; }
+    fs.writeFileSync(PROJECTS_NOTES_FILE, JSON.stringify(notes, null, 2), 'utf8');
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // DELETE /events — מחיקה ידנית (עם אפשרות לפי גיל)
 // body: { older_than_days: N } — אם לא נשלח → מוחק הכל
 app.delete('/events', (req, res) => {
