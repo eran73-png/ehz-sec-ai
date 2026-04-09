@@ -938,10 +938,10 @@ function chipHTML(hookType, toolName) {
 
 function fmtTs(ts) {
   if (!ts) return '—';
-  return new Date(ts).toLocaleTimeString('he-IL', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    timeZone: 'Asia/Jerusalem'
-  });
+  const d = new Date(ts);
+  const date = d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Jerusalem' });
+  const time = d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jerusalem' });
+  return `${date} ${time}`;
 }
 
 function esc(s) {
