@@ -294,6 +294,85 @@ function checkScopeRule(event) {
   return null;
 }
 
+// ─── Rule 6: Git + Env Monitor (MS7.4) ───────────────────────────────────────
+
+// Remotes מורשים — כל דומיין אחר = HIGH
+const ALLOWED_GIT_REMOTES = [
+  'github.com',
+  'ehz-server.duckdns.org',
+  '109.207.76.169',   // Kamatera
+  '35.239.136.8',     // Google Cloud
+  'localhost',
+  '127.0.0.1',
+];
+
+// תבניות commit message חשודות
+const SUSPICIOUS_COMMIT_MSG = [
+  /\b(secret|password|passwd|token|api.?key|credential|private.?key)\b/i,
+  /\b(backdoor|exfil|payload|exploit)\b/i,
+];
+
+function checkGitEnvRules(event) {
+  const tool  = event.tool_name || '';
+  const input = event.tool_input || {};
+
+  // ── Read / Glob / Grep על קבצי .env ──
+  if (['Read', 'Glob', 'Grep'].includes(tool)) {
+    const p = (input.file_path || input.path || input.pattern || '').toLowerCase();
+    if (p.endsWith('.env') || p.includes('/.env') || p.includes('\\.env')) {
+      return { level: 'MEDIUM', reason: `📂 קריאת קובץ סביבה — ${input.file_path || input.path || input.pattern}`, ruleType: 'git_env' };
+    }
+  }
+
+  // ── רק פקודות Bash מכאן ──
+  if (tool !== 'Bash') return null;
+  const cmd = (input.command || '').trim();
+
+  // git push --force
+  if (/git\s+push\s+.*--force/.test(cmd) || /git\s+push\s+.*-f\b/.test(cmd)) {
+    return { level: 'HIGH', reason: `🔴 git push --force — מחיקת היסטוריה!`, ruleType: 'git_env' };
+  }
+
+  // git push לremote לא מוכר
+  const pushMatch = cmd.match(/git\s+push\s+(\S+)/);
+  if (pushMatch) {
+    const remote = pushMatch[1];
+    // אם זה שם symbolic (origin/upstream) — בדוק בפקודות קודמות? קשה. נבדוק אם מכיל URL
+    const urlMatch = cmd.match(/https?:\/\/([a-zA-Z0-9._-]+)/) || cmd.match(/@([a-zA-Z0-9._-]+)[:/]/);
+    if (urlMatch) {
+      const host = urlMatch[1].toLowerCase();
+      const isAllowed = ALLOWED_GIT_REMOTES.some(r => host === r || host.endsWith('.' + r));
+      if (!isAllowed) {
+        return { level: 'HIGH', reason: `🔴 git push לשרת לא מורשה — ${host}`, ruleType: 'git_env' };
+      }
+    }
+  }
+
+  // git commit עם הודעה חשודה
+  const commitMatch = cmd.match(/git\s+commit\s+.*-m\s+["']?(.+?)["']?\s*$/i);
+  if (commitMatch) {
+    const msg = commitMatch[1];
+    if (SUSPICIOUS_COMMIT_MSG.some(re => re.test(msg))) {
+      return { level: 'HIGH', reason: `🔴 git commit עם הודעה חשודה — "${msg.slice(0,60)}"`, ruleType: 'git_env' };
+    }
+  }
+
+  // git remote add / set-url — שינוי remote
+  if (/git\s+remote\s+(add|set-url)/.test(cmd)) {
+    const urlInCmd = cmd.match(/https?:\/\/([a-zA-Z0-9._-]+)/) || cmd.match(/git@([a-zA-Z0-9._-]+)/);
+    if (urlInCmd) {
+      const host = urlInCmd[1].toLowerCase();
+      const isAllowed = ALLOWED_GIT_REMOTES.some(r => host === r || host.endsWith('.' + r));
+      if (!isAllowed) {
+        return { level: 'HIGH', reason: `🔴 git remote שונה לשרת לא מורשה — ${host}`, ruleType: 'git_env' };
+      }
+    }
+    return { level: 'MEDIUM', reason: `⚠️ git remote שונה — ${cmd.slice(0,80)}`, ruleType: 'git_env' };
+  }
+
+  return null;
+}
+
 // ─── Main Export ─────────────────────────────────────────────────────────────
 
 /**
@@ -346,6 +425,10 @@ function checkRules(event) {
   // 5. Scope check — file access outside project paths
   const scopeResult = checkScopeRule(event);
   if (scopeResult) return scopeResult;
+
+  // 6. Git + Env Monitor (MS7.4)
+  const gitEnvResult = checkGitEnvRules(event);
+  if (gitEnvResult) return gitEnvResult;
 
   return null;
 }
