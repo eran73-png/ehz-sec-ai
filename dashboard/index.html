@@ -740,7 +740,11 @@ body {
         </label>
       </div>
 
-      <div id="email-fields" style="display:none;margin-top:12px;">
+      <div id="email-fields" style="margin-top:12px;">
+        <div style="font-size:11px;color:var(--yellow);background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:9px 13px;margin-bottom:12px;line-height:1.7;">
+          ⚠️ <b>על מנת לקבל התראות במייל — יש למלא את הפרטים הבאים ולהפעיל את ה-toggle למעלה.</b><br>
+          ללא מילוי הפרטים לא תישלחנה התראות, גם אם ה-toggle פעיל.
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">SMTP Host</label>
@@ -2142,7 +2146,6 @@ function applyNotifConfig() {
   document.getElementById('email-enabled').checked = !!em.enabled;
   document.getElementById('email-status-label').textContent = em.enabled ? 'פעיל' : 'כבוי';
   document.getElementById('email-status-label').style.color = em.enabled ? '#a78bfa' : 'var(--muted)';
-  document.getElementById('email-fields').style.display = em.enabled ? 'block' : 'none';
   document.getElementById('email-test-btn').style.display = em.enabled ? 'inline-block' : 'none';
 
   if (em.smtp_host) document.getElementById('smtp-host').value = em.smtp_host;
@@ -2166,7 +2169,6 @@ function notifToggle(type) {
     const on = document.getElementById('email-enabled').checked;
     document.getElementById('email-status-label').textContent = on ? 'פעיל' : 'כבוי';
     document.getElementById('email-status-label').style.color = on ? '#a78bfa' : 'var(--muted)';
-    document.getElementById('email-fields').style.display = on ? 'block' : 'none';
     document.getElementById('email-test-btn').style.display = on ? 'inline-block' : 'none';
   }
 }
