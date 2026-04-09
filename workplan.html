@@ -918,8 +918,8 @@
       <h3>שלב 7 — ניטור מתקדם</h3>
       <p>FS Watcher, Session Recording, Process Monitor, Git Monitor, Env Vars, Immutable Log</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:16%;background:#10b981;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">1/6 🔄 בביצוע</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:33%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">2/6 🔄 בביצוע</span>
       </div>
     </div>
     <div class="phase-status" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2);">בביצוע</div>
@@ -931,11 +931,11 @@
       <div class="task-desc">ניטור FS ברמת OS — fs.watch() recursive על C:/Claude-Repo. מוחרגים: node_modules/.git/backups. קבצים רגישים (.env/.key/secret/password) → HIGH + Telegram. recentHookWrites Map מונע כפילות עם Write Guard (8s TTL). stat-card FSWatcher בדשבורד עם eventsToday. chip ציאן 👁️ FSW בטבלת Events. בוצע: 09.04.2026</div>
       <div class="task-tags"><span class="tag">FSW</span><span class="tag">os-level</span><span class="tag">done</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">7.2</div>
-      <div class="task-title">Session Recording</div>
-      <div class="task-desc">תיעוד כל session: prompt → tools → תשובות. ניתן לשחזר אחר כך.</div>
-      <div class="task-tags"><span class="tag">recording</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">7.2 ✅</div>
+      <div class="task-title">Session Recording ✅</div>
+      <div class="task-desc">תיעוד מלא לפי session_id — כל פעולה עם זמן/רמה/כלי/תיאור. GET /sessions (סיכום) + GET /sessions/:id (timeline מלא). טאב 📼 Sessions בדשבורד עם כרטיסים לחיצים, תיבת הסבר, Export HTML לכל session בנפרד + ייצוא כולל לתחקור. בוצע: 09.04.2026</div>
+      <div class="task-tags"><span class="tag">recording</span><span class="tag">export</span><span class="tag">done</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">7.3</div>
