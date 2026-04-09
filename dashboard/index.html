@@ -405,6 +405,11 @@ body {
       <div class="status-dot" id="status-dot"></div>
       <span class="status-txt" id="status-txt">מתחבר...</span>
     </div>
+    <div id="chain-badge" title="Immutable Audit Log — לחץ לאימות"
+      onclick="verifyChain()"
+      style="cursor:pointer;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid rgba(16,185,129,0.3);background:rgba(16,185,129,0.08);color:#10b981;">
+      🔗 Chain…
+    </div>
     <button class="refresh-btn" onclick="loadAll()">⟳ רענן</button>
   </div>
 </div>
@@ -917,7 +922,7 @@ async function loadEvents() {
 }
 
 async function loadAll() {
-  await Promise.all([loadStats(), loadEvents()]);
+  await Promise.all([loadStats(), loadEvents(), loadChainStatus()]);
 }
 
 // ── Render ───────────────────────────────────────────────────────────────────
@@ -986,6 +991,46 @@ function setOnline(on) {
   dot.style.animation    = on ? 'pulse 2s infinite' : 'none';
   txt.textContent        = on ? 'Collector פעיל' : 'Collector לא מגיב';
   txt.style.color        = on ? 'var(--green)'  : 'var(--red)';
+}
+
+// ── Hash Chain Verify (MS7.5) ─────────────────────────────────────────────────
+
+async function verifyChain() {
+  const badge = document.getElementById('chain-badge');
+  badge.textContent = '🔗 בודק…';
+  try {
+    const d = await fetchJSON('/audit/verify');
+    if (d.valid) {
+      badge.textContent  = `🔗 ✅ Chain Valid (${d.checked})`;
+      badge.style.color  = '#10b981';
+      badge.style.borderColor = 'rgba(16,185,129,0.3)';
+      badge.style.background  = 'rgba(16,185,129,0.08)';
+    } else {
+      badge.textContent  = `🔗 ❌ Chain BROKEN!`;
+      badge.style.color  = '#ef4444';
+      badge.style.borderColor = 'rgba(239,68,68,0.4)';
+      badge.style.background  = 'rgba(239,68,68,0.1)';
+      alert(`⚠️ Audit log tampered!\n\nBroken at: ${new Date(d.broken_at?.ts).toLocaleString('he-IL')}\nTool: ${d.broken_at?.tool}`);
+    }
+  } catch(e) {
+    badge.textContent = '🔗 שגיאה';
+  }
+}
+
+// טען chain status אוטומטית
+async function loadChainStatus() {
+  try {
+    const d = await fetchJSON('/audit/verify');
+    const badge = document.getElementById('chain-badge');
+    if (d.valid) {
+      badge.textContent = `🔗 ✅ ${d.checked} events`;
+    } else {
+      badge.textContent = '🔗 ❌ BROKEN!';
+      badge.style.color = '#ef4444';
+      badge.style.borderColor = 'rgba(239,68,68,0.4)';
+      badge.style.background  = 'rgba(239,68,68,0.1)';
+    }
+  } catch(_) {}
 }
 
 // ── Filter ───────────────────────────────────────────────────────────────────

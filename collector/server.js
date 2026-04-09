@@ -12,6 +12,7 @@ const Datastore = require('@seald-io/nedb');
 const https    = require('https');
 const path     = require('path');
 const fs       = require('fs');
+const crypto   = require('crypto');
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 
@@ -31,6 +32,34 @@ const db = new Datastore({ filename: DB_PATH, autoload: true });
 db.ensureIndex({ fieldName: 'ts' });
 db.ensureIndex({ fieldName: 'level' });
 db.ensureIndex({ fieldName: 'tool_name' });
+
+// ─── Hash Chain (MS7.5) ───────────────────────────────────────────────────────
+// lastHash = hash של ה-event האחרון שנשמר
+let lastHash = 'GENESIS'; // ערך התחלתי
+
+function computeHash(doc, prevHash) {
+  const payload = JSON.stringify({
+    ts:      doc.ts,
+    tool:    doc.tool_name,
+    level:   doc.level,
+    reason:  doc.reason,
+    session: doc.session_id,
+  }) + prevHash;
+  return crypto.createHash('sha256').update(payload).digest('hex');
+}
+
+// טען את ה-hash האחרון מה-DB בהפעלה
+function initLastHash(cb) {
+  db.find({ event_hash: { $exists: true } }).sort({ ts: -1 }).limit(1).exec((err, docs) => {
+    if (!err && docs.length > 0) {
+      lastHash = docs[0].event_hash;
+      console.log(`[EHZ-SEC-AI] Hash chain loaded — last hash: ${lastHash.slice(0,16)}…`);
+    } else {
+      console.log('[EHZ-SEC-AI] Hash chain: starting fresh (GENESIS)');
+    }
+    if (cb) cb();
+  });
+}
 
 // ─── Retention: TTL 30d + FIFO 10k ──────────────────────────────────────────
 
@@ -189,6 +218,13 @@ app.post('/event', (req, res) => {
     created_at:     new Date().toISOString(),
   };
 
+  // Hash chain — חשב ושמור
+  const prevHash    = lastHash;
+  const eventHash   = computeHash(doc, prevHash);
+  doc.prev_hash     = prevHash;
+  doc.event_hash    = eventHash;
+  lastHash          = eventHash;
+
   db.insert(doc, (err, newDoc) => {
     if (err) {
       console.error('[DB]', err.message);
@@ -201,7 +237,7 @@ app.post('/event', (req, res) => {
       db.update({ _id: newDoc._id }, { $set: { telegram_sent: true } }, {});
     }
 
-    res.json({ ok: true, id: newDoc._id, level: doc.level });
+    res.json({ ok: true, id: newDoc._id, level: doc.level, hash: eventHash.slice(0,16) });
   });
 });
 
@@ -873,6 +909,34 @@ app.get('/sessions/:id', (req, res) => {
   });
 });
 
+// GET /audit/verify — בדיקת שלמות hash chain (MS7.5)
+app.get('/audit/verify', (req, res) => {
+  db.find({ event_hash: { $exists: true } }).sort({ ts: 1 }).exec((err, docs) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!docs.length) return res.json({ valid: true, checked: 0, message: 'No signed events yet' });
+
+    let prevHash = 'GENESIS';
+    let broken   = null;
+
+    for (const doc of docs) {
+      const expected = computeHash(doc, prevHash);
+      if (expected !== doc.event_hash) {
+        broken = { ts: doc.ts, tool: doc.tool_name, stored: doc.event_hash?.slice(0,16), expected: expected.slice(0,16) };
+        break;
+      }
+      prevHash = doc.event_hash;
+    }
+
+    res.json({
+      valid:      !broken,
+      checked:    docs.length,
+      broken_at:  broken || null,
+      last_hash:  prevHash.slice(0, 16) + '…',
+      message:    broken ? '⚠️ Chain broken — log may have been tampered!' : '✅ Chain intact',
+    });
+  });
+});
+
 // GET /health
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
@@ -1056,6 +1120,9 @@ app.listen(PORT, '127.0.0.1', () => {
   console.log(`[EHZ-SEC-AI] Collector listening on http://127.0.0.1:${PORT}`);
   console.log(`[EHZ-SEC-AI] DB: ${DB_PATH}`);
   console.log(`[EHZ-SEC-AI] Telegram: ${TELEGRAM_TOKEN ? 'configured ✓' : 'NOT configured'}`);
+
+  // טען hash chain state
+  initLastHash();
 
   // הפעל FSWatcher
   startFSWatcher();
