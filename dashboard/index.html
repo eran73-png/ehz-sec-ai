@@ -398,28 +398,28 @@ body {
     <div class="header-logo">🛡</div>
     <div>
       <h1>EHZ-SEC-<span>AI</span></h1>
-      <div class="header-sub">Claude Code Security Monitor &nbsp;•&nbsp; <span style="color:#f59e0b;">⚠ ניטור בלבד — אין חסימה</span></div>
+      <div class="header-sub">Claude Code Security Monitor &nbsp;•&nbsp; <span style="color:#f59e0b;">⚠ Monitoring only — no blocking</span></div>
     </div>
   </div>
   <div class="header-right">
-    <div class="auto-badge" id="auto-badge">● רענון אוטומטי 5s</div>
+    <div class="auto-badge" id="auto-badge">● Auto-refresh 5s</div>
     <div style="display:flex;align-items:center;gap:6px;">
       <div class="status-dot" id="status-dot"></div>
-      <span class="status-txt" id="status-txt">מתחבר...</span>
+      <span class="status-txt" id="status-txt">Connecting...</span>
     </div>
-    <div id="chain-badge" title="Immutable Audit Log — לחץ לאימות"
+    <div id="chain-badge" title="Immutable Audit Log — click to verify"
       onclick="verifyChain()"
       style="cursor:pointer;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid rgba(16,185,129,0.3);background:rgba(16,185,129,0.08);color:#10b981;">
       🔗 Chain…
     </div>
-    <button class="refresh-btn" onclick="loadAll()">⟳ רענן</button>
+    <button class="refresh-btn" onclick="loadAll()">⟳ Refresh</button>
   </div>
 </div>
 
 <!-- STAT CARDS -->
 <div class="stats-grid">
   <div class="stat-card total">
-    <div class="stat-label">סה"כ Events</div>
+    <div class="stat-label">Total Events</div>
     <div class="stat-value" id="stat-total">—</div>
     <div class="stat-sub" id="stat-last">—</div>
     <div class="stat-icon">📊</div>
@@ -427,17 +427,17 @@ body {
   <div class="stat-card critical">
     <div class="stat-label">Critical</div>
     <div class="stat-value" id="stat-critical">—</div>
-    <div class="stat-sub">פעולות חסומות</div>
+    <div class="stat-sub">Blocked actions</div>
     <div class="stat-icon">🚨</div>
   </div>
   <div class="stat-card high">
     <div class="stat-label">High</div>
     <div class="stat-value" id="stat-high">—</div>
-    <div class="stat-sub">התראות גבוהות</div>
+    <div class="stat-sub">High alerts</div>
     <div class="stat-icon">⚠️</div>
   </div>
   <div class="stat-card sessions">
-    <div class="stat-label">סשנים</div>
+    <div class="stat-label">Sessions</div>
     <div class="stat-value" id="stat-sessions">—</div>
     <div class="stat-sub">Claude Code sessions</div>
     <div class="stat-icon">💻</div>
@@ -445,20 +445,20 @@ body {
   <div class="stat-card fsw">
     <div class="stat-label">FSWatcher</div>
     <div class="stat-value" id="stat-fsw">—</div>
-    <div class="stat-sub" id="stat-fsw-sub">ניטור קבצים</div>
+    <div class="stat-sub" id="stat-fsw-sub">File monitoring</div>
     <div class="stat-icon">👁️</div>
   </div>
-  <div class="stat-card baseline" onclick="showBaselineDetails()" style="cursor:pointer;" title="לחץ לפרטי Baseline">
+  <div class="stat-card baseline" onclick="showBaselineDetails()" style="cursor:pointer;" title="Click for Baseline details">
     <div class="stat-label">Behavioral Baseline</div>
     <div class="stat-value" id="stat-baseline">—</div>
-    <div class="stat-sub" id="stat-baseline-sub">למידת דפוסים</div>
+    <div class="stat-sub" id="stat-baseline-sub">Pattern learning</div>
     <div class="stat-icon">🧠</div>
   </div>
 </div>
 
 <!-- LAST EVENT -->
 <div class="last-event-bar" id="last-bar" style="display:none">
-  <span>⏱ אחרון:</span>
+  <span>⏱ Last:</span>
   <span id="last-tool"></span>
   <span id="last-level-badge"></span>
   <span id="last-reason" style="color:var(--muted);"></span>
@@ -483,21 +483,21 @@ body {
 <!-- TOOLBAR -->
 <div class="toolbar">
   <span class="toolbar-title">Events Log</span>
-  <button class="filter-btn active"     onclick="setFilter('ALL')"      id="f-all">הכל</button>
+  <button class="filter-btn active"     onclick="setFilter('ALL')"      id="f-all">All</button>
   <button class="filter-btn crit"       onclick="setFilter('CRITICAL')" id="f-critical">🚨 Critical</button>
   <button class="filter-btn high"       onclick="setFilter('HIGH')"     id="f-high">⚠️ High</button>
   <button class="filter-btn info"       onclick="setFilter('INFO')"     id="f-info">ℹ️ Info</button>
-  <button class="refresh-btn" onclick="exportHTML()" style="margin-right:auto;color:#a78bfa;border-color:#7c3aed44;">📄 ייצא HTML</button>
+  <button class="refresh-btn" onclick="exportHTML()" style="margin-right:auto;color:#a78bfa;border-color:#7c3aed44;">📄 Export HTML</button>
 </div>
 
 <!-- SEARCH BAR (MS6.14b) -->
 <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
-  <input id="events-search" type="text" placeholder="🔍 חפש event — כלי, סיבה, רמה..."
+  <input id="events-search" type="text" placeholder="🔍 Search — tool, reason, level..."
     style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:7px 12px;font-size:12px;direction:rtl;"
     oninput="applySearch()" />
   <select id="events-tool-filter" onchange="applySearch()"
     style="background:var(--panel2);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;padding:7px 10px;font-size:12px;">
-    <option value="">כל הכלים</option>
+    <option value="">All tools</option>
     <option>WebSearch</option><option>WebFetch</option><option>Write</option>
     <option>Edit</option><option>Bash</option><option>Read</option>
     <option>FSWatcher</option>
@@ -512,16 +512,16 @@ body {
     <table class="events-table">
       <thead>
         <tr>
-          <th>רמה</th>
+          <th>Level</th>
           <th>Hook</th>
-          <th>כלי</th>
-          <th>סיבה / תיאור</th>
+          <th>Tool</th>
+          <th>Reason / Description</th>
           <th>Session</th>
-          <th>זמן</th>
+          <th>Time</th>
         </tr>
       </thead>
       <tbody id="events-tbody">
-        <tr><td colspan="6"><div class="loading">טוען...</div></td></tr>
+        <tr><td colspan="6"><div class="loading">Loading...</div></td></tr>
       </tbody>
     </table>
   </div>
@@ -534,18 +534,18 @@ body {
 <div class="skills-header">
   <span style="font-size:13px;font-weight:700;color:var(--muted2);">🔍 Skills Security Scanner</span>
   <div style="display:flex;align-items:center;gap:10px;">
-    <span class="scan-note" id="skills-last-scan">טרם נסרק</span>
-    <button class="scan-btn" id="scan-btn" onclick="runScan()">▶ סרוק עכשיו</button>
+    <span class="scan-note" id="skills-last-scan">Not scanned yet</span>
+    <button class="scan-btn" id="scan-btn" onclick="runScan()">▶ Scan now</button>
   </div>
 </div>
 
 <div class="skills-summary" id="skills-summary" style="display:none">
-  <div class="skill-stat">📦 סה"כ: <b id="sk-total">—</b></div>
-  <div class="skill-stat" style="color:var(--green)">✅ תקין: <b id="sk-ok">—</b></div>
-  <div class="skill-stat" style="color:var(--accent)">🆕 חדש: <b id="sk-new">—</b></div>
-  <div class="skill-stat" style="color:var(--yellow)">🔄 שונה: <b id="sk-changed">—</b></div>
-  <div class="skill-stat" style="color:var(--orange)">🔶 חשוד: <b id="sk-suspicious">—</b></div>
-  <div class="skill-stat" style="color:var(--red)">🚨 קריטי: <b id="sk-critical">—</b></div>
+  <div class="skill-stat">📦 Total: <b id="sk-total">—</b></div>
+  <div class="skill-stat" style="color:var(--green)">✅ OK: <b id="sk-ok">—</b></div>
+  <div class="skill-stat" style="color:var(--accent)">🆕 New: <b id="sk-new">—</b></div>
+  <div class="skill-stat" style="color:var(--yellow)">🔄 Changed: <b id="sk-changed">—</b></div>
+  <div class="skill-stat" style="color:var(--orange)">🔶 Suspicious: <b id="sk-suspicious">—</b></div>
+  <div class="skill-stat" style="color:var(--red)">🚨 Critical: <b id="sk-critical">—</b></div>
 </div>
 
 <div class="table-wrap">
@@ -553,15 +553,15 @@ body {
     <table class="skills-table">
       <thead>
         <tr>
-          <th>סקיל</th>
-          <th>סטטוס</th>
-          <th>ממצאים</th>
+          <th>Skill</th>
+          <th>Status</th>
+          <th>Findings</th>
           <th>Hash</th>
-          <th>סריקה אחרונה</th>
+          <th>Last scan</th>
         </tr>
       </thead>
       <tbody id="skills-tbody">
-        <tr><td colspan="5"><div class="loading">לחץ "סרוק עכשיו" להפעלת סריקה</div></td></tr>
+        <tr><td colspan="5"><div class="loading">Click "Scan now" to start scan</div></td></tr>
       </tbody>
     </table>
   </div>
@@ -571,12 +571,12 @@ body {
 <!-- SETTINGS TAB -->
 <div id="view-settings" style="display:none">
 <div class="settings-panel">
-  <div class="settings-section-title">🔒 רמת Hardening — רמת ניטור ואיתור איומים</div>
+  <div class="settings-section-title">🔒 Hardening Level — threat monitoring & detection</div>
 
-  <!-- כרטיסים + טבלה זה לצד זה -->
+  <!-- cards + table side by side -->
   <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;">
 
-    <!-- כרטיסי בחירה -->
+    <!-- level cards -->
     <div style="flex:1 1 0;min-width:280px;">
       <div class="level-grid">
         <div class="level-card l0" onclick="selectLevel(0)" id="lc0">
@@ -585,7 +585,7 @@ body {
             <span class="level-emoji">⚫</span>
             <span class="level-name">OFF</span>
           </div>
-          <div class="level-desc">ניטור בלבד — ללא שליחת Telegram ולא alerts. שימושי לדיבוג.</div>
+          <div class="level-desc">Monitor only — no Telegram or alerts. Useful for debugging.</div>
         </div>
         <div class="level-card l1" onclick="selectLevel(1)" id="lc1">
           <div class="level-num">Level 1</div>
@@ -593,7 +593,7 @@ body {
             <span class="level-emoji">🟢</span>
             <span class="level-name">SOFT</span>
           </div>
-          <div class="level-desc">ברירת מחדל. התראות HIGH ו-CRITICAL בלבד. לא שולח INFO ו-MEDIUM.</div>
+          <div class="level-desc">Default. HIGH and CRITICAL alerts only. No INFO or MEDIUM sent.</div>
         </div>
         <div class="level-card l2" onclick="selectLevel(2)" id="lc2">
           <div class="level-num">Level 2</div>
@@ -601,7 +601,7 @@ body {
             <span class="level-emoji">🟡</span>
             <span class="level-name">STRICT</span>
           </div>
-          <div class="level-desc">חוקים מחמירים נוספים: pastebin, telnet, FTP, chmod 777, sudo, /dev/tcp.</div>
+          <div class="level-desc">Additional strict rules: pastebin, telnet, FTP, chmod 777, sudo, /dev/tcp.</div>
         </div>
         <div class="level-card l3" onclick="selectLevel(3)" id="lc3">
           <div class="level-num">Level 3</div>
@@ -609,52 +609,52 @@ body {
             <span class="level-emoji">🔴</span>
             <span class="level-name">LOCKDOWN</span>
           </div>
-          <div class="level-desc">התראה על כל פעולה כולל INFO. מצב חקירה מלאה — verbose מקסימלי.</div>
+          <div class="level-desc">Alert on every action including INFO. Full investigation mode — maximum verbosity.</div>
         </div>
       </div>
       <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-        <button class="save-btn" id="save-level-btn" onclick="saveLevel()">שמור רמה</button>
+        <button class="save-btn" id="save-level-btn" onclick="saveLevel()">Save level</button>
         <div class="settings-status" id="settings-status"></div>
       </div>
     </div>
 
-    <!-- טבלת הסבר — צד שמאל -->
+    <!-- explanation table -->
     <div style="flex:1 1 0;min-width:260px;">
-      <div class="settings-section-title">📖 מה קורה בכל רמה</div>
+      <div class="settings-section-title">📖 What happens at each level</div>
       <table style="width:100%;border-collapse:collapse;font-size:12px;">
         <thead>
           <tr style="border-bottom:1px solid var(--border2);">
-            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">רמה</th>
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">Level</th>
             <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">Telegram</th>
-            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">שימוש מומלץ</th>
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">Recommended use</th>
           </tr>
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
             <td style="padding:8px;">⚫ OFF</td>
-            <td style="padding:8px;color:var(--muted);">כלום</td>
-            <td style="padding:8px;color:var(--muted);">דיבוג / פיתוח</td>
+            <td style="padding:8px;color:var(--muted);">Nothing</td>
+            <td style="padding:8px;color:var(--muted);">Debug / Dev</td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(16,185,129,0.04);">
             <td style="padding:8px;">🟢 SOFT</td>
             <td style="padding:8px;color:var(--green);">HIGH + CRITICAL</td>
-            <td style="padding:8px;color:var(--green);">שימוש יומיומי ✓</td>
+            <td style="padding:8px;color:var(--green);">Daily use ✓</td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
             <td style="padding:8px;">🟡 STRICT</td>
             <td style="padding:8px;color:var(--yellow);">HIGH + CRITICAL</td>
-            <td style="padding:8px;color:var(--muted);">סביבה רגישה</td>
+            <td style="padding:8px;color:var(--muted);">Sensitive env</td>
           </tr>
           <tr>
             <td style="padding:8px;">🔴 LOCKDOWN</td>
-            <td style="padding:8px;color:var(--red);">הכל כולל INFO</td>
-            <td style="padding:8px;color:var(--muted);">חקירת אירוע</td>
+            <td style="padding:8px;color:var(--red);">Everything incl. INFO</td>
+            <td style="padding:8px;color:var(--muted);">Incident investigation</td>
           </tr>
         </tbody>
       </table>
       <div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
-        ℹ️ כל הרמות שומרות ב-DB — ההבדל הוא <b style="color:var(--muted2);">מה נשלח ל-Telegram</b>.<br>
-        🔒 <b style="color:var(--muted2);">ניטור בלבד</b> — חסימה תופעל ב-Milestone 10.
+        ℹ️ All levels log to DB — the difference is <b style="color:var(--muted2);">what is sent via Telegram/Email</b>.<br>
+        🔒 <b style="color:var(--muted2);">Monitor only</b> — blocking will be enabled in Milestone 10.
       </div>
     </div>
 
@@ -662,32 +662,32 @@ body {
 
   <!-- Log Retention -->
   <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;">
-    <div class="settings-section-title">🗑️ ניהול לוגים</div>
+    <div class="settings-section-title">🗑️ Log Management</div>
 
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;" id="retention-info">
       <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
-        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">שמירה</span>
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">Retention</span>
         <b style="color:var(--text)" id="ret-days">—</b>
       </div>
       <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
-        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">מקסימום</span>
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">Max events</span>
         <b style="color:var(--text)" id="ret-max">—</b>
       </div>
       <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
-        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">סה"כ events</span>
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">Total events</span>
         <b style="color:var(--accent)" id="ret-total">—</b>
       </div>
     </div>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
       <button onclick="clearLogs(7)"  style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--yellow);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
-        🗑 מחק מעל 7 ימים
+        🗑 Delete older than 7 days
       </button>
       <button onclick="clearLogs(30)" style="background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);color:var(--orange);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
-        🗑 מחק מעל 30 ימים
+        🗑 Delete older than 30 days
       </button>
       <button onclick="clearLogs(0)"  style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:var(--red);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
-        ⚠️ מחק הכל
+        ⚠️ Delete all
       </button>
     </div>
     <div style="min-height:18px;margin-top:10px;font-size:12px;" id="clear-status"></div>
@@ -704,31 +704,31 @@ body {
           <span style="font-size:20px;">✈️</span>
           <div>
             <div style="font-weight:700;font-size:14px;">Telegram Bot</div>
-            <div style="font-size:11px;color:var(--muted);">שליחת התראות בזמן אמת לבוט Telegram</div>
+            <div style="font-size:11px;color:var(--muted);">Send real-time alerts to a Telegram bot</div>
           </div>
         </div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
           <input type="checkbox" id="tg-enabled" onchange="notifToggle('tg')" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
-          <span id="tg-status-label" style="font-size:12px;color:var(--muted);">כבוי</span>
+          <span id="tg-status-label" style="font-size:12px;color:var(--muted);">Off</span>
         </label>
       </div>
       <div id="tg-info" style="font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border-radius:8px;padding:9px 12px;">
-        ℹ️ הגדרות Telegram (Token + Chat ID) נמצאות בקובץ <b style="color:var(--muted2);">collector/server.js</b> — שורות TELEGRAM_TOKEN ו-TELEGRAM_CHAT_ID.<br>
-        כאן ניתן רק להפעיל/לכבות שליחה.
+        ℹ️ Telegram settings (Token + Chat ID) are stored in <b style="color:var(--muted2);">collector/server.js</b> — lines TELEGRAM_TOKEN and TELEGRAM_CHAT_ID.<br>
+        Here you can only enable/disable sending.
         <div style="margin-top:10px;padding:10px 12px;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:8px;line-height:2;">
-          📱 <b style="color:var(--muted2);">איך יוצרים בוט Telegram (בטלפון או מחשב):</b><br>
-          <span style="color:var(--muted2);">1.</span> פתח Telegram וחפש <b style="color:var(--accent);">@BotFather</b><br>
-          <span style="color:var(--muted2);">2.</span> שלח לו <b style="color:var(--accent);">/newbot</b><br>
-          <span style="color:var(--muted2);">3.</span> תן שם לבוט (לדוגמה: <span style="color:var(--muted2);">MySecurityBot</span>)<br>
-          <span style="color:var(--muted2);">4.</span> BotFather ישלח לך <b style="color:var(--green);">Token</b> — העתק אותו ל-server.js<br>
-          <span style="color:var(--muted2);">5.</span> פתח את הבוט שלך ושלח <b style="color:var(--accent);">/start</b><br>
-          <span style="color:var(--muted2);">6.</span> כדי לקבל את ה-<b style="color:var(--green);">Chat ID</b> — שלח הודעה לבוט ואז פתח בדפדפן:<br>
+          📱 <b style="color:var(--muted2);">How to create a Telegram bot (phone or desktop):</b><br>
+          <span style="color:var(--muted2);">1.</span> Open Telegram and search for <b style="color:var(--accent);">@BotFather</b><br>
+          <span style="color:var(--muted2);">2.</span> Send <b style="color:var(--accent);">/newbot</b><br>
+          <span style="color:var(--muted2);">3.</span> Give the bot a name (e.g.: <span style="color:var(--muted2);">MySecurityBot</span>)<br>
+          <span style="color:var(--muted2);">4.</span> BotFather will send you a <b style="color:var(--green);">Token</b> — — copy it to server.js<br>
+          <span style="color:var(--muted2);">5.</span> Open your bot and send <b style="color:var(--accent);">/start</b><br>
+          <span style="color:var(--muted2);">6.</span> To get your <b style="color:var(--green);">Chat ID</b> — send a message to your bot then open in browser:<br>
           &nbsp;&nbsp;&nbsp;<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:10px;">https://api.telegram.org/bot<span style="color:var(--yellow);">TOKEN</span>/getUpdates</code>
         </div>
       </div>
       <div style="margin-top:10px;">
         <button onclick="testTelegram()" style="background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.35);color:var(--accent);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">
-          📨 שלח הודעת בדיקה
+          📨 Send test message
         </button>
         <span id="tg-test-status" style="font-size:11px;margin-right:10px;"></span>
       </div>
@@ -741,19 +741,19 @@ body {
           <span style="font-size:20px;">📧</span>
           <div>
             <div style="font-weight:700;font-size:14px;">Email (SMTP)</div>
-            <div style="font-size:11px;color:var(--muted);">אלטרנטיבה ל-Telegram — שליחה לכל כתובת מייל</div>
+            <div style="font-size:11px;color:var(--muted);">Alternative to Telegram — send to any email address</div>
           </div>
         </div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
           <input type="checkbox" id="email-enabled" onchange="notifToggle('email')" style="width:18px;height:18px;accent-color:#8b5cf6;cursor:pointer;">
-          <span id="email-status-label" style="font-size:12px;color:var(--muted);">כבוי</span>
+          <span id="email-status-label" style="font-size:12px;color:var(--muted);">Off</span>
         </label>
       </div>
 
       <div id="email-fields" style="margin-top:12px;">
         <div style="font-size:11px;color:var(--yellow);background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:9px 13px;margin-bottom:12px;line-height:1.7;">
-          ⚠️ <b>על מנת לקבל התראות במייל — יש למלא את הפרטים הבאים ולהפעיל את ה-toggle למעלה.</b><br>
-          ללא מילוי הפרטים לא תישלחנה התראות, גם אם ה-toggle פעיל.
+          ⚠️ <b>To receive email alerts — fill in the details below and enable the toggle above.</b><br>
+          Without filling in the details, no alerts will be sent even if the toggle is enabled.
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
@@ -786,17 +786,17 @@ body {
           <span style="font-size:12px;color:var(--muted2);">TLS/SSL (port 465)</span>
         </label>
         <div style="font-size:11px;color:var(--muted);background:rgba(255,255,255,0.02);border-radius:8px;padding:9px 12px;margin-bottom:12px;line-height:1.6;">
-          💡 <b style="color:var(--muted2);">Gmail:</b> הפעל "App Passwords" ב-Google Account, השתמש ב-smtp.gmail.com:587<br>
-          💡 <b style="color:var(--muted2);">Outlook:</b> smtp-mail.outlook.com:587 (TLS כבוי)
+          💡 <b style="color:var(--muted2);">Gmail:</b> Enable "App Passwords" in Google Account, use smtp.gmail.com:587<br>
+          💡 <b style="color:var(--muted2);">Outlook:</b> smtp-mail.outlook.com:587 (TLS Off)
         </div>
       </div>
 
       <div style="display:flex;gap:10px;align-items:center;margin-top:4px;">
         <button onclick="saveNotifSettings()" style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#a78bfa;font-size:12px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;">
-          💾 שמור הגדרות
+          💾 Save settings
         </button>
         <button onclick="testEmail()" id="email-test-btn" style="display:none;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);color:#c4b5fd;font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">
-          📨 שלח בדיקה
+          📨 Send test
         </button>
         <span id="notif-save-status" style="font-size:11px;"></span>
       </div>
@@ -807,25 +807,25 @@ body {
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
         <span style="font-size:18px;">🔗</span>
         <div>
-          <div style="font-weight:700;font-size:14px;">Git Remotes מורשים</div>
-          <div style="font-size:11px;color:var(--muted);">push לשרת שאינו ברשימה → התראת HIGH</div>
+          <div style="font-weight:700;font-size:14px;">Authorized Git Remotes</div>
+          <div style="font-size:11px;color:var(--muted);">Push to unlisted server → HIGH alert</div>
         </div>
       </div>
-      <!-- הסבר -->
+      <!-- info box -->
       <div style="font-size:11px;color:var(--muted2);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 13px;margin-bottom:12px;line-height:1.8;">
-        📋 <b style="color:var(--muted2);">מה להוסיף לרשימה?</b><br>
-        כל שרת Git שאתה מורשה לדחוף אליו — hostname או IP:<br>
+        📋 <b style="color:var(--muted2);">What to add to the list?</b><br>
+        Any Git server you are authorized to push to — hostname or IP:<br>
         <span style="color:var(--green);">✓ github.com</span> &nbsp;|&nbsp;
         <span style="color:var(--green);">✓ gitlab.com</span> &nbsp;|&nbsp;
         <span style="color:var(--green);">✓ bitbucket.org</span> &nbsp;|&nbsp;
-        <span style="color:var(--green);">✓ IP שרת פנימי</span><br>
-        <span style="color:var(--yellow);">⚠️ שרת חדש שהוספת?</span> הוסף אותו כאן כדי לא לקבל התראת HIGH בכל push.
+        <span style="color:var(--green);">✓ Internal server IP</span><br>
+        <span style="color:var(--yellow);">⚠️ Added a new server?</span> Add it here to avoid HIGH alerts on every push.
       </div>
 
       <div id="git-remotes-list" style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;"></div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <input id="new-remote-input" type="text" placeholder="hostname או IP (e.g. github.com)" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
-        <button onclick="addGitRemote()" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4);color:var(--green);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">+ הוסף</button>
+        <input id="new-remote-input" type="text" placeholder="hostname or IP (e.g. github.com)" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+        <button onclick="addGitRemote()" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4);color:var(--green);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">+ Add</button>
       </div>
       <div style="min-height:16px;margin-top:6px;font-size:11px;" id="remote-status"></div>
     </div>
@@ -839,20 +839,20 @@ body {
 <div id="view-sessions" style="display:none">
 <div class="toolbar">
   <span class="toolbar-title">📼 Session Recording</span>
-  <button class="refresh-btn" onclick="loadSessions()">🔄 רענן</button>
-  <button class="refresh-btn" onclick="exportAllSessions()" style="color:#10b981;border-color:rgba(16,185,129,0.3);">📄 ייצא הכל</button>
+  <button class="refresh-btn" onclick="loadSessions()">🔄 Refresh</button>
+  <button class="refresh-btn" onclick="exportAllSessions()" style="color:#10b981;border-color:rgba(16,185,129,0.3);">📄 Export all</button>
 </div>
 
-<!-- הסבר -->
+<!-- info box -->
 <div style="background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.15);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;">
   <div style="font-size:22px;flex-shrink:0;">ℹ️</div>
   <div>
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">מה מתועד כאן?</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">What is recorded here?</div>
     <div style="font-size:12px;color:var(--muted2);line-height:1.7;">
-      כל שיחה עם Claude Code מתועדת כ-<b>Session</b> — קבוצת פעולות תחת אותו מזהה שיחה.<br>
-      <b>מתועד:</b> אילו כלים הופעלו (Read/Edit/Bash...), על אילו קבצים, מתי, ואיזו רמת סיכון.<br>
-      <b>לא מתועד:</b> טקסט הפרומפט או התשובות — רק הפעולות בפועל.<br>
-      <b>שימוש לתחקור:</b> לחץ ▼ לפתיחת timeline מלא · לחץ 📄 לייצוא HTML של session בודד.
+      Every Claude Code conversation is recorded as a <b>Session</b> — a group of actions under the same session ID.<br>
+      <b>Recorded:</b> Which tools were used (Read/Edit/Bash...), on which files, when, and the risk level.<br>
+      <b>Not recorded:</b> Prompt text or responses — only the actual actions.<br>
+      <b>For investigation:</b> Click ▼ for full timeline · Click 📄 to export a single session as HTML.
     </div>
   </div>
 </div>
@@ -865,27 +865,27 @@ body {
 <div class="toolbar" style="flex-wrap:wrap;gap:8px;">
   <span class="toolbar-title">🗂️ File Audit Scanner</span>
   <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:280px;">
-    <label style="font-size:11px;color:var(--muted);white-space:nowrap;">נתיב סריקה:</label>
+    <label style="font-size:11px;color:var(--muted);white-space:nowrap;">Scan path:</label>
     <input id="audit-path-input" type="text" value="C:/Claude-Repo"
       style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);
              border-radius:6px;padding:5px 10px;font-size:12px;font-family:monospace;"
       placeholder="C:/Claude-Repo" />
-    <button class="refresh-btn" onclick="resetAuditPath()" title="חזור לברירת מחדל"
+    <button class="refresh-btn" onclick="resetAuditPath()" title="Reset to default"
       style="padding:5px 8px;font-size:12px;">↩</button>
   </div>
   <div style="display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--border2);border-radius:6px;padding:3px 4px;">
     <button id="scan-mode-full" onclick="setScanMode('full')"
       style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:#0ea5e9;color:#fff;font-weight:700;">
-      🔍 מלאה
+      🔍 Full
     </button>
     <button id="scan-mode-inc" onclick="setScanMode('incremental')"
       style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:transparent;color:var(--muted2);">
-      ⚡ שינויים בלבד
+      ⚡ Changed only
     </button>
   </div>
-  <button class="refresh-btn" onclick="runAuditScan()" id="audit-scan-btn">▶ סרוק עכשיו</button>
+  <button class="refresh-btn" onclick="runAuditScan()" id="audit-scan-btn">▶ Scan now</button>
   <a id="audit-export-link" href="http://127.0.0.1:3010/audit/export" style="text-decoration:none">
-    <button class="refresh-btn" style="color:#10b981;border-color:#10b98144">⬇ Export אקסל</button>
+    <button class="refresh-btn" style="color:#10b981;border-color:#10b98144">⬇ Export Excel</button>
   </a>
 </div>
 
@@ -897,15 +897,15 @@ body {
   <div style="flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:7px 14px;">
     <span style="font-size:16px;">🕵️</span>
     <div>
-      <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">סריקה אחרונה בוצעה</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Last scan performed</div>
       <div id="audit-last-scan" style="font-size:12px;font-weight:700;color:var(--text);">—</div>
     </div>
   </div>
   <div style="flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:7px 14px;">
     <span style="font-size:16px;">🕓</span>
     <div>
-      <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">סריקה שבועית הבאה</div>
-      <div id="audit-next-run" style="font-size:12px;font-weight:700;color:var(--accent);">טוען...</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Next weekly scan</div>
+      <div id="audit-next-run" style="font-size:12px;font-weight:700;color:var(--accent);">Loading...<//div>
     </div>
   </div>
   <div id="audit-meta" style="flex:2;min-width:200px;display:flex;align-items:center;font-size:11px;color:var(--muted);background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:7px 14px;"></div>
@@ -916,23 +916,23 @@ body {
 <table id="audit-table" style="width:100%;border-collapse:collapse;font-size:12px;">
   <thead>
     <tr style="background:var(--panel2);color:var(--muted2);">
-      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">קובץ</th>
-      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">סיכון</th>
-      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">ציון</th>
-      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">ממצאים</th>
+      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">File</th>
+      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">Risk</th>
+      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">Score</th>
+      <th style="padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);">Findings</th>
     </tr>
   </thead>
   <tbody id="audit-tbody"></tbody>
 </table>
 </div>
-<div id="audit-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);">לא נמצאו ממצאים — הפעל סריקה</div>
+<div id="audit-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);">No findings — run a scan</div>
 </div>
 
 <!-- WEB ACCESS TAB -->
 <div id="view-domains" style="display:none">
 <div class="toolbar">
   <span class="toolbar-title">🌐 Web Access Allowlist</span>
-  <button class="refresh-btn" onclick="loadDomains()">↺ רענן</button>
+  <button class="refresh-btn" onclick="loadDomains()">↺ Refresh</button>
 </div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
@@ -942,12 +942,12 @@ body {
 
     <!-- Allowed domains -->
     <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
-      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">✅ דומיינים מורשים ידנית</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">✅ Manually authorized domains</div>
       <div style="display:flex;gap:6px;margin-bottom:12px;">
         <input id="domain-add-input" type="text" placeholder="example.com"
           style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:6px 10px;font-size:12px;"
           onkeydown="if(event.key==='Enter') addDomain()" />
-        <button class="refresh-btn" onclick="addDomain()" style="color:var(--green);border-color:#10b98144;">+ הוסף</button>
+        <button class="refresh-btn" onclick="addDomain()" style="color:var(--green);border-color:#10b98144;">+ Add</button>
       </div>
       <div id="domains-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;"></div>
     </div>
@@ -955,11 +955,11 @@ body {
     <!-- Auto-discovered domains -->
     <div style="background:var(--panel);border:1px solid #6366f133;border-radius:12px;padding:16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <div style="font-size:12px;font-weight:700;color:var(--text);">🔍 התגלו בחיפוש <span id="discovered-count" style="color:var(--muted);font-weight:400;font-size:11px;"></span></div>
-        <div style="font-size:10px;color:var(--muted2);">אשר = הוסף למורשים | ✕ = חסום</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);">🔍 Discovered in search <span id="discovered-count" style="color:var(--muted);font-weight:400;font-size:11px;"></span></div>
+        <div style="font-size:10px;color:var(--muted2);">Approve = add to allowlist | ✕ = Block</div>
       </div>
       <div id="discovered-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;">
-        <div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">ממתין לחיפושים...</div>
+        <div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">Waiting for searches...</div>
       </div>
     </div>
 
@@ -967,7 +967,7 @@ body {
 
   <!-- WebFetch + WebSearch history -->
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
-    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📜 היסטוריית גישות Web — WebFetch + WebSearch</div>
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📜 Web access history — WebFetch + WebSearch</div>
     <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:500px;overflow-y:auto;font-size:11px;"></div>
   </div>
 
@@ -978,13 +978,13 @@ body {
 <div id="view-projects" style="display:none">
 <div class="toolbar">
   <span class="toolbar-title">📁 Projects Explorer — C:/Claude-Repo</span>
-  <button class="refresh-btn" onclick="loadProjects()">↺ רענן</button>
+  <button class="refresh-btn" onclick="loadProjects()">↺ Refresh</button>
 </div>
 
 <div id="projects-meta" style="font-size:11px;color:var(--muted);margin-bottom:14px;"></div>
 
 <div id="projects-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
-  <div style="text-align:center;padding:40px;color:var(--muted);grid-column:1/-1;">טוען...</div>
+  <div style="text-align:center;padding:40px;color:var(--muted);grid-column:1/-1;">Loading...<//div>
 </div>
 </div><!-- /view-projects -->
 
@@ -1023,16 +1023,16 @@ async function loadStats() {
 
     if (s.last_ts) {
       document.getElementById('stat-last').textContent =
-        'אחרון: ' + fmtTs(s.last_ts);
+        'Last: ' + fmtTs(s.last_ts);
     }
 
     // FSWatcher status
     try {
       const fw = await fetchJSON('/fsw/status');
-      document.getElementById('stat-fsw').textContent    = fw.active ? '✅ פעיל' : '❌ כבוי';
+      document.getElementById('stat-fsw').textContent    = fw.active ? '✅ On' : '❌ Off';
       document.getElementById('stat-fsw-sub').textContent = fw.active
-        ? `${fw.eventsToday ?? 0} אירועים היום`
-        : 'ניטור קבצים';
+        ? `${fw.eventsToday ?? 0} events today`
+        : 'File monitoring';
     } catch(_) {
       document.getElementById('stat-fsw').textContent = '—';
     }
@@ -1043,16 +1043,16 @@ async function loadStats() {
       const el  = document.getElementById('stat-baseline');
       const sub = document.getElementById('stat-baseline-sub');
       if (bl.status === 'learning') {
-        el.textContent  = '📚 לומד';
+        el.textContent  = '📚 Learning';
         sub.textContent = bl.message;
         el.style.color  = '#a855f7';
       } else if (bl.status === 'anomaly') {
-        el.textContent  = `⚠️ ${bl.anomalies.length} חריגות`;
+        el.textContent  = `⚠️ ${bl.anomalies.length} anomalies`;
         sub.textContent = bl.anomalies[0]?.msg?.slice(0,30) + '…';
         el.style.color  = '#f97316';
       } else {
-        el.textContent  = '✅ תקין';
-        sub.textContent = `${bl.sessions_analyzed} sessions מנותחים`;
+        el.textContent  = '✅ Normal';
+        sub.textContent = `${bl.sessions_analyzed} sessions analyzed`;
         el.style.color  = '#10b981';
       }
     } catch(_) {
@@ -1102,7 +1102,7 @@ function renderTable(events) {
   if (!events.length) {
     tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">
       <div class="icon">🔍</div>
-      <p>אין events בתנאי הנבחר</p>
+      <p>No events match the selected filter</p>
     </div></td></tr>`;
     return;
   }
@@ -1159,7 +1159,7 @@ function setOnline(on) {
   dot.style.background   = on ? 'var(--green)'  : 'var(--red)';
   dot.style.boxShadow    = on ? '0 0 8px var(--green)' : '0 0 8px var(--red)';
   dot.style.animation    = on ? 'pulse 2s infinite' : 'none';
-  txt.textContent        = on ? 'Collector פעיל' : 'Collector לא מגיב';
+  txt.textContent        = on ? 'Collector On' : 'Collector not responding';
   txt.style.color        = on ? 'var(--green)'  : 'var(--red)';
 }
 
@@ -1174,31 +1174,31 @@ async function showBaselineDetails() {
     const tools = (b.top_tools || []).map(t => `  ${t.tool}: ${t.pct}%`).join('\n');
     const hours = (b.active_hours || []).join(', ');
     const anomalies = bl.anomalies.length
-      ? '\n⚠️ חריגות:\n' + bl.anomalies.map(a => `  [${a.level}] ${a.msg}`).join('\n')
-      : '\n✅ אין חריגות — session תקין';
+      ? '\n⚠️ anomalies:\n' + bl.anomalies.map(a => `  [${a.level}] ${a.msg}`).join('\n')
+      : '\n✅ No anomalies — session normal';
 
     alert(`🧠 Behavioral Baseline — ${bl.sessions_analyzed} sessions
 
-📊 ממוצע היסטורי:
-  פעולות לsession: ${b.avg_events_per_session}
-  HIGH לsession: ${b.avg_highs_per_session}
-  שעות פעילות: ${hours || 'אין מספיק נתונים'}
+📊 Historical average:
+  Actions per session: ${b.avg_events_per_session}
+  HIGH per session: ${b.avg_highs_per_session}
+  Active hours: ${hours || 'Not enough data'}
 
-🔧 כלים נפוצים:
+🔧 Common tools:
 ${tools}
 
-📍 Session נוכחי:
-  פעולות: ${bl.current_session?.events}
+📍 Current session:
+  Actions: ${bl.current_session?.events}
   HIGH: ${bl.current_session?.highs}
 ${anomalies}`);
-  } catch(e) { alert('שגיאה בטעינת baseline: ' + e.message); }
+  } catch(e) { alert('Error loading baseline: ' + e.message); }
 }
 
 // ── Hash Chain Verify (MS7.5) ─────────────────────────────────────────────────
 
 async function verifyChain() {
   const badge = document.getElementById('chain-badge');
-  badge.textContent = '🔗 בודק…';
+  badge.textContent = '🔗 Checking…';
   try {
     const d = await fetchJSON('/audit/verify');
     if (d.valid) {
@@ -1214,11 +1214,11 @@ async function verifyChain() {
       alert(`⚠️ Audit log tampered!\n\nBroken at: ${new Date(d.broken_at?.ts).toLocaleString('he-IL')}\nTool: ${d.broken_at?.tool}`);
     }
   } catch(e) {
-    badge.textContent = '🔗 שגיאה';
+    badge.textContent = '🔗 Error';
   }
 }
 
-// טען chain status אוטומטית
+// auto-load chain status
 async function loadChainStatus() {
   try {
     const d = await fetchJSON('/audit/verify');
@@ -1259,7 +1259,7 @@ function applySearch() {
   });
   renderTable(filtered);
   document.getElementById('search-count').textContent =
-    (q || tool) ? `${filtered.length} תוצאות` : '';
+    (q || tool) ? `${filtered.length} results` : '';
 }
 
 // ── Export HTML (MS6.14c) ──────────────────────────────────────────────────────
@@ -1285,15 +1285,15 @@ async function exportHTML() {
 h1{color:#0ea5e9;margin-bottom:4px}p{color:#64748b;margin-bottom:20px}
 table{width:100%;border-collapse:collapse}th{background:#0ea5e922;color:#0ea5e9;padding:8px 12px;text-align:right;font-size:12px}
 td{padding:7px 12px;border-bottom:1px solid #1a2540;font-size:12px}</style></head>
-<body><h1>🛡️ EHZ-SEC-AI — דוח אבטחה</h1>
-<p>נוצר: ${now} | סה"כ: ${events.length} events</p>
-<table><tr><th>זמן</th><th>רמה</th><th>כלי</th><th>סיבה</th></tr>${rows}</table></body></html>`;
+<body><h1>🛡️ EHZ-SEC-AI — Security Report</h1>
+<p>Generated: ${now} | Total: ${events.length} events</p>
+<table><tr><th>Time</th><th>Level</th><th>Tool</th><th>Reason</th></tr>${rows}</table></body></html>`;
     const blob = new Blob([html], {type:'text/html'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `EHZ-SEC-AI-Report-${new Date().toISOString().slice(0,10)}.html`;
     a.click();
-  } catch(e) { alert('שגיאה: ' + e.message); }
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 // ── Auto-refresh ─────────────────────────────────────────────────────────────
@@ -1325,17 +1325,17 @@ const LEVEL_BG    = { CRITICAL:'rgba(239,68,68,0.08)', HIGH:'rgba(249,115,22,0.0
 
 async function loadSessions() {
   const el = document.getElementById('sessions-list');
-  el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px">טוען sessions...</p>';
+  el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px">Loading sessions...</p>';
   try {
     const data = await fetchJSON('/sessions?limit=50');
     const sessions = data.sessions || [];
     if (!sessions.length) {
-      el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px">אין sessions מתועדים עדיין</p>';
+      el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px">No sessions recorded yet</p>';
       return;
     }
     el.innerHTML = sessions.map(s => renderSessionCard(s)).join('');
   } catch(e) {
-    el.innerHTML = '<p style="color:var(--red);font-size:13px;padding:12px">שגיאה בטעינת sessions</p>';
+    el.innerHTML = '<p style="color:var(--red);font-size:13px;padding:12px">Error loading sessions</p>';
   }
 }
 
@@ -1355,7 +1355,7 @@ function renderSessionCard(s) {
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <code style="font-size:12px;color:var(--accent)">${sid8}…</code>
           <span class="badge ${s.max_level}">${s.max_level}</span>
-          <span style="font-size:11px;color:var(--muted)">${s.count} פעולות · ${durStr}</span>
+          <span style="font-size:11px;color:var(--muted)">${s.count} actions · ${durStr}</span>
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:3px;">
           ${fmtTs(s.first_ts)} — ${fmtTs(s.last_ts)}
@@ -1364,12 +1364,12 @@ function renderSessionCard(s) {
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <button onclick="event.stopPropagation();exportSession('${s.session_id}')"
-          style="font-size:10px;padding:3px 8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:#10b981;border-radius:4px;cursor:pointer;">📄 ייצא</button>
+          style="font-size:10px;padding:3px 8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:#10b981;border-radius:4px;cursor:pointer;">📄 Export</button>
         <div style="color:var(--muted);font-size:12px;" id="sess-arrow-${sid8}">▼</div>
       </div>
     </div>
     <div id="sess-timeline-${s.session_id}" style="display:none;border-top:1px solid var(--border);padding:10px 18px;">
-      <p style="color:var(--muted);font-size:12px;">טוען timeline...</p>
+      <p style="color:var(--muted);font-size:12px;">Loading timeline...</p>
     </div>
   </div>`;
 }
@@ -1389,14 +1389,14 @@ async function toggleSession(sid) {
   try {
     const data = await fetchJSON('/sessions/' + encodeURIComponent(sid));
     const events = data.events || [];
-    if (!events.length) { panel.innerHTML = '<p style="color:var(--muted);font-size:12px;">אין events</p>'; return; }
+    if (!events.length) { panel.innerHTML = '<p style="color:var(--muted);font-size:12px;">No events</p>'; return; }
     panel.innerHTML = `
       <table style="width:100%;border-collapse:collapse;font-size:12px;">
         <thead><tr style="color:var(--muted);border-bottom:1px solid var(--border);">
-          <th style="text-align:right;padding:4px 8px;font-weight:500;">זמן</th>
-          <th style="text-align:right;padding:4px 8px;font-weight:500;">רמה</th>
-          <th style="text-align:right;padding:4px 8px;font-weight:500;">כלי</th>
-          <th style="text-align:right;padding:4px 8px;font-weight:500;">תיאור</th>
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Time</th>
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Level</th>
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Tool</th>
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Description</th>
         </tr></thead>
         <tbody>${events.map(e => `
           <tr style="border-bottom:1px solid rgba(30,45,69,0.5);">
@@ -1408,7 +1408,7 @@ async function toggleSession(sid) {
         </tbody>
       </table>`;
   } catch(e) {
-    panel.innerHTML = '<p style="color:var(--red);font-size:12px;">שגיאה</p>';
+    panel.innerHTML = '<p style="color:var(--red);font-size:12px;">Error</p>';
   }
 }
 
@@ -1417,7 +1417,7 @@ function buildSessionHTML(sid, events, summary) {
   const durStr = dur < 60 ? `${dur}s` : `${Math.floor(dur/60)}m ${dur%60}s`;
   const rows = events.map(e => `
     <tr style="border-bottom:1px solid #1e2d45;">
-      <td style="padding:6px 10px;color:#64748b;white-space:nowrap;font-family:monospace;font-size:12px;">${new Date(e.ts).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</td>
+      <td style="padding:6px 10px;color:#64748b;white-space:nowrap;font-family:monospace;font-size:12px;">${new Date(e.ts).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</td>
       <td style="padding:6px 10px;"><span style="padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;background:${e.level==='CRITICAL'?'rgba(239,68,68,0.2)':e.level==='HIGH'?'rgba(249,115,22,0.2)':'rgba(100,116,139,0.2)'};color:${e.level==='CRITICAL'?'#ef4444':e.level==='HIGH'?'#f97316':'#94a3b8'}">${e.level}</span></td>
       <td style="padding:6px 10px;font-family:monospace;color:#0ea5e9;font-size:12px;">${e.tool_name||''}</td>
       <td style="padding:6px 10px;color:#94a3b8;font-size:12px;max-width:380px;">${(e.reason||e.input_summary||'').slice(0,100)}</td>
@@ -1438,15 +1438,15 @@ function buildSessionHTML(sid, events, summary) {
 <h1>📼 EHZ-SEC-AI — Session Report</h1>
 <div class="sub">Session ID: ${sid}</div>
 <div class="meta">
-  <div class="m"><div class="ml">סה"כ פעולות</div><div class="mv">${events.length}</div></div>
-  <div class="m"><div class="ml">משך</div><div class="mv">${durStr}</div></div>
-  <div class="m"><div class="ml">רמה מקסימלית</div><div class="mv" style="color:${summary?.max_level==='CRITICAL'?'#ef4444':summary?.max_level==='HIGH'?'#f97316':'#94a3b8'}">${summary?.max_level||'—'}</div></div>
-  <div class="m"><div class="ml">התחלה</div><div class="mv" style="font-size:13px;">${new Date(summary?.first_ts||0).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div></div>
-  <div class="m"><div class="ml">סיום</div><div class="mv" style="font-size:13px;">${new Date(summary?.last_ts||0).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div></div>
+  <div class="m"><div class="ml">Total actions</div><div class="mv">${events.length}</div></div>
+  <div class="m"><div class="ml">Duration</div><div class="mv">${durStr}</div></div>
+  <div class="m"><div class="ml">Max level</div><div class="mv" style="color:${summary?.max_level==='CRITICAL'?'#ef4444':summary?.max_level==='HIGH'?'#f97316':'#94a3b8'}">${summary?.max_level||'—'}</div></div>
+  <div class="m"><div class="ml">Start</div><div class="mv" style="font-size:13px;">${new Date(summary?.first_ts||0).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div></div>
+  <div class="m"><div class="ml">End</div><div class="mv" style="font-size:13px;">${new Date(summary?.last_ts||0).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div></div>
 </div>
-<table><thead><tr><th>זמן</th><th>רמה</th><th>כלי</th><th>תיאור</th></tr></thead>
+<table><thead><tr><th>Time</th><th>Level</th><th>Tool</th><th>Description</th></tr></thead>
 <tbody>${rows}</tbody></table>
-<div class="footer">EHZ-AI | Claude Code Security Monitor | יוצא ${new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div>
+<div class="footer">EHZ-AI | Claude Code Security Monitor | Exported ${new Date().toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div>
 </body></html>`;
 }
 
@@ -1463,22 +1463,22 @@ async function exportSession(sid) {
     a.href = URL.createObjectURL(blob);
     a.download = `session-${sid.slice(0,8)}-${new Date().toISOString().slice(0,10)}.html`;
     a.click();
-  } catch(e) { alert('שגיאה בייצוא: ' + e.message); }
+  } catch(e) { alert('Export error: ' + e.message); }
 }
 
 async function exportAllSessions() {
   try {
     const data = await fetchJSON('/sessions?limit=200');
     const sessions = data.sessions || [];
-    if (!sessions.length) { alert('אין sessions לייצוא'); return; }
+    if (!sessions.length) { alert('No sessions to export'); return; }
 
-    // שלוף timeline לכל session
+    // fetch timeline for each session
     const allTimelines = await Promise.all(
       sessions.map(s => fetchJSON('/sessions/' + encodeURIComponent(s.session_id)))
     );
 
     let allHTML = `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8">
-<title>EHZ-SEC-AI — כל ה-Sessions</title>
+<title>EHZ-SEC-AI — All Sessions</title>
 <style>
   body{background:#080c14;color:#e2e8f0;font-family:'Segoe UI',Arial,sans-serif;padding:32px;direction:rtl;}
   h1{font-size:24px;margin-bottom:4px;} .sub{color:#64748b;font-size:13px;margin-bottom:32px;}
@@ -1491,7 +1491,7 @@ async function exportAllSessions() {
   .footer{margin-top:32px;font-size:11px;color:#475569;text-align:center;}
 </style></head><body>
 <h1>📼 EHZ-SEC-AI — Session Recording Report</h1>
-<div class="sub">${sessions.length} sessions · יוצא ${new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div>`;
+<div class="sub">${sessions.length} sessions · Exported ${new Date().toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div>`;
 
     sessions.forEach((s, i) => {
       const events = allTimelines[i]?.events || [];
@@ -1500,10 +1500,10 @@ async function exportAllSessions() {
       allHTML += `<div class="sess-block">
         <div class="sess-header">📼 ${s.session_id.slice(0,8)}…
           <span style="font-size:12px;font-weight:400;margin-right:12px;padding:2px 8px;border-radius:3px;background:${s.max_level==='CRITICAL'?'rgba(239,68,68,0.2)':s.max_level==='HIGH'?'rgba(249,115,22,0.2)':'rgba(100,116,139,0.2)'};color:${s.max_level==='CRITICAL'?'#ef4444':s.max_level==='HIGH'?'#f97316':'#94a3b8'}">${s.max_level}</span>
-          <div class="sess-meta">${events.length} פעולות · ${durStr} · ${new Date(s.first_ts).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'})}</div>
+          <div class="sess-meta">${events.length} actions · ${durStr} · ${new Date(s.first_ts).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div>
         </div>
-        <table><thead><tr><th>זמן</th><th>רמה</th><th>כלי</th><th>תיאור</th></tr></thead><tbody>
-        ${events.map(e=>`<tr><td style="color:#64748b;font-family:monospace;">${new Date(e.ts).toLocaleTimeString('he-IL',{timeZone:'Asia/Jerusalem'})}</td><td style="color:${e.level==='CRITICAL'?'#ef4444':e.level==='HIGH'?'#f97316':'#94a3b8'}">${e.level}</td><td style="color:#0ea5e9;font-family:monospace;">${e.tool_name||''}</td><td style="color:#94a3b8;">${(e.reason||e.input_summary||'').slice(0,100)}</td></tr>`).join('')}
+        <table><thead><tr><th>Time</th><th>Level</th><th>Tool</th><th>Description</th></tr></thead><tbody>
+        ${events.map(e=>`<tr><td style="color:#64748b;font-family:monospace;">${new Date(e.ts).toLocaleTimeString('en-GB',{timeZone:'Asia/Jerusalem'})}</td><td style="color:${e.level==='CRITICAL'?'#ef4444':e.level==='HIGH'?'#f97316':'#94a3b8'}">${e.level}</td><td style="color:#0ea5e9;font-family:monospace;">${e.tool_name||''}</td><td style="color:#94a3b8;">${(e.reason||e.input_summary||'').slice(0,100)}</td></tr>`).join('')}
         </tbody></table></div>`;
     });
 
@@ -1514,7 +1514,7 @@ async function exportAllSessions() {
     a.href = URL.createObjectURL(blob);
     a.download = `sessions-report-${new Date().toISOString().slice(0,10)}.html`;
     a.click();
-  } catch(e) { alert('שגיאה בייצוא: ' + e.message); }
+  } catch(e) { alert('Export error: ' + e.message); }
 }
 
 // ── Skills ────────────────────────────────────────────────────────────────────
@@ -1544,9 +1544,9 @@ async function loadSkillsRegistry() {
 async function runScan() {
   const btn = document.getElementById('scan-btn');
   btn.disabled = true;
-  btn.textContent = '⟳ סורק...';
+  btn.textContent = '⟳ Scanning...';
   document.getElementById('skills-tbody').innerHTML =
-    '<tr><td colspan="5"><div class="loading">סריקה בתהליך...</div></td></tr>';
+    '<tr><td colspan="5"><div class="loading">Scanning...</div></td></tr>';
 
   try {
     const r = await fetch(API + '/skills/scan', { method: 'POST' });
@@ -1565,22 +1565,22 @@ async function runScan() {
     document.getElementById('sk-critical').textContent  = s.critical  ?? 0;
 
     document.getElementById('skills-last-scan').textContent =
-      'סריקה אחרונה: ' + new Date(s.scanned_at).toLocaleTimeString('he-IL', { timeZone: 'Asia/Jerusalem' });
+      'Last scan: ' + new Date(s.scanned_at).toLocaleTimeString('he-IL', { timeZone: 'Asia/Jerusalem' });
 
     renderSkillsTable(data.skills || []);
   } catch(e) {
     document.getElementById('skills-tbody').innerHTML =
-      '<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>שגיאה בסריקה — Collector לא מגיב</p></div></td></tr>';
+      '<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>Scan error — Collector not responding</p></div></td></tr>';
   } finally {
     btn.disabled = false;
-    btn.textContent = '▶ סרוק עכשיו';
+    btn.textContent = '▶ Scan now';
   }
 }
 
 function renderSkillsTable(skills) {
   const tbody = document.getElementById('skills-tbody');
   if (!skills.length) {
-    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="icon">📦</div><p>לא נמצאו סקילים</p></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="icon">📦</div><p>No skills found</p></div></td></tr>';
     return;
   }
 
@@ -1621,7 +1621,7 @@ function selectLevel(n) {
 async function loadRetention() {
   try {
     const r = await fetchJSON('/retention');
-    document.getElementById('ret-days').textContent  = r.retention_days + ' יום';
+    document.getElementById('ret-days').textContent  = r.retention_days + ' days';
     document.getElementById('ret-max').textContent   = r.max_events.toLocaleString() + ' events';
     document.getElementById('ret-total').textContent = r.total_events.toLocaleString();
   } catch(_) {}
@@ -1630,12 +1630,12 @@ async function loadRetention() {
 async function clearLogs(days) {
   const statusEl = document.getElementById('clear-status');
   const msg = days === 0
-    ? 'למחוק את כל הלוגים?'
-    : `למחוק events ישנים מ-${days} יום?`;
+    ? 'Delete all logs?'
+    : `Delete events older than ${days} days?`;
   if (!confirm(msg)) return;
 
   statusEl.style.color = 'var(--muted2)';
-  statusEl.textContent = '⟳ מוחק...';
+  statusEl.textContent = '⟳ Deleting...';
   try {
     const body = days > 0 ? { older_than_days: days } : {};
     const r = await fetch(API + '/events', {
@@ -1650,7 +1650,7 @@ async function clearLogs(days) {
     loadStats();
   } catch(_) {
     statusEl.style.color = 'var(--red)';
-    statusEl.textContent = '❌ שגיאה — Collector לא מגיב';
+    statusEl.textContent = '❌ Error — Collector not responding';
   }
 }
 
@@ -1660,7 +1660,7 @@ async function loadConfig() {
     selectLevel(cfg.hardening_level ?? 1);
     document.getElementById('settings-status').textContent = '';
   } catch(e) {
-    document.getElementById('settings-status').textContent = '⚠️ לא ניתן לטעון הגדרות — Collector לא מגיב';
+    document.getElementById('settings-status').textContent = '⚠️ Cannot load settings — Collector not responding';
     document.getElementById('settings-status').style.color = 'var(--red)';
   }
 }
@@ -1679,10 +1679,10 @@ async function saveLevel() {
     if (!r.ok) throw new Error(r.status);
     const data = await r.json();
     statusEl.style.color   = 'var(--green)';
-    statusEl.textContent   = `✅ נשמר: ${data.emoji} ${data.name} (Level ${data.hardening_level})`;
+    statusEl.textContent   = `✅ Saved: ${data.emoji} ${data.name} (Level ${data.hardening_level})`;
   } catch(e) {
     statusEl.style.color   = 'var(--red)';
-    statusEl.textContent   = '❌ שגיאה בשמירה — Collector לא מגיב';
+    statusEl.textContent   = '❌ Save error — Collector not responding';
   } finally {
     btn.disabled = false;
   }
@@ -1704,8 +1704,8 @@ function riskColor(label) {
 function auditSummaryCards(s) {
   if (!s) return '';
   const cards = [
-    { label: 'קבצים סרוקים', val: s.total_files, color: 'var(--accent)' },
-    { label: '✅ תקין',       val: s.clean,       color: 'var(--green)'  },
+    { label: 'Files scanned', val: s.total_files, color: 'var(--accent)' },
+    { label: '✅ OK',       val: s.clean,       color: 'var(--green)'  },
     { label: '⚠️ MEDIUM',    val: s.medium,      color: 'var(--yellow)' },
     { label: '🔶 HIGH',      val: s.high,        color: 'var(--orange)' },
     { label: '🚨 CRITICAL',  val: s.critical,    color: 'var(--red)'    },
@@ -1734,7 +1734,7 @@ function renderAuditTable(files) {
     const shortPath = f.path.replace(/\\/g,'/').replace('C:/Claude-Repo/','');
     const color = riskColor(f.risk_label);
     const findings = f.findings.map(x =>
-      `<span style="color:${riskColor(x.level)};margin-left:6px">● ${x.reason} (שורה ${x.line})</span>`
+      `<span style="color:${riskColor(x.level)};margin-left:6px">● ${x.reason} (line ${x.line})</span>`
     ).join('<br>');
     return `<tr style="border-bottom:1px solid var(--border);transition:background 0.1s" onmouseover="this.style.background='var(--panel2)'" onmouseout="this.style.background=''">
       <td style="padding:8px 12px;color:var(--muted2);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${f.path}">${shortPath}</td>
@@ -1757,7 +1757,7 @@ async function loadAuditSchedule() {
 
 function setAuditLastScan(scanned_at) {
   const el = document.getElementById('audit-last-scan');
-  if (!scanned_at) { el.textContent = 'טרם בוצעה'; el.style.color = 'var(--muted)'; return; }
+  if (!scanned_at) { el.textContent = 'Not performed yet'; el.style.color = 'var(--muted)'; return; }
   const dt = new Date(scanned_at);
   const now = new Date();
   const diffMs  = now - dt;
@@ -1765,10 +1765,10 @@ function setAuditLastScan(scanned_at) {
   const diffH   = Math.floor(diffMin / 60);
   const diffD   = Math.floor(diffH / 24);
   let ago = '';
-  if (diffMin < 1)       ago = 'לפני רגע';
-  else if (diffMin < 60) ago = `לפני ${diffMin} דקות`;
-  else if (diffH < 24)   ago = `לפני ${diffH} שעות`;
-  else                   ago = `לפני ${diffD} ימים`;
+  if (diffMin < 1)       ago = 'just now';
+  else if (diffMin < 60) ago = `${diffMin} min ago`;
+  else if (diffH < 24)   ago = `${diffH}h ago`;
+  else                   ago = `${diffD}d ago`;
   el.textContent = dt.toLocaleString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) + '  (' + ago + ')';
   el.style.color = diffD < 7 ? 'var(--green)' : 'var(--yellow)';
 }
@@ -1782,13 +1782,13 @@ async function loadAuditResults() {
     if (d.summary) {
       setAuditLastScan(d.summary.scanned_at);
       document.getElementById('audit-meta').textContent =
-        d.summary.total_files + ' קבצים | תיקייה: ' + d.summary.scan_path;
+        d.summary.total_files + ' Files | Folder: ' + d.summary.scan_path;
     } else {
       setAuditLastScan(null);
     }
     renderAuditTable(d.files || []);
   } catch(e) {
-    document.getElementById('audit-meta').textContent = 'שגיאה בטעינה — ' + e.message;
+    document.getElementById('audit-meta').textContent = 'Load error — ' + e.message;
   }
 }
 
@@ -1814,9 +1814,9 @@ async function runAuditScan() {
   const btn         = document.getElementById('audit-scan-btn');
   const scanPath    = (document.getElementById('audit-path-input').value || '').trim() || 'C:/Claude-Repo';
   const incremental = auditScanMode === 'incremental';
-  btn.textContent = incremental ? '⏳ סורק שינויים...' : '⏳ סורק...';
+  btn.textContent = incremental ? '⏳ Scanning changes...' : '⏳ Scanning...';
   btn.disabled = true;
-  document.getElementById('audit-meta').textContent = (incremental ? '⚡ סריקת שינויים: ' : '🔍 סריקה מלאה: ') + scanPath + ' ...';
+  document.getElementById('audit-meta').textContent = (incremental ? '⚡ Incremental scan: ' : '🔍 Full scan: ') + scanPath + ' ...';
   try {
     const r = await fetch(API + '/audit/scan', {
       method: 'POST',
@@ -1827,21 +1827,21 @@ async function runAuditScan() {
     document.getElementById('audit-summary-cards').innerHTML = auditSummaryCards(d.summary);
     if (d.summary) {
       setAuditLastScan(d.summary.scanned_at);
-      let meta = d.summary.total_files + ' קבצים | תיקייה: ' + d.summary.scan_path;
+      let meta = d.summary.total_files + ' Files | Folder: ' + d.summary.scan_path;
       if (d.summary.incremental) {
-        meta += ' | ⚡ נסרקו ' + (d.summary.incremental_new || 0) + ' קבצים חדשים/שונים';
+        meta += ' | ⚡ Scanned ' + (d.summary.incremental_new || 0) + ' new/changed files';
         if (d.summary.since) {
           const since = new Date(d.summary.since).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
-          meta += ' (מאז ' + since + ')';
+          meta += ' (since ' + since + ')';
         }
       }
       document.getElementById('audit-meta').textContent = meta;
     }
     renderAuditTable(d.files || []);
   } catch(e) {
-    document.getElementById('audit-meta').textContent = 'שגיאת סריקה — ' + e.message;
+    document.getElementById('audit-meta').textContent = 'Scan error — ' + e.message;
   } finally {
-    btn.textContent = '▶ סרוק עכשיו';
+    btn.textContent = '▶ Scan now';
     btn.disabled = false;
   }
 }
@@ -1858,7 +1858,7 @@ async function loadDomains() {
     // ── Allowed domains ──
     if (!list.length) {
       document.getElementById('domains-list').innerHTML =
-        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">אין דומיינים מורשים</div>';
+        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">No authorized domains</div>';
     } else {
       const repMap = {};
       await Promise.all(list.map(async dom => {
@@ -1887,7 +1887,7 @@ async function loadDomains() {
     document.getElementById('discovered-count').textContent = discovered.length ? `(${discovered.length})` : '';
     if (!discovered.length) {
       document.getElementById('discovered-list').innerHTML =
-        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">ממתין לחיפושים...</div>';
+        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">Waiting for searches...</div>';
     } else {
       // Sort: suspicious first
       const sorted = [...discovered].sort((a, b) => a.score - b.score);
@@ -1898,15 +1898,15 @@ async function loadDomains() {
             <span style="font-size:13px;">🔍</span>
             <span style="flex:1;font-size:11px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.domain}</span>
             <span style="background:${c}22;color:${c};border:1px solid ${c}55;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">${item.score} ${item.label}</span>
-            <button onclick="approveDomain('${item.domain}')" title="הוסף למורשים"
+            <button onclick="approveDomain('${item.domain}')" title="Add to allowlist"
               style="border:1px solid #10b98166;background:transparent;color:var(--green);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✓</button>
-            <button onclick="removeDomain('${item.domain}')" title="חסום"
+            <button onclick="removeDomain('${item.domain}')" title="Block"
               style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✕</button>
           </div>`;
       }).join('');
     }
   } catch(e) {
-    document.getElementById('domains-list').innerHTML = '<div style="color:var(--red)">שגיאה: ' + e.message + '</div>';
+    document.getElementById('domains-list').innerHTML = '<div style="color:var(--red)">Error: ' + e.message + '</div>';
   }
 }
 
@@ -1914,7 +1914,7 @@ async function approveDomain(domain) {
   try {
     await fetch(API + '/domains/approve/' + encodeURIComponent(domain), { method: 'POST' });
     loadDomains();
-  } catch(e) { alert('שגיאה: ' + e.message); }
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 async function addDomain() {
@@ -1929,14 +1929,14 @@ async function addDomain() {
     });
     inp.value = '';
     loadDomains();
-  } catch(e) { alert('שגיאה: ' + e.message); }
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 async function removeDomain(domain) {
   try {
     await fetch(API + '/domains/' + encodeURIComponent(domain), { method: 'DELETE' });
     loadDomains();
-  } catch(e) { alert('שגיאה: ' + e.message); }
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 async function loadDomainHistory() {
@@ -1946,7 +1946,7 @@ async function loadDomainHistory() {
     const hist = d.history || [];
     if (!hist.length) {
       document.getElementById('domains-history').innerHTML =
-        '<div style="color:var(--muted);padding:12px;text-align:center;">אין היסטוריית WebFetch</div>';
+        '<div style="color:var(--muted);padding:12px;text-align:center;">No WebFetch history</div>';
       return;
     }
 
@@ -1989,7 +1989,7 @@ async function loadDomainHistory() {
       </div>`;
     }).join('');
   } catch(e) {
-    document.getElementById('domains-history').innerHTML = '<div style="color:var(--red)">שגיאה: ' + e.message + '</div>';
+    document.getElementById('domains-history').innerHTML = '<div style="color:var(--red)">Error: ' + e.message + '</div>';
   }
 }
 
@@ -2023,10 +2023,10 @@ function timeAgo(iso) {
   const d = Math.floor(diff / 86400000);
   const h = Math.floor(diff / 3600000);
   const m = Math.floor(diff / 60000);
-  if (d > 30) return 'לפני חודש+';
-  if (d > 0)  return `לפני ${d} ימים`;
-  if (h > 0)  return `לפני ${h} שעות`;
-  return `לפני ${m} דקות`;
+  if (d > 30) return '1 month+ ago';
+  if (d > 0)  return `${d}d ago`;
+  if (h > 0)  return `${h}h ago`;
+  return `${m}m ago`;
 }
 
 function renderProjectCard(node) {
@@ -2063,8 +2063,8 @@ function renderProjectCard(node) {
     </div>
 
     <div style="display:flex;gap:6px;font-size:10px;">
-      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📄 ${node.files} קבצים</span>
-      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📁 ${node.folders} תיקיות</span>
+      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📄 ${node.files} Files</span>
+      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📁 ${node.folders} Folders</span>
       ${node.last_mod ? `<span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted);">🕐 ${timeAgo(node.last_mod)}</span>` : ''}
     </div>
 
@@ -2077,7 +2077,7 @@ function renderProjectCard(node) {
     </div>
     <div style="display:flex;gap:5px;align-items:center;">
       <input id="note-input-${btoa(node.path).replace(/[^a-z0-9]/gi,'')}" type="text"
-        value="${noteVal}" placeholder="✏️ הוסף הערה לתיקייה..."
+        value="${noteVal}" placeholder="✏️ Add note to folder..."
         style="flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:4px 8px;font-size:11px;display:none;"
         onkeydown="if(event.key==='Enter') saveNote('${node.path}',this.value)" />
       <button onclick="toggleNoteEdit('${node.path}')"
@@ -2101,13 +2101,13 @@ async function loadProjects(reuseCache) {
       _projectsData = await r.json();
     } catch(e) {
       document.getElementById('projects-grid').innerHTML =
-        '<div style="color:var(--red);padding:20px;">שגיאה: ' + e.message + '</div>';
+        '<div style="color:var(--red);padding:20px;">Error: ' + e.message + '</div>';
       return;
     }
   }
   const d = _projectsData;
   document.getElementById('projects-meta').textContent =
-    d.count + ' תיקיות ב-' + d.root;
+    d.count + ' folders in ' + d.root;
   document.getElementById('projects-grid').innerHTML =
     (d.tree || []).map(renderProjectCard).join('');
 }
@@ -2128,7 +2128,7 @@ async function saveNote(p, note) {
     });
     _projectsData = null; // invalidate cache
     loadProjects();
-  } catch(e) { alert('שגיאה: ' + e.message); }
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 /* ── NOTIFICATIONS SETTINGS ── */
@@ -2149,12 +2149,12 @@ function applyNotifConfig() {
 
   // Telegram toggle
   document.getElementById('tg-enabled').checked = !!tg.enabled;
-  document.getElementById('tg-status-label').textContent = tg.enabled ? 'פעיל' : 'כבוי';
+  document.getElementById('tg-status-label').textContent = tg.enabled ? 'On' : 'Off';
   document.getElementById('tg-status-label').style.color = tg.enabled ? 'var(--green)' : 'var(--muted)';
 
   // Email toggle + fields
   document.getElementById('email-enabled').checked = !!em.enabled;
-  document.getElementById('email-status-label').textContent = em.enabled ? 'פעיל' : 'כבוי';
+  document.getElementById('email-status-label').textContent = em.enabled ? 'On' : 'Off';
   document.getElementById('email-status-label').style.color = em.enabled ? '#a78bfa' : 'var(--muted)';
   document.getElementById('email-test-btn').style.display = em.enabled ? 'inline-block' : 'none';
 
@@ -2173,11 +2173,11 @@ function applyNotifConfig() {
 function notifToggle(type) {
   if (type === 'tg') {
     const on = document.getElementById('tg-enabled').checked;
-    document.getElementById('tg-status-label').textContent = on ? 'פעיל' : 'כבוי';
+    document.getElementById('tg-status-label').textContent = on ? 'On' : 'Off';
     document.getElementById('tg-status-label').style.color = on ? 'var(--green)' : 'var(--muted)';
   } else {
     const on = document.getElementById('email-enabled').checked;
-    document.getElementById('email-status-label').textContent = on ? 'פעיל' : 'כבוי';
+    document.getElementById('email-status-label').textContent = on ? 'On' : 'Off';
     document.getElementById('email-status-label').style.color = on ? '#a78bfa' : 'var(--muted)';
     document.getElementById('email-test-btn').style.display = on ? 'inline-block' : 'none';
   }
@@ -2207,23 +2207,23 @@ async function saveNotifSettings() {
     });
     const j = await r.json();
     _notifConfig = j;
-    st.textContent = '✅ נשמר!';
+    st.textContent = '✅ Saved!';
     st.style.color = 'var(--green)';
     setTimeout(() => st.textContent = '', 3000);
   } catch(e) {
-    st.textContent = '❌ שגיאה: ' + e.message;
+    st.textContent = '❌ Error: ' + e.message;
     st.style.color = 'var(--red)';
   }
 }
 
 async function testTelegram() {
   const st = document.getElementById('tg-test-status');
-  st.textContent = 'שולח...';
+  st.textContent = 'Sending...';
   st.style.color = 'var(--muted)';
   try {
     const r = await fetch('http://localhost:3010/notifications/test-telegram', { method: 'POST' });
     const j = await r.json();
-    st.textContent = j.ok ? '✅ נשלח!' : '❌ ' + (j.error || 'שגיאה');
+    st.textContent = j.ok ? '✅ Sent!' : '❌ ' + (j.error || 'Error');
     st.style.color = j.ok ? 'var(--green)' : 'var(--red)';
   } catch(e) {
     st.textContent = '❌ ' + e.message;
@@ -2234,12 +2234,12 @@ async function testTelegram() {
 
 async function testEmail() {
   const st = document.getElementById('notif-save-status');
-  st.textContent = 'שולח בדיקה...';
+  st.textContent = 'Sending test...';
   st.style.color = 'var(--muted)';
   try {
     const r = await fetch('http://localhost:3010/notifications/test-email', { method: 'POST' });
     const j = await r.json();
-    st.textContent = j.ok ? '✅ מייל נשלח!' : '❌ ' + (j.error || 'שגיאה');
+    st.textContent = j.ok ? '✅ Email sent!' : '❌ ' + (j.error || 'Error');
     st.style.color = j.ok ? 'var(--green)' : 'var(--red)';
   } catch(e) {
     st.textContent = '❌ ' + e.message;
@@ -2267,7 +2267,7 @@ async function addGitRemote() {
   if (!_notifConfig) _notifConfig = { git_remotes: [] };
   if (!_notifConfig.git_remotes) _notifConfig.git_remotes = [];
   if (_notifConfig.git_remotes.includes(val)) {
-    st.textContent = '⚠️ כבר קיים';
+    st.textContent = '⚠️ Already exists';
     st.style.color = 'var(--yellow)';
     return;
   }
@@ -2281,10 +2281,10 @@ async function addGitRemote() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(_notifConfig)
     });
-    st.textContent = '✅ נוסף ונשמר';
+    st.textContent = '✅ Added & saved';
     st.style.color = 'var(--green)';
   } catch(e) {
-    st.textContent = '❌ שגיאה בשמירה';
+    st.textContent = '❌ Save error';
     st.style.color = 'var(--red)';
   }
   setTimeout(() => st.textContent = '', 3000);
@@ -2301,10 +2301,10 @@ async function removeGitRemote(idx) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(_notifConfig)
     });
-    st.textContent = '✅ הוסר ונשמר';
+    st.textContent = '✅ Removed & saved';
     st.style.color = 'var(--green)';
   } catch(e) {
-    st.textContent = '❌ שגיאה בשמירה';
+    st.textContent = '❌ Save error';
     st.style.color = 'var(--red)';
   }
   setTimeout(() => st.textContent = '', 3000);
