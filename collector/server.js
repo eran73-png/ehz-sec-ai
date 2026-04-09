@@ -91,6 +91,43 @@ function checkWeeklyScan() {
 }
 setInterval(checkWeeklyScan, 60 * 1000); // בדוק כל דקה
 
+// ─── Daily Report (MS6.14a) ──────────────────────────────────────────────────
+// שולח דוח יומי כל בוקר 08:00
+function sendDailyReport() {
+  const since = Date.now() - 24 * 60 * 60 * 1000;
+  db.find({ ts: { $gt: since } }).exec((err, docs) => {
+    if (err || !docs.length) return;
+    const critical = docs.filter(d => d.level === 'CRITICAL').length;
+    const high     = docs.filter(d => d.level === 'HIGH').length;
+    const medium   = docs.filter(d => d.level === 'MEDIUM').length;
+    const info     = docs.filter(d => d.level === 'INFO').length;
+    // Top threats
+    const threats  = docs
+      .filter(d => ['CRITICAL','HIGH'].includes(d.level) && d.reason)
+      .slice(0, 5)
+      .map(d => `• ${d.level === 'CRITICAL' ? '🚨' : '🔴'} ${d.reason}`).join('\n');
+    const dateStr = new Date().toLocaleDateString('he-IL');
+    sendTelegram(
+      `📊 <b>EHZ-SEC-AI — דוח יומי</b>\n` +
+      `📅 ${dateStr}\n\n` +
+      `🚨 CRITICAL: <b>${critical}</b>\n` +
+      `🔴 HIGH: <b>${high}</b>\n` +
+      `🟡 MEDIUM: <b>${medium}</b>\n` +
+      `ℹ️ INFO: <b>${info}</b>\n` +
+      `📊 סה"כ: <b>${docs.length}</b> events\n` +
+      (threats ? `\n🔍 <b>החשודים של היום:</b>\n${threats}` : '\n✅ אין איומים חשובים')
+    );
+  });
+}
+
+function checkDailyReport() {
+  const now = new Date();
+  if (now.getHours() === 8 && now.getMinutes() === 0) {
+    sendDailyReport();
+  }
+}
+setInterval(checkDailyReport, 60 * 1000);
+
 // ─── Telegram ────────────────────────────────────────────────────────────────
 
 function sendTelegram(text) {

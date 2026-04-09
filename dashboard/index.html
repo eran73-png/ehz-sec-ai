@@ -463,6 +463,21 @@ body {
   <button class="filter-btn crit"       onclick="setFilter('CRITICAL')" id="f-critical">🚨 Critical</button>
   <button class="filter-btn high"       onclick="setFilter('HIGH')"     id="f-high">⚠️ High</button>
   <button class="filter-btn info"       onclick="setFilter('INFO')"     id="f-info">ℹ️ Info</button>
+  <button class="refresh-btn" onclick="exportHTML()" style="margin-right:auto;color:#a78bfa;border-color:#7c3aed44;">📄 ייצא HTML</button>
+</div>
+
+<!-- SEARCH BAR (MS6.14b) -->
+<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
+  <input id="events-search" type="text" placeholder="🔍 חפש event — כלי, סיבה, רמה..."
+    style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:7px 12px;font-size:12px;direction:rtl;"
+    oninput="applySearch()" />
+  <select id="events-tool-filter" onchange="applySearch()"
+    style="background:var(--panel2);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;padding:7px 10px;font-size:12px;">
+    <option value="">כל הכלים</option>
+    <option>WebSearch</option><option>WebFetch</option><option>Write</option>
+    <option>Edit</option><option>Bash</option><option>Read</option>
+  </select>
+  <span id="search-count" style="font-size:11px;color:var(--muted);white-space:nowrap;"></span>
 </div>
 
 <!-- TABLE -->
@@ -835,7 +850,8 @@ async function loadEvents() {
       ? `/events?limit=${LIMIT}`
       : `/events?limit=${LIMIT}&level=${currentFilter}`;
     const data = await fetchJSON(path);
-    renderTable(data.events || []);
+    _allEvents = data.events || [];
+    applySearch();
 
     // Last event bar
     if (data.events && data.events.length > 0) {
@@ -923,6 +939,8 @@ function setOnline(on) {
 
 // ── Filter ───────────────────────────────────────────────────────────────────
 
+let _allEvents = [];
+
 function setFilter(f) {
   currentFilter = f;
   ['ALL','CRITICAL','HIGH','INFO'].forEach(k => {
@@ -930,6 +948,55 @@ function setFilter(f) {
     document.getElementById(id)?.classList.toggle('active', k === f);
   });
   loadEvents();
+}
+
+// ── Search (MS6.14b) ──────────────────────────────────────────────────────────
+
+function applySearch() {
+  const q    = (document.getElementById('events-search').value || '').toLowerCase();
+  const tool = (document.getElementById('events-tool-filter').value || '').toLowerCase();
+  const filtered = _allEvents.filter(e => {
+    const matchQ    = !q    || JSON.stringify(e).toLowerCase().includes(q);
+    const matchTool = !tool || (e.tool_name || '').toLowerCase() === tool;
+    return matchQ && matchTool;
+  });
+  renderTable(filtered);
+  document.getElementById('search-count').textContent =
+    (q || tool) ? `${filtered.length} תוצאות` : '';
+}
+
+// ── Export HTML (MS6.14c) ──────────────────────────────────────────────────────
+
+async function exportHTML() {
+  try {
+    const data = await fetchJSON('/events?limit=1000');
+    const events = data.events || [];
+    const now = new Date().toLocaleString('he-IL');
+    const rows = events.map(e => {
+      const color = e.level==='CRITICAL'?'#7f1d1d':e.level==='HIGH'?'#431407':e.level==='MEDIUM'?'#422006':'#0c1a0c';
+      const tc    = e.level==='CRITICAL'?'#fca5a5':e.level==='HIGH'?'#fdba74':e.level==='MEDIUM'?'#fde68a':'#86efac';
+      return `<tr style="background:${color}">
+        <td style="color:#94a3b8;font-size:11px">${new Date(e.ts).toLocaleString('he-IL')}</td>
+        <td><span style="background:${tc}22;color:${tc};border:1px solid ${tc}44;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700">${e.level}</span></td>
+        <td style="color:#e2e8f0">${e.tool_name||''}</td>
+        <td style="color:#cbd5e1;font-size:11px">${e.reason||''}</td>
+      </tr>`;
+    }).join('');
+    const html = `<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8">
+<title>EHZ-SEC-AI Report — ${now}</title>
+<style>body{background:#080c14;color:#e2e8f0;font-family:Segoe UI,Arial,sans-serif;padding:24px}
+h1{color:#0ea5e9;margin-bottom:4px}p{color:#64748b;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}th{background:#0ea5e922;color:#0ea5e9;padding:8px 12px;text-align:right;font-size:12px}
+td{padding:7px 12px;border-bottom:1px solid #1a2540;font-size:12px}</style></head>
+<body><h1>🛡️ EHZ-SEC-AI — דוח אבטחה</h1>
+<p>נוצר: ${now} | סה"כ: ${events.length} events</p>
+<table><tr><th>זמן</th><th>רמה</th><th>כלי</th><th>סיבה</th></tr>${rows}</table></body></html>`;
+    const blob = new Blob([html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `EHZ-SEC-AI-Report-${new Date().toISOString().slice(0,10)}.html`;
+    a.click();
+  } catch(e) { alert('שגיאה: ' + e.message); }
 }
 
 // ── Auto-refresh ─────────────────────────────────────────────────────────────
