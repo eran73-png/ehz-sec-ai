@@ -550,10 +550,13 @@ function writeWhitelist(wl) {
   fs.writeFileSync(WHITELIST_FILE, JSON.stringify(wl, null, 2), 'utf8');
 }
 
-// GET /domains — רשימת דומיינים מורשים
+// GET /domains — רשימת דומיינים מורשים + שהתגלו
 app.get('/domains', (req, res) => {
   const wl = readWhitelist();
-  res.json({ allowed_domains: wl.allowed_domains || [] });
+  res.json({
+    allowed_domains:    wl.allowed_domains    || [],
+    discovered_domains: wl.discovered_domains || [],
+  });
 });
 
 // POST /domains — הוספת דומיין
@@ -571,13 +574,61 @@ app.post('/domains', (req, res) => {
   res.json({ ok: true, added: domain, allowed_domains: wl.allowed_domains });
 });
 
-// DELETE /domains/:domain — הסרת דומיין
+// DELETE /domains/:domain — הסרת דומיין (ממורשים + מהתגלו)
 app.delete('/domains/:domain', (req, res) => {
   const domain = decodeURIComponent(req.params.domain).toLowerCase();
   const wl = readWhitelist();
   wl.allowed_domains = (wl.allowed_domains || []).filter(d => d !== domain);
+  wl.discovered_domains = (wl.discovered_domains || []).filter(d => d.domain !== domain);
   writeWhitelist(wl);
-  res.json({ ok: true, removed: domain, allowed_domains: wl.allowed_domains });
+  res.json({ ok: true, removed: domain });
+});
+
+// POST /domains/autodiscover — מוסיף דומיינים שהתגלו בחיפוש (MS6.13)
+// body: { domains: ['site.com', ...] }
+app.post('/domains/autodiscover', (req, res) => {
+  const newDomains = ((req.body || {}).domains || []).map(d =>
+    d.toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+  ).filter(d => d && d.includes('.'));
+
+  if (!newDomains.length) return res.json({ ok: true, added: 0 });
+
+  const wl = readWhitelist();
+  wl.discovered_domains = wl.discovered_domains || [];
+  const allowed  = new Set(wl.allowed_domains || []);
+  const existing = new Set(wl.discovered_domains.map(d => d.domain));
+
+  let added = 0;
+  for (const domain of newDomains) {
+    if (allowed.has(domain) || existing.has(domain)) continue;
+    // Score the domain
+    let score = 50, label = 'NEUTRAL', color = '#f59e0b';
+    if (domainReputationMod) {
+      const rep = domainReputationMod.scoreDomain(domain, wl.allowed_domains || []);
+      score = rep.score; label = rep.label; color = rep.color;
+    }
+    wl.discovered_domains.push({ domain, score, label, color, discovered_at: new Date().toISOString() });
+    added++;
+  }
+
+  // Keep last 200 discovered domains
+  if (wl.discovered_domains.length > 200) {
+    wl.discovered_domains = wl.discovered_domains.slice(-200);
+  }
+
+  writeWhitelist(wl);
+  res.json({ ok: true, added });
+});
+
+// POST /domains/approve/:domain — העבר מ"התגלה" ל"מורשה ידנית"
+app.post('/domains/approve/:domain', (req, res) => {
+  const domain = decodeURIComponent(req.params.domain).toLowerCase();
+  const wl = readWhitelist();
+  wl.discovered_domains = (wl.discovered_domains || []).filter(d => d.domain !== domain);
+  wl.allowed_domains = wl.allowed_domains || [];
+  if (!wl.allowed_domains.includes(domain)) wl.allowed_domains.push(domain);
+  writeWhitelist(wl);
+  res.json({ ok: true, approved: domain });
 });
 
 // ─── Domain Reputation (MS6.10) ──────────────────────────────────────────────

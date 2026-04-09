@@ -112,6 +112,30 @@ async function main() {
     try { sendToCollector(payload); } catch (e) { log(`send error: ${e.message}`); }
   }
 
+  // Auto-discover domains from WebSearch results (MS6.13)
+  if (tool === 'WebSearch' && hookType === 'PostToolUse') {
+    try {
+      const responseText = JSON.stringify(event.tool_response || '');
+      const urlRe = /https?:\/\/([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}/g;
+      const matches = responseText.match(urlRe) || [];
+      const domains = [...new Set(matches.map(u => {
+        try { return new URL(u).hostname.toLowerCase(); } catch(_) { return null; }
+      }).filter(Boolean))];
+      if (domains.length > 0) {
+        const body = JSON.stringify({ domains });
+        const req2 = http.request('http://localhost:3010/domains/autodiscover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+          timeout: 3000,
+        });
+        req2.on('error', () => {});
+        req2.write(body);
+        req2.end();
+        log(`[AutoDiscover] ${domains.length} domains from WebSearch`);
+      }
+    } catch(e) { log(`autodiscover error: ${e.message}`); }
+  }
+
   log(`[${level}] ${hookType} → ${tool}${reason ? ' | ' + reason : ''}`);
 
   process.stdout.write(JSON.stringify(response));

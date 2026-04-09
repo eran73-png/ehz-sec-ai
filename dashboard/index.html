@@ -731,23 +731,38 @@ body {
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
 
-  <!-- Allowed domains list -->
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
-    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">✅ דומיינים מורשים</div>
-    <!-- Add domain -->
-    <div style="display:flex;gap:6px;margin-bottom:12px;">
-      <input id="domain-add-input" type="text" placeholder="example.com"
-        style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:6px 10px;font-size:12px;"
-        onkeydown="if(event.key==='Enter') addDomain()" />
-      <button class="refresh-btn" onclick="addDomain()" style="color:var(--green);border-color:#10b98144;">+ הוסף</button>
+  <!-- Left column: allowed + discovered -->
+  <div style="display:flex;flex-direction:column;gap:12px;">
+
+    <!-- Allowed domains -->
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">✅ דומיינים מורשים ידנית</div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <input id="domain-add-input" type="text" placeholder="example.com"
+          style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:6px 10px;font-size:12px;"
+          onkeydown="if(event.key==='Enter') addDomain()" />
+        <button class="refresh-btn" onclick="addDomain()" style="color:var(--green);border-color:#10b98144;">+ הוסף</button>
+      </div>
+      <div id="domains-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;"></div>
     </div>
-    <div id="domains-list" style="display:flex;flex-direction:column;gap:5px;max-height:380px;overflow-y:auto;"></div>
+
+    <!-- Auto-discovered domains -->
+    <div style="background:var(--panel);border:1px solid #6366f133;border-radius:12px;padding:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:700;color:var(--text);">🔍 התגלו בחיפוש <span id="discovered-count" style="color:var(--muted);font-weight:400;font-size:11px;"></span></div>
+        <div style="font-size:10px;color:var(--muted2);">אשר = הוסף למורשים | ✕ = חסום</div>
+      </div>
+      <div id="discovered-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;">
+        <div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">ממתין לחיפושים...</div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- WebFetch history -->
+  <!-- WebFetch + WebSearch history -->
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
     <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📜 היסטוריית גישות Web — WebFetch + WebSearch</div>
-    <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:420px;overflow-y:auto;font-size:11px;"></div>
+    <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:500px;overflow-y:auto;font-size:11px;"></div>
   </div>
 
 </div>
@@ -1273,38 +1288,69 @@ async function loadDomains() {
   try {
     const r = await fetch(API + '/domains');
     const d = await r.json();
-    const list = d.allowed_domains || [];
+    const list       = d.allowed_domains    || [];
+    const discovered = d.discovered_domains || [];
+
+    // ── Allowed domains ──
     if (!list.length) {
       document.getElementById('domains-list').innerHTML =
-        '<div style="color:var(--muted);padding:12px;text-align:center;">אין דומיינים מורשים</div>';
-      return;
+        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">אין דומיינים מורשים</div>';
+    } else {
+      const repMap = {};
+      await Promise.all(list.map(async dom => {
+        try {
+          const r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(dom));
+          if (r2.ok) repMap[dom] = await r2.json();
+        } catch(_) {}
+      }));
+      document.getElementById('domains-list').innerHTML = list.map(dom => {
+        const rep = repMap[dom];
+        const repBadge = rep
+          ? `<span style="background:${rep.color}22;color:${rep.color};border:1px solid ${rep.color}55;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;flex-shrink:0;cursor:help" title="${(rep.reasons||[]).join('\n')}">${rep.score} ${rep.label}</span>`
+          : '';
+        return `
+          <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;">
+            <span style="font-size:13px;">🌐</span>
+            <span style="flex:1;font-size:11px;color:var(--text);">${dom}</span>
+            ${repBadge}
+            <button onclick="removeDomain('${dom}')"
+              style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✕</button>
+          </div>`;
+      }).join('');
     }
-    // Fetch reputation for all domains in parallel (MS6.10)
-    const repMap = {};
-    await Promise.all(list.map(async dom => {
-      try {
-        const r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(dom));
-        if (r2.ok) repMap[dom] = await r2.json();
-      } catch(_) {}
-    }));
 
-    document.getElementById('domains-list').innerHTML = list.map(dom => {
-      const rep = repMap[dom];
-      const repBadge = rep
-        ? `<span style="background:${rep.color}22;color:${rep.color};border:1px solid ${rep.color}55;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;flex-shrink:0;cursor:help" title="${(rep.reasons||[]).join('\n')}">${rep.score} ${rep.label}</span>`
-        : '';
-      return `
-        <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;">
-          <span style="font-size:14px;">🌐</span>
-          <span style="flex:1;font-size:12px;color:var(--text);">${dom}</span>
-          ${repBadge}
-          <button onclick="removeDomain('${dom}')"
-            style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">✕</button>
-        </div>`;
-    }).join('');
+    // ── Auto-discovered domains ──
+    document.getElementById('discovered-count').textContent = discovered.length ? `(${discovered.length})` : '';
+    if (!discovered.length) {
+      document.getElementById('discovered-list').innerHTML =
+        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">ממתין לחיפושים...</div>';
+    } else {
+      // Sort: suspicious first
+      const sorted = [...discovered].sort((a, b) => a.score - b.score);
+      document.getElementById('discovered-list').innerHTML = sorted.map(item => {
+        const c = item.color || '#f59e0b';
+        return `
+          <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid ${c}33;border-radius:6px;padding:5px 8px;">
+            <span style="font-size:13px;">🔍</span>
+            <span style="flex:1;font-size:11px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.domain}</span>
+            <span style="background:${c}22;color:${c};border:1px solid ${c}55;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">${item.score} ${item.label}</span>
+            <button onclick="approveDomain('${item.domain}')" title="הוסף למורשים"
+              style="border:1px solid #10b98166;background:transparent;color:var(--green);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✓</button>
+            <button onclick="removeDomain('${item.domain}')" title="חסום"
+              style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✕</button>
+          </div>`;
+      }).join('');
+    }
   } catch(e) {
     document.getElementById('domains-list').innerHTML = '<div style="color:var(--red)">שגיאה: ' + e.message + '</div>';
   }
+}
+
+async function approveDomain(domain) {
+  try {
+    await fetch(API + '/domains/approve/' + encodeURIComponent(domain), { method: 'POST' });
+    loadDomains();
+  } catch(e) { alert('שגיאה: ' + e.message); }
 }
 
 async function addDomain() {
