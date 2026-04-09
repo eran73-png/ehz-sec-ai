@@ -844,11 +844,16 @@
       <div class="task-desc">טוגל בדשבורד: 🔍 מלאה / ⚡ שינויים בלבד | walkDir בודק mtime מול scanned_at של הסריקה הקודמת | ממזג תוצאות חדשות עם archive הקודם | meta-bar מציג "נסרקו X קבצים חדשים מאז HH:MM" | POST /audit/scan מקבל incremental:true. בוצע: 09.04.2026</div>
       <div class="task-tags"><span class="tag">incremental</span><span class="tag">mtime</span><span class="tag">merge</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.8</div>
-      <div class="task-title">Real-time Write Guard</div>
-      <div class="task-desc">כל קובץ שנכתב עובר סריקה מיידית. מידע רגיש = CRITICAL + חסום commit. (נדחה ל-MS7+)</div>
-      <div class="task-tags"><span class="tag">write guard</span><span class="tag">נדחה</span></div>
+    <div class="task-cell" style="border-left: 3px solid #f59e0b;">
+      <div class="task-num" style="color:#f59e0b">6.8 ▶</div>
+      <div class="task-title">Real-time Write Guard — בביצוע</div>
+      <div class="task-desc">
+        <b>מה זה:</b> כרגע כשנכתב קובץ (Write/Edit), ה-Hook מתעד אבל לא סורק את תוכן הקובץ המלא מיידית.<br>
+        <b>עם 6.8:</b> כל כתיבת קובץ → סריקה מיידית של תוכן מלא → אם נמצא סיסמה / API Key / מידע רגיש → CRITICAL בדשבורד + Telegram.<br>
+        <b>דוגמה:</b> password=Ehz2026! / sk-ant-api03-... / מספר כרטיס אשראי → התראה מיידית לפני שהקובץ מגיע ל-Git.<br>
+        <b>הערה:</b> ללא חסימת commit בשלב זה — רק התראה (חסימה = MS7).
+      </div>
+      <div class="task-tags"><span class="tag">write guard</span><span class="tag">realtime</span><span class="tag">secrets</span><span class="tag">ללא חסימה</span></div>
     </div>
     <div class="task-cell" style="border-left: 3px solid #22c55e;">
       <div class="task-num" style="color:#22c55e">6.9 ✅</div>

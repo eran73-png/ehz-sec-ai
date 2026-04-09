@@ -112,6 +112,49 @@ async function main() {
     try { sendToCollector(payload); } catch (e) { log(`send error: ${e.message}`); }
   }
 
+  // Real-time Write Guard (MS6.8) — scan full file content after Write/Edit
+  if (['Write', 'Edit', 'NotebookEdit'].includes(tool) && hookType === 'PostToolUse') {
+    try {
+      const filePath = (event.tool_input || {}).file_path || (event.tool_input || {}).path || '';
+      if (filePath && fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        let writeMatch = null;
+        // Run SECRETS_RULES on full file content
+        const secretsRules = [
+          { level: 'CRITICAL', re: /sk-[A-Za-z0-9]{48}/, reason: 'OpenAI API key בקובץ' },
+          { level: 'CRITICAL', re: /sk-ant-[A-Za-z0-9\-_]{40,}/, reason: 'Anthropic API key בקובץ' },
+          { level: 'CRITICAL', re: /AKIA[0-9A-Z]{16}/, reason: 'AWS Access Key בקובץ' },
+          { level: 'CRITICAL', re: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH)\s+PRIVATE\s+KEY/i, reason: 'Private key בקובץ' },
+          { level: 'HIGH', re: /password\s*[=:]\s*\S{6,}/i, reason: 'סיסמה בקובץ' },
+          { level: 'HIGH', re: /secret\s*[=:]\s*\S{6,}/i, reason: 'Secret בקובץ' },
+          { level: 'HIGH', re: /api[_-]?key\s*[=:]\s*\S{6,}/i, reason: 'API key בקובץ' },
+          { level: 'HIGH', re: /ghp_[A-Za-z0-9]{36}/, reason: 'GitHub Token בקובץ' },
+          { level: 'HIGH', re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'כרטיס אשראי Visa בקובץ' },
+        ];
+        for (const rule of secretsRules) {
+          if (rule.re.test(content)) {
+            writeMatch = { level: rule.level, reason: `🛡️ Write Guard: ${rule.reason} — ${filePath}`, ruleType: 'write-guard' };
+            break;
+          }
+        }
+        if (writeMatch) {
+          sendToCollector({
+            ts:            Date.now(),
+            hook_type:     'WriteGuard',
+            tool_name:     tool,
+            session_id:    session,
+            level:         writeMatch.level,
+            reason:        writeMatch.reason,
+            rule_type:     'write-guard',
+            hardening_level: hardeningLevel,
+            input_summary: filePath,
+          });
+          log(`[WRITE-GUARD] ${writeMatch.level} — ${writeMatch.reason}`);
+        }
+      }
+    } catch(e) { log(`write-guard error: ${e.message}`); }
+  }
+
   // Auto-discover domains from WebSearch results (MS6.13)
   if (tool === 'WebSearch' && hookType === 'PostToolUse') {
     try {
