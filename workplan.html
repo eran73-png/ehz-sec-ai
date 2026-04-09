@@ -330,7 +330,7 @@
       <div style="text-align:center;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:10px;padding:10px 16px;">
         <div style="font-size:10px;color:var(--muted2);margin-bottom:3px;">בדיקת תקינות</div>
         <div style="font-size:12px;font-weight:700;color:var(--green);">✅ MS1–5: הושלמו</div>
-        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-top:2px;">▶ MS6: 11/14 — 79%</div>
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-top:2px;">▶ MS6: 13/15 — 87%</div>
       </div>
     </div>
   </div>
@@ -342,8 +342,8 @@
       <div style="font-size:10px;color:var(--muted2);">Milestones שהושלמו</div>
     </div>
     <div style="background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
-      <div style="font-size:22px;font-weight:900;color:#0ea5e9;">79%</div>
-      <div style="font-size:10px;color:var(--muted2);">MS6 בתהליך (11/14)</div>
+      <div style="font-size:22px;font-weight:900;color:#0ea5e9;">87%</div>
+      <div style="font-size:10px;color:var(--muted2);">MS6 בתהליך (13/15)</div>
     </div>
     <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
       <div style="font-size:22px;font-weight:900;color:#8b5cf6;">22</div>
@@ -354,7 +354,7 @@
       <div style="font-size:10px;color:var(--muted2);">קבצים בסריקה אחרונה</div>
     </div>
     <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
-      <div style="font-size:22px;font-weight:900;color:#ef4444;">3</div>
+      <div style="font-size:22px;font-weight:900;color:#ef4444;">2</div>
       <div style="font-size:10px;color:var(--muted2);">Milestones נותרו ב-MS6</div>
     </div>
     <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
@@ -483,8 +483,8 @@
       else pending++;
     });
     const total = rows.length;
-    // MS6 partial: 11/14 tasks = 79% → counts as 0.79 milestone
-    const effectiveDone = done + (active > 0 ? 0.79 : 0);
+    // MS6 partial: 13/15 tasks = 87% → counts as 0.87 milestone
+    const effectiveDone = done + (active > 0 ? 0.87 : 0);
     const pct = Math.round((effectiveDone / total) * 100);
 
     document.getElementById('pct-total').textContent = pct + '%';
@@ -784,8 +784,8 @@
       <h3>שלב 6 — Secrets Scanner + DLP + File Audit</h3>
       <p>גילוי סיסמאות, API keys, כרטיסי אשראי, ת"ז — סריקת כל C:/Claude-Repo/ + דוח + Excel</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(14,165,233,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:79%;background:linear-gradient(90deg,#0ea5e9,#6366f1);border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:#0ea5e9;font-weight:700;white-space:nowrap;">11/14 ▶ 79% — 09.04.2026</span>
+        <div style="flex:1;height:5px;background:rgba(14,165,233,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:87%;background:linear-gradient(90deg,#0ea5e9,#6366f1);border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:#0ea5e9;font-weight:700;white-space:nowrap;">13/15 ▶ 87% — 09.04.2026</span>
       </div>
     </div>
     <div class="phase-status status-active">▶ בתהליך</div>
@@ -862,17 +862,23 @@
       <div class="task-desc">domain-reputation.js: scoreDomain() ציון 0-100 offline | TLD_GOOD/TLD_BAD, BLACKLIST, SUSPICIOUS_KEYWORDS, punycode | rules.js: reputation מצורף ל-allowlist alert | GET /domains/reputation/:domain ב-collector | badge ציון+label בהיסטוריית WebFetch בדשבורד (tooltip עם reasons). בוצע: 09.04.2026</div>
       <div class="task-tags"><span class="tag">reputation</span><span class="tag">tld</span><span class="tag">offline</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.11</div>
-      <div class="task-title">טאב פרויקטים — Projects Explorer</div>
-      <div class="task-desc">טאב 📁 בדשבורד: מציג עץ תיקיות של C:/Claude-Repo (רמה 1-2) כ-Cards | GET /projects בקולקטור | לחיצה להרחבה/כיווץ | תצוגה בלבד — קריאה בלבד</div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.11 ✅</div>
+      <div class="task-title">טאב פרויקטים — Projects Explorer ✅</div>
+      <div class="task-desc">טאב 📁 בדשבורד: מציג עץ תיקיות של C:/Claude-Repo (רמה 1-2) כ-Cards | GET /projects בקולקטור | לחיצה להרחבה/כיווץ | תצוגה בלבד. בוצע: 09.04.2026</div>
       <div class="task-tags"><span class="tag">dashboard</span><span class="tag">explorer</span><span class="tag">readonly</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">6.12</div>
-      <div class="task-title">הערות לפרויקטים — Project Notes</div>
-      <div class="task-desc">עריכה ידנית של הערה לכל פרויקט/תיקייה בדשבורד: לחיצה על ✏️ → שדה טקסט חופשי → שמירה | מאוחסן ב-projects-notes.json בקולקטור | מוצג מתחת לשם התיקייה בטאב הפרויקטים</div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.12 ✅</div>
+      <div class="task-title">הערות לפרויקטים — Project Notes ✅</div>
+      <div class="task-desc">עריכה ידנית של הערה לכל פרויקט/תיקייה בדשבורד: ✏️ → שדה טקסט → שמירה | projects-notes.json. בוצע: 09.04.2026</div>
       <div class="task-tags"><span class="tag">notes</span><span class="tag">editable</span><span class="tag">json</span></div>
+    </div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">6.13 ✅</div>
+      <div class="task-title">WebSearch Monitoring + Auto-Discovery ✅</div>
+      <div class="task-desc">ניטור WebSearch: hook.js שולח תמיד WebSearch+WebFetch לקולקטור | rules.js מחזיר INFO עם טקסט החיפוש | Auto-Discovery: כל דומיין בתוצאות נרשם אוטומטית עם ציון מוניטין | דשבורד: badge סגול SEARCH + קטע "🔍 התגלו בחיפוש" — אשר/חסום כל דומיין. בוצע: 09.04.2026</div>
+      <div class="task-tags"><span class="tag">websearch</span><span class="tag">auto-discovery</span><span class="tag">monitoring</span></div>
     </div>
   </div>
   <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
