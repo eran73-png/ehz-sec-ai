@@ -377,9 +377,9 @@
     </div>
     <div class="ms-row" data-status="done" data-num="5" data-name="Skill Scanner">
     </div>
-    <div class="ms-row" data-status="active" data-num="6" data-name="Secrets + DLP">
+    <div class="ms-row" data-status="done" data-num="6" data-name="Secrets + DLP">
     </div>
-    <div class="ms-row" data-status="pending" data-num="7" data-name="ניטור מתקדם">
+    <div class="ms-row" data-status="done" data-num="7" data-name="ניטור מתקדם">
     </div>
     <div class="ms-row" data-status="pending" data-num="8" data-name="Installer Package">
     </div>
@@ -491,7 +491,7 @@
     document.getElementById('pct-total').style.color =
       pct === 100 ? 'var(--green)' : pct >= 47 ? 'var(--accent)' : pct > 0 ? 'var(--yellow)' : 'var(--muted2)';
     document.getElementById('bar-total').style.width = pct + '%';
-    document.getElementById('pct-label').textContent = `${done} הושלמו + 1 בתהליך / ${total} Milestones`;
+    document.getElementById('pct-label').textContent = `${done} הושלמו / ${total} Milestones`;
     document.getElementById('cnt-done').textContent = done;
     document.getElementById('cnt-progress').textContent = active;
     document.getElementById('cnt-pending').textContent = pending;
@@ -3549,7 +3549,7 @@ Claude מבצע tool call
     <div>מערכת ניטור ואבטחה לפעילות Claude Code.</div>
     <div>Agent hooks → Collector → Dashboard → Telegram</div>
     <div style="margin-top:8px;color:var(--text);">## מצב נוכחי</div>
-    <div style="color:var(--green);">✅ Milestones 1–5 הושלמו | 🔵 Milestone 6 בתהליך</div>
+    <div style="color:var(--green);">✅ Milestones 1–7 הושלמו | ⏳ Milestone 8 הבא</div>
     <div style="margin-top:8px;color:var(--text);">## התקנה</div>
     <div>ראה workplan.html לתוכנית מלאה</div>
     <div style="margin-top:8px;color:var(--text);">## פותח על ידי</div>
