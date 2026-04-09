@@ -449,6 +449,7 @@ body {
   <button class="tab-btn"        id="tab-skills"    onclick="switchTab('skills')">🔍 Skills</button>
   <button class="tab-btn"        id="tab-audit"     onclick="switchTab('audit')">🗂️ File Audit</button>
   <button class="tab-btn"        id="tab-projects"  onclick="switchTab('projects')">📁 Projects</button>
+  <button class="tab-btn"        id="tab-domains"   onclick="switchTab('domains')">🌐 Web Access</button>
   <button class="tab-btn"        id="tab-settings"  onclick="switchTab('settings')">⚙️ הגדרות</button>
 </div>
 
@@ -721,6 +722,37 @@ body {
 <div id="audit-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);">לא נמצאו ממצאים — הפעל סריקה</div>
 </div>
 
+<!-- WEB ACCESS TAB -->
+<div id="view-domains" style="display:none">
+<div class="toolbar">
+  <span class="toolbar-title">🌐 Web Access Allowlist</span>
+  <button class="refresh-btn" onclick="loadDomains()">↺ רענן</button>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+  <!-- Allowed domains list -->
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">✅ דומיינים מורשים</div>
+    <!-- Add domain -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <input id="domain-add-input" type="text" placeholder="example.com"
+        style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:6px 10px;font-size:12px;"
+        onkeydown="if(event.key==='Enter') addDomain()" />
+      <button class="refresh-btn" onclick="addDomain()" style="color:var(--green);border-color:#10b98144;">+ הוסף</button>
+    </div>
+    <div id="domains-list" style="display:flex;flex-direction:column;gap:5px;max-height:380px;overflow-y:auto;"></div>
+  </div>
+
+  <!-- WebFetch history -->
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📜 היסטוריית גישות Web</div>
+    <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:420px;overflow-y:auto;font-size:11px;"></div>
+  </div>
+
+</div>
+</div><!-- /view-domains -->
+
 <!-- PROJECTS TAB -->
 <div id="view-projects" style="display:none">
 <div class="toolbar">
@@ -895,7 +927,7 @@ function startRefresh() {
 // ── Tabs ─────────────────────────────────────────────────────────────────────
 
 function switchTab(tab) {
-  ['events','skills','audit','projects','settings'].forEach(t => {
+  ['events','skills','audit','projects','domains','settings'].forEach(t => {
     document.getElementById('view-' + t).style.display = t === tab ? '' : 'none';
     document.getElementById('tab-'  + t).classList.toggle('active', t === tab);
   });
@@ -903,6 +935,7 @@ function switchTab(tab) {
   if (tab === 'settings') { loadConfig(); loadRetention(); }
   if (tab === 'skills')   { loadSkillsRegistry(); }
   if (tab === 'projects') { loadProjects(); }
+  if (tab === 'domains')  { loadDomains(); loadDomainHistory(); }
 }
 
 // ── Skills ────────────────────────────────────────────────────────────────────
@@ -1231,6 +1264,75 @@ async function runAuditScan() {
   } finally {
     btn.textContent = '▶ סרוק עכשיו';
     btn.disabled = false;
+  }
+}
+
+// ── Web Access Allowlist (MS6.9) ──────────────────────────────────────────────
+
+async function loadDomains() {
+  try {
+    const r = await fetch(API + '/domains');
+    const d = await r.json();
+    const list = d.allowed_domains || [];
+    document.getElementById('domains-list').innerHTML = list.length
+      ? list.map(dom => `
+          <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;">
+            <span style="font-size:14px;">🌐</span>
+            <span style="flex:1;font-size:12px;color:var(--text);">${dom}</span>
+            <button onclick="removeDomain('${dom}')"
+              style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">✕</button>
+          </div>`).join('')
+      : '<div style="color:var(--muted);padding:12px;text-align:center;">אין דומיינים מורשים</div>';
+  } catch(e) {
+    document.getElementById('domains-list').innerHTML = '<div style="color:var(--red)">שגיאה: ' + e.message + '</div>';
+  }
+}
+
+async function addDomain() {
+  const inp = document.getElementById('domain-add-input');
+  const domain = (inp.value || '').trim();
+  if (!domain) return;
+  try {
+    await fetch(API + '/domains', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain })
+    });
+    inp.value = '';
+    loadDomains();
+  } catch(e) { alert('שגיאה: ' + e.message); }
+}
+
+async function removeDomain(domain) {
+  try {
+    await fetch(API + '/domains/' + encodeURIComponent(domain), { method: 'DELETE' });
+    loadDomains();
+  } catch(e) { alert('שגיאה: ' + e.message); }
+}
+
+async function loadDomainHistory() {
+  try {
+    const r = await fetch(API + '/domains/history');
+    const d = await r.json();
+    const hist = d.history || [];
+    if (!hist.length) {
+      document.getElementById('domains-history').innerHTML =
+        '<div style="color:var(--muted);padding:12px;text-align:center;">אין היסטוריית WebFetch</div>';
+      return;
+    }
+    document.getElementById('domains-history').innerHTML = hist.map(h => {
+      let host = h.url;
+      try { host = new URL(h.url).hostname; } catch(_) {}
+      const color = h.level === 'CRITICAL' ? 'var(--red)' : h.level === 'HIGH' ? 'var(--orange)' : 'var(--green)';
+      const ts = new Date(h.ts).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      return `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;background:var(--panel2);border:1px solid var(--border);">
+        <span style="background:${color}22;color:${color};border:1px solid ${color}44;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">${h.level}</span>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${host}</span>
+        <span style="color:var(--muted);font-size:10px;flex-shrink:0">${ts}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('domains-history').innerHTML = '<div style="color:var(--red)">שגיאה: ' + e.message + '</div>';
   }
 }
 

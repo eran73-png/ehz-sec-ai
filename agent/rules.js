@@ -39,6 +39,16 @@ function isWhitelistedDomain(url) {
   } catch (_) { return false; }
 }
 
+function isAllowedDomain(url, allowedList) {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return allowedList.some(d => {
+      const dn = d.toLowerCase().replace(/^https?:\/\//, '');
+      return host === dn || host.endsWith('.' + dn);
+    });
+  } catch (_) { return true; } // if URL parse fails → don't block
+}
+
 function isWhitelistedCommand(cmd) {
   const wl = getWhitelist();
   return wl.commands.some(pattern => {
@@ -140,18 +150,30 @@ function checkContextRules(event) {
   // WebFetch — check URL
   if (tool === 'WebFetch') {
     const url = (input.url || '').toLowerCase();
-    if (isWhitelistedDomain(url)) return null;
 
-    if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(url.replace(/https?:\/\//, ''))) {
-      return { level: 'HIGH', reason: 'WebFetch to raw IP address', ruleType: 'context' };
-    }
+    // CRITICAL / HIGH patterns — always checked first
     if (url.includes('.onion')) {
       return { level: 'CRITICAL', reason: 'WebFetch to TOR .onion address', ruleType: 'context' };
+    }
+    if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(url.replace(/https?:\/\//, ''))) {
+      return { level: 'HIGH', reason: 'WebFetch to raw IP address', ruleType: 'context' };
     }
     const suspiciousTLDs = ['.ru', '.cn', '.tk', '.ml', '.ga', '.cf', '.gq', '.xyz'];
     if (suspiciousTLDs.some(tld => url.includes(tld + '/') || url.endsWith(tld))) {
       return { level: 'HIGH', reason: `WebFetch to suspicious TLD (${suspiciousTLDs.find(t => url.includes(t))})`, ruleType: 'context' };
     }
+
+    // Allowlist check (MS6.9) — domain not in allowed list → HIGH
+    const wl = getWhitelist();
+    const allowedDomains = wl.allowed_domains || wl.domains || [];
+    if (allowedDomains.length > 0 && !isAllowedDomain(url, allowedDomains)) {
+      let host = url;
+      try { host = new URL(url).hostname; } catch(_) {}
+      return { level: 'HIGH', reason: `WebFetch לדומיין לא מורשה: ${host}`, ruleType: 'allowlist', domain: host };
+    }
+
+    // Legacy whitelist (domains array) — no alert if in list
+    if (isWhitelistedDomain(url)) return null;
   }
 
   // Write / Edit — sensitive paths

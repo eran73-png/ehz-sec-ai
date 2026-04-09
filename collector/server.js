@@ -538,6 +538,62 @@ app.get('/audit/schedule', (req, res) => {
   });
 });
 
+// ─── Web Access Allowlist (Milestone 6.9) ────────────────────────────────────
+
+const WHITELIST_FILE = path.join(__dirname, '..', 'agent', 'whitelist.json');
+
+function readWhitelist() {
+  try { return JSON.parse(fs.readFileSync(WHITELIST_FILE, 'utf8')); }
+  catch(_) { return { allowed_domains: [], domains: [] }; }
+}
+function writeWhitelist(wl) {
+  fs.writeFileSync(WHITELIST_FILE, JSON.stringify(wl, null, 2), 'utf8');
+}
+
+// GET /domains — רשימת דומיינים מורשים
+app.get('/domains', (req, res) => {
+  const wl = readWhitelist();
+  res.json({ allowed_domains: wl.allowed_domains || [] });
+});
+
+// POST /domains — הוספת דומיין
+// body: { domain: 'example.com' }
+app.post('/domains', (req, res) => {
+  const domain = ((req.body || {}).domain || '').trim().toLowerCase()
+    .replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  if (!domain) return res.status(400).json({ error: 'domain required' });
+  const wl = readWhitelist();
+  wl.allowed_domains = wl.allowed_domains || [];
+  if (wl.allowed_domains.includes(domain))
+    return res.json({ ok: true, msg: 'כבר קיים', allowed_domains: wl.allowed_domains });
+  wl.allowed_domains.push(domain);
+  writeWhitelist(wl);
+  res.json({ ok: true, added: domain, allowed_domains: wl.allowed_domains });
+});
+
+// DELETE /domains/:domain — הסרת דומיין
+app.delete('/domains/:domain', (req, res) => {
+  const domain = decodeURIComponent(req.params.domain).toLowerCase();
+  const wl = readWhitelist();
+  wl.allowed_domains = (wl.allowed_domains || []).filter(d => d !== domain);
+  writeWhitelist(wl);
+  res.json({ ok: true, removed: domain, allowed_domains: wl.allowed_domains });
+});
+
+// GET /domains/history — היסטוריית WebFetch מהאירועים
+app.get('/domains/history', (req, res) => {
+  db.find({ tool_name: 'WebFetch' }).sort({ ts: -1 }).limit(200).exec((err, docs) => {
+    if (err) return res.status(500).json({ error: err.message });
+    const history = docs.map(d => ({
+      ts:     d.ts,
+      url:    (d.tool_input || {}).url || '',
+      level:  d.level || 'INFO',
+      reason: d.reason || '',
+    }));
+    res.json({ history });
+  });
+});
+
 // ─── Projects Explorer (Milestone 6.11) ──────────────────────────────────────
 
 const PROJECTS_ROOT    = 'C:/Claude-Repo';
