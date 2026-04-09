@@ -692,6 +692,121 @@ body {
     </div>
     <div style="min-height:18px;margin-top:10px;font-size:12px;" id="clear-status"></div>
   </div>
+
+  <!-- Notifications -->
+  <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;">
+    <div class="settings-section-title">🔔 Notifications — Telegram & Email</div>
+
+    <!-- Telegram -->
+    <div style="background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.2);border-radius:12px;padding:16px 18px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">✈️</span>
+          <div>
+            <div style="font-weight:700;font-size:14px;">Telegram Bot</div>
+            <div style="font-size:11px;color:var(--muted);">שליחת התראות בזמן אמת לבוט Telegram</div>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="tg-enabled" onchange="notifToggle('tg')" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
+          <span id="tg-status-label" style="font-size:12px;color:var(--muted);">כבוי</span>
+        </label>
+      </div>
+      <div id="tg-info" style="font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border-radius:8px;padding:9px 12px;">
+        ℹ️ הגדרות Telegram (Token + Chat ID) נמצאות בקובץ <b style="color:var(--muted2);">collector/server.js</b> — שורות TELEGRAM_TOKEN ו-TELEGRAM_CHAT_ID.<br>
+        כאן ניתן רק להפעיל/לכבות שליחה.
+      </div>
+      <div style="margin-top:10px;">
+        <button onclick="testTelegram()" style="background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.35);color:var(--accent);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">
+          📨 שלח הודעת בדיקה
+        </button>
+        <span id="tg-test-status" style="font-size:11px;margin-right:10px;"></span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:12px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">📧</span>
+          <div>
+            <div style="font-weight:700;font-size:14px;">Email (SMTP)</div>
+            <div style="font-size:11px;color:var(--muted);">אלטרנטיבה ל-Telegram — שליחה לכל כתובת מייל</div>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="email-enabled" onchange="notifToggle('email')" style="width:18px;height:18px;accent-color:#8b5cf6;cursor:pointer;">
+          <span id="email-status-label" style="font-size:12px;color:var(--muted);">כבוי</span>
+        </label>
+      </div>
+
+      <div id="email-fields" style="display:none;margin-top:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">SMTP Host</label>
+            <input id="smtp-host" type="text" placeholder="smtp.gmail.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Port</label>
+            <input id="smtp-port" type="number" placeholder="587" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Username / Email</label>
+            <input id="smtp-user" type="text" placeholder="your@gmail.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Password / App Password</label>
+            <input id="smtp-pass" type="password" placeholder="••••••••" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">From (sender)</label>
+            <input id="smtp-from" type="text" placeholder="security@yourdomain.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">To (recipient)</label>
+            <input id="smtp-to" type="text" placeholder="admin@company.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;">
+          <input type="checkbox" id="smtp-secure" style="width:15px;height:15px;accent-color:#8b5cf6;cursor:pointer;">
+          <span style="font-size:12px;color:var(--muted2);">TLS/SSL (port 465)</span>
+        </label>
+        <div style="font-size:11px;color:var(--muted);background:rgba(255,255,255,0.02);border-radius:8px;padding:9px 12px;margin-bottom:12px;line-height:1.6;">
+          💡 <b style="color:var(--muted2);">Gmail:</b> הפעל "App Passwords" ב-Google Account, השתמש ב-smtp.gmail.com:587<br>
+          💡 <b style="color:var(--muted2);">Outlook:</b> smtp-mail.outlook.com:587 (TLS כבוי)
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-top:4px;">
+        <button onclick="saveNotifSettings()" style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#a78bfa;font-size:12px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;">
+          💾 שמור הגדרות
+        </button>
+        <button onclick="testEmail()" id="email-test-btn" style="display:none;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);color:#c4b5fd;font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">
+          📨 שלח בדיקה
+        </button>
+        <span id="notif-save-status" style="font-size:11px;"></span>
+      </div>
+    </div>
+
+    <!-- Git Remotes Allowlist -->
+    <div style="margin-top:14px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:18px;">🔗</span>
+        <div>
+          <div style="font-weight:700;font-size:14px;">Git Remotes מורשים</div>
+          <div style="font-size:11px;color:var(--muted);">push לשרת שאינו ברשימה → התראת HIGH</div>
+        </div>
+      </div>
+      <div id="git-remotes-list" style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input id="new-remote-input" type="text" placeholder="hostname או IP (e.g. github.com)" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+        <button onclick="addGitRemote()" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4);color:var(--green);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">+ הוסף</button>
+      </div>
+      <div style="min-height:16px;margin-top:6px;font-size:11px;" id="remote-status"></div>
+    </div>
+
+  </div><!-- /Notifications -->
+
 </div>
 </div><!-- /view-settings -->
 
@@ -1171,7 +1286,7 @@ function switchTab(tab) {
     document.getElementById('tab-'  + t).classList.toggle('active', t === tab);
   });
   if (tab === 'audit')    { loadAuditResults(); }
-  if (tab === 'settings') { loadConfig(); loadRetention(); }
+  if (tab === 'settings') { loadConfig(); loadRetention(); loadNotifSettings(); }
   if (tab === 'skills')   { loadSkillsRegistry(); }
   if (tab === 'projects') { loadProjects(); }
   if (tab === 'domains')  { loadDomains(); loadDomainHistory(); }
@@ -1989,6 +2104,187 @@ async function saveNote(p, note) {
     _projectsData = null; // invalidate cache
     loadProjects();
   } catch(e) { alert('שגיאה: ' + e.message); }
+}
+
+/* ── NOTIFICATIONS SETTINGS ── */
+let _notifConfig = null;
+
+async function loadNotifSettings() {
+  try {
+    const r = await fetch('http://localhost:3010/notifications/config');
+    _notifConfig = await r.json();
+    applyNotifConfig();
+  } catch(e) {}
+}
+
+function applyNotifConfig() {
+  if (!_notifConfig) return;
+  const tg = _notifConfig.telegram || {};
+  const em = _notifConfig.email || {};
+
+  // Telegram toggle
+  document.getElementById('tg-enabled').checked = !!tg.enabled;
+  document.getElementById('tg-status-label').textContent = tg.enabled ? 'פעיל' : 'כבוי';
+  document.getElementById('tg-status-label').style.color = tg.enabled ? 'var(--green)' : 'var(--muted)';
+
+  // Email toggle + fields
+  document.getElementById('email-enabled').checked = !!em.enabled;
+  document.getElementById('email-status-label').textContent = em.enabled ? 'פעיל' : 'כבוי';
+  document.getElementById('email-status-label').style.color = em.enabled ? '#a78bfa' : 'var(--muted)';
+  document.getElementById('email-fields').style.display = em.enabled ? 'block' : 'none';
+  document.getElementById('email-test-btn').style.display = em.enabled ? 'inline-block' : 'none';
+
+  if (em.smtp_host) document.getElementById('smtp-host').value = em.smtp_host;
+  if (em.smtp_port) document.getElementById('smtp-port').value = em.smtp_port;
+  if (em.smtp_user) document.getElementById('smtp-user').value = em.smtp_user;
+  if (em.smtp_pass) document.getElementById('smtp-pass').value = em.smtp_pass;
+  if (em.from)      document.getElementById('smtp-from').value = em.from;
+  if (em.to)        document.getElementById('smtp-to').value = em.to;
+  if (em.smtp_secure) document.getElementById('smtp-secure').checked = !!em.smtp_secure;
+
+  // Git remotes
+  renderGitRemotes(_notifConfig.git_remotes || []);
+}
+
+function notifToggle(type) {
+  if (type === 'tg') {
+    const on = document.getElementById('tg-enabled').checked;
+    document.getElementById('tg-status-label').textContent = on ? 'פעיל' : 'כבוי';
+    document.getElementById('tg-status-label').style.color = on ? 'var(--green)' : 'var(--muted)';
+  } else {
+    const on = document.getElementById('email-enabled').checked;
+    document.getElementById('email-status-label').textContent = on ? 'פעיל' : 'כבוי';
+    document.getElementById('email-status-label').style.color = on ? '#a78bfa' : 'var(--muted)';
+    document.getElementById('email-fields').style.display = on ? 'block' : 'none';
+    document.getElementById('email-test-btn').style.display = on ? 'inline-block' : 'none';
+  }
+}
+
+async function saveNotifSettings() {
+  const st = document.getElementById('notif-save-status');
+  const cfg = {
+    telegram: { enabled: document.getElementById('tg-enabled').checked },
+    email: {
+      enabled: document.getElementById('email-enabled').checked,
+      smtp_host: document.getElementById('smtp-host').value.trim(),
+      smtp_port: parseInt(document.getElementById('smtp-port').value) || 587,
+      smtp_user: document.getElementById('smtp-user').value.trim(),
+      smtp_pass: document.getElementById('smtp-pass').value,
+      from:      document.getElementById('smtp-from').value.trim(),
+      to:        document.getElementById('smtp-to').value.trim(),
+      smtp_secure: document.getElementById('smtp-secure').checked
+    },
+    git_remotes: _notifConfig ? (_notifConfig.git_remotes || []) : []
+  };
+  try {
+    const r = await fetch('http://localhost:3010/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cfg)
+    });
+    const j = await r.json();
+    _notifConfig = j;
+    st.textContent = '✅ נשמר!';
+    st.style.color = 'var(--green)';
+    setTimeout(() => st.textContent = '', 3000);
+  } catch(e) {
+    st.textContent = '❌ שגיאה: ' + e.message;
+    st.style.color = 'var(--red)';
+  }
+}
+
+async function testTelegram() {
+  const st = document.getElementById('tg-test-status');
+  st.textContent = 'שולח...';
+  st.style.color = 'var(--muted)';
+  try {
+    const r = await fetch('http://localhost:3010/notifications/test-telegram', { method: 'POST' });
+    const j = await r.json();
+    st.textContent = j.ok ? '✅ נשלח!' : '❌ ' + (j.error || 'שגיאה');
+    st.style.color = j.ok ? 'var(--green)' : 'var(--red)';
+  } catch(e) {
+    st.textContent = '❌ ' + e.message;
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 5000);
+}
+
+async function testEmail() {
+  const st = document.getElementById('notif-save-status');
+  st.textContent = 'שולח בדיקה...';
+  st.style.color = 'var(--muted)';
+  try {
+    const r = await fetch('http://localhost:3010/notifications/test-email', { method: 'POST' });
+    const j = await r.json();
+    st.textContent = j.ok ? '✅ מייל נשלח!' : '❌ ' + (j.error || 'שגיאה');
+    st.style.color = j.ok ? 'var(--green)' : 'var(--red)';
+  } catch(e) {
+    st.textContent = '❌ ' + e.message;
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 6000);
+}
+
+function renderGitRemotes(list) {
+  const el = document.getElementById('git-remotes-list');
+  if (!el) return;
+  el.innerHTML = list.map((r,i) => `
+    <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--green);">
+      🔗 ${r}
+      <button onclick="removeGitRemote(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0 0 0 4px;line-height:1;">×</button>
+    </span>
+  `).join('');
+}
+
+async function addGitRemote() {
+  const input = document.getElementById('new-remote-input');
+  const val = input.value.trim();
+  const st = document.getElementById('remote-status');
+  if (!val) return;
+  if (!_notifConfig) _notifConfig = { git_remotes: [] };
+  if (!_notifConfig.git_remotes) _notifConfig.git_remotes = [];
+  if (_notifConfig.git_remotes.includes(val)) {
+    st.textContent = '⚠️ כבר קיים';
+    st.style.color = 'var(--yellow)';
+    return;
+  }
+  _notifConfig.git_remotes.push(val);
+  input.value = '';
+  renderGitRemotes(_notifConfig.git_remotes);
+  // auto-save
+  try {
+    await fetch('http://localhost:3010/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_notifConfig)
+    });
+    st.textContent = '✅ נוסף ונשמר';
+    st.style.color = 'var(--green)';
+  } catch(e) {
+    st.textContent = '❌ שגיאה בשמירה';
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 3000);
+}
+
+async function removeGitRemote(idx) {
+  if (!_notifConfig || !_notifConfig.git_remotes) return;
+  _notifConfig.git_remotes.splice(idx, 1);
+  renderGitRemotes(_notifConfig.git_remotes);
+  const st = document.getElementById('remote-status');
+  try {
+    await fetch('http://localhost:3010/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_notifConfig)
+    });
+    st.textContent = '✅ הוסר ונשמר';
+    st.style.color = 'var(--green)';
+  } catch(e) {
+    st.textContent = '❌ שגיאה בשמירה';
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 3000);
 }
 </script>
 </body>

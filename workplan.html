@@ -1001,6 +1001,62 @@
   </div>
 </div>
 
+<!-- PHASE NOTIFICATIONS — Email + Git Remotes -->
+<div class="phase-block" style="margin-bottom:12px;">
+  <div class="phase-header">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#8b5cf6,#0ea5e9);">🔔</div>
+    <div class="phase-info">
+      <h3>Notifications — Telegram &amp; Email + Git Remotes</h3>
+      <p>חלק מ-MS7 | פיצ'ר תוספת — הושלם 09.04.2026</p>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:100%;background:linear-gradient(90deg,#8b5cf6,#0ea5e9);border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:var(--green);font-weight:700;white-space:nowrap;">✅ הושלם</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:0 20px 20px;">
+
+    <div class="task-row" style="border-left:3px solid #8b5cf6;">
+      <div class="task-num" style="color:#a78bfa">N.1 ✅</div>
+      <div class="task-title">Email Notifications (SMTP + nodemailer)</div>
+      <div class="task-desc">
+        <b>מה זה עושה:</b><br>
+        אלטרנטיבה מלאה ל-Telegram — שליחת התראות אבטחה ישירות לתיבת דואר. מיועד ללקוחות שאין להם בוט Telegram.<br><br>
+        <b>כיצד עובד:</b><br>
+        השתמשנו ב-<code>nodemailer</code> — ספריית Node.js סטנדרטית לשליחת מיילים. הלקוח מגדיר שרת SMTP (Gmail, Outlook, Office 365 וכו'). כל התראת HIGH/CRITICAL שהיתה נשלחת ל-Telegram — נשלחת כעת גם/במקום זאת למייל.<br><br>
+        <b>הגדרה בדשבורד (Settings → Notifications):</b><br>
+        ✅ Toggle Telegram ON/OFF + כפתור בדיקה<br>
+        ✅ Toggle Email ON/OFF<br>
+        ✅ שדות SMTP: Host, Port, Username, Password, From, To, TLS<br>
+        ✅ כפתור "שלח בדיקה" — מאמת שהחיבור עובד<br>
+        ✅ הגדרות נשמרות ב-<code>notifications.json</code><br><br>
+        <b>דוגמה:</b><br>
+        לקוח בחברה שמשתמש ב-Office 365 מגדיר smtp-mail.outlook.com:587 ומקבל מייל בנושא "[EHZ-SEC-AI] CRITICAL — git push --force detected"
+      </div>
+      <div class="task-tags"><span class="tag">email</span><span class="tag">smtp</span><span class="tag">nodemailer</span><span class="tag">done</span></div>
+    </div>
+
+    <div class="task-row" style="border-left:3px solid #10b981;">
+      <div class="task-num" style="color:#22c55e">N.2 ✅</div>
+      <div class="task-title">Git Remotes Allowlist — ניהול מהדשבורד</div>
+      <div class="task-desc">
+        <b>מה זה עושה:</b><br>
+        רשימת שרתי Git מורשים ערוכה ישירות מהדשבורד. כל push לשרת שאינו ברשימה מייצר התראת HIGH אוטומטית.<br><br>
+        <b>למה זה נחוץ:</b><br>
+        ללא זה, כל הוספת שרת Oracle חדש (IP חדש) תיצור false-positive HIGH לכל push. עכשיו הלקוח מוסיף את הIP לרשימה בלחיצה אחת מהדשבורד ואין יותר התראות שווא.<br><br>
+        <b>ממשק:</b><br>
+        Settings → Git Remotes מורשים → רשימת tags ירוקים + שדה הוספה + כפתור הסרה (×).<br>
+        שמירה אוטומטית ב-<code>notifications.json</code> ומיד פעיל.<br><br>
+        <b>ברירת מחדל:</b><br>
+        github.com, ehz-server.duckdns.org, 109.207.76.169, 35.239.136.8, localhost
+      </div>
+      <div class="task-tags"><span class="tag">git</span><span class="tag">allowlist</span><span class="tag">dashboard</span><span class="tag">done</span></div>
+    </div>
+
+  </div>
+</div>
+
 <!-- PHASE MARKETING — PROMO VIDEO -->
 <div class="phase-block" style="margin-bottom:12px;">
   <div class="phase-header">

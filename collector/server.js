@@ -7,12 +7,13 @@
 
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
-const express  = require('express');
-const Datastore = require('@seald-io/nedb');
-const https    = require('https');
-const path     = require('path');
-const fs       = require('fs');
-const crypto   = require('crypto');
+const express    = require('express');
+const Datastore  = require('@seald-io/nedb');
+const https      = require('https');
+const path       = require('path');
+const fs         = require('fs');
+const crypto     = require('crypto');
+const nodemailer = require('nodemailer');
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 
@@ -20,9 +21,50 @@ const PORT           = process.env.PORT           || 3010;
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN  || '';
 const TELEGRAM_CHAT  = process.env.TELEGRAM_CHAT_ID || '';
 const DB_PATH        = path.join(__dirname, 'ccsm.db');
+const NOTIF_PATH     = path.join(__dirname, 'notifications.json');
 
 const RETENTION_DAYS = 30;
 const MAX_EVENTS     = 10000;
+
+// ─── Notifications Config ────────────────────────────────────────────────────
+
+function loadNotifConfig() {
+  try { return JSON.parse(fs.readFileSync(NOTIF_PATH, 'utf8')); } catch(_) {}
+  return {
+    telegram: { enabled: true },
+    email: { enabled: false, smtp_host: '', smtp_port: 587, smtp_secure: false,
+              smtp_user: '', smtp_pass: '', from: '', to: '' },
+    git_remotes: [],
+  };
+}
+
+function saveNotifConfig(cfg) {
+  fs.writeFileSync(NOTIF_PATH, JSON.stringify(cfg, null, 2), 'utf8');
+}
+
+let notifConfig = loadNotifConfig();
+
+// שלח מייל
+async function sendEmail(subject, text) {
+  const ec = notifConfig.email;
+  if (!ec.enabled || !ec.smtp_host || !ec.to) return;
+  try {
+    const transporter = nodemailer.createTransport({
+      host: ec.smtp_host, port: ec.smtp_port,
+      secure: ec.smtp_secure || false,
+      auth: ec.smtp_user ? { user: ec.smtp_user, pass: ec.smtp_pass } : undefined,
+    });
+    await transporter.sendMail({
+      from: ec.from || ec.smtp_user,
+      to:   ec.to,
+      subject: `[EHZ-SEC-AI] ${subject}`,
+      text,
+    });
+    console.log('[Email] sent:', subject);
+  } catch(e) {
+    console.error('[Email] error:', e.message);
+  }
+}
 
 // ─── DB Init ─────────────────────────────────────────────────────────────────
 
@@ -231,9 +273,16 @@ app.post('/event', (req, res) => {
       return res.status(500).json({ error: 'db error' });
     }
 
-    // Send Telegram for HIGH / CRITICAL
+    // Send alerts for HIGH / CRITICAL
     if (['HIGH', 'CRITICAL'].includes(doc.level)) {
-      sendTelegram(buildTelegramMsg(doc));
+      if (notifConfig.telegram?.enabled !== false) {
+        sendTelegram(buildTelegramMsg(doc));
+      }
+      if (notifConfig.email?.enabled) {
+        const subject = `${doc.level} Alert — ${doc.tool_name}`;
+        const text = `EHZ-SEC-AI Security Alert\n\nLevel: ${doc.level}\nTool: ${doc.tool_name}\nReason: ${doc.reason || '—'}\nTime: ${new Date(doc.ts).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })}\nSession: ${doc.session_id}\n\nDashboard: http://localhost:3010/dashboard`;
+        sendEmail(subject, text);
+      }
       db.update({ _id: newDoc._id }, { $set: { telegram_sent: true } }, {});
     }
 
@@ -1041,6 +1090,42 @@ app.get('/audit/verify', (req, res) => {
       message:    broken ? '⚠️ Chain broken — log may have been tampered!' : '✅ Chain intact',
     });
   });
+});
+
+// ─── Notifications Config (MS8) ──────────────────────────────────────────────
+
+app.get('/notifications/config', (req, res) => {
+  const cfg = { ...notifConfig };
+  if (cfg.email) cfg.email = { ...cfg.email, smtp_pass: cfg.email.smtp_pass ? '***' : '' };
+  res.json(cfg);
+});
+
+app.post('/notifications/config', (req, res) => {
+  const body = req.body || {};
+  // Merge — preserve password if sent as '***'
+  if (body.email && body.email.smtp_pass === '***') {
+    body.email.smtp_pass = notifConfig.email?.smtp_pass || '';
+  }
+  notifConfig = { ...notifConfig, ...body };
+  if (body.email) notifConfig.email = { ...notifConfig.email, ...body.email };
+  if (body.telegram) notifConfig.telegram = { ...notifConfig.telegram, ...body.telegram };
+  if (body.git_remotes) notifConfig.git_remotes = body.git_remotes;
+  saveNotifConfig(notifConfig);
+  res.json({ ok: true });
+});
+
+app.post('/notifications/test-email', async (req, res) => {
+  try {
+    await sendEmail('Test Alert — EHZ-SEC-AI', 'This is a test email from EHZ-SEC-AI.\nIf you received this, email notifications are working correctly.');
+    res.json({ ok: true, msg: 'מייל נשלח בהצלחה' });
+  } catch(e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+app.post('/notifications/test-telegram', (req, res) => {
+  sendTelegram('🧪 <b>EHZ-SEC-AI — Test</b>\nהתראת Telegram עובדת ✅');
+  res.json({ ok: true, msg: 'הודעת Telegram נשלחה' });
 });
 
 // GET /health
