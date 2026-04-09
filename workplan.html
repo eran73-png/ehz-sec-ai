@@ -918,8 +918,8 @@
       <h3>שלב 7 — ניטור מתקדם</h3>
       <p>FS Watcher, Session Recording, Process Monitor, Git Monitor, Env Vars, Immutable Log</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:50%;background:#10b981;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">3/6 🔄 בביצוע</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:66%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">4/6 🔄 בביצוע</span>
       </div>
     </div>
     <div class="phase-status" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2);">בביצוע</div>
@@ -948,11 +948,19 @@
       </div>
       <div class="task-tags"><span class="tag">process</span><span class="tag">anomaly</span><span class="tag">done</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">7.4</div>
-      <div class="task-title">Git + Env + Clipboard</div>
-      <div class="task-desc">ניטור commits, גישה ל-.env/API keys, כתיבה לclipboard.</div>
-      <div class="task-tags"><span class="tag">git</span><span class="tag">env</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">7.4 ✅</div>
+      <div class="task-title">Git + Env Monitor ✅</div>
+      <div class="task-desc">
+        <b>מה זה עושה:</b> Claude יכול לשלוח קוד לכל שרת בעולם — המערכת עוקבת לאן.<br><br>
+        <b>ניטור git push:</b> כל דחיפה לשרת שאינו GitHub שלך / Oracle / Kamatera → <b>HIGH + Telegram</b>. שרתים מורשים מוגדרים ברשימה.<br>
+        <b>git push --force:</b> פקודה שמוחקת היסטוריה → תמיד <b>HIGH</b>. נתפס בפועל במהלך הפיתוח עצמו.<br>
+        <b>git remote שינוי:</b> Claude משנה לאן הקוד נשלח → <b>HIGH</b>.<br>
+        <b>קריאת .env:</b> Claude פותח קובץ סיסמאות/API keys → <b>MEDIUM</b>.<br>
+        <b>commit message חשוד:</b> הודעה שמכילה "secret/token/password" → <b>HIGH</b>.<br><br>
+        <b>דוגמה אמיתית:</b> במהלך הפיתוח עצמו — git push --force נתפס פעמיים (Pre+Post Hook) + קובץ ssh-key זוהה כרגיש ע"י FSWatcher. בוצע: 09.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">git</span><span class="tag">env</span><span class="tag">done</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">7.5</div>
