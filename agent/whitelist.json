@@ -79,5 +79,35 @@
     "yarnpkg.com",
     "al-tours.co.il",
     "openai.com"
+  ],
+  "discovered_domains": [
+    {
+      "domain": "en.wikipedia.org",
+      "score": 100,
+      "label": "TRUSTED",
+      "color": "#10b981",
+      "discovered_at": "2026-04-09T06:47:18.206Z"
+    },
+    {
+      "domain": "www.uefa.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T06:47:18.206Z"
+    },
+    {
+      "domain": "sports.yahoo.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T06:47:18.206Z"
+    },
+    {
+      "domain": "allsportdb.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T06:47:18.206Z"
+    }
   ]
 }

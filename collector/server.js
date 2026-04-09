@@ -819,6 +819,85 @@ app.get('/retention', (req, res) => {
 // GET /health
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
+// GET /fsw/status — סטטוס ה-FSWatcher
+app.get('/fsw/status', (req, res) => {
+  const startOfDay = new Date(); startOfDay.setHours(0,0,0,0);
+  db.count({ tool_name: 'FSWatcher', ts: { $gte: startOfDay.getTime() } }, (err, count) => {
+    res.json({ active: fswActive, watch_path: FSW_ROOT, exclude: [...FSW_EXCLUDE], eventsToday: count || 0 });
+  });
+});
+
+// ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
+
+const FSW_ROOT    = 'C:/Claude-Repo';
+const FSW_EXCLUDE = new Set(['node_modules', '.git', 'backups', 'ccsm.db', 'hook.log']);
+const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
+
+// קבצים שנכתבו ע"י Claude בשניות האחרונות — למנוע כפילות עם Write Guard
+const recentHookWrites = new Map(); // path → timestamp
+let fswActive = false;
+
+function markHookWrite(filePath) {
+  recentHookWrites.set(filePath.toLowerCase().replace(/\\/g, '/'), Date.now());
+}
+function wasRecentHookWrite(filePath) {
+  const key = filePath.toLowerCase().replace(/\\/g, '/');
+  const ts = recentHookWrites.get(key);
+  if (!ts) return false;
+  if (Date.now() - ts < 8000) return true; // פחות מ-8 שניות — כנראה Claude
+  recentHookWrites.delete(key);
+  return false;
+}
+
+function startFSWatcher() {
+  try {
+    const watcher = fs.watch(FSW_ROOT, { recursive: true }, (eventType, filename) => {
+      if (!filename) return;
+      // סינון תיקיות מוחרגות
+      const parts = filename.replace(/\\/g, '/').split('/');
+      if (parts.some(p => FSW_EXCLUDE.has(p))) return;
+      // סינון קבצים זמניים
+      if (filename.endsWith('.tmp') || filename.endsWith('~')) return;
+
+      const fullPath = path.join(FSW_ROOT, filename).replace(/\\/g, '/');
+
+      // אם נכתב ע"י Claude לאחרונה — לא מייצר event כפול
+      if (wasRecentHookWrite(fullPath)) return;
+
+      // בדוק אם קובץ רגיש
+      const nameLower = filename.toLowerCase();
+      const isSensitive = FSW_SENSITIVE.some(s => nameLower.includes(s));
+      const level  = isSensitive ? 'HIGH' : 'INFO';
+      const reason = isSensitive
+        ? `🔍 FSW: קובץ רגיש שונה מחוץ ל-Claude — ${filename}`
+        : `🔍 FSW: ${eventType} — ${filename}`;
+
+      db.insert({
+        ts:            Date.now(),
+        hook_type:     'FSWatcher',
+        tool_name:     'FSWatcher',
+        session_id:    'fsw',
+        level,
+        reason,
+        rule_type:     'fsw',
+        hardening_level: 1,
+        input_summary: fullPath,
+        output_summary: '',
+      });
+
+      if (isSensitive) {
+        sendTelegram(`🔍 <b>EHZ-SEC-AI — FSWatcher</b>\n📄 קובץ רגיש שונה:\n<code>${filename}</code>`);
+      }
+    });
+
+    watcher.on('error', e => console.error('[FSW] Error:', e.message));
+    fswActive = true;
+    console.log(`[EHZ-SEC-AI] FSWatcher פעיל על ${FSW_ROOT}`);
+  } catch(e) {
+    console.error('[FSW] לא ניתן להפעיל:', e.message);
+  }
+}
+
 // ─── Start ───────────────────────────────────────────────────────────────────
 
 app.listen(PORT, '127.0.0.1', () => {
@@ -826,9 +905,12 @@ app.listen(PORT, '127.0.0.1', () => {
   console.log(`[EHZ-SEC-AI] DB: ${DB_PATH}`);
   console.log(`[EHZ-SEC-AI] Telegram: ${TELEGRAM_TOKEN ? 'configured ✓' : 'NOT configured'}`);
 
+  // הפעל FSWatcher
+  startFSWatcher();
+
   // Startup Telegram ping
   if (TELEGRAM_TOKEN && TELEGRAM_CHAT) {
-    sendTelegram('✅ <b>EHZ-SEC-AI</b> — Collector הופעל בהצלחה\n🖥️ ניטור Claude Code פעיל');
+    sendTelegram('✅ <b>EHZ-SEC-AI</b> — Collector הופעל בהצלחה\n🖥️ ניטור Claude Code פעיל\n👁️ FSWatcher פעיל');
   }
 });
 

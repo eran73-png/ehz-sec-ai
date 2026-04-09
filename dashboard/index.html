@@ -104,6 +104,7 @@ body {
 .stat-card.critical::before { background: var(--red); }
 .stat-card.high::before   { background: var(--orange); }
 .stat-card.sessions::before { background: var(--purple); }
+.stat-card.fsw::before { background: #06b6d4; }
 .stat-label {
   font-size: 10px; font-weight: 700; letter-spacing: 2px;
   text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
@@ -116,6 +117,7 @@ body {
 .stat-card.critical .stat-value { color: var(--red); }
 .stat-card.high     .stat-value { color: var(--orange); }
 .stat-card.sessions .stat-value { color: var(--purple); }
+.stat-card.fsw      .stat-value { color: #06b6d4; }
 .stat-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
 .stat-icon { position: absolute; top: 16px; left: 16px; font-size: 18px; opacity: 0.5; }
 
@@ -215,6 +217,7 @@ body {
 }
 .chip.pre  { color: var(--accent); border-color: rgba(14,165,233,0.2); background: rgba(14,165,233,0.06); }
 .chip.post { color: var(--purple); border-color: rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); }
+.chip.fsw  { color: #06b6d4; border-color: rgba(6,182,212,0.25); background: rgba(6,182,212,0.08); }
 
 /* Reason text */
 .reason { color: var(--muted2); max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
@@ -431,6 +434,12 @@ body {
     <div class="stat-sub">Claude Code sessions</div>
     <div class="stat-icon">💻</div>
   </div>
+  <div class="stat-card fsw">
+    <div class="stat-label">FSWatcher</div>
+    <div class="stat-value" id="stat-fsw">—</div>
+    <div class="stat-sub" id="stat-fsw-sub">ניטור קבצים</div>
+    <div class="stat-icon">👁️</div>
+  </div>
 </div>
 
 <!-- LAST EVENT -->
@@ -476,6 +485,7 @@ body {
     <option value="">כל הכלים</option>
     <option>WebSearch</option><option>WebFetch</option><option>Write</option>
     <option>Edit</option><option>Bash</option><option>Read</option>
+    <option>FSWatcher</option>
   </select>
   <span id="search-count" style="font-size:11px;color:var(--muted);white-space:nowrap;"></span>
 </div>
@@ -835,6 +845,17 @@ async function loadStats() {
         'אחרון: ' + fmtTs(s.last_ts);
     }
 
+    // FSWatcher status
+    try {
+      const fw = await fetchJSON('/fsw/status');
+      document.getElementById('stat-fsw').textContent    = fw.active ? '✅ פעיל' : '❌ כבוי';
+      document.getElementById('stat-fsw-sub').textContent = fw.active
+        ? `${fw.eventsToday ?? 0} אירועים היום`
+        : 'ניטור קבצים';
+    } catch(_) {
+      document.getElementById('stat-fsw').textContent = '—';
+    }
+
     // Status dot
     setOnline(true);
   } catch(e) {
@@ -885,7 +906,7 @@ function renderTable(events) {
 
   tbody.innerHTML = events.map(e => {
     const rowClass = e.level === 'CRITICAL' ? 'critical' : e.level === 'HIGH' ? 'high' : '';
-    const hookChip = chipHTML(e.hook_type);
+    const hookChip = chipHTML(e.hook_type, e.tool_name);
     const reason   = e.reason
       ? `<span class="reason alert">${esc(e.reason)}</span>`
       : `<span class="reason">${esc((e.input_summary||'').slice(0,60))}</span>`;
@@ -908,7 +929,8 @@ function badgeHTML(level) {
   return `<span class="badge ${level}">${level}</span>`;
 }
 
-function chipHTML(hookType) {
+function chipHTML(hookType, toolName) {
+  if (toolName === 'FSWatcher') return `<span class="chip fsw">👁️ FSW</span>`;
   const cls = hookType === 'PreToolUse' ? 'pre' : hookType === 'PostToolUse' ? 'post' : '';
   const lbl = hookType === 'PreToolUse' ? 'Pre' : hookType === 'PostToolUse' ? 'Post' : hookType || '?';
   return `<span class="chip ${cls}">${lbl}</span>`;
