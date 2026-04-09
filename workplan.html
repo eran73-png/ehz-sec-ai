@@ -918,11 +918,11 @@
       <h3>שלב 7 — ניטור מתקדם</h3>
       <p>FS Watcher, Session Recording, Process Monitor, Git Monitor, Env Vars, Immutable Log</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:83%;background:#10b981;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">5/6 🔄 בביצוע</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:100%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:#10b981;font-weight:700;white-space:nowrap;">6/6 ✅ הושלם</span>
       </div>
     </div>
-    <div class="phase-status" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2);">בביצוע</div>
+    <div class="phase-status" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);">✅ הושלם</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell" style="border-left: 3px solid #22c55e;">
@@ -974,16 +974,30 @@
       </div>
       <div class="task-tags"><span class="tag">immutable</span><span class="tag">sha256</span><span class="tag">forensics</span><span class="tag">done</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">7.6</div>
-      <div class="task-title">Behavioral Baseline</div>
-      <div class="task-desc">למידת "רגיל" עבורך. חריגה מbaseline → alert אוטומטי.</div>
-      <div class="task-tags"><span class="tag">baseline</span></div>
+    <div class="task-cell" style="border-left: 3px solid #22c55e;">
+      <div class="task-num" style="color:#22c55e">7.6 ✅</div>
+      <div class="task-title">Behavioral Baseline ✅</div>
+      <div class="task-desc">
+        <b>מה זה עושה:</b> המערכת לומדת מה "רגיל" עבורך — ואז מזהה כשמשהו חריג קורה, גם אם לא ידוע מראש שהוא מסוכן.<br><br>
+        <b>מה המערכת לומדת מ-30 הימים האחרונים:</b><br>
+        • כמה פעולות יש בממוצע בכל שיחה (session)<br>
+        • כמה התראות HIGH יש בממוצע<br>
+        • באילו שעות ביום אתה עובד בדרך כלל<br>
+        • אילו כלים אתה משתמש בהם הכי הרבה (Bash, Edit, Read...)<br><br>
+        <b>מה מפעיל התראה:</b><br>
+        • פי 3 יותר פעולות מהממוצע → MEDIUM<br>
+        • פי 5 יותר התראות HIGH → HIGH<br>
+        • פעילות בשעה לא רגילה (למשל 3 לפנות בוקר) → MEDIUM<br>
+        • כלי חדש שלא היה בשימוש קודם, מעל 15% מהפעולות → MEDIUM<br><br>
+        <b>בדשבורד:</b> כרטיס 🧠 Behavioral Baseline מציג: לומד / ✅ תקין / ⚠️ חריגות. לחיצה פותחת פירוט מלא — הממוצעים ההיסטוריים מול ה-session הנוכחי.<br><br>
+        <b>דוגמה שנבדקה:</b> 4 sessions, ממוצע 54 פעולות/session, שעות פעילות 9:00-18:00, כלים מובילים: Bash 54%, Edit 31%. בוצע: 09.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">baseline</span><span class="tag">anomaly</span><span class="tag">ml</span><span class="tag">done</span></div>
     </div>
   </div>
-  <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
-    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
-    <span style="color:var(--muted2);"> שנה קובץ ישירות (לא דרך Claude) → FS Watcher מזהה → Session playback עובד</span>
+  <div style="background:rgba(16,185,129,0.1);border-top:1px solid rgba(16,185,129,0.2);padding:14px 20px;font-size:12px;">
+    <span style="color:#10b981;font-weight:700;font-size:14px;">✅ MS7 הושלם במלואו — 09.04.2026</span>
+    <span style="color:var(--muted2);"> 6/6 משימות | FSWatcher · Session Recording · Process Monitor · Git+Env · Immutable Log · Behavioral Baseline</span>
   </div>
 </div>
 
