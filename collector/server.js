@@ -909,6 +909,112 @@ app.get('/sessions/:id', (req, res) => {
   });
 });
 
+// ─── Behavioral Baseline (MS7.6) ─────────────────────────────────────────────
+
+// GET /baseline/status — מצב baseline ואנומליות בsession הנוכחי
+app.get('/baseline/status', (req, res) => {
+  const cutoff30 = Date.now() - 30 * 24 * 60 * 60 * 1000;
+
+  // שלוף events מ-30 יום אחרונים — ללא FSWatcher/ProcessMonitor
+  db.find({
+    ts: { $gte: cutoff30 },
+    session_id: { $nin: ['fsw', 'proc'] },
+    tool_name:  { $nin: ['FSWatcher', 'ProcessMonitor'] },
+  }).sort({ ts: 1 }).exec((err, docs) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (docs.length < 10) return res.json({ status: 'learning', message: 'Not enough data yet (need 10+ events)', events: docs.length });
+
+    // ── בנה פרופיל לכל session ──
+    const sessionMap = {};
+    for (const d of docs) {
+      const sid = d.session_id || 'unknown';
+      if (!sessionMap[sid]) sessionMap[sid] = { events: [], highs: 0, tools: {} };
+      sessionMap[sid].events.push(d);
+      if (['HIGH','CRITICAL'].includes(d.level)) sessionMap[sid].highs++;
+      sessionMap[sid].tools[d.tool_name] = (sessionMap[sid].tools[d.tool_name] || 0) + 1;
+    }
+
+    const sessions = Object.values(sessionMap);
+    const sessionCount = sessions.length;
+    if (sessionCount < 2) return res.json({ status: 'learning', message: 'Need at least 2 sessions', sessions: sessionCount });
+
+    // ── חשב baseline (כל sessions חוץ מהאחרון) ──
+    const historical = sessions.slice(0, -1);
+    const current    = sessions[sessions.length - 1];
+
+    function avg(arr, fn) { return arr.reduce((s, x) => s + fn(x), 0) / arr.length; }
+
+    const baselineEventsPerSession = avg(historical, s => s.events.length);
+    const baselineHighsPerSession  = avg(historical, s => s.highs);
+
+    // שעות פעילות רגילות (0-23)
+    const hourCounts = {};
+    for (const s of historical) {
+      for (const e of s.events) {
+        const h = new Date(e.ts).getHours();
+        hourCounts[h] = (hourCounts[h] || 0) + 1;
+      }
+    }
+    const activeHours = Object.keys(hourCounts).filter(h => hourCounts[h] >= 2).map(Number);
+
+    // כלים נפוצים
+    const toolTotals = {};
+    for (const s of historical) {
+      for (const [t, c] of Object.entries(s.tools)) toolTotals[t] = (toolTotals[t] || 0) + c;
+    }
+    const totalHistoricalEvents = historical.reduce((s, x) => s + x.events.length, 0);
+    const topTools = Object.entries(toolTotals)
+      .map(([t, c]) => ({ tool: t, pct: Math.round(c / totalHistoricalEvents * 100) }))
+      .sort((a, b) => b.pct - a.pct).slice(0, 5);
+
+    // ── זיהוי אנומליות בsession הנוכחי ──
+    const anomalies = [];
+    const curEvents = current.events.length;
+    const curHighs  = current.highs;
+
+    // יותר מ-3x ממוצע events
+    if (curEvents > baselineEventsPerSession * 3 && baselineEventsPerSession > 3) {
+      anomalies.push({ level: 'MEDIUM', msg: `פעולות רבות מהרגיל — ${curEvents} לעומת ממוצע ${Math.round(baselineEventsPerSession)}` });
+    }
+    // יותר מ-5x ממוצע HIGH events
+    if (curHighs > baselineHighsPerSession * 5 + 3) {
+      anomalies.push({ level: 'HIGH', msg: `התראות HIGH חריגות — ${curHighs} לעומת ממוצע ${Math.round(baselineHighsPerSession)}` });
+    }
+    // פעילות בשעה לא רגילה
+    if (current.events.length > 0 && activeHours.length > 0) {
+      const curHour = new Date(current.events[0].ts).getHours();
+      if (!activeHours.includes(curHour)) {
+        anomalies.push({ level: 'MEDIUM', msg: `פעילות בשעה חריגה — ${curHour}:00 (שעות רגילות: ${activeHours.slice(0,5).join(', ')})` });
+      }
+    }
+    // כלי חדש שלא היה בbaseline — יותר מ-10% מהeventים
+    const curToolPcts = Object.entries(current.tools).map(([t, c]) => ({ tool: t, pct: Math.round(c / curEvents * 100) }));
+    for (const { tool, pct } of curToolPcts) {
+      const inBaseline = topTools.find(t => t.tool === tool);
+      if (!inBaseline && pct > 15) {
+        anomalies.push({ level: 'MEDIUM', msg: `כלי חדש בשימוש נרחב — ${tool} (${pct}% מהpעולות)` });
+      }
+    }
+
+    res.json({
+      status: anomalies.length > 0 ? 'anomaly' : 'normal',
+      sessions_analyzed: sessionCount,
+      baseline: {
+        avg_events_per_session: Math.round(baselineEventsPerSession),
+        avg_highs_per_session:  Math.round(baselineHighsPerSession * 10) / 10,
+        active_hours:           activeHours.sort((a,b)=>a-b),
+        top_tools:              topTools,
+      },
+      current_session: {
+        session_id: Object.keys(sessionMap)[Object.keys(sessionMap).length - 1],
+        events:     curEvents,
+        highs:      curHighs,
+      },
+      anomalies,
+    });
+  });
+});
+
 // GET /audit/verify — בדיקת שלמות hash chain (MS7.5)
 app.get('/audit/verify', (req, res) => {
   db.find({ event_hash: { $exists: true } }).sort({ ts: 1 }).exec((err, docs) => {

@@ -104,7 +104,8 @@ body {
 .stat-card.critical::before { background: var(--red); }
 .stat-card.high::before   { background: var(--orange); }
 .stat-card.sessions::before { background: var(--purple); }
-.stat-card.fsw::before { background: #06b6d4; }
+.stat-card.fsw::before      { background: #06b6d4; }
+.stat-card.baseline::before { background: #a855f7; }
 .stat-label {
   font-size: 10px; font-weight: 700; letter-spacing: 2px;
   text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
@@ -118,6 +119,7 @@ body {
 .stat-card.high     .stat-value { color: var(--orange); }
 .stat-card.sessions .stat-value { color: var(--purple); }
 .stat-card.fsw      .stat-value { color: #06b6d4; }
+.stat-card.baseline .stat-value { color: #a855f7; }
 .stat-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
 .stat-icon { position: absolute; top: 16px; left: 16px; font-size: 18px; opacity: 0.5; }
 
@@ -445,6 +447,12 @@ body {
     <div class="stat-value" id="stat-fsw">—</div>
     <div class="stat-sub" id="stat-fsw-sub">ניטור קבצים</div>
     <div class="stat-icon">👁️</div>
+  </div>
+  <div class="stat-card baseline" onclick="showBaselineDetails()" style="cursor:pointer;" title="לחץ לפרטי Baseline">
+    <div class="stat-label">Behavioral Baseline</div>
+    <div class="stat-value" id="stat-baseline">—</div>
+    <div class="stat-sub" id="stat-baseline-sub">למידת דפוסים</div>
+    <div class="stat-icon">🧠</div>
   </div>
 </div>
 
@@ -889,6 +897,28 @@ async function loadStats() {
       document.getElementById('stat-fsw').textContent = '—';
     }
 
+    // Behavioral Baseline
+    try {
+      const bl = await fetchJSON('/baseline/status');
+      const el  = document.getElementById('stat-baseline');
+      const sub = document.getElementById('stat-baseline-sub');
+      if (bl.status === 'learning') {
+        el.textContent  = '📚 לומד';
+        sub.textContent = bl.message;
+        el.style.color  = '#a855f7';
+      } else if (bl.status === 'anomaly') {
+        el.textContent  = `⚠️ ${bl.anomalies.length} חריגות`;
+        sub.textContent = bl.anomalies[0]?.msg?.slice(0,30) + '…';
+        el.style.color  = '#f97316';
+      } else {
+        el.textContent  = '✅ תקין';
+        sub.textContent = `${bl.sessions_analyzed} sessions מנותחים`;
+        el.style.color  = '#10b981';
+      }
+    } catch(_) {
+      document.getElementById('stat-baseline').textContent = '—';
+    }
+
     // Status dot
     setOnline(true);
   } catch(e) {
@@ -991,6 +1021,37 @@ function setOnline(on) {
   dot.style.animation    = on ? 'pulse 2s infinite' : 'none';
   txt.textContent        = on ? 'Collector פעיל' : 'Collector לא מגיב';
   txt.style.color        = on ? 'var(--green)'  : 'var(--red)';
+}
+
+// ── Behavioral Baseline (MS7.6) ───────────────────────────────────────────────
+
+async function showBaselineDetails() {
+  try {
+    const bl = await fetchJSON('/baseline/status');
+    if (bl.status === 'learning') { alert('🧠 Baseline\n\n' + bl.message + '\n\nEvents so far: ' + bl.events); return; }
+
+    const b = bl.baseline;
+    const tools = (b.top_tools || []).map(t => `  ${t.tool}: ${t.pct}%`).join('\n');
+    const hours = (b.active_hours || []).join(', ');
+    const anomalies = bl.anomalies.length
+      ? '\n⚠️ חריגות:\n' + bl.anomalies.map(a => `  [${a.level}] ${a.msg}`).join('\n')
+      : '\n✅ אין חריגות — session תקין';
+
+    alert(`🧠 Behavioral Baseline — ${bl.sessions_analyzed} sessions
+
+📊 ממוצע היסטורי:
+  פעולות לsession: ${b.avg_events_per_session}
+  HIGH לsession: ${b.avg_highs_per_session}
+  שעות פעילות: ${hours || 'אין מספיק נתונים'}
+
+🔧 כלים נפוצים:
+${tools}
+
+📍 Session נוכחי:
+  פעולות: ${bl.current_session?.events}
+  HIGH: ${bl.current_session?.highs}
+${anomalies}`);
+  } catch(e) { alert('שגיאה בטעינת baseline: ' + e.message); }
 }
 
 // ── Hash Chain Verify (MS7.5) ─────────────────────────────────────────────────
