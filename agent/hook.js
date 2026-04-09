@@ -106,8 +106,9 @@ async function main() {
     output_summary:   JSON.stringify(event.tool_response || {}).slice(0, 500),
   };
 
-  // Only send to collector if hardening level says we should alert on this level
-  if (shouldSend(level, hardeningLevel)) {
+  // Always send WebSearch + WebFetch events (web monitoring) — regardless of hardening level
+  const isWebEvent = ['WebSearch', 'WebFetch'].includes(tool);
+  if (isWebEvent || shouldSend(level, hardeningLevel)) {
     try { sendToCollector(payload); } catch (e) { log(`send error: ${e.message}`); }
   }
 

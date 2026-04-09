@@ -593,16 +593,27 @@ app.get('/domains/reputation/:domain', (req, res) => {
   res.json({ domain, ...result });
 });
 
-// GET /domains/history — היסטוריית WebFetch מהאירועים
+// GET /domains/history — היסטוריית WebFetch + WebSearch מהאירועים
 app.get('/domains/history', (req, res) => {
-  db.find({ tool_name: 'WebFetch' }).sort({ ts: -1 }).limit(200).exec((err, docs) => {
+  db.find({ tool_name: { $in: ['WebFetch', 'WebSearch'] } }).sort({ ts: -1 }).limit(200).exec((err, docs) => {
     if (err) return res.status(500).json({ error: err.message });
-    const history = docs.map(d => ({
-      ts:     d.ts,
-      url:    (d.tool_input || {}).url || '',
-      level:  d.level || 'INFO',
-      reason: d.reason || '',
-    }));
+    const history = docs.map(d => {
+      const inp = d.tool_input ? (typeof d.tool_input === 'string' ? JSON.parse(d.tool_input) : d.tool_input) : {};
+      // Try to parse input_summary if tool_input missing
+      let parsedInput = inp;
+      if (!parsedInput.url && !parsedInput.query && d.input_summary) {
+        try { parsedInput = JSON.parse(d.input_summary); } catch(_) {}
+      }
+      return {
+        ts:        d.ts,
+        tool:      d.tool_name,
+        url:       parsedInput.url   || '',
+        query:     parsedInput.query || '',
+        level:     d.level  || 'INFO',
+        reason:    d.reason || '',
+        rule_type: d.rule_type || '',
+      };
+    });
     res.json({ history });
   });
 });

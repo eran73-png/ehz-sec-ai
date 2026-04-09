@@ -746,7 +746,7 @@ body {
 
   <!-- WebFetch history -->
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
-    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📜 היסטוריית גישות Web</div>
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📜 היסטוריית גישות Web — WebFetch + WebSearch</div>
     <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:420px;overflow-y:auto;font-size:11px;"></div>
   </div>
 
@@ -1353,17 +1353,27 @@ async function loadDomainHistory() {
     }));
 
     document.getElementById('domains-history').innerHTML = hist.map(h => {
-      let host = h.url;
-      try { host = new URL(h.url).hostname; } catch(_) {}
-      const color = h.level === 'CRITICAL' ? 'var(--red)' : h.level === 'HIGH' ? 'var(--orange)' : 'var(--green)';
+      const isSearch = h.tool === 'WebSearch';
+      let display = '';
+      let host = '';
+      if (isSearch) {
+        display = `🔍 ${h.query || h.reason.replace('WebSearch: ','').replace(/"/g,'')}`;
+      } else {
+        try { host = new URL(h.url).hostname; } catch(_) { host = h.url; }
+        display = host;
+      }
+      const levelColor = h.level === 'CRITICAL' ? 'var(--red)' : h.level === 'HIGH' ? 'var(--orange)' : h.level === 'INFO' ? 'var(--muted2)' : 'var(--green)';
       const ts = new Date(h.ts).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
-      const rep = repMap[host];
+      const rep = !isSearch && repMap[host];
       const repBadge = rep
         ? `<span style="background:${rep.color}22;color:${rep.color};border:1px solid ${rep.color}55;border-radius:3px;padding:1px 6px;font-size:9px;font-weight:700;flex-shrink:0;cursor:help" title="${(rep.reasons||[]).join(' | ')}">${rep.score} ${rep.label}</span>`
         : '';
+      const toolBadge = isSearch
+        ? `<span style="background:#6366f122;color:#818cf8;border:1px solid #6366f144;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">SEARCH</span>`
+        : `<span style="background:${levelColor}22;color:${levelColor};border:1px solid ${levelColor}44;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">${h.level}</span>`;
       return `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;background:var(--panel2);border:1px solid var(--border);">
-        <span style="background:${color}22;color:${color};border:1px solid ${color}44;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">${h.level}</span>
-        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${host}</span>
+        ${toolBadge}
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:11px;">${display}</span>
         ${repBadge}
         <span style="color:var(--muted);font-size:10px;flex-shrink:0">${ts}</span>
       </div>`;

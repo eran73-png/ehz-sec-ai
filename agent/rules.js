@@ -151,6 +151,12 @@ function checkContextRules(event) {
   const tool  = event.tool_name || '';
   const input = event.tool_input || {};
 
+  // WebSearch — always log the query (MS6.10b)
+  if (tool === 'WebSearch') {
+    const query = input.query || '';
+    return { level: 'INFO', reason: `WebSearch: "${query}"`, ruleType: 'websearch' };
+  }
+
   // WebFetch — check URL
   if (tool === 'WebFetch') {
     const url = (input.url || '').toLowerCase();
