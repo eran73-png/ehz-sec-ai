@@ -1320,14 +1320,32 @@ async function loadDomainHistory() {
         '<div style="color:var(--muted);padding:12px;text-align:center;">אין היסטוריית WebFetch</div>';
       return;
     }
+
+    // Collect unique hosts → fetch reputation in parallel (MS6.10)
+    const hosts = [...new Set(hist.map(h => {
+      try { return new URL(h.url).hostname; } catch(_) { return h.url; }
+    }))];
+    const repMap = {};
+    await Promise.all(hosts.map(async host => {
+      try {
+        const r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(host));
+        if (r2.ok) repMap[host] = await r2.json();
+      } catch(_) {}
+    }));
+
     document.getElementById('domains-history').innerHTML = hist.map(h => {
       let host = h.url;
       try { host = new URL(h.url).hostname; } catch(_) {}
       const color = h.level === 'CRITICAL' ? 'var(--red)' : h.level === 'HIGH' ? 'var(--orange)' : 'var(--green)';
       const ts = new Date(h.ts).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      const rep = repMap[host];
+      const repBadge = rep
+        ? `<span style="background:${rep.color}22;color:${rep.color};border:1px solid ${rep.color}55;border-radius:3px;padding:1px 6px;font-size:9px;font-weight:700;flex-shrink:0;cursor:help" title="${(rep.reasons||[]).join(' | ')}">${rep.score} ${rep.label}</span>`
+        : '';
       return `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;background:var(--panel2);border:1px solid var(--border);">
         <span style="background:${color}22;color:${color};border:1px solid ${color}44;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">${h.level}</span>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${host}</span>
+        ${repBadge}
         <span style="color:var(--muted);font-size:10px;flex-shrink:0">${ts}</span>
       </div>`;
     }).join('');

@@ -580,6 +580,19 @@ app.delete('/domains/:domain', (req, res) => {
   res.json({ ok: true, removed: domain, allowed_domains: wl.allowed_domains });
 });
 
+// ─── Domain Reputation (MS6.10) ──────────────────────────────────────────────
+let domainReputationMod;
+try { domainReputationMod = require('../agent/domain-reputation'); } catch(_) {}
+
+// GET /domains/reputation/:domain — ציון מוניטין דומיין (offline)
+app.get('/domains/reputation/:domain', (req, res) => {
+  if (!domainReputationMod) return res.status(500).json({ error: 'domain-reputation module not available' });
+  const domain = decodeURIComponent(req.params.domain);
+  const wl = readWhitelist();
+  const result = domainReputationMod.scoreDomain(domain, wl.allowed_domains || []);
+  res.json({ domain, ...result });
+});
+
 // GET /domains/history — היסטוריית WebFetch מהאירועים
 app.get('/domains/history', (req, res) => {
   db.find({ tool_name: 'WebFetch' }).sort({ ts: -1 }).limit(200).exec((err, docs) => {

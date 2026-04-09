@@ -17,6 +17,10 @@ function getExtraRules() {
   return hardening ? hardening.getExtraRules() : [];
 }
 
+// ─── Domain Reputation (MS6.10) ──────────────────────────────────────────────
+let _domainRep;
+try { _domainRep = require('./domain-reputation'); } catch(_) {}
+
 // ─── Whitelist ───────────────────────────────────────────────────────────────
 
 let _whitelist = null;
@@ -169,7 +173,8 @@ function checkContextRules(event) {
     if (allowedDomains.length > 0 && !isAllowedDomain(url, allowedDomains)) {
       let host = url;
       try { host = new URL(url).hostname; } catch(_) {}
-      return { level: 'HIGH', reason: `WebFetch לדומיין לא מורשה: ${host}`, ruleType: 'allowlist', domain: host };
+      const reputation = _domainRep ? _domainRep.scoreDomain(host, allowedDomains) : null;
+      return { level: 'HIGH', reason: `WebFetch לדומיין לא מורשה: ${host}`, ruleType: 'allowlist', domain: host, reputation };
     }
 
     // Legacy whitelist (domains array) — no alert if in list
