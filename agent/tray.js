@@ -58,6 +58,24 @@ function openDashboard() {
   });
 }
 
+function logAgentEvent(action, reason) {
+  const body = JSON.stringify({
+    hook_event_name: 'TrayAction',
+    tool_name:       action,
+    session_id:      'tray',
+    level:           'INFO',
+    tool_input:      { action, reason },
+  });
+  const req = http.request(`${COLLECTOR_URL}/event`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+    timeout: 3000,
+  });
+  req.on('error', () => {});
+  req.write(body);
+  req.end();
+}
+
 function sep() {
   return { title: '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500', tooltip: '', checked: false, enabled: false };
 }
@@ -215,8 +233,10 @@ fetchAll(({ stats, recent, silentOn }) => {
       // Toggle agent enable/disable
       if (isAgentDisabled()) {
         try { fs.unlinkSync(DISABLE_FILE); } catch(_) {}
+        logAgentEvent('AGENT START', 'Agent enabled via Tray');
       } else {
         try { fs.writeFileSync(DISABLE_FILE, '', 'utf8'); } catch(_) {}
+        logAgentEvent('AGENT STOP', 'Agent disabled via Tray');
       }
       const nowDisabled = isAgentDisabled();
       tray.sendAction({ type: 'update-item', seq_id: 3, item: agentItem(nowDisabled) });
