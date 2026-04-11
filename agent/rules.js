@@ -266,10 +266,10 @@ function checkScopeRule(event) {
     if (!isDrivePath(rawPath) && !isUNCPath(rawPath)) return null;
 
     if (!isPathAllowed(rawPath, allowedPaths)) {
-      const label = isUNCPath(rawPath) ? 'UNC' : 'כונן';
+      const label = isUNCPath(rawPath) ? 'UNC' : 'Drive';
       return {
         level:    'HIGH',
-        reason:   `גישה מחוץ לפרויקט (${label}) — נתיב: ${rawPath}`,
+        reason:   `Access outside project (${label}) — path: ${rawPath}`,
         ruleType: 'scope',
       };
     }
@@ -285,10 +285,10 @@ function checkScopeRule(event) {
       const paths = extractPathsFromCommand(cmd);
       for (const p of paths) {
         if (!isPathAllowed(p, allowedPaths)) {
-          const label = isUNCPath(p) ? 'UNC' : 'כונן';
+          const label = isUNCPath(p) ? 'UNC' : 'Drive';
           return {
             level:    'HIGH',
-            reason:   `גישה מחוץ לפרויקט (Bash ${label}) — נתיב: ${p}`,
+            reason:   `Access outside project (Bash ${label}) — path: ${p}`,
             ruleType: 'scope',
           };
         }
@@ -301,7 +301,7 @@ function checkScopeRule(event) {
 
 // ─── Rule 6: Git + Env Monitor (MS7.4) ───────────────────────────────────────
 
-// Remotes מורשים — כל דומיין אחר = HIGH
+// Allowed remotes — any other domain = HIGH
 const ALLOWED_GIT_REMOTES = [
   'github.com',
   'ehz-server.duckdns.org',
@@ -311,7 +311,7 @@ const ALLOWED_GIT_REMOTES = [
   '127.0.0.1',
 ];
 
-// תבניות commit message חשודות
+// Suspicious commit message patterns
 const SUSPICIOUS_COMMIT_MSG = [
   /\b(secret|password|passwd|token|api.?key|credential|private.?key)\b/i,
   /\b(backdoor|exfil|payload|exploit)\b/i,
@@ -321,58 +321,56 @@ function checkGitEnvRules(event) {
   const tool  = event.tool_name || '';
   const input = event.tool_input || {};
 
-  // ── Read / Glob / Grep על קבצי .env ──
+  // ── Read / Glob / Grep on .env files ──
   if (['Read', 'Glob', 'Grep'].includes(tool)) {
     const p = (input.file_path || input.path || input.pattern || '').toLowerCase();
     if (p.endsWith('.env') || p.includes('/.env') || p.includes('\\.env')) {
-      return { level: 'MEDIUM', reason: `📂 קריאת קובץ סביבה — ${input.file_path || input.path || input.pattern}`, ruleType: 'git_env' };
+      return { level: 'MEDIUM', reason: `📂 Environment file read — ${input.file_path || input.path || input.pattern}`, ruleType: 'git_env' };
     }
   }
 
-  // ── רק פקודות Bash מכאן ──
+  // ── Bash commands only from here ──
   if (tool !== 'Bash') return null;
   const cmd = (input.command || '').trim();
 
   // git push --force
   if (/git\s+push\s+.*--force/.test(cmd) || /git\s+push\s+.*-f\b/.test(cmd)) {
-    return { level: 'HIGH', reason: `🔴 git push --force — מחיקת היסטוריה!`, ruleType: 'git_env' };
+    return { level: 'HIGH', reason: `🔴 git push --force — history rewrite!`, ruleType: 'git_env' };
   }
 
-  // git push לremote לא מוכר
+  // git push to unknown remote
   const pushMatch = cmd.match(/git\s+push\s+(\S+)/);
   if (pushMatch) {
-    const remote = pushMatch[1];
-    // אם זה שם symbolic (origin/upstream) — בדוק בפקודות קודמות? קשה. נבדוק אם מכיל URL
     const urlMatch = cmd.match(/https?:\/\/([a-zA-Z0-9._-]+)/) || cmd.match(/@([a-zA-Z0-9._-]+)[:/]/);
     if (urlMatch) {
       const host = urlMatch[1].toLowerCase();
       const isAllowed = ALLOWED_GIT_REMOTES.some(r => host === r || host.endsWith('.' + r));
       if (!isAllowed) {
-        return { level: 'HIGH', reason: `🔴 git push לשרת לא מורשה — ${host}`, ruleType: 'git_env' };
+        return { level: 'HIGH', reason: `🔴 git push to unauthorized server — ${host}`, ruleType: 'git_env' };
       }
     }
   }
 
-  // git commit עם הודעה חשודה
+  // git commit with suspicious message
   const commitMatch = cmd.match(/git\s+commit\s+.*-m\s+["']?(.+?)["']?\s*$/i);
   if (commitMatch) {
     const msg = commitMatch[1];
     if (SUSPICIOUS_COMMIT_MSG.some(re => re.test(msg))) {
-      return { level: 'HIGH', reason: `🔴 git commit עם הודעה חשודה — "${msg.slice(0,60)}"`, ruleType: 'git_env' };
+      return { level: 'HIGH', reason: `🔴 git commit with suspicious message — "${msg.slice(0,60)}"`, ruleType: 'git_env' };
     }
   }
 
-  // git remote add / set-url — שינוי remote
+  // git remote add / set-url
   if (/git\s+remote\s+(add|set-url)/.test(cmd)) {
     const urlInCmd = cmd.match(/https?:\/\/([a-zA-Z0-9._-]+)/) || cmd.match(/git@([a-zA-Z0-9._-]+)/);
     if (urlInCmd) {
       const host = urlInCmd[1].toLowerCase();
       const isAllowed = ALLOWED_GIT_REMOTES.some(r => host === r || host.endsWith('.' + r));
       if (!isAllowed) {
-        return { level: 'HIGH', reason: `🔴 git remote שונה לשרת לא מורשה — ${host}`, ruleType: 'git_env' };
+        return { level: 'HIGH', reason: `🔴 git remote changed to unauthorized server — ${host}`, ruleType: 'git_env' };
       }
     }
-    return { level: 'MEDIUM', reason: `⚠️ git remote שונה — ${cmd.slice(0,80)}`, ruleType: 'git_env' };
+    return { level: 'MEDIUM', reason: `⚠️ git remote changed — ${cmd.slice(0,80)}`, ruleType: 'git_env' };
   }
 
   return null;
@@ -397,7 +395,7 @@ function checkRules(event) {
   const SCOPE_EXEMPT_BASH = ['git ', 'npm ', 'node ', 'echo ', 'Write-Host', 'Get-'];
   const isBashWhitelisted = (tool === 'Bash') && SCOPE_EXEMPT_BASH.some(p => rawCmd.trim().startsWith(p));
   if (!isBashWhitelisted && (/\\\\[a-z0-9._-]/i.test(rawCmd) || /\\\\\\\\[a-z0-9._-]/i.test(inputText))) {
-    return { level: 'INFO', reason: 'UNC path זוהה — ייתכן lateral movement (\\\\server\\share)', ruleType: 'signature' };
+    return { level: 'INFO', reason: 'UNC path detected — possible lateral movement (\\\\server\\share)', ruleType: 'signature' };
   }
 
   // 1. Signature rules (on all tools)

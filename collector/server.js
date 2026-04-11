@@ -44,7 +44,7 @@ function saveNotifConfig(cfg) {
 
 let notifConfig = loadNotifConfig();
 
-// שלח מייל
+// Send email
 async function sendEmail(subject, text) {
   const ec = notifConfig.email;
   if (!ec.enabled || !ec.smtp_host || !ec.to) return;
@@ -76,8 +76,8 @@ db.ensureIndex({ fieldName: 'level' });
 db.ensureIndex({ fieldName: 'tool_name' });
 
 // ─── Hash Chain (MS7.5) ───────────────────────────────────────────────────────
-// lastHash = hash של ה-event האחרון שנשמר
-let lastHash = 'GENESIS'; // ערך התחלתי
+// lastHash = hash of the last saved event
+let lastHash = 'GENESIS'; // initial value
 
 function computeHash(doc, prevHash) {
   const payload = JSON.stringify({
@@ -90,7 +90,7 @@ function computeHash(doc, prevHash) {
   return crypto.createHash('sha256').update(payload).digest('hex');
 }
 
-// טען את ה-hash האחרון מה-DB בהפעלה
+// Load last hash from DB on startup
 function initLastHash(cb) {
   db.find({ event_hash: { $exists: true } }).sort({ ts: -1 }).limit(1).exec((err, docs) => {
     if (!err && docs.length > 0 && docs[0].event_hash) {
@@ -108,11 +108,11 @@ function initLastHash(cb) {
 function enforceRetention() {
   const cutoff = Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
 
-  // 1. מחק events ישנים מ-30 יום
+  // 1. Delete events older than 30 days
   db.remove({ ts: { $lt: cutoff } }, { multi: true }, (err, n1) => {
-    if (n1 > 0) console.log(`[Retention] מחיקת ${n1} events ישנים (>${RETENTION_DAYS} יום)`);
+    if (n1 > 0) console.log(`[Retention] Deleted ${n1} old events (>${RETENTION_DAYS} days)`);
 
-    // 2. FIFO — אם עדיין מעל 10,000 מחק הכי ישנים
+    // 2. FIFO — if still above 10,000 delete oldest
     db.count({}, (err, total) => {
       if (total <= MAX_EVENTS) return;
       const excess = total - MAX_EVENTS;
@@ -120,22 +120,22 @@ function enforceRetention() {
         if (err || !docs.length) return;
         const ids = docs.map(d => d._id);
         db.remove({ _id: { $in: ids } }, { multi: true }, (err, n2) => {
-          if (n2 > 0) console.log(`[Retention] FIFO — מחיקת ${n2} events עודפים (מעל ${MAX_EVENTS})`);
+          if (n2 > 0) console.log(`[Retention] FIFO — deleted ${n2} excess events (above ${MAX_EVENTS})`);
         });
       });
     });
   });
 }
 
-// הרץ retention פעם ביום (86400000ms) + מיד בהפעלה
+// Run retention once per day + immediately on startup
 enforceRetention();
 setInterval(enforceRetention, 24 * 60 * 60 * 1000);
 
 // ─── Weekly Auto-Scan (MS6.7) ────────────────────────────────────────────────
-// בדוק כל דקה אם הגיע זמן הסריקה השבועית (יום ראשון 04:00)
+// Check every minute if weekly scan time has arrived (Sunday 04:00)
 function checkWeeklyScan() {
   const now = new Date();
-  // 0=ראשון, שעה 4, דקה 0, פחות מדקה
+  // 0=Sunday, hour 4, minute 0
   if (now.getDay() === 0 && now.getHours() === 4 && now.getMinutes() === 0) {
     console.log('[Weekly Scan] Starting automatic weekly scan...');
     try {
@@ -144,10 +144,10 @@ function checkWeeklyScan() {
       fs.writeFileSync(AUDIT_RESULT_FILE, JSON.stringify(result, null, 2), 'utf8');
       const critCount = result.files.filter(f => f.risk_label === 'CRITICAL').length;
       sendTelegram(
-        `📋 <b>EHZ-SEC-AI — סריקה שבועית אוטומטית</b>\n` +
-        `📁 ${result.summary.total_files} קבצים נסרקו\n` +
+        `📋 <b>FlowGuard — Weekly Auto Scan</b>\n` +
+        `📁 ${result.summary.total_files} files scanned\n` +
         `🚨 CRITICAL: ${result.summary.critical} | HIGH: ${result.summary.high} | MEDIUM: ${result.summary.medium}\n` +
-        `✅ נקי: ${result.summary.clean}`
+        `✅ Clean: ${result.summary.clean}`
       );
       if (critCount > 0) {
         result.files.filter(f => f.risk_label === 'CRITICAL').forEach(f => {
@@ -160,10 +160,10 @@ function checkWeeklyScan() {
     }
   }
 }
-setInterval(checkWeeklyScan, 60 * 1000); // בדוק כל דקה
+setInterval(checkWeeklyScan, 60 * 1000); // check every minute
 
 // ─── Daily Report (MS6.14a) ──────────────────────────────────────────────────
-// שולח דוח יומי כל בוקר 08:00
+// Sends daily report every morning at 08:00
 function sendDailyReport() {
   const since = Date.now() - 24 * 60 * 60 * 1000;
   db.find({ ts: { $gt: since } }).exec((err, docs) => {
@@ -179,13 +179,13 @@ function sendDailyReport() {
       .map(d => `• ${d.level === 'CRITICAL' ? '🚨' : '🔴'} ${d.reason}`).join('\n');
     const dateStr = new Date().toLocaleDateString('he-IL');
     sendTelegram(
-      `📊 <b>EHZ-SEC-AI — דוח יומי</b>\n` +
+      `📊 <b>FlowGuard — Daily Report</b>\n` +
       `📅 ${dateStr}\n\n` +
       `🚨 CRITICAL: <b>${critical}</b>\n` +
       `🔴 HIGH: <b>${high}</b>\n` +
       `🟡 MEDIUM: <b>${medium}</b>\n` +
       `ℹ️ INFO: <b>${info}</b>\n` +
-      `📊 סה"כ: <b>${docs.length}</b> events\n` +
+      `📊 Total: <b>${docs.length}</b> events\n` +
       (threats ? `\n🔍 <b>Top threats today:</b>\n${threats}` : '\n✅ No significant threats')
     );
   });
@@ -424,17 +424,17 @@ app.post('/update/apply', async (req, res) => {
         r.on('end', () => resolve(d));
       }).on('error', reject);
     });
-    // ולידציה — וודא שהתוכן הוא rules.js אמיתי ולא דף שגיאה
+    // Validate — ensure content is real rules.js and not an error page
     if (!src.includes('module.exports') || !src.includes('checkRules')) {
-      throw new Error(`תוכן לא תקין מ-GitHub (${src.length} bytes) — לא נכתב`);
+      throw new Error(`Invalid content from GitHub (${src.length} bytes) — not written`);
     }
-    // גיבוי rules.js הנוכחי
+    // Backup current rules.js
     const fs2 = require('fs');
     const backup = rulesPath + '.bak';
     fs2.copyFileSync(rulesPath, backup);
-    // כתיבת rules.js חדש
+    // Write new rules.js
     fs2.writeFileSync(rulesPath, src, 'utf8');
-    // טעינה מחדש
+    // Reload module
     delete require.cache[require.resolve('../agent/rules.js')];
     const info = getRulesInfo();
     db.insert({ ts: Date.now(), hook_type: 'ManualUpdate', tool_name: 'RULES_MANUAL_UPDATE',
@@ -479,9 +479,9 @@ async function runAutoUpdate() {
         let d = ''; r.on('data', c => d += c); r.on('end', () => resolve(d));
       }).on('error', reject);
     });
-    // ולידציה — וודא שהתוכן הוא rules.js אמיתי ולא דף שגיאה
+    // Validate — ensure content is real rules.js and not an error page
     if (!src.includes('module.exports') || !src.includes('checkRules')) {
-      throw new Error(`תוכן לא תקין מ-GitHub (${src.length} bytes) — לא נכתב`);
+      throw new Error(`Invalid content from GitHub (${src.length} bytes) — not written`);
     }
     fs.copyFileSync(rulesPath, rulesPath + '.bak');
     fs.writeFileSync(rulesPath, src, 'utf8');
@@ -590,7 +590,7 @@ app.post('/skills/scan', (req, res) => {
         sendTelegram(`${emoji} <b>FlowGuard — Skill Alert</b>\n🔧 Skill: <code>${s.name}</code>\n📌 Status: ${s.status}\n⚡ ${s.findings.map(f=>f.reason).join(', ')}`);
       }
       if (s.hash_changed) {
-        sendTelegram(`⚠️ <b>EHZ-SEC-AI — Skill Changed</b>\n🔧 Skill: <code>${s.name}</code>\n📌 Hash השתנה — ייתכן שהסקיל עודכן או שונה`);
+        sendTelegram(`⚠️ <b>FlowGuard — Skill Changed</b>\n🔧 Skill: <code>${s.name}</code>\n📌 Hash changed — skill may have been updated or modified`);
       }
     });
 
@@ -622,7 +622,7 @@ app.get('/audit', (req, res) => {
 app.get('/audit/export', async (req, res) => {
   try {
     if (!fs.existsSync(AUDIT_RESULT_FILE))
-      return res.status(404).json({ error: 'אין תוצאות סריקה — הפעל סריקה קודם' });
+      return res.status(404).json({ error: 'No scan results — run a scan first' });
 
     const data    = JSON.parse(fs.readFileSync(AUDIT_RESULT_FILE, 'utf8'));
     const ExcelJS = require('exceljs');
@@ -638,13 +638,13 @@ app.get('/audit/export', async (req, res) => {
       OK:       { bg: 'FF10B981', fg: 'FFFFFFFF' },
     };
 
-    const ws = wb.addWorksheet('דוח אבטחה — EHZ-SEC-AI');
+    const ws = wb.addWorksheet('Security Report — FlowGuard');
     ws.views = [{ rightToLeft: true, showGridLines: false }];
 
     // ── Title row (A:E = 5 cols) ──
     ws.mergeCells('A1:E1');
     const titleCell = ws.getCell('A1');
-    titleCell.value = '🛡️  EHZ-SEC-AI — דוח File Audit';
+    titleCell.value = '🛡️  FlowGuard — File Audit Report';
     titleCell.font  = { bold: true, size: 16, color: { argb: 'FFFFFFFF' } };
     titleCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0D1424' } };
     titleCell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'rightToLeft' };
@@ -653,7 +653,7 @@ app.get('/audit/export', async (req, res) => {
     // ── Subtitle / scan info ──
     ws.mergeCells('A2:E2');
     const subCell = ws.getCell('A2');
-    subCell.value = `תיקייה: ${s.scan_path || ''}   |   תאריך: ${s.scanned_at ? new Date(s.scanned_at).toLocaleString('he-IL') : ''}`;
+    subCell.value = `Folder: ${s.scan_path || ''}   |   Date: ${s.scanned_at ? new Date(s.scanned_at).toLocaleString('en-US') : ''}`;
     subCell.font  = { size: 10, color: { argb: 'FF94A3B8' } };
     subCell.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF111827' } };
     subCell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'rightToLeft' };
@@ -665,7 +665,7 @@ app.get('/audit/export', async (req, res) => {
     ws.getRow(3).height = 6;
 
     // ── Summary stats — 5 cards matching 5 columns ──
-    const statLabels   = ['סה"כ קבצים', '✅ תקין', '⚠️ MEDIUM', '🔶 HIGH', '🚨 CRITICAL'];
+    const statLabels   = ['Total Files', '✅ Clean', '⚠️ MEDIUM', '🔶 HIGH', '🚨 CRITICAL'];
     const statValues   = [s.total_files, s.clean, s.medium, s.high, s.critical];
     const statBgColors = ['FF1E293B', 'FF064E3B', 'FF78350F', 'FF431407', 'FF450A0A'];
     const statTxtColors= ['FFFFFFFF', 'FF10B981', 'FFF59E0B', 'FFF97316', 'FFEF4444'];
@@ -690,7 +690,7 @@ app.get('/audit/export', async (req, res) => {
     // Spacer
     ws.getRow(6).height = 10;
 
-    // ── Table header — 5 columns: קובץ | תיקייה | סיכון | ציון | ממצאים ──
+    // ── Table header — 5 columns: File | Directory | Risk | Score | Findings ──
     const HDR_ROW = 7;
     const COLS = [
       { key: 'A', header: 'File',      width: 32 },
@@ -1481,16 +1481,16 @@ function startProcessMonitor() {
     procs.forEach(p => procBaseline.add(p.ProcessId));
     console.log(`[EHZ-SEC-AI] ProcessMonitor: baseline ${procBaseline.size} processes`);
 
-    // סריקה כל 30 שניות
+    // Scan every 30 seconds
     setInterval(() => {
       getProcessList(current => {
         for (const p of current) {
-          if (procBaseline.has(p.ProcessId)) continue; // תהליך ישן
+          if (procBaseline.has(p.ProcessId)) continue; // known process
           procBaseline.add(p.ProcessId);
 
           const cmdLine = (p.CommandLine || '').trim();
           const isSuspicious = PROC_SUSPICIOUS.some(re => re.test(cmdLine));
-          if (!isSuspicious && !cmdLine) continue; // תהליך חדש ללא CommandLine — לא מעניין
+          if (!isSuspicious && !cmdLine) continue; // new process with no CommandLine — skip
 
           const level  = isSuspicious ? 'HIGH' : 'INFO';
           const reason = isSuspicious
@@ -1513,7 +1513,7 @@ function startProcessMonitor() {
           });
 
           if (isSuspicious) {
-            sendTelegram(`⚙️ <b>EHZ-SEC-AI — Process Monitor</b>\n🚨 תהליך חשוד:\n<code>${p.Name} (PID ${p.ProcessId})</code>\n<code>${cmdLine.slice(0,150)}</code>`);
+            sendTelegram(`⚙️ <b>FlowGuard — Process Monitor</b>\n🚨 Suspicious process:\n<code>${p.Name} (PID ${p.ProcessId})</code>\n<code>${cmdLine.slice(0,150)}</code>`);
           }
         }
       });
