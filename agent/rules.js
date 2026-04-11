@@ -143,11 +143,11 @@ const SECRETS_RULES = [
   { level: 'HIGH', re: /postgres(ql)?:\/\/[^:]+:[^@]+@/i,          reason: 'PostgreSQL connection string with credentials' },
 
   // ── Israeli PII (6.2) ──
-  { level: 'HIGH',   re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'כרטיס אשראי Visa' },
-  { level: 'HIGH',   re: /\b5[1-5][0-9]{14}\b/,                    reason: 'כרטיס אשראי MasterCard' },
-  { level: 'HIGH',   re: /\b3[47][0-9]{13}\b/,                     reason: 'כרטיס אשראי American Express' },
-  { level: 'MEDIUM', re: /\b05[0-9]{1}[-\s]?[0-9]{7}\b/,          reason: 'מספר פלאפון ישראלי' },
-  { level: 'MEDIUM', re: /\b[0-9]{9}\b/,                           reason: 'מספר ת"ז ישראלי אפשרי (9 ספרות)' },
+  { level: 'HIGH',   re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'Credit card number (Visa)' },
+  { level: 'HIGH',   re: /\b5[1-5][0-9]{14}\b/,                    reason: 'Credit card number (MasterCard)' },
+  { level: 'HIGH',   re: /\b3[47][0-9]{13}\b/,                     reason: 'Credit card number (American Express)' },
+  { level: 'MEDIUM', re: /\b05[0-9]{1}[-\s]?[0-9]{7}\b/,          reason: 'Israeli phone number (PII)' },
+  { level: 'MEDIUM', re: /\b[0-9]{9}\b/,                           reason: 'Possible Israeli ID number (9 digits)' },
 ];
 
 // ─── Rule 3: Context Rules (per tool) ────────────────────────────────────────
@@ -185,7 +185,7 @@ function checkContextRules(event) {
       let host = url;
       try { host = new URL(url).hostname; } catch(_) {}
       const reputation = _domainRep ? _domainRep.scoreDomain(host, allowedDomains) : null;
-      return { level: 'HIGH', reason: `WebFetch לדומיין לא מורשה: ${host}`, ruleType: 'allowlist', domain: host, reputation };
+      return { level: 'HIGH', reason: `WebFetch to unauthorized domain: ${host}`, ruleType: 'allowlist', domain: host, reputation };
     }
 
     // Legacy whitelist (domains array) — no alert if in list

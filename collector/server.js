@@ -186,7 +186,7 @@ function sendDailyReport() {
       `🟡 MEDIUM: <b>${medium}</b>\n` +
       `ℹ️ INFO: <b>${info}</b>\n` +
       `📊 סה"כ: <b>${docs.length}</b> events\n` +
-      (threats ? `\n🔍 <b>החשודים של היום:</b>\n${threats}` : '\n✅ אין איומים חשובים')
+      (threats ? `\n🔍 <b>Top threats today:</b>\n${threats}` : '\n✅ No significant threats')
     );
   });
 }
@@ -220,9 +220,9 @@ function buildTelegramMsg(ev) {
   const emoji = ev.level === 'CRITICAL' ? '🚨' : ev.level === 'HIGH' ? '⚠️' : 'ℹ️';
   const ts    = new Date(ev.ts).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' });
   return `${emoji} <b>EHZ-SEC-AI — ${ev.level}</b>\n` +
-         `🔧 כלי: <code>${ev.tool_name}</code>\n` +
+         `🔧 Tool: <code>${ev.tool_name}</code>\n` +
          `📌 Hook: ${ev.hook_type}\n` +
-         (ev.reason ? `⚡ סיבה: ${ev.reason}\n` : '') +
+         (ev.reason ? `⚡ Reason: ${ev.reason}\n` : '') +
          `🕐 ${ts}`;
 }
 
@@ -564,7 +564,7 @@ app.post('/skills/scan', (req, res) => {
     result.skills.forEach(s => {
       if (['CRITICAL', 'SUSPICIOUS'].includes(s.status)) {
         const emoji = s.status === 'CRITICAL' ? '🚨' : '🔶';
-        sendTelegram(`${emoji} <b>EHZ-SEC-AI — Skill Alert</b>\n🔧 Skill: <code>${s.name}</code>\n📌 סטטוס: ${s.status}\n⚡ ${s.findings.map(f=>f.reason).join(', ')}`);
+        sendTelegram(`${emoji} <b>FlowGuard — Skill Alert</b>\n🔧 Skill: <code>${s.name}</code>\n📌 Status: ${s.status}\n⚡ ${s.findings.map(f=>f.reason).join(', ')}`);
       }
       if (s.hash_changed) {
         sendTelegram(`⚠️ <b>EHZ-SEC-AI — Skill Changed</b>\n🔧 Skill: <code>${s.name}</code>\n📌 Hash השתנה — ייתכן שהסקיל עודכן או שונה`);
@@ -591,7 +591,7 @@ app.get('/audit', (req, res) => {
       const data = JSON.parse(fs.readFileSync(AUDIT_RESULT_FILE, 'utf8'));
       return res.json(data);
     }
-    res.json({ files: [], summary: null, msg: 'לא נמצאה סריקה קודמת' });
+    res.json({ files: [], summary: null, msg: 'No previous scan found' });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -670,11 +670,11 @@ app.get('/audit/export', async (req, res) => {
     // ── Table header — 5 columns: קובץ | תיקייה | סיכון | ציון | ממצאים ──
     const HDR_ROW = 7;
     const COLS = [
-      { key: 'A', header: 'קובץ',     width: 32 },
-      { key: 'B', header: 'תיקייה',   width: 38 },
-      { key: 'C', header: 'סיכון',    width: 12 },
-      { key: 'D', header: 'ציון',     width:  8 },
-      { key: 'E', header: 'ממצאים',   width: 55 },
+      { key: 'A', header: 'File',      width: 32 },
+      { key: 'B', header: 'Directory', width: 38 },
+      { key: 'C', header: 'Risk',      width: 12 },
+      { key: 'D', header: 'Score',     width:  8 },
+      { key: 'E', header: 'Findings',  width: 55 },
     ];
     COLS.forEach(({ key, header, width }) => {
       ws.getColumn(key).width = width;
@@ -707,8 +707,8 @@ app.get('/audit/export', async (req, res) => {
 
       // Build findings text: "• רמה — סיבה (שורה X)" per finding
       const findingsText = isOK
-        ? '✓ תקין'
-        : f.findings.map(fn => `${fn.level === 'CRITICAL' ? '🔴' : fn.level === 'HIGH' ? '🟠' : '🟡'} ${fn.reason}  (שורה ${fn.line})`).join('\n');
+        ? '✓ Clean'
+        : f.findings.map(fn => `${fn.level === 'CRITICAL' ? '🔴' : fn.level === 'HIGH' ? '🟠' : '🟡'} ${fn.reason}  (line ${fn.line})`).join('\n');
 
       const r   = ws.getRow(rowIdx++);
       const numLines = isOK ? 1 : f.findings.length;
@@ -878,7 +878,7 @@ app.post('/domains', (req, res) => {
   const wl = readWhitelist();
   wl.allowed_domains = wl.allowed_domains || [];
   if (wl.allowed_domains.includes(domain))
-    return res.json({ ok: true, msg: 'כבר קיים', allowed_domains: wl.allowed_domains });
+    return res.json({ ok: true, msg: 'Already exists', allowed_domains: wl.allowed_domains });
   wl.allowed_domains.push(domain);
   writeWhitelist(wl);
   res.json({ ok: true, added: domain, allowed_domains: wl.allowed_domains });
@@ -1072,7 +1072,7 @@ app.delete('/events', (req, res) => {
   db.remove(query, { multi: true }, (err, n) => {
     if (err) return res.status(500).json({ error: err.message });
     db.compactDatafile();
-    res.json({ ok: true, deleted: n, msg: `נמחקו ${n} events` });
+    res.json({ ok: true, deleted: n, msg: `Deleted ${n} events` });
   });
 });
 
@@ -1211,17 +1211,17 @@ app.get('/baseline/status', (req, res) => {
 
     // יותר מ-3x ממוצע events
     if (curEvents > baselineEventsPerSession * 3 && baselineEventsPerSession > 3) {
-      anomalies.push({ level: 'MEDIUM', msg: `פעולות רבות מהרגיל — ${curEvents} לעומת ממוצע ${Math.round(baselineEventsPerSession)}` });
+      anomalies.push({ level: 'MEDIUM', msg: `Unusually high activity — ${curEvents} vs avg ${Math.round(baselineEventsPerSession)}` });
     }
     // יותר מ-5x ממוצע HIGH events
     if (curHighs > baselineHighsPerSession * 5 + 3) {
-      anomalies.push({ level: 'HIGH', msg: `התראות HIGH חריגות — ${curHighs} לעומת ממוצע ${Math.round(baselineHighsPerSession)}` });
+      anomalies.push({ level: 'HIGH', msg: `Spike in HIGH alerts — ${curHighs} vs avg ${Math.round(baselineHighsPerSession)}` });
     }
     // פעילות בשעה לא רגילה
     if (current.events.length > 0 && activeHours.length > 0) {
       const curHour = new Date(current.events[0].ts).getHours();
       if (!activeHours.includes(curHour)) {
-        anomalies.push({ level: 'MEDIUM', msg: `פעילות בשעה חריגה — ${curHour}:00 (שעות רגילות: ${activeHours.slice(0,5).join(', ')})` });
+        anomalies.push({ level: 'MEDIUM', msg: `Activity at unusual hour — ${curHour}:00 (normal hours: ${activeHours.slice(0,5).join(', ')})` });
       }
     }
     // כלי חדש שלא היה בbaseline — יותר מ-10% מהeventים
@@ -1229,7 +1229,7 @@ app.get('/baseline/status', (req, res) => {
     for (const { tool, pct } of curToolPcts) {
       const inBaseline = topTools.find(t => t.tool === tool);
       if (!inBaseline && pct > 15) {
-        anomalies.push({ level: 'MEDIUM', msg: `כלי חדש בשימוש נרחב — ${tool} (${pct}% מהpעולות)` });
+        anomalies.push({ level: 'MEDIUM', msg: `New tool in heavy use — ${tool} (${pct}% of actions)` });
       }
     }
 
@@ -1386,13 +1386,13 @@ function startFSWatcher() {
 
         if (isSensitive) {
           level  = 'HIGH';
-          reason = `🔍 FSW: קובץ רגיש ${isNewFile ? 'הועתק לפרויקט' : 'שונה'} — ${filename}`;
+          reason = `🔍 FSW: Sensitive file ${isNewFile ? 'copied to project' : 'modified'} — ${filename}`;
         } else if (isNewFile) {
           level  = 'HIGH';
-          reason = `📥 FSW: קובץ חדש הועתק לפרויקט — ${filename}`;
+          reason = `📥 FSW: New file copied to project — ${filename}`;
         } else {
           level  = 'INFO';
-          reason = `🔍 FSW: שינוי — ${filename}`;
+          reason = `🔍 FSW: File changed — ${filename}`;
         }
 
         db.insert({
@@ -1410,16 +1410,16 @@ function startFSWatcher() {
 
         if (level === 'HIGH') {
           const emoji = isSensitive ? '🔑' : '📥';
-          sendTelegram(`${emoji} <b>EHZ-SEC-AI — FSWatcher</b>\n${reason}\n<code>${filename}</code>`);
+          sendTelegram(`${emoji} <b>FlowGuard — FSWatcher</b>\n${reason}\n<code>${filename}</code>`);
         }
       }, 3000)); // 3 שניות debounce
     });
 
     watcher.on('error', e => console.error('[FSW] Error:', e.message));
     fswActive = true;
-    console.log(`[EHZ-SEC-AI] FSWatcher פעיל על ${FSW_ROOT}`);
+    console.log(`[FlowGuard] FSWatcher active on ${FSW_ROOT}`);
   } catch(e) {
-    console.error('[FSW] לא ניתן להפעיל:', e.message);
+    console.error('[FSW] Failed to start:', e.message);
   }
 }
 
@@ -1471,8 +1471,8 @@ function startProcessMonitor() {
 
           const level  = isSuspicious ? 'HIGH' : 'INFO';
           const reason = isSuspicious
-            ? `⚙️ PROC: תהליך חשוד — ${p.Name} (PID ${p.ProcessId})`
-            : `⚙️ PROC: תהליך חדש — ${p.Name} (PID ${p.ProcessId})`;
+            ? `⚙️ PROC: Suspicious process — ${p.Name} (PID ${p.ProcessId})`
+            : `⚙️ PROC: New process — ${p.Name} (PID ${p.ProcessId})`;
 
           let currentHardeningLevel = 1;
           try { currentHardeningLevel = require('../config/hardening').getLevel(); } catch(_) {}
@@ -1516,7 +1516,7 @@ app.listen(PORT, '127.0.0.1', () => {
 
   // Startup Telegram ping
   if (TELEGRAM_TOKEN && TELEGRAM_CHAT) {
-    sendTelegram('✅ <b>EHZ-SEC-AI</b> — Collector הופעל בהצלחה\n🖥️ ניטור Claude Code פעיל\n👁️ FSWatcher פעיל');
+    sendTelegram('✅ <b>FlowGuard</b> — Collector started successfully\n🖥️ Claude Code monitoring active\n👁️ FSWatcher active');
   }
 });
 

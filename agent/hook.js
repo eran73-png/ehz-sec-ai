@@ -121,15 +121,15 @@ async function main() {
         let writeMatch = null;
         // Run SECRETS_RULES on full file content
         const secretsRules = [
-          { level: 'CRITICAL', re: /sk-[A-Za-z0-9]{48}/, reason: 'OpenAI API key בקובץ' },
-          { level: 'CRITICAL', re: /sk-ant-[A-Za-z0-9\-_]{40,}/, reason: 'Anthropic API key בקובץ' },
-          { level: 'CRITICAL', re: /AKIA[0-9A-Z]{16}/, reason: 'AWS Access Key בקובץ' },
-          { level: 'CRITICAL', re: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH)\s+PRIVATE\s+KEY/i, reason: 'Private key בקובץ' },
-          { level: 'HIGH', re: /password\s*[=:]\s*\S{6,}/i, reason: 'סיסמה בקובץ' },
-          { level: 'HIGH', re: /secret\s*[=:]\s*\S{6,}/i, reason: 'Secret בקובץ' },
-          { level: 'HIGH', re: /api[_-]?key\s*[=:]\s*\S{6,}/i, reason: 'API key בקובץ' },
-          { level: 'HIGH', re: /ghp_[A-Za-z0-9]{36}/, reason: 'GitHub Token בקובץ' },
-          { level: 'HIGH', re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'כרטיס אשראי Visa בקובץ' },
+          { level: 'CRITICAL', re: /sk-[A-Za-z0-9]{48}/, reason: 'OpenAI API key in file' },
+          { level: 'CRITICAL', re: /sk-ant-[A-Za-z0-9\-_]{40,}/, reason: 'Anthropic API key in file' },
+          { level: 'CRITICAL', re: /AKIA[0-9A-Z]{16}/, reason: 'AWS Access Key in file' },
+          { level: 'CRITICAL', re: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH)\s+PRIVATE\s+KEY/i, reason: 'Private key in file' },
+          { level: 'HIGH', re: /password\s*[=:]\s*\S{6,}/i, reason: 'Hardcoded password in file' },
+          { level: 'HIGH', re: /secret\s*[=:]\s*\S{6,}/i, reason: 'Hardcoded secret in file' },
+          { level: 'HIGH', re: /api[_-]?key\s*[=:]\s*\S{6,}/i, reason: 'Hardcoded API key in file' },
+          { level: 'HIGH', re: /ghp_[A-Za-z0-9]{36}/, reason: 'GitHub Token in file' },
+          { level: 'HIGH', re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'Credit card number (Visa) in file' },
         ];
         for (const rule of secretsRules) {
           if (rule.re.test(content)) {
