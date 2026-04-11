@@ -93,7 +93,7 @@ function computeHash(doc, prevHash) {
 // טען את ה-hash האחרון מה-DB בהפעלה
 function initLastHash(cb) {
   db.find({ event_hash: { $exists: true } }).sort({ ts: -1 }).limit(1).exec((err, docs) => {
-    if (!err && docs.length > 0) {
+    if (!err && docs.length > 0 && docs[0].event_hash) {
       lastHash = docs[0].event_hash;
       console.log(`[EHZ-SEC-AI] Hash chain loaded — last hash: ${lastHash.slice(0,16)}…`);
     } else {
@@ -323,6 +323,194 @@ app.get('/stats', (req, res) => {
       });
     });
   });});});
+});
+
+// ── Rules Update (MS8.5) ──────────────────────────────────────────────────────
+
+const GITHUB_RULES_URL = 'https://raw.githubusercontent.com/eran73-png/ehz-sec-ai/master/agent/rules.js';
+const rulesPath = path.join(__dirname, '../agent/rules.js');
+
+function getRulesInfo() {
+  try {
+    delete require.cache[require.resolve('../agent/rules.js')];
+    const r = require('../agent/rules.js');
+    // ספירת חוקים מתוך הקובץ עצמו
+    const src = require('fs').readFileSync(rulesPath, 'utf8');
+    const rulesCount = (src.match(/level\s*:/g) || []).length;
+    return {
+      version:      r.RULES_VERSION || '1.0.0',
+      last_updated: r.RULES_UPDATED || null,
+      rules_count:  rulesCount
+    };
+  } catch(e) { return { version: '1.0.0', last_updated: null, rules_count: '?' }; }
+}
+
+function extractVersion(src) {
+  const m = src.match(/RULES_VERSION\s*=\s*['"]([^'"]+)['"]/);
+  return m ? m[1] : null;
+}
+
+app.get('/update/status', (req, res) => {
+  res.json(getRulesInfo());
+});
+
+app.get('/update/check', async (req, res) => {
+  try {
+    const https = require('https');
+    const src = await new Promise((resolve, reject) => {
+      https.get(GITHUB_RULES_URL, r => {
+        let d = '';
+        r.on('data', c => d += c);
+        r.on('end', () => resolve(d));
+      }).on('error', reject);
+    });
+    const latestVer   = extractVersion(src);
+    const currentInfo = getRulesInfo();
+    const isNewer = latestVer && latestVer !== currentInfo.version;
+    const msg = isNewer
+      ? `Update available: v${currentInfo.version} → v${latestVer}`
+      : `Up to date: v${currentInfo.version}`;
+    db.insert({ ts: Date.now(), hook_type: 'UpdateCheck', tool_name: 'RULES_UPDATE_CHECK',
+      session_id: 'system', level: 'INFO', reason: msg,
+      rule_type: 'update_check', input_summary: null, output_summary: isNewer ? 'update_available' : 'up_to_date',
+      telegram_sent: false, created_at: new Date().toISOString(),
+      prev_hash: lastHash, event_hash: null }, () => {});
+    res.json({
+      update_available: isNewer,
+      current_version:  currentInfo.version,
+      latest_version:   latestVer || currentInfo.version,
+      new_rules:        isNewer ? '?' : 0
+    });
+  } catch(e) {
+    db.insert({ ts: Date.now(), hook_type: 'UpdateCheck', tool_name: 'RULES_UPDATE_CHECK',
+      session_id: 'system', level: 'HIGH', reason: `Update check failed: ${e.message}`,
+      rule_type: 'update_check', input_summary: null, output_summary: null,
+      telegram_sent: false, created_at: new Date().toISOString(),
+      prev_hash: lastHash, event_hash: null }, () => {});
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/update/apply', async (req, res) => {
+  try {
+    const https = require('https');
+    const src = await new Promise((resolve, reject) => {
+      https.get(GITHUB_RULES_URL, r => {
+        let d = '';
+        r.on('data', c => d += c);
+        r.on('end', () => resolve(d));
+      }).on('error', reject);
+    });
+    // ולידציה — וודא שהתוכן הוא rules.js אמיתי ולא דף שגיאה
+    if (!src.includes('module.exports') || !src.includes('checkRules')) {
+      throw new Error(`תוכן לא תקין מ-GitHub (${src.length} bytes) — לא נכתב`);
+    }
+    // גיבוי rules.js הנוכחי
+    const fs2 = require('fs');
+    const backup = rulesPath + '.bak';
+    fs2.copyFileSync(rulesPath, backup);
+    // כתיבת rules.js חדש
+    fs2.writeFileSync(rulesPath, src, 'utf8');
+    // טעינה מחדש
+    delete require.cache[require.resolve('../agent/rules.js')];
+    const info = getRulesInfo();
+    db.insert({ ts: Date.now(), hook_type: 'ManualUpdate', tool_name: 'RULES_MANUAL_UPDATE',
+      session_id: 'system', level: 'INFO',
+      reason: `Manual update: rules v${info.version} (${info.rules_count} rules)`,
+      rule_type: 'manual_update', input_summary: null,
+      output_summary: `${info.rules_count} rules loaded`,
+      telegram_sent: false, created_at: new Date().toISOString(),
+      prev_hash: lastHash, event_hash: null }, () => {});
+    res.json({ ok: true, version: info.version, rules_count: info.rules_count });
+  } catch(e) {
+    db.insert({ ts: Date.now(), hook_type: 'ManualUpdate', tool_name: 'RULES_MANUAL_UPDATE',
+      session_id: 'system', level: 'HIGH',
+      reason: `Manual update failed: ${e.message}`,
+      rule_type: 'manual_update', input_summary: null, output_summary: null,
+      telegram_sent: false, created_at: new Date().toISOString(),
+      prev_hash: lastHash, event_hash: null }, () => {});
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// ── Rules Auto-Update Scheduler ───────────────────────────────────────────────
+
+const SCHEDULE_PATH = path.join(__dirname, '../config/update-schedule.json');
+
+let autoUpdateSchedule = { hours: 0, timer: null, lastRunTs: null, lastResult: null };
+
+function loadScheduleHours() {
+  try { return parseInt(JSON.parse(fs.readFileSync(SCHEDULE_PATH, 'utf8')).hours, 10) || 0; } catch(_) { return 0; }
+}
+function saveScheduleHours(hours) {
+  const dir = path.join(__dirname, '../config');
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(SCHEDULE_PATH, JSON.stringify({ hours }, null, 2), 'utf8');
+}
+
+async function runAutoUpdate() {
+  console.log('[AutoUpdate] Running scheduled update...');
+  try {
+    const src = await new Promise((resolve, reject) => {
+      require('https').get(GITHUB_RULES_URL, r => {
+        let d = ''; r.on('data', c => d += c); r.on('end', () => resolve(d));
+      }).on('error', reject);
+    });
+    // ולידציה — וודא שהתוכן הוא rules.js אמיתי ולא דף שגיאה
+    if (!src.includes('module.exports') || !src.includes('checkRules')) {
+      throw new Error(`תוכן לא תקין מ-GitHub (${src.length} bytes) — לא נכתב`);
+    }
+    fs.copyFileSync(rulesPath, rulesPath + '.bak');
+    fs.writeFileSync(rulesPath, src, 'utf8');
+    delete require.cache[require.resolve('../agent/rules.js')];
+    const info = getRulesInfo();
+    autoUpdateSchedule.lastRunTs = Date.now();
+    autoUpdateSchedule.lastResult = { ok: true, version: info.version, rules_count: info.rules_count };
+    db.insert({ ts: Date.now(), hook_type: 'AutoUpdate', tool_name: 'RULES_AUTO_UPDATE',
+      session_id: 'system', level: 'INFO',
+      reason: `Auto-update: rules v${info.version} (${info.rules_count} rules)`,
+      rule_type: 'auto_update', input_summary: null,
+      output_summary: `${info.rules_count} rules loaded`,
+      telegram_sent: false, created_at: new Date().toISOString(),
+      prev_hash: lastHash, event_hash: null }, () => {});
+    console.log(`[AutoUpdate] ✅ v${info.version} (${info.rules_count} rules)`);
+  } catch(e) {
+    autoUpdateSchedule.lastRunTs = Date.now();
+    autoUpdateSchedule.lastResult = { ok: false, error: e.message };
+    db.insert({ ts: Date.now(), hook_type: 'AutoUpdate', tool_name: 'RULES_AUTO_UPDATE',
+      session_id: 'system', level: 'HIGH',
+      reason: `Auto-update failed: ${e.message}`,
+      rule_type: 'auto_update', input_summary: null, output_summary: null,
+      telegram_sent: false, created_at: new Date().toISOString(),
+      prev_hash: lastHash, event_hash: null }, () => {});
+    console.error('[AutoUpdate] ❌', e.message);
+  }
+}
+
+function setAutoUpdateTimer(hours) {
+  if (autoUpdateSchedule.timer) { clearInterval(autoUpdateSchedule.timer); autoUpdateSchedule.timer = null; }
+  autoUpdateSchedule.hours = hours;
+  if (hours > 0) {
+    autoUpdateSchedule.timer = setInterval(runAutoUpdate, hours * 3600 * 1000);
+    console.log(`[AutoUpdate] Scheduled every ${hours}h`);
+  } else {
+    console.log('[AutoUpdate] Disabled');
+  }
+}
+
+// Init schedule from saved config
+setAutoUpdateTimer(loadScheduleHours());
+
+app.get('/update/schedule', (req, res) => {
+  res.json({ hours: autoUpdateSchedule.hours, last_run: autoUpdateSchedule.lastRunTs, last_result: autoUpdateSchedule.lastResult });
+});
+
+app.post('/update/schedule', (req, res) => {
+  const h = parseInt((req.body || {}).hours, 10);
+  if (isNaN(h) || h < 0) return res.status(400).json({ error: 'invalid hours' });
+  setAutoUpdateTimer(h);
+  saveScheduleHours(h);
+  res.json({ ok: true, hours: h });
 });
 
 // GET /config — return current hardening level
@@ -1283,6 +1471,8 @@ function startProcessMonitor() {
             ? `⚙️ PROC: תהליך חשוד — ${p.Name} (PID ${p.ProcessId})`
             : `⚙️ PROC: תהליך חדש — ${p.Name} (PID ${p.ProcessId})`;
 
+          let currentHardeningLevel = 1;
+          try { currentHardeningLevel = require('../config/hardening').getLevel(); } catch(_) {}
           db.insert({
             ts:            Date.now(),
             hook_type:     'ProcessMonitor',
@@ -1291,7 +1481,7 @@ function startProcessMonitor() {
             level,
             reason,
             rule_type:     'process',
-            hardening_level: 1,
+            hardening_level: currentHardeningLevel,
             input_summary: cmdLine.slice(0, 200),
             output_summary: `PID:${p.ProcessId} Parent:${p.ParentProcessId}`,
           });

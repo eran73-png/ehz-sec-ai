@@ -1,10 +1,15 @@
 'use strict';
 /**
- * EHZ-SEC-AI — Anomaly Rules Engine
- * Milestone 2+4: Signature + Context + Behavioral + Whitelist + Hardening Levels
+ * FlowGuard — Detection Rules Engine
+ * Signature + Context + Behavioral + Whitelist + Hardening Levels
  *
  * exports.checkRules(event) → { level, reason, ruleType } | null
  */
+
+const RULES_VERSION   = '1.0.0';
+const RULES_UPDATED   = '2026-04-10';
+module.exports.RULES_VERSION = RULES_VERSION;
+module.exports.RULES_UPDATED = RULES_UPDATED;
 
 const fs   = require('fs');
 const path = require('path');
@@ -433,4 +438,4 @@ function checkRules(event) {
   return null;
 }
 
-module.exports = { checkRules };
+module.exports = { checkRules, RULES_VERSION, RULES_UPDATED };
