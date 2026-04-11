@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EHZ-SEC-AI — תוכנית עבודה</title>
+<title>FlowGuard — תוכנית עבודה</title>
 <style>
   :root {
     --bg: #0a0e1a;
@@ -293,9 +293,9 @@
 
 <!-- HEADER -->
 <div class="header">
-  <div class="header-badge">EHZ Security AI</div>
-  <h1>EHZ-SEC-AI</h1>
-  <p>Claude Code Security Monitor — תוכנית עבודה ושלבי פיתוח</p>
+  <div class="header-badge">FlowGuard by EHZ-AI</div>
+  <h1>FlowGuard</h1>
+  <p>AI Security Monitor for Claude Code — תוכנית עבודה ושלבי פיתוח</p>
 </div>
 
 <!-- PROGRESS TRACKER -->
@@ -329,8 +329,8 @@
       </div>
       <div style="text-align:center;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:10px;padding:10px 16px;">
         <div style="font-size:10px;color:var(--muted2);margin-bottom:3px;">בדיקת תקינות</div>
-        <div style="font-size:12px;font-weight:700;color:var(--green);">✅ MS1–5: הושלמו</div>
-        <div style="font-size:12px;font-weight:700;color:var(--green);margin-top:2px;">✅ MS6: הושלם! 15/15 — 100%</div>
+        <div style="font-size:12px;font-weight:700;color:var(--green);">✅ MS1–7: הושלמו</div>
+        <div style="font-size:12px;font-weight:700;color:#0ea5e9;margin-top:2px;">🔄 MS8: בתהליך — 4/11</div>
       </div>
     </div>
   </div>
@@ -354,11 +354,11 @@
       <div style="font-size:10px;color:var(--muted2);">קבצים בסריקה אחרונה</div>
     </div>
     <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
-      <div style="font-size:22px;font-weight:900;color:#10b981;">6</div>
+      <div style="font-size:22px;font-weight:900;color:#10b981;">7</div>
       <div style="font-size:10px;color:var(--muted2);">Milestones הושלמו!</div>
     </div>
-    <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
-      <div style="font-size:22px;font-weight:900;color:#10b981;">09.04</div>
+    <div style="background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
+      <div style="font-size:22px;font-weight:900;color:#0ea5e9;">11.04</div>
       <div style="font-size:10px;color:var(--muted2);">עדכון אחרון</div>
     </div>
   </div>
@@ -381,25 +381,20 @@
     </div>
     <div class="ms-row" data-status="done" data-num="7" data-name="ניטור מתקדם">
     </div>
-    <div class="ms-row" data-status="pending" data-num="8" data-name="Installer Package">
+    <div class="ms-row" data-status="active" data-num="8" data-name="Installer Package">
     </div>
-    <div class="ms-row" data-status="pending" data-num="9" data-name="Domain + Kamatera">
+    <div class="ms-row" data-status="pending" data-num="9" data-name="SIEM + Network Monitor">
     </div>
-    <div class="ms-row" data-status="pending" data-num="10" data-name="Block Mode — חסימה + Popup אישור">
+    <div class="ms-row" data-status="pending" data-num="10" data-name="Gap Fix — שיפורים מהמחקר">
     </div>
-    <!-- MS10 detail -->
-    <div style="margin:0 0 8px 0; padding:12px 16px; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.25); border-radius:8px; font-size:11px; color:#94a3b8;">
-      <b style="color:#a5b4fc">MS10 — Block Mode: שני שלבים</b><br><br>
-      <b style="color:#e2e8f0">שלב א (Scope Alert — בוצע ב-MS6.0):</b><br>
-      התראת HIGH בלוג בכל גישה לקובץ/תיקייה מחוץ ל-allowed_paths — כל כוננים A-Z:<br><br>
-      <b style="color:#e2e8f0">שלב ב (Popup Client — תכנון):</b><br>
-      Hook מזהה גישה מחוץ לפרויקט → פותח חלון Popup (PowerShell MessageBox)<br>
-      ממתין לתשובה → <code style="color:#86efac">approve</code> = continue:true | <code style="color:#fca5a5">deny</code> = continue:false<br>
-      דורש שינוי hook.js לתמוך ב-continue:false (חסימה אמיתית)
+    <div class="ms-row" data-status="pending" data-num="11" data-name="English Alert Strings">
     </div>
-    <div class="ms-row" data-status="pending" data-num="11" data-name="SIEM + Network">
+    <div style="margin:4px 0 8px 0;padding:8px 14px;background:rgba(100,116,139,0.08);border:1px solid rgba(100,116,139,0.2);border-radius:8px;font-size:11px;color:#64748b;">
+      <b style="color:#94a3b8;">MS14–15 — עתידי (לאחר פידבק שוק)</b> &nbsp;·&nbsp; Domain/AD &nbsp;·&nbsp; Block Mode
     </div>
-    <div class="ms-row" data-status="pending" data-num="12" data-name="שיפורים מהמחקר — Gap Fix">
+    <div class="ms-row" data-status="pending" data-num="14" data-name="Domain + AD + PostgreSQL">
+    </div>
+    <div class="ms-row" data-status="pending" data-num="15" data-name="Block Mode — חסימה אקטיבית">
     </div>
 
   </div>
@@ -1032,7 +1027,7 @@
         ✅ כפתור "שלח בדיקה" — מאמת שהחיבור עובד<br>
         ✅ הגדרות נשמרות ב-<code>notifications.json</code><br><br>
         <b>דוגמה:</b><br>
-        לקוח בחברה שמשתמש ב-Office 365 מגדיר smtp-mail.outlook.com:587 ומקבל מייל בנושא "[EHZ-SEC-AI] CRITICAL — git push --force detected"
+        לקוח בחברה שמשתמש ב-Office 365 מגדיר smtp-mail.outlook.com:587 ומקבל מייל בנושא "[FlowGuard] CRITICAL — git push --force detected"
       </div>
       <div class="task-tags"><span class="tag">email</span><span class="tag">smtp</span><span class="tag">nodemailer</span><span class="tag">done</span></div>
     </div>
@@ -1062,44 +1057,51 @@
   <div class="phase-header">
     <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#f59e0b,#ef4444);">🎬</div>
     <div class="phase-info">
-      <h3>סרטון שיווקי — EHZ-SEC-AI Promo</h3>
-      <p>מצגת + סרטון 60-90 שניות המציג את יכולות המוצר — לשיתוף ב-LinkedIn / YouTube / לקוחות</p>
+      <h3>Marketing Video — FlowGuard Promo</h3>
+      <p>90-second video in 2 formats (portrait + landscape) — English, narration, music. 10 slides.</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:0%;background:#f59e0b;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">0/4 ⏳ עתידי</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:60%;background:#f59e0b;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:#f59e0b;font-weight:700;white-space:nowrap;">🟡 In Progress — V1 done</span>
       </div>
     </div>
-    <div class="phase-status status-future">עתידי</div>
+    <div class="phase-status" style="background:rgba(245,158,11,0.15);color:#f59e0b;border-color:rgba(245,158,11,0.3);">In Progress</div>
   </div>
   <div class="tasks-grid">
-    <div class="task-cell">
-      <div class="task-num">V.1</div>
-      <div class="task-title">HTML Slides — 10 שקופיות</div>
-      <div class="task-desc">עיצוב כהה כמו הדשבורד. 1280×720 (16:9). תוכן: פתיח → הבעיה → הפתרון → Dashboard Demo → Secrets Detection → FSWatcher → Process Monitor → Session Recording → Telegram Alerts → CTA (EHZ-AI · 054-4825276).</div>
-      <div class="task-tags"><span class="tag">HTML</span><span class="tag">design</span></div>
+    <div class="task-cell" style="border-left:3px solid #10b981;">
+      <div class="task-num" style="color:#10b981;">V.1 ✅</div>
+      <div class="task-title">✅ 10 HTML Slides — Built & Rendered</div>
+      <div class="task-desc">10 slides built: Opener, Problem, Solution, 6 Engines, Hook, Skills Scanner, Dashboard, Telegram, Hardening Levels, CTA. Portrait 720×1280. FFmpeg video compiled — 90s, 2.1MB. Narration script written. Done: April 2026.</div>
+      <div class="task-tags"><span class="tag">HTML</span><span class="tag">FFmpeg</span><span class="tag">done</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">V.2</div>
-      <div class="task-title">Screenshots → FFmpeg Video</div>
-      <div class="task-desc">Edge headless screenshots לכל שקופית → FFmpeg עם fade transitions → 60-90 שניות. מוזיקת רקע קלה. פורמט MP4 מוכן לשיתוף.</div>
-      <div class="task-tags"><span class="tag">FFmpeg</span><span class="tag">video</span></div>
+    <div class="task-cell" style="border-left:3px solid #f59e0b;">
+      <div class="task-num" style="color:#f59e0b;">V.2</div>
+      <div class="task-title">Slide Polish — Larger Fonts + Visual Effects</div>
+      <div class="task-desc">
+        שיפורים שנדרשו לאחר צפייה ב-V1:<br>
+        ✦ הגדלת פונטים בכל השקופיות — כותרות וטקסט קטן<br>
+        ✦ הוספת אפקטים ויזואליים — glow, pulse, animated scan lines<br>
+        ✦ שיפור contrast וקריאות על מסך קטן<br>
+        ✦ Fade transitions בין שקופיות ב-FFmpeg<br>
+        ✦ בניית גרסת landscape 1280×720 מותאמת
+      </div>
+      <div class="task-tags"><span class="tag">design</span><span class="tag">effects</span><span class="tag">fonts</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">V.3</div>
-      <div class="task-title">נרטיב + כתוביות</div>
-      <div class="task-desc">טקסט נרטיב לכל שקופית — מה המוצר עושה, למה זה חשוב, מה המשתמש מרוויח. אפשרות: הוספת קריינות בעברית.</div>
-      <div class="task-tags"><span class="tag">narration</span><span class="tag">hebrew</span></div>
+      <div class="task-title">Narration Recording + Mix</div>
+      <div class="task-desc">הקלטת קריינות לפי narration-script.txt → שמור כ-narration.mp3 → מיקס עם מוזיקה + ducking. קובץ: C:/Claude-Repo/agents/FlowGuard/marketing/narration.mp3</div>
+      <div class="task-tags"><span class="tag">narration</span><span class="tag">audio</span><span class="tag">mix</span></div>
     </div>
     <div class="task-cell">
       <div class="task-num">V.4</div>
-      <div class="task-title">הפצה</div>
-      <div class="task-desc">LinkedIn post · שליחה ללקוחות פוטנציאליים · העלאה ל-YouTube · הטמעה בדף נחיתה עתידי של EHZ-AI.</div>
+      <div class="task-title">Distribution</div>
+      <div class="task-desc">LinkedIn post · WhatsApp שיתוף ללקוחות · YouTube upload · embed in landing page.</div>
       <div class="task-tags"><span class="tag">LinkedIn</span><span class="tag">YouTube</span><span class="tag">marketing</span></div>
     </div>
   </div>
   <div style="background:rgba(245,158,11,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
-    <span style="color:#f59e0b;font-weight:700;">📋 תנאי פתיחה:</span>
-    <span style="color:var(--muted2);"> לאחר השלמת MS7 — כל היכולות מתועדות ומוסברות בתכנית העבודה</span>
+    <span style="color:#f59e0b;font-weight:700;">📁 Files:</span>
+    <span style="color:var(--muted2);"> C:/Claude-Repo/agents/FlowGuard/marketing/ — slides/, out/, narration-script.txt</span>
   </div>
 </div><!-- /PHASE MARKETING -->
 
@@ -1111,26 +1113,21 @@
       <h3>Dashboard — English UI (תרגום מלא לאנגלית)</h3>
       <p>כל הטאבים, הכפתורים, ההסברים וההתראות — באנגלית מלאה</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:0%;background:#6366f1;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">⏳ עתידי</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:100%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:#10b981;font-weight:700;white-space:nowrap;">✅ Done</span>
       </div>
     </div>
   </div>
 
   <div style="padding:0 20px 20px;">
-    <div class="task-row" style="border-left:3px solid #6366f1;">
-      <div class="task-num" style="color:#818cf8">UI-EN</div>
-      <div class="task-title">English UI — תרגום מלא</div>
+    <div class="task-row" style="border-left:3px solid #10b981;opacity:0.7;">
+      <div class="task-num" style="color:#10b981">UI-EN</div>
+      <div class="task-title">✅ English UI — Full translation complete</div>
       <div class="task-desc">
-        <b>מה צריך לתרגם:</b><br>
-        ✦ כל שמות הטאבים: Events, Skills, File Audit, Projects, Web Access, Settings<br>
-        ✦ כל הכפתורים, labels, ו-placeholders<br>
-        ✦ כל תיבות ההסבר וה-tooltips<br>
-        ✦ הודעות סטטוס (נשמר, שגיאה, מחיקה וכו')<br>
-        ✦ כותרות סקשנים בתוך Settings<br>
-        ✦ טקסטים בתוך Events, Sessions, Audit tabs<br><br>
-        <b>למה חשוב:</b><br>
-        המוצר מיועד גם ללקוחות בינלאומיים ולהצגה שיווקית. ממשק באנגלית מקצועי יותר ומאפשר שיתוף בקלות.
+        All tabs, buttons, labels, tooltips, status messages, and section headers translated to English.<br>
+        Also added: LTR direction on all views, File Audit table, Settings panel, tabs bar.<br>
+        Added BROWSE button to File Audit scan path input.<br>
+        <span style="color:var(--muted);font-size:11px;">Completed: April 2026</span>
       </div>
       <div class="task-tags"><span class="tag">i18n</span><span class="tag">UI</span><span class="tag">dashboard</span><span class="tag">english</span></div>
     </div>
@@ -1145,13 +1142,13 @@
       <h3>שלב 8 — חבילת התקנה (Standalone Installer)</h3>
       <p>MSI / ZIP / CLI installer — פריסה על מחשב בודד בלחיצה אחת</p>
     </div>
-    <div class="phase-status status-future">סיום שלב א</div>
+    <div class="phase-status status-next">🔄 בתהליך — 4/11</div>
   </div>
   <div class="tasks-grid">
-    <div class="task-cell">
-      <div class="task-num">8.1</div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.1 ✅</div>
       <div class="task-title">Build Script</div>
-      <div class="task-desc">npm run build — אורז את כל הרכיבים לתיקייה אחת: agent + collector + dashboard + rules.</div>
+      <div class="task-desc">npm run build — build.ps1 יוצר dist/flowguard-v1.0.0/ + .zip (8.86MB). בוצע: 10.04.2026</div>
       <div class="task-tags"><span class="tag">build</span><span class="tag">npm</span></div>
     </div>
     <div class="task-cell">
@@ -1160,34 +1157,47 @@
       <div class="task-desc">חבילת Windows — מתקין Node.js אם חסר, מוריד dependencies, מגדיר hooks, יוצר shortcuts.</div>
       <div class="task-tags"><span class="tag">MSI</span><span class="tag">Windows</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">8.3</div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.3 ✅</div>
       <div class="task-title">install.ps1 — Silent</div>
-      <div class="task-desc">סקריפט PowerShell לפריסה שקטה ללא GUI. מתאים ל-GPO / RMM. פרמטר -CollectorURL לשרת מרכזי.</div>
+      <div class="task-desc">סקריפט PowerShell לפריסה שקטה. פרמטרים: -Silent -TelegramToken -TelegramChatId. מתאים ל-GPO / RMM. בוצע: 10.04.2026</div>
       <div class="task-tags"><span class="tag">PowerShell</span><span class="tag">silent</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">8.4</div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.4 ✅</div>
       <div class="task-title">Config Wizard</div>
-      <div class="task-desc">אשף הגדרות ראשוני: Telegram token, project folder, hardening level, API keys.</div>
+      <div class="task-desc">אשף הגדרות ראשוני: Telegram token + Chat ID + Hardening Level (0-3). קורא ערכים קיימים מ-.env. בוצע: 10.04.2026</div>
       <div class="task-tags"><span class="tag">wizard</span><span class="tag">UI</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num">8.5</div>
-      <div class="task-title">Auto-Update</div>
-      <div class="task-desc">בדיקת גרסה חדשה בהפעלה. עדכון rules אוטומטי. לא משנה hooks ללא אישור.</div>
-      <div class="task-tags"><span class="tag">update</span></div>
+      <div class="task-num" style="color:var(--green);">8.5 ✅</div>
+      <div class="task-title">Rules Update — Detection Signatures</div>
+      <div class="task-desc">
+        כפתור <b>UPDATE</b> בטאב Settings בדשבורד — עדכון ידני של חוקי זיהוי מ-GitHub.<br><br>
+        <b>מה מתעדכן עכשיו (MVP):</b><br>
+        • <code>rules.js</code> — 69 חוקי זיהוי (signatures). מוריד מ-GitHub Raw, מחליף קובץ מקומי, ללא restart.<br><br>
+        <b>מה יתעדכן בעתיד:</b><br>
+        • YARA rules — חתימות malware<br>
+        • <code>whitelist.json</code> — patterns מורשים<br><br>
+        <b>איך עובד:</b> Dashboard → Settings → Check for Updates → Apply Update → rules.js מוחלף תוך שניות. Hook טוען אוטומטית בקריאה הבאה.<br><br>
+        <b>תזמון אוטומטי (11.04.2026):</b><br>
+        • Dropdown: Off / 4h / 8h / 12h / 24h — setInterval אמיתי ב-collector<br>
+        • כל עדכון (ידני/אוטומטי) נרשם ל-DB ומופיע בטאב Events<br>
+        • Toast notification בדשבורד כשמבוצע auto-update<br>
+        • Telegram alert אם עדכון נכשל (level HIGH)
+      </div>
+      <div class="task-tags"><span class="tag">update</span><span class="tag">signatures</span><span class="tag">GitHub</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">8.6</div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.6 ✅</div>
       <div class="task-title">Uninstaller</div>
-      <div class="task-desc">הסרה נקייה: מוחק hooks מsettings.json, עצירת שירותים, אופציה לשמירת logs.</div>
+      <div class="task-desc">הסרה נקייה: עצירת Collector+Tray, מחיקת Task Scheduler, הסרת hooks מ-settings.json, מחיקת DB/logs (אופציונלי). קובץ: install/uninstall.ps1. בוצע: 11.04.2026</div>
       <div class="task-tags"><span class="tag">uninstall</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">8.7</div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.7 ✅</div>
       <div class="task-title">🛡 System Tray Icon</div>
-      <div class="task-desc">אייקון בשורת המשימות — סטטוס צבעוני, לחיצה ימנית לתפריט מהיר. בנוי עם node-systray.</div>
+      <div class="task-desc">אייקון FlowGuard (F ציאן על רקע כחול) בשורת המשימות. תפריט: Open Dashboard / סטטוס / Exit. עדכון כל 15 שניות. systray2 + ICO file. תיקון: ICO file במקום base64 PNG (Windows 11). בוצע: 11.04.2026</div>
       <div class="task-tags"><span class="tag">systray</span><span class="tag">GUI</span></div>
     </div>
     <div class="task-cell" style="border-top:2px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.04);">
@@ -1195,6 +1205,34 @@
       <div class="task-title" style="color:var(--red);">⏸ DISABLE / ENABLE Agent</div>
       <div class="task-desc">כיבוי מיידי. 4 שיטות: System Tray, Dashboard toggle, Telegram, קובץ .ccsm-disable.</div>
       <div class="task-tags"><span class="tag">disable</span><span class="tag">emergency</span></div>
+    </div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.9 ✅</div>
+      <div class="task-title">Windows Auto-Start (Task Scheduler)</div>
+      <div class="task-desc">FlowGuard-Collector + FlowGuard-Tray נרשמים כ-Scheduled Tasks (AtLogOn). Tray מתחיל 5 שניות אחרי Collector. RestartCount=3. קובץ: install/autostart.ps1. Auto-UAC elevation. בוצע: 11.04.2026</div>
+      <div class="task-tags"><span class="tag">installer</span><span class="tag">windows</span><span class="tag">autostart</span></div>
+    </div>
+    <div class="task-cell" style="border-top:2px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.04);">
+      <div class="task-num" style="color:#818cf8;">8.10</div>
+      <div class="task-title">Git Remotes — Configurable (not hardcoded)</div>
+      <div class="task-desc">כרגע שרתים מורשים ל-git push מוגדרים hardcoded ב-rules.js עם שרתים אישיים (Kamatera, Google Cloud, Oracle). יש להעביר לקובץ config שהmשתמש מגדיר בזמן התקנה. הConfig Wizard (8.4) ישאל: "אילו שרתי git מורשים?" ויכתוב ל-whitelist.json.</div>
+      <div class="task-tags"><span class="tag">installer</span><span class="tag">config</span><span class="tag">git</span></div>
+    </div>
+    <div class="task-cell" style="border-top:2px solid rgba(167,139,250,0.3);background:rgba(167,139,250,0.04);">
+      <div class="task-num" style="color:#a78bfa;">8.11</div>
+      <div class="task-title">🏷️ שינוי שם מלא — EHZ-SEC-AI → FlowGuard</div>
+      <div class="task-desc">
+        שינוי שם הפרויקט בכל הקוד, תיקיות, ו-Git. כרגע השם שונה רק בדפי UI ושיווק.<br><br>
+        <strong>מה צריך לשנות:</strong><br>
+        • תיקייה: <code>agents/EHZ-SEC-AI/</code> → <code>agents/flowguard/</code><br>
+        • GitHub repo: <code>eran73-png/ehz-sec-ai</code> → <code>eran73-png/flowguard</code><br>
+        • קבצי קוד: hook.js, rules.js, server.js, hardening.js, skill-scanner.js, file-audit-scanner.js, domain-reputation.js<br>
+        • מסמכים: README.md, gap-analysis.html, security-research.html, dashboard-demo.html<br>
+        • נתונים: whitelist.json, schema.sql<br>
+        • CLAUDE.md + memory files<br><br>
+        <strong>סה"כ:</strong> ~17 קבצי קוד + שינוי תיקייה + rename repo ב-GitHub.
+      </div>
+      <div class="task-tags"><span class="tag">branding</span><span class="tag">rename</span><span class="tag">git</span></div>
     </div>
   </div>
 
@@ -1281,7 +1319,7 @@
       <div style="background:#0f1623;padding:10px 14px;border-bottom:1px solid #2d3748;">
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);"></div>
-          <span style="font-weight:800;color:var(--text);">EHZ-SEC-AI</span>
+          <span style="font-weight:800;color:var(--text);">FlowGuard</span>
         </div>
         <div style="font-size:10px;color:var(--muted2);margin-top:3px;">PC-ERAN-01 · Agent פעיל</div>
       </div>
@@ -1400,7 +1438,7 @@
     <div style="background:#1f2937;border:1px solid #374151;border-radius:12px;padding:14px 16px;min-width:280px;max-width:320px;">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
         <div style="width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;font-size:11px;">🛡</div>
-        <span style="font-size:11px;font-weight:700;color:var(--text);">EHZ-SEC-AI</span>
+        <span style="font-size:11px;font-weight:700;color:var(--text);">FlowGuard</span>
         <span style="margin-right:auto;font-size:10px;color:var(--muted2);">עכשיו</span>
       </div>
       <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:4px;">🚨 CRITICAL ALERT</div>
@@ -1569,12 +1607,12 @@
   💡 מצב SILENT — שימושי בזמן פיתוח: Agent רץ ומתעד הכל, אבל לא שולח Telegram. מופעל ב: <span style="font-family:monospace;">/ccsm silent</span>
 </div>
 
-<!-- PHASE 9 (was 8) — Domain -->
+<!-- PHASE 14 — Domain -->
 <div class="phase-block" style="margin-bottom:12px;">
   <div class="phase-header">
-    <div class="phase-num b" style="font-size:13px;width:48px;height:48px;">9</div>
+    <div class="phase-num b" style="font-size:13px;width:48px;height:48px;">14</div>
     <div class="phase-info">
-      <h3>שלב 9 — Domain + Kamatera</h3>
+      <h3>שלב 14 — Domain + AD + PostgreSQL</h3>
       <p>PostgreSQL, AD Auth, RBAC, GPO, Multi-machine Dashboard</p>
     </div>
     <div class="phase-status status-future">שלב ב</div>
@@ -1611,12 +1649,12 @@
   </div>
 </div>
 
-<!-- PHASE 10 — Block Mode -->
+<!-- PHASE 15 — Block Mode -->
 <div class="phase-block" style="margin-bottom:12px;">
   <div class="phase-header">
-    <div class="phase-num c" style="font-size:13px;width:48px;height:48px;">10</div>
+    <div class="phase-num c" style="font-size:13px;width:48px;height:48px;">15</div>
     <div class="phase-info">
-      <h3>שלב 10 — Block Mode — חסימה + Popup אישור (Phase 2)</h3>
+      <h3>שלב 15 — Block Mode — חסימה אקטיבית (Phase 2)</h3>
       <p>מעבר מניטור לחסימה אקטיבית — exit(1) עצור Claude</p>
     </div>
     <div class="phase-status status-future">שלב ג</div>
@@ -1641,54 +1679,121 @@
   </div>
 </div>
 
-<!-- PHASE 11 — SIEM -->
+<!-- PHASE 9 — SIEM -->
 <div class="phase-block" style="margin-bottom:24px;">
   <div class="phase-header">
-    <div class="phase-num d" style="font-size:13px;width:48px;height:48px;">11</div>
+    <div class="phase-num d" style="font-size:13px;width:48px;height:48px;">9</div>
     <div class="phase-info">
-      <h3>שלב 11 — SIEM + Network Monitor</h3>
+      <h3>שלב 9 — SIEM + Network Monitor</h3>
       <p>אינטגרציה עם Splunk/Sentinel, ניטור traffic, Network DLP</p>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;">עתידי</span>
+        <span style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--yellow);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;">📡 9.0 Demo Tab — מתוכנן</span>
+      </div>
     </div>
     <div class="phase-status status-future">שלב ד</div>
   </div>
+
+  <!-- 11.0 — SIEM DEMO TAB (first priority) -->
+  <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;margin:16px 20px;padding:16px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+      <div style="background:rgba(245,158,11,0.2);color:var(--yellow);font-size:11px;font-weight:900;padding:3px 8px;border-radius:4px;">11.0</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text);">📡 SIEM Demo Tab — תצוגת דמו בדשבורד</div>
+      <div style="margin-left:auto;background:rgba(245,158,11,0.15);color:var(--yellow);font-size:10px;font-weight:700;padding:2px 10px;border-radius:4px;">⏳ מתוכנן</div>
+    </div>
+    <div style="font-size:12px;color:var(--muted2);line-height:1.7;">
+      <strong style="color:var(--text);">מה זה עושה:</strong> טאב SIEM בדשבורד — תצוגה ויזואלית מלאה ללא חיבור אמיתי. מציג את יכולות האינטגרציה העתידיות למטרות Demo &amp; Sales.<br><br>
+      <strong style="color:var(--text);">מה המשתמש רואה:</strong>
+      <ul style="margin:6px 0 0 16px;">
+        <li>פאנל חיבור לכלי SIEM — Splunk / Microsoft Sentinel / QRadar / Elastic (סטטוס: Not configured)</li>
+        <li>טבלת events אחרונים שנשלחו ל-SIEM (נתונים מדומים — Demo Mode)</li>
+        <li>כפתורי Test Connection + Configure לכל כלי</li>
+        <li>Syslog format preview — RFC 5424</li>
+        <li>סטטיסטיקות: Events/hour, Total forwarded, Errors</li>
+        <li>באנר בולט "COMING SOON — MS9" על הטאב</li>
+      </ul>
+      <br>
+      <strong style="color:var(--text);">מטרה:</strong> להראות ללקוחות פוטנציאליים שהמוצר מתוכנן לאינטגרציה עם SIEM ארגוני — ומושך לקוחות Enterprise עוד לפני שהפיצ'ר מוכן.
+    </div>
+  </div>
+
   <div class="tasks-grid">
     <div class="task-cell">
-      <div class="task-num">10.1</div>
+      <div class="task-num">11.1</div>
       <div class="task-title">Syslog Connector</div>
-      <div class="task-desc">שליחת events בפורמט RFC 5424 לכל SIEM. UDP/TCP.</div>
+      <div class="task-desc">שליחת events בפורמט RFC 5424 לכל SIEM. UDP/TCP. מיפוי severity לPriority.</div>
       <div class="task-tags"><span class="tag">Syslog</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num">10.2</div>
+      <div class="task-num">11.2</div>
       <div class="task-title">Sentinel / Splunk</div>
-      <div class="task-desc">KQL queries לSentinel. Splunk dashboard templates מוכנים.</div>
+      <div class="task-desc">KQL queries לSentinel. Splunk dashboard templates מוכנים. REST API connector.</div>
       <div class="task-tags"><span class="tag">SIEM</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num">10.3</div>
+      <div class="task-num">11.3</div>
       <div class="task-title">Network Monitor</div>
-      <div class="task-desc">ניתוח traffic של Claude — לאיזה IP, כמה bytes, data exfiltration.</div>
+      <div class="task-desc">ניתוח traffic של Claude — לאיזה IP, כמה bytes, זיהוי data exfiltration.</div>
       <div class="task-tags"><span class="tag">network</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num">10.4</div>
+      <div class="task-num">11.4</div>
       <div class="task-title">Prompt Injection — API</div>
       <div class="task-desc">ניתוח תשובות API חיצוניות — האם מכילות הוראות זדוניות לClaude.</div>
       <div class="task-tags"><span class="tag">injection</span></div>
     </div>
   </div>
   <div style="background:rgba(16,185,129,0.07);border-top:1px solid var(--border);padding:12px 20px;font-size:12px;">
-    <span style="color:var(--green);font-weight:700;">✅ בדיקת קבלה:</span>
-    <span style="color:var(--muted2);"> ראה events ב-Sentinel → ודא Syslog מגיע → Network monitor מזהה WebFetch</span>
+    <span style="color:var(--yellow);font-weight:700;">⏳ סדר עבודה:</span>
+    <span style="color:var(--muted2);"> ראשון — 11.0 Demo Tab (ויזואלי בלבד) → אחר כך 11.1 Syslog → 11.2 Sentinel/Splunk → 11.3 Network</span>
   </div>
 </div>
 
-<!-- PHASE 12 — GAP FIX -->
+<!-- PHASE 11 — ENGLISH ALERTS -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
+  <div class="phase-header" style="background:rgba(16,185,129,0.05);">
+    <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#0ea5e9);">11</div>
+    <div class="phase-info">
+      <h3>MS11 — English Alert Strings (Pre-Deploy Polish)</h3>
+      <p>תרגום כל הודעות alert מעברית לאנגלית — rules.js, hook.js, server.js</p>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:0%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">⏳ Pre-Deploy</span>
+      </div>
+    </div>
+  </div>
+  <div style="padding:0 20px 20px;">
+    <div class="task-row" style="border-left:3px solid #10b981;">
+      <div class="task-num" style="color:#10b981;">13.1</div>
+      <div class="task-title">rules.js — Translate reason strings</div>
+      <div class="task-desc">
+        כל שדות <code>reason</code> ב-SIGNATURE_RULES, SECRETS_RULES, context rules, scope rules, git rules — מעברית לאנגלית.<br>
+        דוגמאות לתרגום:<br>
+        ✦ <code>"WebFetch לדומיין לא מורשה"</code> → <code>"WebFetch to unauthorized domain"</code><br>
+        ✦ <code>"כרטיס אשראי Visa"</code> → <code>"Credit card number (Visa)"</code><br>
+        ✦ <code>"מספר פלאפון ישראלי"</code> → <code>"Israeli phone number (PII)"</code><br>
+        ✦ <code>"גישה מחוץ לפרויקט"</code> → <code>"File access outside project scope"</code>
+      </div>
+      <div class="task-tags"><span class="tag">i18n</span><span class="tag">rules</span><span class="tag">alerts</span></div>
+    </div>
+    <div class="task-row" style="border-left:3px solid #0ea5e9;margin-top:10px;">
+      <div class="task-num" style="color:#0ea5e9;">13.2</div>
+      <div class="task-title">server.js + hook.js — Translate log & alert strings</div>
+      <div class="task-desc">
+        הודעות Telegram, log entries, ו-skill alerts שנשלחים מ-server.js ו-hook.js — מעברית לאנגלית.<br>
+        כולל: הודעת startup, דוח יומי, skill changed, FSWatcher alerts.
+      </div>
+      <div class="task-tags"><span class="tag">i18n</span><span class="tag">telegram</span><span class="tag">server</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 10 — GAP FIX -->
 <div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(188,140,255,0.3);">
   <div class="phase-header" style="background:rgba(188,140,255,0.05);">
-    <div class="phase-num d" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);">12</div>
+    <div class="phase-num d" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);">10</div>
     <div class="phase-info">
-      <h3>שלב 12 — שיפורים מהמחקר (Gap Fix)</h3>
+      <h3>שלב 10 — שיפורים מהמחקר (Gap Fix)</h3>
       <p>תיקונים וכיסויים שעלו מ-Gap Analysis — מ-82% ל-95%+ כיסוי OWASP</p>
     </div>
     <div class="phase-status" style="background:rgba(188,140,255,0.12);color:#a78bfa;border:1px solid rgba(188,140,255,0.3);">📊 מחקר</div>
@@ -1718,7 +1823,7 @@
       <div class="task-num" style="color:var(--red);">12.2 🔴</div>
       <div class="task-title">ConfigChange Hook</div>
       <div class="task-desc">
-        ללא זה — מישהו יכול לערוך <code style="color:#7dd3fc;">settings.json</code> ולכבות את EHZ-SEC-AI בשקט.
+        ללא זה — מישהו יכול לערוך <code style="color:#7dd3fc;">settings.json</code> ולכבות את FlowGuard בשקט.
         הוסף Hook מסוג <code style="color:#7dd3fc;">ConfigChange</code> (Anthropic מספקים זאת רשמית) שמשלח התראה מיידית:<br>
         <code style="color:#86efac;font-size:10px;">"ConfigChange" → Telegram: ⚠️ הגדרות Claude שונו!</code>
       </div>
@@ -1766,8 +1871,8 @@
       <div class="task-num" style="color:var(--yellow);">12.6 🟡</div>
       <div class="task-title">OpenTelemetry Export — Enterprise</div>
       <div class="task-desc">
-        ארגונים עם Prometheus/Grafana/Datadog לא יכולים לשלב EHZ-SEC-AI ללא OTel.
-        הוסף ל-Collector export של events בפורמט OTel סטנדרטי — כך EHZ-SEC-AI
+        ארגונים עם Prometheus/Grafana/Datadog לא יכולים לשלב FlowGuard ללא OTel.
+        הוסף ל-Collector export של events בפורמט OTel סטנדרטי — כך FlowGuard
         מדבר עם תשתית ניטור קיימת ולא מחליף אותה. רלוונטי לשלב ב' (Domain).
       </div>
       <div class="task-tags"><span class="tag">OTel</span><span class="tag">Enterprise</span><span class="tag">Milestone 9+</span></div>
@@ -2884,7 +2989,7 @@
   "hardening_level": 2,
   "project_roots": [
     "C:/Claude-Repo/local-apps/next-stop-flights/",
-    "C:/Claude-Repo/agents/EHZ-SEC-AI/"
+    "C:/Claude-Repo/agents/FlowGuard/"
   ],
   "allowed_read_outside": [
     "C:/Users/Eran/.claude/",
@@ -3027,8 +3132,8 @@ Claude מנסה לכתוב מחוץ לפרויקט
       "allowed_urls": ["ehz-server.duckdns.org", "vercel.com"]
     },
     {
-      "name": "EHZ-SEC-AI",
-      "root": "C:/Claude-Repo/agents/EHZ-SEC-AI/",
+      "name": "FlowGuard",
+      "root": "C:/Claude-Repo/agents/FlowGuard/",
       "hardening": 1,
       "allowed_urls": ["github.com", "npmjs.com"]
     },
@@ -3602,7 +3707,7 @@ Claude מבצע tool call
   <div class="hw-card-title">הקמה ראשונית — Claude מבצע לפני Milestone 1</div>
   <pre style="font-size:12px; color:var(--muted); line-height:2; font-family:monospace; margin-top:10px; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px;">
   # 1. init בתיקיית הפרויקט
-  cd C:/Claude-Repo/agents/EHZ-SEC-AI
+  cd C:/Claude-Repo/agents/FlowGuard
   git init
 
   # 2. הגדרת remotes — GitHub + Oracle (גיבוי כפול)
@@ -3633,7 +3738,7 @@ Claude מבצע tool call
 <div class="hw-card" style="margin-bottom:16px;">
   <div class="hw-card-title">README.md — תוכן</div>
   <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:14px;font-size:12px;font-family:monospace;color:var(--muted2);line-height:1.9;margin-top:10px;">
-    <div style="color:var(--accent);font-size:16px;font-weight:800;"># EHZ-SEC-AI 🛡</div>
+    <div style="color:var(--accent);font-size:16px;font-weight:800;"># FlowGuard 🛡</div>
     <div style="color:var(--muted2);">Claude Code Security Monitor</div>
     <div style="margin-top:8px;color:var(--text);">## מה זה?</div>
     <div>מערכת ניטור ואבטחה לפעילות Claude Code.</div>
@@ -3771,7 +3876,7 @@ Claude מבצע tool call
   $KEY   = "C:/Claude-Repo/oracle/keys/ssh-key-2026-03-14 (1).key"
   $DEST  = "opc@ehz-server.duckdns.org"
   $DATE  = Get-Date -Format "yyyyMMdd"
-  $SRC   = "C:/Claude-Repo/agents/EHZ-SEC-AI"
+  $SRC   = "C:/Claude-Repo/agents/FlowGuard"
   $REMOTE = "/home/opc/backups/ehz-sec-ai/$DATE"
 
   # יצירת תיקיית יעד
