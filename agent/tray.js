@@ -94,27 +94,19 @@ function truncate(str, n) {
 // 5  : separator
 // 6  : Stats line (disabled)
 // 7  : separator
-// 8  : Recent event 1 (disabled)
-// 9  : Recent event 2 (disabled)
-// 10 : Recent event 3 (disabled)
-// 11 : separator
-// 12 : Exit FlowGuard
+// 8  : Exit FlowGuard
 
-function buildInitMenu(stats, recentEvs, agentDisabled, silentOn) {
+function buildInitMenu(stats, agentDisabled, silentOn) {
   return [
-    /* 0  */ { title: `FlowGuard | PC: ${PC_NAME}`, tooltip: 'FlowGuard AI Security Monitor', checked: false, enabled: false },
-    /* 1  */ { title: 'Open Dashboard', tooltip: 'Open FlowGuard dashboard in browser', checked: false, enabled: true },
-    /* 2  */ sep(),
-    /* 3  */ agentItem(agentDisabled),
-    /* 4  */ silentItem(silentOn),
-    /* 5  */ sep(),
-    /* 6  */ statsItem(stats),
-    /* 7  */ sep(),
-    /* 8  */ recentItem(recentEvs, 0),
-    /* 9  */ recentItem(recentEvs, 1),
-    /* 10 */ recentItem(recentEvs, 2),
-    /* 11 */ sep(),
-    /* 12 */ { title: 'Exit FlowGuard', tooltip: 'Stop tray and exit', checked: false, enabled: true },
+    /* 0 */ { title: `FlowGuard | PC: ${PC_NAME}`, tooltip: 'FlowGuard AI Security Monitor', checked: false, enabled: false },
+    /* 1 */ { title: 'Open Dashboard', tooltip: 'Open FlowGuard dashboard in browser', checked: false, enabled: true },
+    /* 2 */ sep(),
+    /* 3 */ agentItem(agentDisabled),
+    /* 4 */ silentItem(silentOn),
+    /* 5 */ sep(),
+    /* 6 */ statsItem(stats),
+    /* 7 */ sep(),
+    /* 8 */ { title: 'Exit FlowGuard', tooltip: 'Stop tray and exit', checked: false, enabled: true },
   ];
 }
 
@@ -157,11 +149,11 @@ function recentItem(evs, idx) {
 // ── Fetch all data needed for menu ───────────────────────────────────────────
 
 function fetchAll(cb) {
-  let stats = null, recent = [], silentOn = false, done = 0;
+  let stats = null, silentOn = false, done = 0;
 
   function finish() {
     done++;
-    if (done === 3) cb({ stats, recent, silentOn });
+    if (done === 2) cb({ stats, silentOn });
   }
 
   // Stats + config
@@ -184,12 +176,6 @@ function fetchAll(cb) {
     }
   });
 
-  // Recent events
-  apiGet('/recent?n=3', (err, evs) => {
-    recent = err ? [] : (Array.isArray(evs) ? evs : []);
-    finish();
-  });
-
   // Silent mode
   apiGet('/silent', (err, s) => {
     silentOn = (!err && s) ? !!s.silent : false;
@@ -201,7 +187,7 @@ function fetchAll(cb) {
 
 console.log('[FlowGuard Tray] Starting...');
 
-fetchAll(({ stats, recent, silentOn }) => {
+fetchAll(({ stats, silentOn }) => {
   const agentDisabled = isAgentDisabled();
 
   const tooltip = stats && stats.ok
@@ -213,7 +199,7 @@ fetchAll(({ stats, recent, silentOn }) => {
       icon:    ICON_PATH,
       title:   '',
       tooltip: tooltip,
-      items:   buildInitMenu(stats, recent, agentDisabled, silentOn),
+      items:   buildInitMenu(stats, agentDisabled, silentOn),
     },
     debug:   false,
     copyDir: true,
@@ -251,7 +237,7 @@ fetchAll(({ stats, recent, silentOn }) => {
         tray.sendAction({ type: 'update-item', seq_id: 4, item: silentItem(nowSilent) });
       });
 
-    } else if (id === 12) {
+    } else if (id === 8) {
       // Exit
       console.log('[FlowGuard Tray] Exiting...');
       tray.kill();
@@ -261,20 +247,14 @@ fetchAll(({ stats, recent, silentOn }) => {
 
   // ── Periodic refresh ──────────────────────────────────────────────────────
   setInterval(() => {
-    fetchAll(({ stats: s, recent: evs, silentOn: silent }) => {
+    fetchAll(({ stats: s, silentOn: silent }) => {
       tray._lastStats = s;
       const disabled = isAgentDisabled();
 
-      // Update stats
       tray.sendAction({ type: 'update-item', seq_id: 6, item: statsItem(s) });
-      // Update recent events
-      tray.sendAction({ type: 'update-item', seq_id: 8,  item: recentItem(evs, 0) });
-      tray.sendAction({ type: 'update-item', seq_id: 9,  item: recentItem(evs, 1) });
-      tray.sendAction({ type: 'update-item', seq_id: 10, item: recentItem(evs, 2) });
-      // Update agent + silent state
       tray.sendAction({ type: 'update-item', seq_id: 3, item: agentItem(disabled) });
       tray.sendAction({ type: 'update-item', seq_id: 4, item: silentItem(silent) });
-      // Update tooltip
+
       const tip = disabled
         ? 'FlowGuard — AGENT DISABLED'
         : (s && s.ok
