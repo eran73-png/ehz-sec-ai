@@ -80,11 +80,6 @@ function sep() {
   return { title: '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500', tooltip: '', checked: false, enabled: false };
 }
 
-function truncate(str, n) {
-  if (!str) return '';
-  return str.length > n ? str.slice(0, n) + '...' : str;
-}
-
 // ── Menu layout (fixed seq_ids) ───────────────────────────────────────────────
 // 0  : PC info (disabled)
 // 1  : Open Dashboard
@@ -127,20 +122,6 @@ function statsItem(stats) {
   return {
     title: `Events: ${stats.total}  |  Critical: ${stats.critical}  |  High: ${stats.high}  |  ${stats.emoji} ${stats.level}`,
     tooltip: 'Today\'s security stats',
-    checked: false,
-    enabled: false,
-  };
-}
-
-function recentItem(evs, idx) {
-  const ev = evs && evs[idx];
-  if (!ev) return { title: '  (no events yet)', tooltip: '', checked: false, enabled: false };
-  const lvl  = (ev.level || 'INFO').padEnd(8);
-  const tool = (ev.tool_name || '').padEnd(12);
-  const reason = truncate(ev.reason || ev.hook_type || '', 42);
-  return {
-    title: `  ${lvl} ${tool} ${reason}`,
-    tooltip: ev.reason || '',
     checked: false,
     enabled: false,
   };
