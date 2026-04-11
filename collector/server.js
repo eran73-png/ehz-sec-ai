@@ -275,7 +275,7 @@ app.post('/event', (req, res) => {
 
     // Send alerts for HIGH / CRITICAL
     if (['HIGH', 'CRITICAL'].includes(doc.level)) {
-      if (notifConfig.telegram?.enabled !== false) {
+      if (notifConfig.telegram?.enabled !== false && !silentMode) {
         sendTelegram(buildTelegramMsg(doc));
       }
       if (notifConfig.email?.enabled) {
@@ -290,6 +290,26 @@ app.post('/event', (req, res) => {
     broadcastCEF(newDoc);
 
     res.json({ ok: true, id: newDoc._id, level: doc.level, hash: eventHash.slice(0,16) });
+  });
+});
+
+// ─── Silent Mode ─────────────────────────────────────────────────────────────
+
+let silentMode = false;
+
+app.get('/silent', (req, res) => res.json({ silent: silentMode }));
+app.post('/silent', (req, res) => {
+  silentMode = !silentMode;
+  console.log(`[Silent] Silent mode: ${silentMode}`);
+  res.json({ silent: silentMode });
+});
+
+// GET /recent?n=5 — last N events for tray
+app.get('/recent', (req, res) => {
+  const n = Math.min(parseInt(req.query.n) || 5, 20);
+  db.find({}).sort({ ts: -1 }).limit(n).exec((err, docs) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(docs);
   });
 });
 
