@@ -1319,6 +1319,9 @@ app.post('/notifications/test-telegram', (req, res) => {
 // GET /health
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
+// GET /dashboard — serve dashboard HTML (for tray icon)
+app.use('/dashboard', express.static(path.join(__dirname, '..', 'dashboard')));
+
 // GET /fsw/status — סטטוס ה-FSWatcher
 app.get('/fsw/status', (req, res) => {
   const startOfDay = new Date(); startOfDay.setHours(0,0,0,0);
