@@ -286,6 +286,9 @@ app.post('/event', (req, res) => {
       db.update({ _id: newDoc._id }, { $set: { telegram_sent: true } }, {});
     }
 
+    // Broadcast to SIEM SSE clients
+    broadcastCEF(newDoc);
+
     res.json({ ok: true, id: newDoc._id, level: doc.level, hash: eventHash.slice(0,16) });
   });
 });
@@ -1497,6 +1500,65 @@ function startProcessMonitor() {
     }, 30000);
   });
 }
+
+// ─── SIEM Integration (CEF Stream) ───────────────────────────────────────────
+
+const SIEM_CONFIG_PATH = path.join(__dirname, 'siem-config.json');
+
+function loadSiemConfig() {
+  try { return JSON.parse(fs.readFileSync(SIEM_CONFIG_PATH, 'utf8')); } catch(_) {}
+  return { host: '', port: 514, proto: 'udp', format: 'cef' };
+}
+function saveSiemConfig(cfg) {
+  fs.writeFileSync(SIEM_CONFIG_PATH, JSON.stringify(cfg, null, 2), 'utf8');
+}
+
+// SSE clients for live CEF stream
+const siemClients = new Set();
+
+// Broadcast a CEF event to all connected SIEM SSE clients
+function broadcastCEF(eventDoc) {
+  if (siemClients.size === 0) return;
+  const data = JSON.stringify(eventDoc);
+  for (const res of siemClients) {
+    try { res.write(`event: cef\ndata: ${data}\n\n`); } catch(_) { siemClients.delete(res); }
+  }
+}
+
+// GET /siem/stream — SSE endpoint for live CEF feed
+app.get('/siem/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
+
+  siemClients.add(res);
+  res.write(': connected\n\n');
+
+  // Send last 20 events immediately on connect
+  db.find({}).sort({ ts: -1 }).limit(20).exec((err, docs) => {
+    if (err || !docs) return;
+    [...docs].reverse().forEach(ev => {
+      try { res.write(`event: cef\ndata: ${JSON.stringify(ev)}\n\n`); } catch(_) {}
+    });
+  });
+
+  req.on('close', () => siemClients.delete(res));
+});
+
+// GET /siem/config
+app.get('/siem/config', (req, res) => {
+  res.json(loadSiemConfig());
+});
+
+// POST /siem/config
+app.post('/siem/config', (req, res) => {
+  const { host, port, proto, format } = req.body || {};
+  const cfg = { host: host || '', port: parseInt(port) || 514, proto: proto || 'udp', format: format || 'cef' };
+  saveSiemConfig(cfg);
+  res.json({ ok: true, ...cfg });
+});
 
 // ─── Start ───────────────────────────────────────────────────────────────────
 
