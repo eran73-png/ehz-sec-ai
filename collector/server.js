@@ -861,7 +861,7 @@ app.get('/audit/schedule', (req, res) => {
   next.setDate(now.getDate() + daysUntilSunday);
   next.setHours(4, 0, 0, 0);
   res.json({
-    schedule: 'כל יום ראשון 04:00',
+    schedule: 'Every Sunday 04:00',
     day_of_week: 'Sunday',
     hour: 4,
     minute: 0,
@@ -1328,15 +1328,15 @@ app.post('/notifications/config', (req, res) => {
 app.post('/notifications/test-email', async (req, res) => {
   try {
     await sendEmail('Test Alert — EHZ-SEC-AI', 'This is a test email from EHZ-SEC-AI.\nIf you received this, email notifications are working correctly.');
-    res.json({ ok: true, msg: 'מייל נשלח בהצלחה' });
+    res.json({ ok: true, msg: 'Email sent successfully' });
   } catch(e) {
     res.status(500).json({ ok: false, error: e.message });
   }
 });
 
 app.post('/notifications/test-telegram', (req, res) => {
-  sendTelegram('🧪 <b>EHZ-SEC-AI — Test</b>\nהתראת Telegram עובדת ✅');
-  res.json({ ok: true, msg: 'הודעת Telegram נשלחה' });
+  sendTelegram('🧪 <b>FlowGuard — Test</b>\nTelegram alerts working ✅');
+  res.json({ ok: true, msg: 'Telegram message sent' });
 });
 
 // GET /health

@@ -3,8 +3,8 @@
  * EHZ-SEC-AI — Claude Code Hook
  * PreToolUse / PostToolUse / ConfigChange interceptor
  *
- * עקרון ברזל: תמיד מחזיר continue: true — לעולם לא חוסם בשלב א
- * רק מנטר ומתריע.
+ * Iron rule: always returns continue: true — never blocks.
+ * Monitor and alert only.
  *
  * stdin (JSON) → rules.js → sendToCollector() [async fire-and-forget]
  */
