@@ -1151,11 +1151,11 @@
       <div class="task-desc">npm run build — build.ps1 יוצר dist/flowguard-v1.0.0/ + .zip (8.86MB). בוצע: 10.04.2026</div>
       <div class="task-tags"><span class="tag">build</span><span class="tag">npm</span></div>
     </div>
-    <div class="task-cell">
-      <div class="task-num">8.2</div>
-      <div class="task-title">ccsm-setup.exe / MSI</div>
-      <div class="task-desc">חבילת Windows — מתקין Node.js אם חסר, מוריד dependencies, מגדיר hooks, יוצר shortcuts.</div>
-      <div class="task-tags"><span class="tag">MSI</span><span class="tag">Windows</span></div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.2 ✅</div>
+      <div class="task-title">FlowGuard-Setup.exe (Inno Setup)</div>
+      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 6.9MB (LZMA). כולל: node_modules, hooks, Task Scheduler, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>קובץ: <code>dist/FlowGuard-Setup-v1.0.0.exe</code></div>
+      <div class="task-tags"><span class="tag">installer</span><span class="tag">Windows</span><span class="tag">Inno Setup</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.3 ✅</div>
@@ -1200,11 +1200,11 @@
       <div class="task-desc">אייקון FlowGuard (F ציאן על רקע כחול) בשורת המשימות. תפריט: Open Dashboard / סטטוס / Exit. עדכון כל 15 שניות. systray2 + ICO file. תיקון: ICO file במקום base64 PNG (Windows 11). בוצע: 11.04.2026</div>
       <div class="task-tags"><span class="tag">systray</span><span class="tag">GUI</span></div>
     </div>
-    <div class="task-cell" style="border-top:2px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.04);">
-      <div class="task-num" style="color:var(--red);">8.8</div>
-      <div class="task-title" style="color:var(--red);">⏸ DISABLE / ENABLE Agent</div>
-      <div class="task-desc">כיבוי מיידי. 4 שיטות: System Tray, Dashboard toggle, Telegram, קובץ .ccsm-disable.</div>
-      <div class="task-tags"><span class="tag">disable</span><span class="tag">emergency</span></div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.8 ✅</div>
+      <div class="task-title">Tray Menu מלא + DISABLE / ENABLE Agent</div>
+      <div class="task-desc">תפריט Tray מלא: PC name, Open Dashboard, Agent ON/OFF, Silent Mode, Stats (Events/Critical/High/Level), Exit. כיבוי דרך .ccsm-disable file. AGENT STOP/START נרשמים ל-DB. בוצע: 11.04.2026</div>
+      <div class="task-tags"><span class="tag">tray</span><span class="tag">disable</span><span class="tag">emergency</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.9 ✅</div>
@@ -1750,15 +1750,15 @@
 </div>
 
 <!-- PHASE 11 — ENGLISH ALERTS -->
-<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);opacity:0.85;">
   <div class="phase-header" style="background:rgba(16,185,129,0.05);">
     <div class="phase-num a" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#0ea5e9);">11</div>
     <div class="phase-info">
-      <h3>MS11 — English Alert Strings (Pre-Deploy Polish)</h3>
+      <h3>MS11 ✅ — English Alert Strings (Pre-Deploy Polish)</h3>
       <p>תרגום כל הודעות alert מעברית לאנגלית — rules.js, hook.js, server.js</p>
       <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:0%;background:#10b981;border-radius:3px;"></div></div>
-        <span style="font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;">⏳ Pre-Deploy</span>
+        <div style="flex:1;height:5px;background:rgba(100,116,139,0.15);border-radius:3px;overflow:hidden;"><div style="height:100%;width:100%;background:#10b981;border-radius:3px;"></div></div>
+        <span style="font-size:10px;color:#10b981;font-weight:700;white-space:nowrap;">✅ הושלם 11.04.2026</span>
       </div>
     </div>
   </div>
@@ -1784,6 +1784,56 @@
         כולל: הודעת startup, דוח יומי, skill changed, FSWatcher alerts.
       </div>
       <div class="task-tags"><span class="tag">i18n</span><span class="tag">telegram</span><span class="tag">server</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 9 — LINUX & macOS -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
+  <div class="phase-header" style="background:rgba(16,185,129,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#0ea5e9);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">9</div>
+    <div class="phase-info">
+      <h3>MS9 — Cross-Platform: Linux &amp; macOS</h3>
+      <p>פריסת FlowGuard על Linux ו-macOS — installer, auto-start, tray</p>
+    </div>
+    <div class="phase-status" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.3);">📋 מתוכנן</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num" style="color:#10b981;">9.1</div>
+      <div class="task-title">Linux Installer (.sh / .deb)</div>
+      <div class="task-desc">סקריפט bash להתקנה על Ubuntu/Debian. בדיקת Node.js, העתקת קבצים ל-/opt/flowguard, הגדרת hooks ב-~/.claude/settings.json.</div>
+      <div class="task-tags"><span class="tag">Linux</span><span class="tag">bash</span><span class="tag">deb</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#10b981;">9.2</div>
+      <div class="task-title">macOS Installer (.pkg / brew)</div>
+      <div class="task-desc">חבילת .pkg או Homebrew formula. התקנה ל-/Applications/FlowGuard. תמיכה ב-Apple Silicon (arm64) ו-Intel (x86_64).</div>
+      <div class="task-tags"><span class="tag">macOS</span><span class="tag">pkg</span><span class="tag">brew</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#10b981;">9.3</div>
+      <div class="task-title">Cross-Platform Tray</div>
+      <div class="task-desc">systray2 תומך ב-Linux (GTK/AppIndicator) ו-macOS (Cocoa NSStatusItem). בדיקה על שתי הפלטפורמות ותיקון icons (PNG במקום ICO).</div>
+      <div class="task-tags"><span class="tag">systray2</span><span class="tag">Linux</span><span class="tag">macOS</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#10b981;">9.4</div>
+      <div class="task-title">Linux Auto-Start (systemd)</div>
+      <div class="task-desc">שירות systemd לCollector + Tray. Unit files: flowguard-collector.service + flowguard-tray.service. Enable at user login.</div>
+      <div class="task-tags"><span class="tag">systemd</span><span class="tag">Linux</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#10b981;">9.5</div>
+      <div class="task-title">macOS Auto-Start (launchd)</div>
+      <div class="task-desc">LaunchAgent plist files ב-~/Library/LaunchAgents/. הפעלה אוטומטית ב-login. flowguard.collector.plist + flowguard.tray.plist.</div>
+      <div class="task-tags"><span class="tag">launchd</span><span class="tag">macOS</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#10b981;">9.6</div>
+      <div class="task-title">ProcessMonitor — Linux/macOS</div>
+      <div class="task-desc">Get-Process (PowerShell) לא זמין. חלופה: /proc filesystem (Linux) + ps command (macOS). refactor getProcessList() לפי OS.</div>
+      <div class="task-tags"><span class="tag">cross-platform</span><span class="tag">process</span></div>
     </div>
   </div>
 </div>
