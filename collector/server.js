@@ -1356,7 +1356,7 @@ app.get('/fsw/status', (req, res) => {
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
 const FSW_ROOT    = 'C:/Claude-Repo';
-const FSW_EXCLUDE = new Set(['node_modules', '.git', 'backups', 'ccsm.db', 'hook.log']);
+const FSW_EXCLUDE = new Set(['node_modules', '.git', 'backups', 'ccsm.db', 'hook.log', '.ccsm-disable', '.ccsm-silent']);
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
 
 // קבצים שנכתבו ע"י Claude בשניות האחרונות — למנוע כפילות עם Write Guard
