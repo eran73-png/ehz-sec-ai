@@ -15,9 +15,8 @@ const COLLECTOR_URL = 'http://localhost:3010';
 const DASHBOARD     = path.join(__dirname, '..', 'dashboard', 'index.html');
 const CHECK_INTERVAL = 15000; // בדוק סטטוס כל 15 שניות
 
-// ── Icon (base64 PNG 16x16) ───────────────────────────────────
-// FlowGuard shield icon — 32x32 RGBA PNG transparent bg, cyan shield + white F
-const ICON_ACTIVE = 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAuElEQVR4nO2WTQoDIQyFk+BBCt3OTXrdmZt02YHeJCW7UnTMjyUt47eV+J55BgWYnB08XL0zD1NasKpVuoXPPS5+uTaXCJKhbAPFWsC3djvfwW3/jw7Q6Q2USAe0Oc8IvhYBf4ykJxKCZCjbQPntKVgQj14yFVLfeIr7BqImOuI6A14TCnFBfwdkM+0PSSkujJ8Cg7jdgGFjLeiqkihqf0Xj6QVfBLVL6RCPI51YHzz0+24mVXwCcV4/OyX8cJ+hiwAAAABJRU5ErkJggg==';
+// ── Icon — path to .ico file ──────────────────────────────────
+const ICON_ACTIVE = path.join(__dirname, 'flowguard.ico');
 
 const ICON_ERROR = ICON_ACTIVE; // same icon, title will show error
 
