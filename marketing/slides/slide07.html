@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+.grid { position:absolute; inset:0; background-image: linear-gradient(rgba(14,165,233,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,0.04) 1px, transparent 1px); background-size:48px 48px; }
+.corner { position:absolute; width:40px; height:40px; border-color:#0ea5e9; border-style:solid; opacity:0.3; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.header { position:relative; z-index:10; padding:55px 50px 24px; }
+.label { font-size:13px; letter-spacing:3px; color:#0ea5e9; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
+.title { font-size:44px; font-weight:900; color:#fff; line-height:1.1; }
+.title span { color:#0ea5e9; }
+
+/* Mock dashboard */
+.dashboard { position:relative; z-index:10; margin:0 30px; flex:1; display:flex; flex-direction:column; gap:12px; padding-bottom:20px; }
+
+/* Stat row */
+.stat-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.stat-card {
+  padding:14px 16px; border-radius:10px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+}
+.stat-val { font-size:26px; font-weight:900; }
+.stat-val.green { color:#10b981; }
+.stat-val.red { color:#ef4444; }
+.stat-val.yellow { color:#f59e0b; }
+.stat-val.cyan { color:#0ea5e9; }
+.stat-label { font-size:10px; color:rgba(255,255,255,0.35); margin-top:3px; letter-spacing:1px; }
+
+/* Tab bar */
+.tab-bar {
+  display:flex; gap:6px; padding:6px;
+  background:rgba(255,255,255,0.03); border-radius:10px;
+  border:1px solid rgba(255,255,255,0.07);
+}
+.tab {
+  padding:7px 14px; border-radius:7px; font-size:12px; font-weight:600;
+  color:rgba(255,255,255,0.35); flex:1; text-align:center;
+}
+.tab.active { background:#0ea5e9; color:#000; }
+
+/* Event list */
+.event-list { display:flex; flex-direction:column; gap:8px; flex:1; }
+.event-row {
+  display:flex; align-items:center; gap:12px; padding:12px 16px;
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px;
+}
+.event-badge {
+  padding:3px 10px; border-radius:100px; font-size:10px; font-weight:700;
+  letter-spacing:1px; flex-shrink:0;
+}
+.badge-crit { background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+.badge-high { background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+.badge-med  { background:rgba(14,165,233,0.2); color:#0ea5e9; border:1px solid rgba(14,165,233,0.3); }
+.badge-info { background:rgba(100,116,139,0.2); color:#64748b; border:1px solid rgba(100,116,139,0.3); }
+
+.event-tool { font-size:12px; color:rgba(255,255,255,0.5); flex-shrink:0; width:80px; }
+.event-reason { font-size:12px; color:rgba(255,255,255,0.7); flex:1; }
+.event-time { font-size:11px; color:rgba(255,255,255,0.25); flex-shrink:0; }
+
+.footer-label {
+  position:relative; z-index:10;
+  margin:0 30px 40px;
+  text-align:center; font-size:14px; color:rgba(255,255,255,0.4);
+}
+.footer-label span { color:#0ea5e9; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="header">
+  <div class="label">📊 Dashboard</div>
+  <div class="title">Full Visibility.<br><span>One Screen.</span></div>
+</div>
+
+<div class="dashboard">
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-val red">3</div>
+      <div class="stat-label">CRITICAL</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val yellow">12</div>
+      <div class="stat-label">HIGH</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val cyan">847</div>
+      <div class="stat-label">EVENTS</div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab active">Events</div>
+    <div class="tab">File Audit</div>
+    <div class="tab">Skills</div>
+    <div class="tab">Web</div>
+    <div class="tab">Settings</div>
+  </div>
+
+  <div class="event-list">
+    <div class="event-row">
+      <span class="event-badge badge-crit">CRITICAL</span>
+      <span class="event-tool">Bash</span>
+      <span class="event-reason">Encoded PowerShell payload detected</span>
+      <span class="event-time">09:14</span>
+    </div>
+    <div class="event-row">
+      <span class="event-badge badge-high">HIGH</span>
+      <span class="event-tool">Write</span>
+      <span class="event-reason">API key written to config file</span>
+      <span class="event-time">09:11</span>
+    </div>
+    <div class="event-row">
+      <span class="event-badge badge-high">HIGH</span>
+      <span class="event-tool">WebFetch</span>
+      <span class="event-reason">Fetch to raw IP address</span>
+      <span class="event-time">09:08</span>
+    </div>
+    <div class="event-row">
+      <span class="event-badge badge-med">MEDIUM</span>
+      <span class="event-tool">Read</span>
+      <span class="event-reason">.env file accessed</span>
+      <span class="event-time">09:05</span>
+    </div>
+    <div class="event-row">
+      <span class="event-badge badge-med">MEDIUM</span>
+      <span class="event-tool">Bash</span>
+      <span class="event-reason">Israeli phone number in output</span>
+      <span class="event-time">09:02</span>
+    </div>
+    <div class="event-row">
+      <span class="event-badge badge-info">INFO</span>
+      <span class="event-tool">WebSearch</span>
+      <span class="event-reason">Search: "reverse shell python"</span>
+      <span class="event-time">08:59</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer-label">Real-time updates · <span>Export to Excel</span> · Session replay</div>
+</body>
+</html>

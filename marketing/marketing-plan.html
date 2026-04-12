@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowGuard — תוכנית שיווקית</title>
+<style>
+:root {
+  --bg: #060b14;
+  --panel: #0d1424;
+  --border: #1a2540;
+  --accent: #00d4ff;
+  --accent2: #6366f1;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
+
+/* HEADER */
+.doc-header { text-align: center; padding: 48px 0 56px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+.doc-badge { display: inline-block; background: linear-gradient(135deg, #00d4ff22, #6366f122); border: 1px solid #00d4ff44; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 3px; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px; text-transform: uppercase; }
+.doc-logo { width: 72px; height: 72px; background: linear-gradient(135deg, #00d4ff, #6366f1); border-radius: 18px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 900; color: #fff; font-style: italic; }
+.doc-header h1 { font-size: 48px; font-weight: 900; background: linear-gradient(135deg, #e2e8f0, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.doc-header p { color: var(--muted2); margin-top: 10px; font-size: 15px; }
+.doc-meta { display: flex; justify-content: center; gap: 32px; margin-top: 24px; flex-wrap: wrap; }
+.doc-meta span { font-size: 12px; color: var(--muted); }
+.doc-meta strong { color: var(--muted2); }
+
+/* SECTIONS */
+.section { margin-bottom: 48px; }
+.section-title { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* CARDS GRID */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.card-icon { font-size: 28px; margin-bottom: 12px; }
+.card h3 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.card p { font-size: 13px; color: var(--muted2); line-height: 1.7; }
+.card.accent { border-color: rgba(0,212,255,0.3); background: rgba(0,212,255,0.04); }
+.card.purple { border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.04); }
+.card.green { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.04); }
+.card.yellow { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.04); }
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--panel); color: var(--muted2); font-weight: 700; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 12px 16px; text-align: right; border-bottom: 1px solid var(--border); }
+td { padding: 12px 16px; border-bottom: 1px solid rgba(26,37,64,0.5); vertical-align: top; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* TIMELINE */
+.timeline { position: relative; }
+.timeline-item { display: flex; gap: 20px; margin-bottom: 28px; }
+.timeline-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.timeline-dot.done { background: rgba(16,185,129,0.2); border: 2px solid #10b981; color: #10b981; }
+.timeline-dot.next { background: rgba(0,212,255,0.2); border: 2px solid #00d4ff; color: #00d4ff; }
+.timeline-dot.plan { background: rgba(100,116,139,0.15); border: 2px solid var(--border); color: var(--muted); }
+.timeline-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.timeline-content p { font-size: 12px; color: var(--muted2); line-height: 1.6; }
+.timeline-content .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--muted2); }
+
+/* ASSET LIST */
+.asset-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.asset-item { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+.asset-item .icon { font-size: 22px; }
+.asset-item .info { flex: 1; }
+.asset-item .name { font-size: 13px; font-weight: 600; }
+.asset-item .status { font-size: 11px; margin-top: 2px; }
+.status-done { color: #10b981; }
+.status-next { color: #00d4ff; }
+.status-plan { color: var(--muted); }
+
+/* AUDIENCE */
+.audience-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.audience-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.audience-card .role { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.audience-card .title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.audience-card .pain { font-size: 12px; color: var(--muted2); line-height: 1.6; }
+
+/* SITE MAP */
+.sitemap { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.sitemap-page { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.sitemap-page .url { font-size: 11px; color: var(--accent); font-family: monospace; margin-bottom: 6px; }
+.sitemap-page .page-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.sitemap-page .page-desc { font-size: 11px; color: var(--muted); }
+
+/* KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.kpi-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+.kpi-val { font-size: 28px; font-weight: 900; color: var(--accent); }
+.kpi-label { font-size: 11px; color: var(--muted2); margin-top: 4px; }
+
+/* CHANNEL */
+.channel-row { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 14px; }
+.channel-icon { font-size: 22px; }
+.channel-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.channel-desc { font-size: 12px; color: var(--muted2); margin-top: 3px; }
+.channel-priority { margin-left: auto; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; white-space: nowrap; }
+.p-high { background: rgba(16,185,129,0.15); color: #10b981; }
+.p-mid { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.p-low { background: rgba(100,116,139,0.15); color: var(--muted2); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-badge">מסמך שיווק</div>
+  <div class="doc-logo">F</div>
+  <h1>FlowGuard</h1>
+  <p>AI Security Monitor for Claude Code — תוכנית שיווקית מלאה</p>
+  <div class="doc-meta">
+    <span><strong>גרסה:</strong> 1.0</span>
+    <span><strong>תאריך:</strong> אפריל 2026</span>
+    <span><strong>מוצר:</strong> FlowGuard v1.0.0</span>
+    <span><strong>by:</strong> EHZ-AI | ערן הרשקוביץ</span>
+  </div>
+</div>
+
+<!-- 1. PRODUCT POSITIONING -->
+<div class="section">
+  <div class="section-title">01 — מיצוב המוצר</div>
+  <div class="cards">
+    <div class="card accent">
+      <div class="card-icon">🛡️</div>
+      <h3>מה זה FlowGuard?</h3>
+      <p>כלי אבטחה שמנטר בזמן אמת את פעולות ה-AI (Claude Code) על המחשב שלך. כמו מצלמת אבטחה — רק לבינה מלאכותית.</p>
+    </div>
+    <div class="card purple">
+      <div class="card-icon">🎯</div>
+      <h3>המסר השיווקי המרכזי</h3>
+      <p>"אתה יודע מה ה-AI עושה עכשיו?" — FlowGuard נותן לך שליטה מלאה ושקיפות על כל פעולה שה-AI מבצע.</p>
+    </div>
+    <div class="card green">
+      <div class="card-icon">⚡</div>
+      <h3>הערך המרכזי</h3>
+      <p>ארגונים שמשתמשים ב-AI חייבים לדעת מה הוא עושה. FlowGuard הוא השמירה בין ה-AI לנתונים הרגישים שלך.</p>
+    </div>
+    <div class="card yellow">
+      <div class="card-icon">🏆</div>
+      <h3>יתרון תחרותי</h3>
+      <p>הפתרון היחיד בשוק הישראלי המותאם ל-Claude Code. בנוי על ידי מנהל תשתיות בכיר מבנק ירושלים — מבין אבטחת מידע בפועל.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2. TARGET AUDIENCE -->
+<div class="section">
+  <div class="section-title">02 — קהל יעד</div>
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="role">🎯 ראשוני</div>
+      <div class="title">CISO / מנהל אבטחת מידע</div>
+      <div class="pain">מפחד שה-AI יוציא מידע רגיש. צריך visibility מלאה על פעולות ה-AI בארגון.</div>
+    </div>
+    <div class="audience-card">
+      <div class="role">🎯 ראשוני</div>
+      <div class="title">מנהל IT / תשתיות</div>
+      <div class="pain">מפרנס מתכנתים שמשתמשים ב-AI. רוצה לדעת מה קורה בפועל על המחשבים.</div>
+    </div>
+    <div class="audience-card">
+      <div class="role">🎯 שניוני</div>
+      <div class="title">מפתח בכיר / Tech Lead</div>
+      <div class="pain">אחראי על אבטחת קוד הצוות. רוצה לוודא ש-AI לא מוציא secrets לחוץ.</div>
+    </div>
+    <div class="audience-card">
+      <div class="role">🎯 שניוני</div>
+      <div class="title">בנקים / פיננסים / ביטוח</div>
+      <div class="pain">רגולציה קפדנית. לא יכולים להרשות לעצמם דליפת מידע לכלי AI.</div>
+    </div>
+    <div class="audience-card">
+      <div class="role">🎯 שלישוני</div>
+      <div class="title">סטארטאפ טכנולוגי</div>
+      <div class="pain">כל הצוות משתמש ב-AI. קוד פתוח ונתוני לקוחות חשופים לסיכון.</div>
+    </div>
+    <div class="audience-card">
+      <div class="role">🎯 שלישוני</div>
+      <div class="title">משרד עורכי דין / ראיית חשבון</div>
+      <div class="pain">סודיות מקצועית. AI שמשתמשים בו עשוי לחשוף מסמכים רגישים.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. MARKETING ASSETS -->
+<div class="section">
+  <div class="section-title">03 — נכסי שיווק קיימים</div>
+  <div class="asset-list">
+    <div class="asset-item">
+      <div class="icon">🎬</div>
+      <div class="info">
+        <div class="name">סרטון Demo — Desktop</div>
+        <div class="status status-done">✅ מוכן | FlowGuard-Desktop.mp4</div>
+      </div>
+    </div>
+    <div class="asset-item">
+      <div class="icon">📦</div>
+      <div class="info">
+        <div class="name">סרטון Demo — התקנה</div>
+        <div class="status status-done">✅ מוכן | FlowGuard-Install-Demo.mp4</div>
+      </div>
+    </div>
+    <div class="asset-item">
+      <div class="icon">🎨</div>
+      <div class="info">
+        <div class="name">לוגו FlowGuard v2</div>
+        <div class="status status-done">✅ מוכן | flowguard-logo-v2.png</div>
+      </div>
+    </div>
+    <div class="asset-item">
+      <div class="icon">💾</div>
+      <div class="info">
+        <div class="name">FlowGuard-Setup-v1.0.0.exe</div>
+        <div class="status status-done">✅ מוכן | 6.9MB</div>
+      </div>
+    </div>
+    <div class="asset-item">
+      <div class="icon">🌐</div>
+      <div class="info">
+        <div class="name">אתר שיווקי (Vercel)</div>
+        <div class="status status-next">🔄 בבנייה</div>
+      </div>
+    </div>
+    <div class="asset-item">
+      <div class="icon">📊</div>
+      <div class="info">
+        <div class="name">מצגת מכירות</div>
+        <div class="status status-plan">📋 מתוכנן</div>
+      </div>
+    </div>
+    <div class="asset-item">
+      <div class="icon">📝</div>
+      <div class="info">
+        <div class="name">One-pager PDF</div>
+        <div class="status status-plan">📋 מתוכנן</div>
+      </div>
+    </div>
+    <div class="asset-item">
+      <div class="icon">📱</div>
+      <div class="info">
+        <div class="name">פוסטים LinkedIn</div>
+        <div class="status status-plan">📋 מתוכנן</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. WEBSITE PLAN -->
+<div class="section">
+  <div class="section-title">04 — תוכנית האתר (Vercel)</div>
+  <div class="sitemap">
+    <div class="sitemap-page">
+      <div class="url">/</div>
+      <div class="page-title">🏠 דף ראשי</div>
+      <div class="page-desc">Hero + תכונות + סרטון + CTA להורדה</div>
+    </div>
+    <div class="sitemap-page">
+      <div class="url">/features</div>
+      <div class="page-title">⚡ תכונות</div>
+      <div class="page-desc">הסבר על יכולות FlowGuard — ויזואלי, לא טכני</div>
+    </div>
+    <div class="sitemap-page">
+      <div class="url">/demo</div>
+      <div class="page-title">🎬 Demo</div>
+      <div class="page-desc">סרטוני Demo + Screenshots</div>
+    </div>
+    <div class="sitemap-page">
+      <div class="url">/download</div>
+      <div class="page-title">💾 הורדה</div>
+      <div class="page-desc">הורדת Setup.exe + Release Notes</div>
+    </div>
+    <div class="sitemap-page">
+      <div class="url">/about</div>
+      <div class="page-title">👤 אודות</div>
+      <div class="page-desc">ערן הרשקוביץ + EHZ-AI</div>
+    </div>
+    <div class="sitemap-page">
+      <div class="url">/contact</div>
+      <div class="page-title">📞 צור קשר</div>
+      <div class="page-desc">טופס + WhatsApp + מייל</div>
+    </div>
+  </div>
+
+  <!-- Tech stack -->
+  <div style="margin-top:16px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:20px;">
+    <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Stack טכני</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;font-size:13px;">
+      <div>⚡ <strong>Next.js 14</strong> — App Router</div>
+      <div>🎨 <strong>Tailwind CSS</strong> — עיצוב</div>
+      <div>🔐 <strong>NextAuth.js</strong> — Google OAuth</div>
+      <div>☁️ <strong>Vercel</strong> — hosting + serverless</div>
+      <div>📦 <strong>Vercel Blob</strong> — אחסון קבצי EXE</div>
+      <div>💾 <strong>Vercel KV</strong> — משתמשים</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. MARKETING CHANNELS -->
+<div class="section">
+  <div class="section-title">05 — ערוצי שיווק</div>
+
+  <div class="channel-row">
+    <div class="channel-icon">💼</div>
+    <div>
+      <div class="channel-name">LinkedIn — פרופיל מקצועי</div>
+      <div class="channel-desc">פוסטים שבועיים על AI Security. Case studies. שיתוף סרטוני Demo. ערן הרשקוביץ כ-Thought Leader.</div>
+    </div>
+    <div class="channel-priority p-high">עדיפות גבוהה</div>
+  </div>
+
+  <div class="channel-row">
+    <div class="channel-icon">🏢</div>
+    <div>
+      <div class="channel-name">גישה ישירה לארגונים — בנקים, ביטוח</div>
+      <div class="channel-desc">ניצול הרקע בבנק ירושלים וישראכארד. הצגת המוצר ל-CISOים מוכרים. Demo אישי.</div>
+    </div>
+    <div class="channel-priority p-high">עדיפות גבוהה</div>
+  </div>
+
+  <div class="channel-row">
+    <div class="channel-icon">🤝</div>
+    <div>
+      <div class="channel-name">קהילת IT ישראל — Groups, Forums</div>
+      <div class="channel-desc">קבוצות WhatsApp של מנהלי IT. פורומים מקצועיים. הצגת הבעיה → הפתרון.</div>
+    </div>
+    <div class="channel-priority p-high">עדיפות גבוהה</div>
+  </div>
+
+  <div class="channel-row">
+    <div class="channel-icon">🎤</div>
+    <div>
+      <div class="channel-name">כנסים מקצועיים — CyberSec, IT Summit</div>
+      <div class="channel-desc">הצגת FlowGuard בכנסי אבטחת מידע ישראליים. מפגשי ISACA, ISC2.</div>
+    </div>
+    <div class="channel-priority p-mid">עדיפות בינונית</div>
+  </div>
+
+  <div class="channel-row">
+    <div class="channel-icon">📧</div>
+    <div>
+      <div class="channel-name">Email Marketing</div>
+      <div class="channel-desc">ניוזלטר חודשי — חדשות AI Security. Case studies. עדכוני גרסה.</div>
+    </div>
+    <div class="channel-priority p-mid">עדיפות בינונית</div>
+  </div>
+
+  <div class="channel-row">
+    <div class="channel-icon">📝</div>
+    <div>
+      <div class="channel-name">Blog / Medium — תוכן מקצועי</div>
+      <div class="channel-desc">"5 דברים שה-AI עשה אצלך בלי שידעת". מאמרים על AI Security בעברית.</div>
+    </div>
+    <div class="channel-priority p-low">השלמה</div>
+  </div>
+</div>
+
+<!-- 6. KEY MESSAGES -->
+<div class="section">
+  <div class="section-title">06 — הודעות מפתח שיווקיות</div>
+  <div class="cards">
+    <div class="card accent">
+      <div class="card-icon">🔍</div>
+      <h3>"שקיפות מלאה"</h3>
+      <p>כל קובץ שה-AI נוגע בו, כל פקודה שהוא מריץ — אתה רואה בזמן אמת. אין הפתעות.</p>
+    </div>
+    <div class="card purple">
+      <div class="card-icon">🚨</div>
+      <h3>"התראות מיידיות"</h3>
+      <p>ה-AI ניסה לגשת לקבצים רגישים? קיבלת Telegram תוך שניות. לא אחרי שהנזק נעשה.</p>
+    </div>
+    <div class="card green">
+      <div class="card-icon">🏦</div>
+      <h3>"בנוי לסטנדרט פיננסי"</h3>
+      <p>פותח על ידי מנהל תשתיות בבנק ירושלים. עומד בדרישות רגולציה של מגזר פיננסי.</p>
+    </div>
+    <div class="card yellow">
+      <div class="card-icon">⚙️</div>
+      <h3>"דקה להתקנה"</h3>
+      <p>Setup.exe אחד. אין צורך במומחה IT. עובד מיד עם Claude Code — plug & play.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 7. WORKPLAN TIMELINE -->
+<div class="section">
+  <div class="section-title">07 — לוח זמנים שיווקי</div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot done">✅</div>
+      <div class="timeline-content">
+        <h4>שלב 1 — בסיס (הושלם)</h4>
+        <p>לוגו, סרטוני Demo, קובץ התקנה, תוכנית שיווקית</p>
+        <div class="tags"><span class="tag">לוגו</span><span class="tag">סרטון</span><span class="tag">EXE</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot next">2</div>
+      <div class="timeline-content">
+        <h4>שלב 2 — אתר Vercel (הבא)</h4>
+        <p>בניית אתר שיווקי מלא ב-Next.js. דף ראשי + הורדות + Demo + אודות + Google OAuth.</p>
+        <div class="tags"><span class="tag">Next.js</span><span class="tag">Vercel</span><span class="tag">Google OAuth</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot plan">3</div>
+      <div class="timeline-content">
+        <h4>שלב 3 — תוכן שיווקי</h4>
+        <p>One-pager PDF. מצגת PowerPoint למכירות. 5 פוסטים LinkedIn מוכנים.</p>
+        <div class="tags"><span class="tag">PDF</span><span class="tag">PPT</span><span class="tag">LinkedIn</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot plan">4</div>
+      <div class="timeline-content">
+        <h4>שלב 4 — גישה לשוק</h4>
+        <p>Demo אישי ל-5 CISO מוכרים. הצגה בקבוצות WhatsApp IT. פוסט ראשון LinkedIn.</p>
+        <div class="tags"><span class="tag">Demo</span><span class="tag">CISO</span><span class="tag">LinkedIn</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot plan">5</div>
+      <div class="timeline-content">
+        <h4>שלב 5 — דומיין + Branding מלא</h4>
+        <p>רכישת דומיין flowguard.io / flowguard.ai. SSL. Email מקצועי.</p>
+        <div class="tags"><span class="tag">domain</span><span class="tag">SSL</span><span class="tag">email</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot plan">6</div>
+      <div class="timeline-content">
+        <h4>שלב 6 — כנסים + PR</h4>
+        <p>הרצאה בכנס CyberSec ישראל. מאמר מקצועי. ראיון מדיה IT.</p>
+        <div class="tags"><span class="tag">כנס</span><span class="tag">PR</span><span class="tag">מדיה</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 8. ABOUT ERAN -->
+<div class="section">
+  <div class="section-title">08 — הפרופיל המקצועי — ערן הרשקוביץ</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px;">
+    <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,#00d4ff,#6366f1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;flex-shrink:0;">ע</div>
+      <div style="flex:1;min-width:200px;">
+        <h2 style="font-size:20px;font-weight:900;margin-bottom:4px;">ערן הרשקוביץ</h2>
+        <p style="color:var(--accent);font-size:13px;font-weight:600;margin-bottom:12px;">מייסד EHZ-AI | מנהל תשתיות בכיר | מומחה אבטחת מידע</p>
+        <p style="font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:16px;">
+          20+ שנות ניסיון בניהול תשתיות IT בארגונים פיננסיים גדולים בישראל.
+          מנהל תשתיות וסיסטם בבנק ירושלים. לשעבר ראש צוות תשתיות בישראכארד.
+          מומחה ב-Data Protection, אבטחת מידע ורגולציה פיננסית.
+        </p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;font-size:12px;">
+          <div style="background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.2);border-radius:6px;padding:8px 12px;">
+            <div style="color:var(--accent);font-weight:700;">2022 — היום</div>
+            <div>בנק ירושלים — מנהל תשתיות</div>
+          </div>
+          <div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.2);border-radius:6px;padding:8px 12px;">
+            <div style="color:#818cf8;font-weight:700;">2019 — 2022</div>
+            <div>ישראכארד — ראש צוות תשתיות</div>
+          </div>
+          <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:6px;padding:8px 12px;">
+            <div style="color:#10b981;font-weight:700;">2011 — 2019</div>
+            <div>מלם תים — מנהל פרויקטים</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:8px 12px;">
+            <div style="color:#f59e0b;font-weight:700;">1992 — 1996</div>
+            <div>חיל האוויר — ראש צוות מכונאי מסוקים</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--muted2);">
+      <span>📧 eran73@gmail.com</span>
+      <span>📱 054-4825276</span>
+      <span>🏢 EHZ-AI</span>
+      <span>🎖️ MCSE | VMCE | Azure | Veeam</span>
+    </div>
+  </div>
+</div>
+
+<!-- 9. KPIs -->
+<div class="section">
+  <div class="section-title">09 — מדדי הצלחה (KPIs)</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-val">500</div>
+      <div class="kpi-label">הורדות — 6 חודשים</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">10</div>
+      <div class="kpi-label">לידים B2B — חודש ראשון</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">5</div>
+      <div class="kpi-label">Demo אישי לארגונים</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">1K</div>
+      <div class="kpi-label">כניסות לאתר — חודש 1</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">★4.8</div>
+      <div class="kpi-label">ציון Product Hunt</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">₪</div>
+      <div class="kpi-label">עסקה ראשונה — 90 יום</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid var(--border);margin-top:48px;color:var(--muted);font-size:12px;">
+  <div style="font-size:20px;font-weight:900;color:var(--accent);margin-bottom:8px;">FlowGuard</div>
+  <div>AI Security Monitor for Claude Code | by EHZ-AI</div>
+  <div style="margin-top:8px;">054-4825276 | eran73@gmail.com</div>
+  <div style="margin-top:16px;color:rgba(100,116,139,0.5);font-size:10px;">v1.0 | אפריל 2026 | סודי — לשימוש פנימי</div>
+</div>
+
+</body>
+</html>

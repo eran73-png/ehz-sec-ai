@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+
+.grid { position:absolute; inset:0; background-image: linear-gradient(rgba(16,185,129,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.05) 1px, transparent 1px); background-size:48px 48px; }
+.corner { position:absolute; width:40px; height:40px; border-color:#10b981; border-style:solid; opacity:0.3; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.content { position:relative; z-index:10; padding:55px 50px; width:100%; }
+.label { font-size:13px; letter-spacing:3px; color:#10b981; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
+.title { font-size:46px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:40px; }
+.title span { color:#10b981; }
+
+/* Flow diagram */
+.flow { display:flex; flex-direction:column; align-items:center; gap:0; margin-bottom:40px; }
+.flow-box {
+  width:100%; padding:20px 28px;
+  border-radius:12px; position:relative;
+  display:flex; align-items:center; gap:16px;
+}
+.flow-box.claude { background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.3); }
+.flow-box.hook   { background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.4); border-width:2px; }
+.flow-box.result { background:rgba(14,165,233,0.10); border:1px solid rgba(14,165,233,0.3); }
+
+.flow-icon { font-size:32px; flex-shrink:0; }
+.flow-body {}
+.flow-title { font-size:18px; font-weight:700; color:#fff; margin-bottom:3px; }
+.flow-sub { font-size:12px; color:rgba(255,255,255,0.45); }
+
+.arrow { font-size:22px; color:rgba(16,185,129,0.6); margin:6px 0; }
+
+.hook-badge {
+  position:absolute; right:16px; top:50%; transform:translateY(-50%);
+  padding:5px 12px; border-radius:100px;
+  background:#10b981; color:#000; font-size:11px; font-weight:900; letter-spacing:1px;
+}
+
+/* Stats */
+.stats { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:30px; }
+.stat-box {
+  padding:20px; border-radius:12px; text-align:center;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+}
+.stat-val { font-size:34px; font-weight:900; color:#10b981; }
+.stat-label { font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px; letter-spacing:1px; }
+
+.info-box {
+  padding:18px 22px;
+  background:rgba(16,185,129,0.07); border:1px solid rgba(16,185,129,0.2);
+  border-radius:10px; font-size:14px; color:rgba(255,255,255,0.6); line-height:1.6;
+  text-align:center;
+}
+.info-box b { color:#10b981; }
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="label">⚡ Hook System</div>
+  <div class="title">Intercepts <span>Every</span><br>Tool Call.</div>
+
+  <div class="flow">
+    <div class="flow-box claude">
+      <div class="flow-icon">🤖</div>
+      <div class="flow-body">
+        <div class="flow-title">Claude Code</div>
+        <div class="flow-sub">Initiates any tool — Bash, Write, WebSearch...</div>
+      </div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="flow-box hook">
+      <div class="flow-icon">🛡️</div>
+      <div class="flow-body">
+        <div class="flow-title">FlowGuard Hook</div>
+        <div class="flow-sub">PreToolUse + PostToolUse — 6 engines fire instantly</div>
+      </div>
+      <div class="hook-badge">ACTIVE</div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="flow-box result">
+      <div class="flow-icon">📊</div>
+      <div class="flow-body">
+        <div class="flow-title">Collector + Dashboard</div>
+        <div class="flow-sub">Logged, analyzed, alerted — in real-time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-box">
+      <div class="stat-val">100%</div>
+      <div class="stat-label">Tool call coverage</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">&lt;1ms</div>
+      <div class="stat-label">Analysis latency</div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <b>Zero configuration required.</b> Hooks are injected automatically into<br>
+    Claude Code settings on install — no code changes needed.
+  </div>
+</div>
+</body>
+</html>

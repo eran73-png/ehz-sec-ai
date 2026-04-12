@@ -1,0 +1,86 @@
+FlowGuard — Marketing Video Narration Script
+Duration: ~90 seconds
+Language: English
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 01 (0:00–0:08) — OPENER
+"Claude Code is a powerful AI assistant. It reads your files, runs commands, accesses the web — all on your machine.
+But who is watching what it does?"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 02 (0:08–0:18) — THE PROBLEM
+"AI coding tools have unprecedented access to your system.
+API keys, private files, shell commands, git repositories —
+all without oversight, without audit trails, without alerts.
+This is a serious security gap."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 03 (0:18–0:26) — THE SOLUTION
+"Introducing FlowGuard — the first dedicated security monitor for Claude Code.
+Real-time protection. Zero configuration. Always on."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 04 (0:26–0:38) — 6 DETECTION ENGINES
+"FlowGuard runs six detection engines simultaneously.
+Signature rules catch known attack patterns.
+Secrets and DLP detect exposed credentials.
+Behavioral analysis flags anomalies.
+Scope monitor watches file access.
+Git Guardian protects your repositories.
+And YARA scanner checks every written file for malware signatures."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 05 (0:38–0:48) — HOOK SYSTEM
+"The hook intercepts every single tool call — before and after execution.
+No tool runs undetected. No action goes unlogged.
+And it all happens in under one millisecond — zero performance impact."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 06 (0:48–0:58) — SKILLS SCANNER
+"Claude Code skills are custom tools that run code on your machine.
+They're also a new attack surface.
+FlowGuard scans every skill — checking hash integrity, detecting malicious patterns,
+and alerting you the moment an unauthorized change is detected."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 07 (0:58–1:06) — DASHBOARD
+"The dashboard gives you full visibility in one screen.
+Events, file audit, web access, sessions, and settings —
+all in real time. Export to Excel. Replay any session."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 08 (1:06–1:14) — TELEGRAM ALERTS
+"When a critical event occurs, you know immediately.
+Telegram alerts reach you in under two seconds — on any device.
+Email notifications are also supported for corporate environments."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 09 (1:14–1:20) — HARDENING LEVELS
+"Four protection levels — from monitor-only to full lockdown.
+Switch instantly from the dashboard. No restart required."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLIDE 10 (1:20–1:30) — CTA
+"FlowGuard. Six engines. Real-time alerts. Local deployment — your data never leaves your machine.
+Up and running in minutes.
+Contact us today — and protect your AI workflow."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RECORDING TIPS:
+- Pace: calm, professional, confident (not fast)
+- Tone: security expert explaining to IT manager
+- Total reading time: ~85 seconds — leave 5s breathing room
+- Record in a quiet room, close to microphone
+- Save as: narration.mp3 or narration.wav
+  → Place in: C:/Claude-Repo/agents/FlowGuard/marketing/

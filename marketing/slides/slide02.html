@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+
+.grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(239,68,68,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239,68,68,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.orb {
+  position:absolute; width:600px; height:600px;
+  background: radial-gradient(circle, rgba(239,68,68,0.1) 0%, transparent 70%);
+  top:30%; left:50%; transform:translate(-50%,-50%);
+}
+.corner { position:absolute; width:40px; height:40px; border-color:#ef4444; border-style:solid; opacity:0.3; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.content { position:relative; z-index:10; padding:60px 50px; width:100%; }
+
+.label {
+  font-size:13px; letter-spacing:3px; color:#ef4444; text-transform:uppercase;
+  margin-bottom:24px; font-weight:700;
+}
+
+.title {
+  font-size:46px; font-weight:900; color:#fff;
+  line-height:1.15; margin-bottom:50px;
+}
+.title span { color:#ef4444; }
+
+.threat-item {
+  display:flex; align-items:flex-start; gap:18px;
+  padding:20px 24px; margin-bottom:16px;
+  background:rgba(239,68,68,0.06);
+  border:1px solid rgba(239,68,68,0.2);
+  border-left:3px solid #ef4444;
+  border-radius:10px;
+}
+.threat-icon { font-size:28px; flex-shrink:0; margin-top:2px; }
+.threat-body {}
+.threat-title { font-size:17px; font-weight:700; color:#fff; margin-bottom:4px; }
+.threat-desc { font-size:13px; color:rgba(255,255,255,0.45); line-height:1.5; }
+
+.bottom-line {
+  margin-top:36px; padding:22px 24px;
+  background:rgba(239,68,68,0.1);
+  border:1px solid rgba(239,68,68,0.3);
+  border-radius:10px;
+  font-size:18px; font-weight:700; color:#ef4444; text-align:center;
+  line-height:1.4;
+}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="orb"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="label">⚠ The Problem</div>
+  <div class="title">AI Tools Have<br><span>Unrestricted</span><br>Access.</div>
+
+  <div class="threat-item">
+    <div class="threat-icon">🔑</div>
+    <div class="threat-body">
+      <div class="threat-title">API Keys & Secrets</div>
+      <div class="threat-desc">Claude reads .env files, credentials, private keys — with zero oversight</div>
+    </div>
+  </div>
+
+  <div class="threat-item">
+    <div class="threat-icon">📁</div>
+    <div class="threat-body">
+      <div class="threat-title">Full File System Access</div>
+      <div class="threat-desc">Reads, writes and modifies any file on your workstation</div>
+    </div>
+  </div>
+
+  <div class="threat-item">
+    <div class="threat-icon">🌐</div>
+    <div class="threat-body">
+      <div class="threat-title">Unrestricted Web Access</div>
+      <div class="threat-desc">Downloads scripts, fetches external URLs — no audit trail</div>
+    </div>
+  </div>
+
+  <div class="threat-item">
+    <div class="threat-icon">⚙️</div>
+    <div class="threat-body">
+      <div class="threat-title">Executes Shell Commands</div>
+      <div class="threat-desc">Runs Bash, PowerShell — anything, anytime</div>
+    </div>
+  </div>
+
+  <div class="bottom-line">
+    No monitoring. No alerts. No audit trail.<br>Until now.
+  </div>
+</div>
+</body>
+</html>

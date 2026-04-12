@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.grid { position:absolute; inset:0; background-image: linear-gradient(rgba(14,165,233,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,0.04) 1px, transparent 1px); background-size:48px 48px; }
+.corner { position:absolute; width:40px; height:40px; border-color:#64748b; border-style:solid; opacity:0.3; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.content { position:relative; z-index:10; padding:55px 50px; width:100%; }
+.label { font-size:13px; letter-spacing:3px; color:#64748b; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
+.title { font-size:46px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:50px; }
+.title span { color:#0ea5e9; }
+
+.level-card {
+  width:100%; padding:26px 28px; margin-bottom:18px;
+  border-radius:14px; border:1px solid;
+  display:flex; align-items:center; gap:22px;
+  position:relative;
+}
+.level-card.l0 { background:rgba(100,116,139,0.08); border-color:rgba(100,116,139,0.25); }
+.level-card.l1 { background:rgba(16,185,129,0.08); border-color:rgba(16,185,129,0.35); }
+.level-card.l2 { background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.35); }
+.level-card.l3 { background:rgba(239,68,68,0.08); border-color:rgba(239,68,68,0.35); }
+
+.level-emoji { font-size:36px; flex-shrink:0; }
+.level-body { flex:1; }
+.level-name { font-size:22px; font-weight:900; margin-bottom:4px; }
+.l0 .level-name { color:#64748b; }
+.l1 .level-name { color:#10b981; }
+.l2 .level-name { color:#f59e0b; }
+.l3 .level-name { color:#ef4444; }
+.level-desc { font-size:13px; color:rgba(255,255,255,0.45); line-height:1.5; }
+
+.level-num {
+  font-size:13px; font-weight:900; letter-spacing:1px;
+  padding:5px 12px; border-radius:100px;
+  flex-shrink:0;
+}
+.l0 .level-num { background:rgba(100,116,139,0.2); color:#64748b; }
+.l1 .level-num { background:rgba(16,185,129,0.2); color:#10b981; }
+.l2 .level-num { background:rgba(245,158,11,0.2); color:#f59e0b; }
+.l3 .level-num { background:rgba(239,68,68,0.2); color:#ef4444; }
+
+.active-badge {
+  position:absolute; top:12px; right:16px;
+  font-size:10px; font-weight:700; letter-spacing:1.5px;
+  padding:3px 10px; border-radius:100px;
+  background:#10b981; color:#000;
+}
+
+.footer-note {
+  margin-top:10px; padding:16px 20px; text-align:center;
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px; font-size:13px; color:rgba(255,255,255,0.4); line-height:1.6;
+}
+.footer-note span { color:#0ea5e9; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="label">🔒 Protection Levels</div>
+  <div class="title">4 Levels.<br>Your <span>Choice.</span></div>
+
+  <div class="level-card l0">
+    <div class="level-emoji">⚫</div>
+    <div class="level-body">
+      <div class="level-name">OFF</div>
+      <div class="level-desc">Log only — no alerts sent. Debug mode.</div>
+    </div>
+    <div class="level-num">LVL 0</div>
+  </div>
+
+  <div class="level-card l1">
+    <div class="level-emoji">🟢</div>
+    <div class="level-body">
+      <div class="level-name">SOFT</div>
+      <div class="level-desc">Alerts for HIGH & CRITICAL only. Recommended for daily use.</div>
+    </div>
+    <div class="level-num">LVL 1</div>
+    <div class="active-badge">DEFAULT</div>
+  </div>
+
+  <div class="level-card l2">
+    <div class="level-emoji">🟡</div>
+    <div class="level-body">
+      <div class="level-name">STRICT</div>
+      <div class="level-desc">Extended rules: pastebin, telnet, FTP, chmod 777, sudo, /dev/tcp.</div>
+    </div>
+    <div class="level-num">LVL 2</div>
+  </div>
+
+  <div class="level-card l3">
+    <div class="level-emoji">🔴</div>
+    <div class="level-body">
+      <div class="level-name">LOCKDOWN</div>
+      <div class="level-desc">Alert on every action including INFO. Full investigation mode.</div>
+    </div>
+    <div class="level-num">LVL 3</div>
+  </div>
+
+  <div class="footer-note">
+    Switch levels <span>instantly from the dashboard</span> —<br>no restart required
+  </div>
+</div>
+</body>
+</html>

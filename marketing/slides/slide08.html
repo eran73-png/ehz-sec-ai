@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+.grid { position:absolute; inset:0; background-image: linear-gradient(rgba(16,185,129,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.04) 1px, transparent 1px); background-size:48px 48px; }
+.orb { position:absolute; width:500px; height:500px; background:radial-gradient(circle, rgba(16,185,129,0.09) 0%, transparent 70%); top:40%; left:50%; transform:translate(-50%,-50%); }
+.corner { position:absolute; width:40px; height:40px; border-color:#10b981; border-style:solid; opacity:0.3; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.header { position:relative; z-index:10; padding:55px 50px 30px; }
+.label { font-size:13px; letter-spacing:3px; color:#10b981; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
+.title { font-size:46px; font-weight:900; color:#fff; line-height:1.1; }
+.title span { color:#10b981; }
+
+.body { position:relative; z-index:10; padding:0 50px; flex:1; display:flex; flex-direction:column; justify-content:center; gap:16px; }
+
+/* Phone mockup */
+.phone {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px; padding:16px; margin-bottom:6px;
+  position:relative;
+}
+.phone-header {
+  display:flex; align-items:center; gap:10px;
+  padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.07);
+  margin-bottom:14px;
+}
+.tg-icon { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#229ed9,#1a7fc1); display:flex; align-items:center; justify-content:center; font-size:18px; }
+.tg-name { font-size:15px; font-weight:700; color:#fff; }
+.tg-sub { font-size:11px; color:rgba(255,255,255,0.3); }
+.tg-online { margin-left:auto; width:8px; height:8px; border-radius:50%; background:#10b981; }
+
+.msg {
+  padding:14px 16px; border-radius:12px; margin-bottom:10px;
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);
+  font-size:13px; color:rgba(255,255,255,0.8); line-height:1.7;
+  font-family:monospace;
+}
+.msg.critical { border-left:3px solid #ef4444; background:rgba(239,68,68,0.07); }
+.msg.high { border-left:3px solid #f59e0b; background:rgba(245,158,11,0.07); }
+.msg .msg-time { font-size:10px; color:rgba(255,255,255,0.25); margin-top:6px; text-align:right; font-family:sans-serif; }
+
+.feature-list { display:flex; flex-direction:column; gap:12px; }
+.feature-item {
+  display:flex; align-items:center; gap:16px;
+  padding:14px 18px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;
+}
+.feature-icon { font-size:22px; flex-shrink:0; }
+.feature-text { font-size:14px; color:rgba(255,255,255,0.7); }
+.feature-text b { color:#fff; }
+
+.footer { position:relative; z-index:10; padding:0 50px 45px; }
+.footer-box {
+  padding:16px 22px; text-align:center;
+  background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2);
+  border-radius:10px; font-size:14px; font-weight:700; color:#10b981;
+}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="orb"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="header">
+  <div class="label">📱 Telegram Alerts</div>
+  <div class="title">Instant Alerts.<br><span>Wherever</span><br>You Are.</div>
+</div>
+
+<div class="body">
+  <div class="phone">
+    <div class="phone-header">
+      <div class="tg-icon">✈️</div>
+      <div>
+        <div class="tg-name">FlowGuard Bot</div>
+        <div class="tg-sub">Security Monitor</div>
+      </div>
+      <div class="tg-online"></div>
+    </div>
+
+    <div class="msg critical">
+      🚨 <b>FlowGuard — CRITICAL</b><br>
+      🔧 Tool: <code>Bash</code><br>
+      📌 Hook: PreToolUse<br>
+      ⚡ Encoded PowerShell payload<br>
+      🕐 10/04/2026 09:14:32
+      <div class="msg-time">09:14 ✓✓</div>
+    </div>
+
+    <div class="msg high">
+      ⚠️ <b>FlowGuard — HIGH</b><br>
+      🔧 Tool: <code>Write</code><br>
+      📌 Hook: PostToolUse<br>
+      ⚡ API key written to file<br>
+      🕐 10/04/2026 09:11:08
+      <div class="msg-time">09:11 ✓✓</div>
+    </div>
+  </div>
+
+  <div class="feature-list">
+    <div class="feature-item">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-text"><b>Real-time</b> — alert arrives in under 2 seconds</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-text"><b>Smart filtering</b> — only HIGH & CRITICAL by default</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📧</div>
+      <div class="feature-text"><b>Email support</b> — SMTP for corporate environments</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-box">Works on any device — phone, tablet, desktop</div>
+</div>
+</body>
+</html>

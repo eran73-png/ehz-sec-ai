@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+.grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(14,165,233,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14,165,233,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.corner { position:absolute; width:40px; height:40px; border-color:#0ea5e9; border-style:solid; opacity:0.3; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.header {
+  position:relative; z-index:10;
+  padding:55px 50px 30px;
+}
+.label { font-size:13px; letter-spacing:3px; color:#0ea5e9; text-transform:uppercase; font-weight:700; margin-bottom:12px; }
+.title { font-size:44px; font-weight:900; color:#fff; line-height:1.1; }
+.title span { color:#0ea5e9; }
+
+.engines {
+  position:relative; z-index:10;
+  padding:0 40px; flex:1; display:flex; flex-direction:column; justify-content:center; gap:14px;
+}
+
+.engine {
+  display:flex; align-items:center; gap:20px;
+  padding:18px 22px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;
+  transition:all 0.2s;
+  position:relative; overflow:hidden;
+}
+.engine::before {
+  content:'';
+  position:absolute; left:0; top:0; bottom:0; width:3px;
+}
+.engine.green::before { background:#10b981; }
+.engine.cyan::before { background:#0ea5e9; }
+.engine.yellow::before { background:#f59e0b; }
+.engine.purple::before { background:#8b5cf6; }
+.engine.red::before { background:#ef4444; }
+.engine.orange::before { background:#f97316; }
+
+.engine-num {
+  width:36px; height:36px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:900; flex-shrink:0;
+}
+.green .engine-num { background:rgba(16,185,129,0.15); color:#10b981; }
+.cyan .engine-num { background:rgba(14,165,233,0.15); color:#0ea5e9; }
+.yellow .engine-num { background:rgba(245,158,11,0.15); color:#f59e0b; }
+.purple .engine-num { background:rgba(139,92,246,0.15); color:#8b5cf6; }
+.red .engine-num { background:rgba(239,68,68,0.15); color:#ef4444; }
+.orange .engine-num { background:rgba(249,115,22,0.15); color:#f97316; }
+
+.engine-icon { font-size:26px; flex-shrink:0; }
+.engine-body { flex:1; }
+.engine-name { font-size:16px; font-weight:700; color:#fff; margin-bottom:3px; }
+.engine-desc { font-size:12px; color:rgba(255,255,255,0.4); line-height:1.4; }
+
+.footer-bar {
+  position:relative; z-index:10;
+  margin:0 40px 40px;
+  padding:16px 22px;
+  background:rgba(14,165,233,0.08);
+  border:1px solid rgba(14,165,233,0.2);
+  border-radius:10px;
+  text-align:center;
+  font-size:15px; font-weight:700; color:#0ea5e9;
+}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="header">
+  <div class="label">⚙ Detection Engines</div>
+  <div class="title"><span>6 Engines.</span><br>Zero Blind Spots.</div>
+</div>
+
+<div class="engines">
+  <div class="engine green">
+    <div class="engine-num">01</div>
+    <div class="engine-icon">🔍</div>
+    <div class="engine-body">
+      <div class="engine-name">Signature Rules</div>
+      <div class="engine-desc">Known attack patterns — RCE, reverse shell, LOLBins, fork bombs</div>
+    </div>
+  </div>
+  <div class="engine cyan">
+    <div class="engine-num">02</div>
+    <div class="engine-icon">🔐</div>
+    <div class="engine-body">
+      <div class="engine-name">Secrets & DLP</div>
+      <div class="engine-desc">API keys, AWS credentials, private keys, credit cards, PII</div>
+    </div>
+  </div>
+  <div class="engine yellow">
+    <div class="engine-num">03</div>
+    <div class="engine-icon">🧠</div>
+    <div class="engine-body">
+      <div class="engine-name">Behavioral Analysis</div>
+      <div class="engine-desc">Anomaly detection — unusual file access, scope violations</div>
+    </div>
+  </div>
+  <div class="engine purple">
+    <div class="engine-num">04</div>
+    <div class="engine-icon">📁</div>
+    <div class="engine-body">
+      <div class="engine-name">Scope Monitor</div>
+      <div class="engine-desc">File access outside project boundaries — drive paths, UNC shares</div>
+    </div>
+  </div>
+  <div class="engine red">
+    <div class="engine-num">05</div>
+    <div class="engine-icon">🔀</div>
+    <div class="engine-body">
+      <div class="engine-name">Git Guardian</div>
+      <div class="engine-desc">Unauthorized remotes, force push, suspicious commit messages</div>
+    </div>
+  </div>
+  <div class="engine orange">
+    <div class="engine-num">06</div>
+    <div class="engine-icon">📋</div>
+    <div class="engine-body">
+      <div class="engine-name">YARA Scanner</div>
+      <div class="engine-desc">Malware file signatures — scans every written file in real-time</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-bar">Every tool call analyzed in &lt;1ms — zero performance impact</div>
+</body>
+</html>

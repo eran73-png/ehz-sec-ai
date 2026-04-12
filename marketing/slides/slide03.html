@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+
+.grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(16,185,129,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16,185,129,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glow-ring {
+  position:absolute;
+  width:480px; height:480px;
+  border:1px solid rgba(16,185,129,0.2);
+  border-radius:50%;
+  top:50%; left:50%; transform:translate(-50%,-54%);
+}
+.glow-ring2 {
+  position:absolute;
+  width:360px; height:360px;
+  border:1px solid rgba(16,185,129,0.15);
+  border-radius:50%;
+  top:50%; left:50%; transform:translate(-50%,-54%);
+}
+.orb {
+  position:absolute; width:300px; height:300px;
+  background: radial-gradient(circle, rgba(16,185,129,0.25) 0%, transparent 70%);
+  top:50%; left:50%; transform:translate(-50%,-54%);
+}
+
+.corner { position:absolute; width:40px; height:40px; border-color:#10b981; border-style:solid; opacity:0.4; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.content {
+  position:relative; z-index:10;
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; padding:60px 50px; width:100%;
+}
+
+.shield { font-size:100px; margin-bottom:30px; filter:drop-shadow(0 0 40px rgba(16,185,129,0.9)); }
+
+.intro { font-size:14px; letter-spacing:4px; color:rgba(16,185,129,0.7); text-transform:uppercase; margin-bottom:20px; font-weight:700; }
+
+.product-name {
+  font-size:62px; font-weight:900; color:#fff;
+  letter-spacing:-1px; line-height:1;
+  text-shadow: 0 0 80px rgba(16,185,129,0.5);
+  margin-bottom:8px;
+}
+.product-name span { color:#10b981; }
+
+.tagline {
+  font-size:20px; font-weight:400; color:rgba(255,255,255,0.55);
+  letter-spacing:1px; margin-bottom:50px;
+}
+
+.divider {
+  width:120px; height:2px;
+  background:linear-gradient(90deg, transparent, #10b981, transparent);
+  margin-bottom:50px;
+}
+
+.desc {
+  font-size:22px; font-weight:600; color:rgba(255,255,255,0.85);
+  line-height:1.5; margin-bottom:50px;
+}
+
+.pills { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.pill {
+  padding:8px 20px;
+  background:rgba(16,185,129,0.1);
+  border:1px solid rgba(16,185,129,0.3);
+  border-radius:100px;
+  font-size:13px; font-weight:700; color:#10b981; letter-spacing:1px;
+}
+
+.version {
+  position:absolute; bottom:50px;
+  font-size:12px; color:rgba(255,255,255,0.2); letter-spacing:2px;
+}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="glow-ring"></div>
+<div class="glow-ring2"></div>
+<div class="orb"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="shield">🛡️</div>
+  <div class="intro">Introducing</div>
+  <div class="product-name">EHZ-<span>SEC</span>-AI</div>
+  <div class="tagline">Claude Code Security Monitor</div>
+  <div class="divider"></div>
+  <div class="desc">The first dedicated security layer<br>for AI coding assistants.<br>Real-time. Zero-config. Always on.</div>
+  <div class="pills">
+    <span class="pill">6 Detection Engines</span>
+    <span class="pill">Instant Alerts</span>
+    <span class="pill">Local Deploy</span>
+  </div>
+</div>
+
+<div class="version">v1.0 — EHZ-AI Security Solutions</div>
+</body>
+</html>

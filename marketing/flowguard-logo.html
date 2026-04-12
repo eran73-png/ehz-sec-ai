@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { background:#0a1628; width:800px; height:500px; display:flex; align-items:center; justify-content:center; font-family:'Segoe UI',system-ui,sans-serif; }
+
+.logo-wrap {
+  display:flex; flex-direction:column; align-items:center; gap:40px;
+}
+
+/* VERSION 1 — Icon + Text horizontal */
+.v1 {
+  display:flex; align-items:center; gap:24px;
+}
+
+.icon-ring {
+  position:relative; width:80px; height:80px;
+}
+.ring-outer {
+  width:80px; height:80px; border-radius:50%;
+  border:2px solid rgba(16,185,129,0.4);
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.ring-outer::before {
+  content:'';
+  position:absolute; inset:-6px;
+  border-radius:50%;
+  border:1px solid rgba(16,185,129,0.15);
+}
+.ring-inner {
+  width:58px; height:58px; border-radius:50%;
+  background:linear-gradient(135deg, rgba(16,185,129,0.2), rgba(14,165,233,0.1));
+  border:1px solid rgba(16,185,129,0.3);
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Flow arrow inside */
+.flow-icon {
+  font-size:26px;
+  filter:drop-shadow(0 0 8px rgba(16,185,129,0.8));
+}
+
+.text-block { display:flex; flex-direction:column; }
+.brand-name {
+  font-size:48px; font-weight:900; letter-spacing:-1px;
+  line-height:1;
+}
+.brand-flow { color:#10b981; }
+.brand-guard { color:#ffffff; }
+
+.brand-tag {
+  font-size:11px; font-weight:700; letter-spacing:3px;
+  color:rgba(16,185,129,0.6); text-transform:uppercase;
+  margin-top:4px;
+}
+
+/* Dividers */
+.sep { width:600px; height:1px; background:rgba(255,255,255,0.05); }
+
+/* VERSION 2 — Stacked compact */
+.v2 {
+  display:flex; align-items:center; gap:16px;
+}
+
+.shield-icon {
+  width:64px; height:72px; position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.shield-svg { width:64px; height:72px; }
+
+.v2-text {}
+.v2-name {
+  font-size:36px; font-weight:900; letter-spacing:-0.5px; line-height:1;
+}
+.v2-sub { font-size:10px; letter-spacing:3px; color:rgba(255,255,255,0.35); margin-top:3px; text-transform:uppercase; }
+
+/* VERSION 3 — Minimal */
+.v3 {
+  display:flex; align-items:center; gap:14px;
+}
+.v3-dot {
+  width:12px; height:12px; border-radius:50%;
+  background:#10b981;
+  box-shadow: 0 0 12px rgba(16,185,129,0.8), 0 0 24px rgba(16,185,129,0.4);
+}
+.v3-name {
+  font-size:32px; font-weight:900; letter-spacing:2px; text-transform:uppercase;
+  color:#fff;
+}
+.v3-name span { color:#10b981; }
+.v3-line {
+  width:1px; height:32px; background:rgba(16,185,129,0.3);
+}
+.v3-tag { font-size:10px; letter-spacing:2px; color:rgba(16,185,129,0.5); line-height:1.6; text-transform:uppercase; }
+
+</style>
+</head>
+<body>
+<div class="logo-wrap">
+
+  <!-- V1: Main logo -->
+  <div class="v1">
+    <div class="icon-ring">
+      <div class="ring-outer">
+        <div class="ring-inner">
+          <div class="flow-icon">⟳</div>
+        </div>
+      </div>
+    </div>
+    <div class="text-block">
+      <div class="brand-name">
+        <span class="brand-flow">Flow</span><span class="brand-guard">Guard</span>
+      </div>
+      <div class="brand-tag">AI Security Monitor</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- V2: Shield -->
+  <div class="v2">
+    <svg class="shield-svg" viewBox="0 0 64 72" fill="none">
+      <path d="M32 2L4 14v20c0 16.6 12.1 32.1 28 36 15.9-3.9 28-19.4 28-36V14L32 2z"
+        fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1.5"/>
+      <path d="M32 12L12 21v13c0 10.5 7.6 20.3 20 22.8 12.4-2.5 20-12.3 20-22.8V21L32 12z"
+        fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+      <text x="32" y="42" text-anchor="middle" font-size="20" font-weight="900" fill="#10b981" font-family="Segoe UI">F</text>
+    </svg>
+    <div class="v2-text">
+      <div class="v2-name">
+        <span style="color:#10b981">Flow</span><span style="color:#fff">Guard</span>
+      </div>
+      <div class="v2-sub">AI Security Monitor · EHZ-AI</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- V3: Minimal -->
+  <div class="v3">
+    <div class="v3-dot"></div>
+    <div class="v3-name"><span>FLOW</span>GUARD</div>
+    <div class="v3-line"></div>
+    <div class="v3-tag">AI Security<br>Monitor</div>
+  </div>
+
+</div>
+</body>
+</html>

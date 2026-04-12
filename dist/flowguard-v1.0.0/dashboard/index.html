@@ -1,0 +1,2367 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowGuard — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #080c14;
+  --panel:    #0d1424;
+  --panel2:   #111827;
+  --border:   #1a2540;
+  --border2:  #243050;
+  --accent:   #0ea5e9;
+  --green:    #10b981;
+  --yellow:   #f59e0b;
+  --red:      #ef4444;
+  --orange:   #f97316;
+  --purple:   #8b5cf6;
+  --text:     #e2e8f0;
+  --muted:    #64748b;
+  --muted2:   #94a3b8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  padding: 24px 20px;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.header-logo {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border-radius: 14px;
+  border: 1px solid rgba(0,212,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 18px rgba(16,185,129,0.35), 0 0 40px rgba(16,185,129,0.15);
+  flex-shrink: 0;
+  overflow: visible;
+}
+.header h1 { font-size: 38px; font-weight: 900; font-style: italic; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; line-height:1; }
+.header h1 .fg-flow  { color: #00d4ff; text-shadow: 0 0 20px rgba(0,212,255,0.7), 0 0 40px rgba(0,212,255,0.3); }
+.header h1 .fg-guard { color: #ffffff; }
+.header-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+}
+.status-txt { font-size: 12px; color: var(--muted2); }
+.refresh-btn {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── STAT CARDS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--border2); }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60px; height: 60px;
+  border-radius: 0 12px 0 60px;
+  opacity: 0.08;
+}
+.stat-card.total::before  { background: var(--accent); }
+.stat-card.critical::before { background: var(--red); }
+.stat-card.high::before   { background: var(--orange); }
+.stat-card.sessions::before { background: var(--purple); }
+.stat-card.fsw::before      { background: #06b6d4; }
+.stat-card.baseline::before { background: #a855f7; }
+.stat-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+.stat-value {
+  font-size: 38px; font-weight: 900; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat-card.total    .stat-value { color: var(--accent); }
+.stat-card.critical .stat-value { color: var(--red); }
+.stat-card.high     .stat-value { color: var(--orange); }
+.stat-card.sessions .stat-value { color: var(--purple); }
+.stat-card.fsw      .stat-value { color: #06b6d4; }
+.stat-card.baseline .stat-value { color: #a855f7; }
+.stat-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.stat-icon { position: absolute; top: 16px; left: 16px; font-size: 18px; opacity: 0.5; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.toolbar-title { font-size: 13px; font-weight: 700; color: var(--muted2); flex: 1; }
+.filter-btn {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted2);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover  { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.filter-btn.crit.active  { background: var(--red);    border-color: var(--red); }
+.filter-btn.high.active  { background: var(--orange); border-color: var(--orange); }
+.filter-btn.info.active  { background: var(--muted);  border-color: var(--muted); }
+.auto-badge {
+  font-size: 10px; color: var(--green); border: 1px solid rgba(16,185,129,0.3);
+  padding: 3px 8px; border-radius: 20px; margin-right: auto;
+}
+
+/* ── EVENTS TABLE ── */
+.table-wrap {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.events-table thead tr {
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border2);
+}
+.events-table th {
+  padding: 11px 14px;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.events-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.events-table tbody tr:last-child td { border-bottom: none; }
+.events-table tbody tr { transition: background 0.1s; }
+.events-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+/* Row highlight by level */
+.events-table tbody tr.critical { border-right: 3px solid var(--red); }
+.events-table tbody tr.high     { border-right: 3px solid var(--orange); }
+
+/* Level badge */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.badge.CRITICAL { background: rgba(239,68,68,0.15);   color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+.badge.HIGH     { background: rgba(249,115,22,0.15);  color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+.badge.MEDIUM   { background: rgba(245,158,11,0.15);  color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+.badge.INFO     { background: rgba(100,116,139,0.15); color: var(--muted2); border: 1px solid rgba(100,116,139,0.2); }
+
+/* Hook type chip */
+.chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font-size: 10px;
+  background: rgba(255,255,255,0.06);
+  color: var(--muted2);
+  border: 1px solid var(--border2);
+}
+.chip.pre  { color: var(--accent); border-color: rgba(14,165,233,0.2); background: rgba(14,165,233,0.06); }
+.chip.post { color: var(--purple); border-color: rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); }
+.chip.fsw  { color: #06b6d4; border-color: rgba(6,182,212,0.25); background: rgba(6,182,212,0.08); }
+.chip.proc { color: #f43f5e; border-color: rgba(244,63,94,0.25);  background: rgba(244,63,94,0.08); }
+
+/* Reason text */
+.reason { color: var(--muted2); max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+.reason.alert { color: var(--text); font-weight: 500; }
+
+/* Timestamp */
+.ts { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+.empty-state p { font-size: 13px; }
+
+/* ── SKILLS TAB ── */
+.skills-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px; flex-wrap: wrap; gap: 10px;
+}
+.scan-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none; color: #fff; font-size: 12px; font-weight: 700;
+  padding: 8px 18px; border-radius: 8px; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.scan-btn:hover { opacity: 0.85; }
+.scan-btn:disabled { opacity: 0.5; cursor: default; }
+.skills-summary {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.skill-stat {
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 14px; font-size: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.skills-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.skills-table thead tr { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border2); }
+.skills-table th { padding: 10px 14px; text-align: right; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.skills-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+.skills-table tbody tr:last-child td { border-bottom: none; }
+.skills-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+.skill-status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 5px; font-size: 11px; font-weight: 700; }
+.skill-status.OK         { background: rgba(16,185,129,0.12);  color: var(--green);  border: 1px solid rgba(16,185,129,0.3); }
+.skill-status.NEW        { background: rgba(14,165,233,0.12);  color: var(--accent); border: 1px solid rgba(14,165,233,0.3); }
+.skill-status.CHANGED    { background: rgba(245,158,11,0.12);  color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+.skill-status.SUSPICIOUS { background: rgba(249,115,22,0.12);  color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+.skill-status.CRITICAL   { background: rgba(239,68,68,0.12);   color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+.skill-finding { font-size: 11px; color: var(--orange); margin-top: 2px; }
+.scan-note { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.symlink-badge { font-size: 9px; background: rgba(139,92,246,0.12); color: var(--purple); border: 1px solid rgba(139,92,246,0.2); padding: 1px 6px; border-radius: 3px; margin-right: 5px; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 0;
+}
+.tab-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── SETTINGS ── */
+.settings-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  width: 100%;
+}
+.settings-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 0;
+}
+.level-card {
+  border: 2px solid var(--border2);
+  border-radius: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  background: var(--panel2);
+}
+.level-card:hover { border-color: var(--accent); }
+.level-card.active-level { border-color: var(--accent); background: rgba(14,165,233,0.08); }
+.level-card.active-level.l0 { border-color: #475569; background: rgba(71,85,105,0.1); }
+.level-card.active-level.l1 { border-color: var(--green); background: rgba(16,185,129,0.08); }
+.level-card.active-level.l2 { border-color: var(--yellow); background: rgba(245,158,11,0.08); }
+.level-card.active-level.l3 { border-color: var(--red); background: rgba(239,68,68,0.08); }
+.level-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.level-emoji { font-size: 20px; }
+.level-name { font-size: 16px; font-weight: 800; }
+.level-desc { font-size: 11px; color: var(--muted2); line-height: 1.5; }
+.level-num { position: absolute; top: 10px; left: 14px; font-size: 10px; color: var(--muted); font-family: monospace; }
+.save-btn {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.save-btn:hover { opacity: 0.85; }
+.save-btn:disabled { opacity: 0.4; cursor: default; }
+.settings-status {
+  font-size: 12px;
+  color: var(--green);
+  margin-top: 10px;
+  min-height: 18px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── LAST EVENT BAR ── */
+.last-event-bar {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.last-event-bar span { color: var(--muted2); }
+
+/* ── LOADING ── */
+.loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+
+/* Scrollable table */
+.table-scroll { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">
+      <svg width="34" height="36" viewBox="0 0 34 36" fill="none">
+        <defs>
+          <filter id="sg" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="1.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Shield — ירוק בולט -->
+        <path d="M17 1L1 7v10c0 10 7 18.5 16 21 9-2.5 16-11 16-21V7L17 1z"
+          fill="rgba(16,185,129,0.25)"
+          stroke="#10b981" stroke-width="2"
+          filter="url(#sg)"/>
+        <!-- Inner shield -->
+        <path d="M17 6L6 10v7c0 6.5 4.8 12.5 11 14.5 6.2-2 11-8 11-14.5v-7L17 6z"
+          fill="rgba(16,185,129,0.1)"
+          stroke="rgba(16,185,129,0.5)" stroke-width="1"/>
+        <!-- Wheel rim -->
+        <circle cx="17" cy="20" r="6" stroke="#10b981" stroke-width="1.2" fill="none" filter="url(#sg)"/>
+        <!-- Hub -->
+        <circle cx="17" cy="20" r="1.5" fill="#10b981"/>
+        <!-- Spokes -->
+        <line x1="17" y1="14" x2="17" y2="26" stroke="#10b981" stroke-width="0.8" opacity="0.8"/>
+        <line x1="11" y1="20" x2="23" y2="20" stroke="#10b981" stroke-width="0.8" opacity="0.8"/>
+        <line x1="12.8" y1="15.8" x2="21.2" y2="24.2" stroke="#10b981" stroke-width="0.7" opacity="0.6"/>
+        <line x1="21.2" y1="15.8" x2="12.8" y2="24.2" stroke="#10b981" stroke-width="0.7" opacity="0.6"/>
+      </svg>
+    </div>
+    <div>
+      <h1><span class="fg-flow">FLOW</span><span class="fg-guard">GUARD</span></h1>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-sub" style="margin-left:0;margin-right:auto;">AI Security Monitor &nbsp;•&nbsp; <span style="color:#f59e0b;">⚠ Monitoring only — no blocking</span></div>
+    <div class="auto-badge" id="auto-badge">● Auto-refresh 5s</div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div class="status-dot" id="status-dot"></div>
+      <span class="status-txt" id="status-txt">Connecting...</span>
+    </div>
+    <div id="chain-badge" title="Immutable Audit Log — click to verify"
+      onclick="verifyChain()"
+      style="cursor:pointer;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid rgba(16,185,129,0.3);background:rgba(16,185,129,0.08);color:#10b981;">
+      🔗 Chain…
+    </div>
+    <button class="refresh-btn" onclick="loadAll()">⟳ Refresh</button>
+  </div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stats-grid">
+  <div class="stat-card total">
+    <div class="stat-label">Total Events</div>
+    <div class="stat-value" id="stat-total">—</div>
+    <div class="stat-sub" id="stat-last">—</div>
+    <div class="stat-icon">📊</div>
+  </div>
+  <div class="stat-card critical">
+    <div class="stat-label">Critical</div>
+    <div class="stat-value" id="stat-critical">—</div>
+    <div class="stat-sub">Blocked actions</div>
+    <div class="stat-icon">🚨</div>
+  </div>
+  <div class="stat-card high">
+    <div class="stat-label">High</div>
+    <div class="stat-value" id="stat-high">—</div>
+    <div class="stat-sub">High alerts</div>
+    <div class="stat-icon">⚠️</div>
+  </div>
+  <div class="stat-card sessions">
+    <div class="stat-label">Sessions</div>
+    <div class="stat-value" id="stat-sessions">—</div>
+    <div class="stat-sub">Claude Code sessions</div>
+    <div class="stat-icon">💻</div>
+  </div>
+  <div class="stat-card fsw">
+    <div class="stat-label">FSWatcher</div>
+    <div class="stat-value" id="stat-fsw">—</div>
+    <div class="stat-sub" id="stat-fsw-sub">File monitoring</div>
+    <div class="stat-icon">👁️</div>
+  </div>
+  <div class="stat-card baseline" onclick="showBaselineDetails()" style="cursor:pointer;" title="Click for Baseline details">
+    <div class="stat-label">Behavioral Baseline</div>
+    <div class="stat-value" id="stat-baseline">—</div>
+    <div class="stat-sub" id="stat-baseline-sub">Pattern learning</div>
+    <div class="stat-icon">🧠</div>
+  </div>
+</div>
+
+<!-- LAST EVENT -->
+<div class="last-event-bar" id="last-bar" style="display:none">
+  <span>⏱ Last:</span>
+  <span id="last-tool"></span>
+  <span id="last-level-badge"></span>
+  <span id="last-reason" style="color:var(--muted);"></span>
+  <span style="margin-right:auto;"></span>
+  <span class="ts" id="last-ts"></span>
+</div>
+
+<!-- TABS -->
+<div class="tabs" dir="ltr">
+  <button class="tab-btn active" id="tab-events"    onclick="switchTab('events')">📋 Events</button>
+  <button class="tab-btn"        id="tab-skills"    onclick="switchTab('skills')">🔍 Skills</button>
+  <button class="tab-btn"        id="tab-audit"     onclick="switchTab('audit')">🗂️ File Audit</button>
+  <button class="tab-btn"        id="tab-projects"  onclick="switchTab('projects')">📁 Projects</button>
+  <button class="tab-btn"        id="tab-domains"   onclick="switchTab('domains')">🌐 Web Access</button>
+  <button class="tab-btn"        id="tab-sessions"  onclick="switchTab('sessions')">📼 Sessions</button>
+  <button class="tab-btn"        id="tab-settings"  onclick="switchTab('settings')">⚙️ Settings</button>
+</div>
+
+<!-- EVENTS TAB -->
+<div id="view-events" dir="ltr">
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <span class="toolbar-title">Events Log</span>
+  <button class="filter-btn active"     onclick="setFilter('ALL')"      id="f-all">All</button>
+  <button class="filter-btn crit"       onclick="setFilter('CRITICAL')" id="f-critical">🚨 Critical</button>
+  <button class="filter-btn high"       onclick="setFilter('HIGH')"     id="f-high">⚠️ High</button>
+  <button class="filter-btn info"       onclick="setFilter('INFO')"     id="f-info">ℹ️ Info</button>
+  <button class="refresh-btn" onclick="exportHTML()" style="margin-right:auto;color:#a78bfa;border-color:#7c3aed44;">📄 Export HTML</button>
+</div>
+
+<!-- SEARCH BAR (MS6.14b) -->
+<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
+  <input id="events-search" type="text" placeholder="🔍 Search — tool, reason, level..."
+    style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:7px 12px;font-size:12px;direction:rtl;"
+    oninput="applySearch()" />
+  <select id="events-tool-filter" onchange="applySearch()"
+    style="background:var(--panel2);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;padding:7px 10px;font-size:12px;">
+    <option value="">All tools</option>
+    <option>WebSearch</option><option>WebFetch</option><option>Write</option>
+    <option>Edit</option><option>Bash</option><option>Read</option>
+    <option>FSWatcher</option>
+    <option>ProcessMonitor</option>
+  </select>
+  <span id="search-count" style="font-size:11px;color:var(--muted);white-space:nowrap;"></span>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <div class="table-scroll">
+    <table class="events-table">
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Hook</th>
+          <th>Tool</th>
+          <th>Reason / Description</th>
+          <th>Session</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="events-tbody">
+        <tr><td colspan="6"><div class="loading">Loading...</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /view-events -->
+
+<!-- SKILLS TAB -->
+<div id="view-skills" dir="ltr" style="display:none">
+<div class="skills-header">
+  <span style="font-size:13px;font-weight:700;color:var(--muted2);">🔍 Skills Security Scanner</span>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="scan-note" id="skills-last-scan">Not scanned yet</span>
+    <button class="scan-btn" id="scan-btn" onclick="runScan()">▶ Scan now</button>
+  </div>
+</div>
+
+<div class="skills-summary" id="skills-summary" style="display:none">
+  <div class="skill-stat">📦 Total: <b id="sk-total">—</b></div>
+  <div class="skill-stat" style="color:var(--green)">✅ OK: <b id="sk-ok">—</b></div>
+  <div class="skill-stat" style="color:var(--accent)">🆕 New: <b id="sk-new">—</b></div>
+  <div class="skill-stat" style="color:var(--yellow)">🔄 Changed: <b id="sk-changed">—</b></div>
+  <div class="skill-stat" style="color:var(--orange)">🔶 Suspicious: <b id="sk-suspicious">—</b></div>
+  <div class="skill-stat" style="color:var(--red)">🚨 Critical: <b id="sk-critical">—</b></div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-scroll">
+    <table class="skills-table">
+      <thead>
+        <tr>
+          <th>Skill</th>
+          <th>Status</th>
+          <th>Findings</th>
+          <th>Hash</th>
+          <th>Last scan</th>
+        </tr>
+      </thead>
+      <tbody id="skills-tbody">
+        <tr><td colspan="5"><div class="loading">Click "Scan now" to start scan</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div><!-- /view-skills -->
+
+<!-- SETTINGS TAB -->
+<div id="view-settings" style="display:none">
+<div class="settings-panel" dir="ltr">
+  <div class="settings-section-title">🔒 Hardening Level — threat monitoring & detection</div>
+
+  <!-- cards + table side by side -->
+  <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;">
+
+    <!-- level cards -->
+    <div style="flex:1 1 0;min-width:280px;">
+      <div class="level-grid">
+        <div class="level-card l0" onclick="selectLevel(0)" id="lc0">
+          <div class="level-num">Level 0</div>
+          <div class="level-card-header">
+            <span class="level-emoji">⚫</span>
+            <span class="level-name">OFF</span>
+          </div>
+          <div class="level-desc">Monitor only — no Telegram or alerts. Useful for debugging.</div>
+        </div>
+        <div class="level-card l1" onclick="selectLevel(1)" id="lc1">
+          <div class="level-num">Level 1</div>
+          <div class="level-card-header">
+            <span class="level-emoji">🟢</span>
+            <span class="level-name">SOFT</span>
+          </div>
+          <div class="level-desc">Default. HIGH and CRITICAL alerts only. No INFO or MEDIUM sent.</div>
+        </div>
+        <div class="level-card l2" onclick="selectLevel(2)" id="lc2">
+          <div class="level-num">Level 2</div>
+          <div class="level-card-header">
+            <span class="level-emoji">🟡</span>
+            <span class="level-name">STRICT</span>
+          </div>
+          <div class="level-desc">Additional strict rules: pastebin, telnet, FTP, chmod 777, sudo, /dev/tcp.</div>
+        </div>
+        <div class="level-card l3" onclick="selectLevel(3)" id="lc3">
+          <div class="level-num">Level 3</div>
+          <div class="level-card-header">
+            <span class="level-emoji">🔴</span>
+            <span class="level-name">LOCKDOWN</span>
+          </div>
+          <div class="level-desc">Alert on every action including INFO. Full investigation mode — maximum verbosity.</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+        <button class="save-btn" id="save-level-btn" onclick="saveLevel()">Save level</button>
+        <div class="settings-status" id="settings-status"></div>
+      </div>
+    </div>
+
+    <!-- explanation table -->
+    <div style="flex:1 1 0;min-width:260px;">
+      <div class="settings-section-title">📖 What happens at each level</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border2);">
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">Level</th>
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">Telegram</th>
+            <th style="text-align:right;padding:7px 8px;color:var(--muted);font-weight:700;letter-spacing:1px;">Recommended use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:8px;">⚫ OFF</td>
+            <td style="padding:8px;color:var(--muted);">Nothing</td>
+            <td style="padding:8px;color:var(--muted);">Debug / Dev</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(16,185,129,0.04);">
+            <td style="padding:8px;">🟢 SOFT</td>
+            <td style="padding:8px;color:var(--green);">HIGH + CRITICAL</td>
+            <td style="padding:8px;color:var(--green);">Daily use ✓</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:8px;">🟡 STRICT</td>
+            <td style="padding:8px;color:var(--yellow);">HIGH + CRITICAL</td>
+            <td style="padding:8px;color:var(--muted);">Sensitive env</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;">🔴 LOCKDOWN</td>
+            <td style="padding:8px;color:var(--red);">Everything incl. INFO</td>
+            <td style="padding:8px;color:var(--muted);">Incident investigation</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+        ℹ️ All levels log to DB — the difference is <b style="color:var(--muted2);">what is sent via Telegram/Email</b>.<br>
+        🔒 <b style="color:var(--muted2);">Monitor only</b> — blocking will be enabled in Milestone 10.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Log Retention -->
+  <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;">
+    <div class="settings-section-title">🗑️ Log Management</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;" id="retention-info">
+      <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">Retention</span>
+        <b style="color:var(--text)" id="ret-days">—</b>
+      </div>
+      <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">Max events</span>
+        <b style="color:var(--text)" id="ret-max">—</b>
+      </div>
+      <div class="skill-stat" style="flex-direction:column;align-items:flex-start;gap:3px;">
+        <span style="font-size:10px;color:var(--muted);letter-spacing:1px;">Total events</span>
+        <b style="color:var(--accent)" id="ret-total">—</b>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <button onclick="clearLogs(7)"  style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--yellow);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
+        🗑 Delete older than 7 days
+      </button>
+      <button onclick="clearLogs(30)" style="background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);color:var(--orange);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
+        🗑 Delete older than 30 days
+      </button>
+      <button onclick="clearLogs(0)"  style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:var(--red);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;">
+        ⚠️ Delete all
+      </button>
+    </div>
+    <div style="min-height:18px;margin-top:10px;font-size:12px;" id="clear-status"></div>
+  </div>
+
+  <!-- Notifications -->
+  <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;">
+    <div class="settings-section-title">🔔 Notifications — Telegram & Email</div>
+
+    <!-- Telegram -->
+    <div style="background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.2);border-radius:12px;padding:16px 18px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">✈️</span>
+          <div>
+            <div style="font-weight:700;font-size:14px;">Telegram Bot</div>
+            <div style="font-size:11px;color:var(--muted);">Send real-time alerts to a Telegram bot</div>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="tg-enabled" onchange="notifToggle('tg')" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
+          <span id="tg-status-label" style="font-size:12px;color:var(--muted);">Off</span>
+        </label>
+      </div>
+      <div id="tg-info" style="font-size:11px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,0.02);border-radius:8px;padding:9px 12px;">
+        ℹ️ Telegram settings (Token + Chat ID) are stored in <b style="color:var(--muted2);">collector/server.js</b> — lines TELEGRAM_TOKEN and TELEGRAM_CHAT_ID.<br>
+        Here you can only enable/disable sending.
+        <div style="margin-top:10px;padding:10px 12px;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:8px;line-height:2;">
+          📱 <b style="color:var(--muted2);">How to create a Telegram bot (phone or desktop):</b><br>
+          <span style="color:var(--muted2);">1.</span> Open Telegram and search for <b style="color:var(--accent);">@BotFather</b><br>
+          <span style="color:var(--muted2);">2.</span> Send <b style="color:var(--accent);">/newbot</b><br>
+          <span style="color:var(--muted2);">3.</span> Give the bot a name (e.g.: <span style="color:var(--muted2);">MySecurityBot</span>)<br>
+          <span style="color:var(--muted2);">4.</span> BotFather will send you a <b style="color:var(--green);">Token</b> — — copy it to server.js<br>
+          <span style="color:var(--muted2);">5.</span> Open your bot and send <b style="color:var(--accent);">/start</b><br>
+          <span style="color:var(--muted2);">6.</span> To get your <b style="color:var(--green);">Chat ID</b> — send a message to your bot then open in browser:<br>
+          &nbsp;&nbsp;&nbsp;<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:10px;">https://api.telegram.org/bot<span style="color:var(--yellow);">TOKEN</span>/getUpdates</code>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <button onclick="testTelegram()" style="background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.35);color:var(--accent);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">
+          📨 Send test message
+        </button>
+        <span id="tg-test-status" style="font-size:11px;margin-right:10px;"></span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:12px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">📧</span>
+          <div>
+            <div style="font-weight:700;font-size:14px;">Email (SMTP)</div>
+            <div style="font-size:11px;color:var(--muted);">Alternative to Telegram — send to any email address</div>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="email-enabled" onchange="notifToggle('email')" style="width:18px;height:18px;accent-color:#8b5cf6;cursor:pointer;">
+          <span id="email-status-label" style="font-size:12px;color:var(--muted);">Off</span>
+        </label>
+      </div>
+
+      <div id="email-fields" style="margin-top:12px;">
+        <div style="font-size:11px;color:var(--yellow);background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:9px 13px;margin-bottom:12px;line-height:1.7;">
+          ⚠️ <b>To receive email alerts — fill in the details below and enable the toggle above.</b><br>
+          Without filling in the details, no alerts will be sent even if the toggle is enabled.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">SMTP Host</label>
+            <input id="smtp-host" type="text" placeholder="smtp.gmail.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Port</label>
+            <input id="smtp-port" type="number" placeholder="587" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Username / Email</label>
+            <input id="smtp-user" type="text" placeholder="your@gmail.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Password / App Password</label>
+            <input id="smtp-pass" type="password" placeholder="••••••••" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">From (sender)</label>
+            <input id="smtp-from" type="text" placeholder="security@yourdomain.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">To (recipient)</label>
+            <input id="smtp-to" type="text" placeholder="admin@company.com" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;">
+          <input type="checkbox" id="smtp-secure" style="width:15px;height:15px;accent-color:#8b5cf6;cursor:pointer;">
+          <span style="font-size:12px;color:var(--muted2);">TLS/SSL (port 465)</span>
+        </label>
+        <div style="font-size:11px;color:var(--muted);background:rgba(255,255,255,0.02);border-radius:8px;padding:9px 12px;margin-bottom:12px;line-height:1.6;">
+          💡 <b style="color:var(--muted2);">Gmail:</b> Enable "App Passwords" in Google Account, use smtp.gmail.com:587<br>
+          💡 <b style="color:var(--muted2);">Outlook:</b> smtp-mail.outlook.com:587 (TLS Off)
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-top:4px;">
+        <button onclick="saveNotifSettings()" style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#a78bfa;font-size:12px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;">
+          💾 Save settings
+        </button>
+        <button onclick="testEmail()" id="email-test-btn" style="display:none;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);color:#c4b5fd;font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">
+          📨 Send test
+        </button>
+        <span id="notif-save-status" style="font-size:11px;"></span>
+      </div>
+    </div>
+
+    <!-- Git Remotes Allowlist -->
+    <div style="margin-top:14px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:18px;">🔗</span>
+        <div>
+          <div style="font-weight:700;font-size:14px;">Authorized Git Remotes</div>
+          <div style="font-size:11px;color:var(--muted);">Push to unlisted server → HIGH alert</div>
+        </div>
+      </div>
+      <!-- info box -->
+      <div style="font-size:11px;color:var(--muted2);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 13px;margin-bottom:12px;line-height:1.8;">
+        📋 <b style="color:var(--muted2);">What to add to the list?</b><br>
+        Any Git server you are authorized to push to — hostname or IP:<br>
+        <span style="color:var(--green);">✓ github.com</span> &nbsp;|&nbsp;
+        <span style="color:var(--green);">✓ gitlab.com</span> &nbsp;|&nbsp;
+        <span style="color:var(--green);">✓ bitbucket.org</span> &nbsp;|&nbsp;
+        <span style="color:var(--green);">✓ Internal server IP</span><br>
+        <span style="color:var(--yellow);">⚠️ Added a new server?</span> Add it here to avoid HIGH alerts on every push.
+      </div>
+
+      <div id="git-remotes-list" style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input id="new-remote-input" type="text" placeholder="hostname or IP (e.g. github.com)" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none;">
+        <button onclick="addGitRemote()" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4);color:var(--green);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;">+ Add</button>
+      </div>
+      <div style="min-height:16px;margin-top:6px;font-size:11px;" id="remote-status"></div>
+    </div>
+
+  </div><!-- /Notifications -->
+
+</div>
+</div><!-- /view-settings -->
+
+<!-- SESSIONS TAB (MS7.2) -->
+<div id="view-sessions" dir="ltr" style="display:none">
+<div class="toolbar">
+  <span class="toolbar-title">📼 Session Recording</span>
+  <button class="refresh-btn" onclick="loadSessions()">🔄 Refresh</button>
+  <button class="refresh-btn" onclick="exportAllSessions()" style="color:#10b981;border-color:rgba(16,185,129,0.3);">📄 Export all</button>
+</div>
+
+<!-- info box -->
+<div style="background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.15);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;">
+  <div style="font-size:22px;flex-shrink:0;">ℹ️</div>
+  <div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">What is recorded here?</div>
+    <div style="font-size:12px;color:var(--muted2);line-height:1.7;">
+      Every Claude Code conversation is recorded as a <b>Session</b> — a group of actions under the same session ID.<br>
+      <b>Recorded:</b> Which tools were used (Read/Edit/Bash...), on which files, when, and the risk level.<br>
+      <b>Not recorded:</b> Prompt text or responses — only the actual actions.<br>
+      <b>For investigation:</b> Click ▼ for full timeline · Click 📄 to export a single session as HTML.
+    </div>
+  </div>
+</div>
+
+<div id="sessions-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+</div><!-- /view-sessions -->
+
+<!-- FILE AUDIT TAB -->
+<div id="view-audit" dir="ltr" style="display:none">
+<div class="toolbar" style="flex-wrap:wrap;gap:8px;">
+  <span class="toolbar-title">🗂️ File Audit Scanner</span>
+  <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:280px;">
+    <label style="font-size:11px;color:var(--muted);white-space:nowrap;">Scan path:</label>
+    <input id="audit-path-input" type="text" value="C:/Claude-Repo"
+      style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);
+             border-radius:6px;padding:5px 10px;font-size:12px;font-family:monospace;"
+      placeholder="C:/Claude-Repo" />
+    <button class="refresh-btn" onclick="resetAuditPath()" title="Reset to default"
+      style="padding:5px 8px;font-size:12px;">↩</button>
+    <button class="refresh-btn" onclick="browseAuditPath()" title="Browse folder"
+      style="padding:5px 10px;font-size:12px;">📁 Browse</button>
+    <input type="file" id="audit-folder-picker" webkitdirectory style="display:none"
+      onchange="auditFolderSelected(this)">
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--border2);border-radius:6px;padding:3px 4px;">
+    <button id="scan-mode-full" onclick="setScanMode('full')"
+      style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:#0ea5e9;color:#fff;font-weight:700;">
+      🔍 Full
+    </button>
+    <button id="scan-mode-inc" onclick="setScanMode('incremental')"
+      style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:transparent;color:var(--muted2);">
+      ⚡ Changed only
+    </button>
+  </div>
+  <button class="refresh-btn" onclick="runAuditScan()" id="audit-scan-btn">▶ Scan now</button>
+  <a id="audit-export-link" href="http://127.0.0.1:3010/audit/export" style="text-decoration:none">
+    <button class="refresh-btn" style="color:#10b981;border-color:#10b98144">⬇ Export Excel</button>
+  </a>
+</div>
+
+<!-- Summary Cards -->
+<div id="audit-summary-cards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;"></div>
+
+<!-- Scan info bar -->
+<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+  <div style="flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:7px 14px;">
+    <span style="font-size:16px;">🕵️</span>
+    <div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Last scan performed</div>
+      <div id="audit-last-scan" style="font-size:12px;font-weight:700;color:var(--text);">—</div>
+    </div>
+  </div>
+  <div style="flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:7px 14px;">
+    <span style="font-size:16px;">🕓</span>
+    <div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Next weekly scan</div>
+      <div id="audit-next-run" style="font-size:12px;font-weight:700;color:var(--accent);">Loading...</div>
+    </div>
+  </div>
+  <div id="audit-meta" style="flex:2;min-width:200px;display:flex;align-items:center;font-size:11px;color:var(--muted);background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:7px 14px;"></div>
+</div>
+
+<!-- Results Table -->
+<div style="overflow-x:auto;">
+<table id="audit-table" dir="ltr" style="width:100%;border-collapse:collapse;font-size:12px;">
+  <thead>
+    <tr style="background:var(--panel2);color:var(--muted2);">
+      <th style="padding:8px 12px;text-align:left;border-bottom:1px solid var(--border2);">File</th>
+      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">Risk</th>
+      <th style="padding:8px 12px;text-align:center;border-bottom:1px solid var(--border2);">Score</th>
+      <th style="padding:8px 12px;text-align:left;border-bottom:1px solid var(--border2);">Findings</th>
+    </tr>
+  </thead>
+  <tbody id="audit-tbody"></tbody>
+</table>
+</div>
+<div id="audit-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);">No findings — run a scan</div>
+</div>
+
+<!-- WEB ACCESS TAB -->
+<div id="view-domains" dir="ltr" style="display:none">
+<div class="toolbar">
+  <span class="toolbar-title">🌐 Web Access Allowlist</span>
+  <button class="refresh-btn" onclick="loadDomains()">↺ Refresh</button>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+  <!-- Left column: allowed + discovered -->
+  <div style="display:flex;flex-direction:column;gap:12px;">
+
+    <!-- Allowed domains -->
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">✅ Manually authorized domains</div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <input id="domain-add-input" type="text" placeholder="example.com"
+          style="flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:6px 10px;font-size:12px;"
+          onkeydown="if(event.key==='Enter') addDomain()" />
+        <button class="refresh-btn" onclick="addDomain()" style="color:var(--green);border-color:#10b98144;">+ Add</button>
+      </div>
+      <div id="domains-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;"></div>
+    </div>
+
+    <!-- Auto-discovered domains -->
+    <div style="background:var(--panel);border:1px solid #6366f133;border-radius:12px;padding:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:700;color:var(--text);">🔍 Discovered in search <span id="discovered-count" style="color:var(--muted);font-weight:400;font-size:11px;"></span></div>
+        <div style="font-size:10px;color:var(--muted2);">Approve = add to allowlist | ✕ = Block</div>
+      </div>
+      <div id="discovered-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;">
+        <div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">Waiting for searches...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WebFetch + WebSearch history -->
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📜 Web access history — WebFetch + WebSearch</div>
+    <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:500px;overflow-y:auto;font-size:11px;"></div>
+  </div>
+
+</div>
+</div><!-- /view-domains -->
+
+<!-- PROJECTS TAB -->
+<div id="view-projects" dir="ltr" style="display:none">
+<div class="toolbar">
+  <span class="toolbar-title">📁 Projects Explorer — C:/Claude-Repo</span>
+  <button class="refresh-btn" onclick="loadProjects()">↺ Refresh</button>
+</div>
+
+<div id="projects-meta" style="font-size:11px;color:var(--muted);margin-bottom:14px;"></div>
+
+<div id="projects-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+  <div style="text-align:center;padding:40px;color:var(--muted);grid-column:1/-1;">Loading...</div>
+</div>
+</div><!-- /view-projects -->
+
+<div class="footer">
+  EHZ-AI | Claude Code Security Monitor | 054-4825276 &nbsp;•&nbsp;
+  Collector: <a href="http://localhost:3010/health" target="_blank" style="color:var(--accent)">localhost:3010</a>
+</div>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────────────────
+const API       = 'http://localhost:3010';
+const LIMIT     = 100;
+const REFRESH_S = 5;
+
+let currentFilter = 'ALL';
+let refreshTimer  = null;
+let lastCount     = 0;
+
+// ── Fetch helpers ────────────────────────────────────────────────────────────
+
+async function fetchJSON(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+// ── Stats ────────────────────────────────────────────────────────────────────
+
+async function loadStats() {
+  try {
+    const s = await fetchJSON('/stats');
+    document.getElementById('stat-total').textContent    = s.total    ?? 0;
+    document.getElementById('stat-critical').textContent = s.critical ?? 0;
+    document.getElementById('stat-high').textContent     = s.high     ?? 0;
+    document.getElementById('stat-sessions').textContent = s.sessions ?? 0;
+
+    if (s.last_ts) {
+      document.getElementById('stat-last').textContent =
+        'Last: ' + fmtTs(s.last_ts);
+    }
+
+    // FSWatcher status
+    try {
+      const fw = await fetchJSON('/fsw/status');
+      document.getElementById('stat-fsw').textContent    = fw.active ? '✅ On' : '❌ Off';
+      document.getElementById('stat-fsw-sub').textContent = fw.active
+        ? `${fw.eventsToday ?? 0} events today`
+        : 'File monitoring';
+    } catch(_) {
+      document.getElementById('stat-fsw').textContent = '—';
+    }
+
+    // Behavioral Baseline
+    try {
+      const bl = await fetchJSON('/baseline/status');
+      const el  = document.getElementById('stat-baseline');
+      const sub = document.getElementById('stat-baseline-sub');
+      if (bl.status === 'learning') {
+        el.textContent  = '📚 Learning';
+        sub.textContent = bl.message;
+        el.style.color  = '#a855f7';
+      } else if (bl.status === 'anomaly') {
+        el.textContent  = `⚠️ ${bl.anomalies.length} anomalies`;
+        sub.textContent = bl.anomalies[0]?.msg?.slice(0,30) + '…';
+        el.style.color  = '#f97316';
+      } else {
+        el.textContent  = '✅ Normal';
+        sub.textContent = `${bl.sessions_analyzed} sessions analyzed`;
+        el.style.color  = '#10b981';
+      }
+    } catch(_) {
+      document.getElementById('stat-baseline').textContent = '—';
+    }
+
+    // Status dot
+    setOnline(true);
+  } catch(e) {
+    setOnline(false);
+  }
+}
+
+// ── Events ───────────────────────────────────────────────────────────────────
+
+async function loadEvents() {
+  try {
+    const path = currentFilter === 'ALL'
+      ? `/events?limit=${LIMIT}`
+      : `/events?limit=${LIMIT}&level=${currentFilter}`;
+    const data = await fetchJSON(path);
+    _allEvents = data.events || [];
+    applySearch();
+
+    // Last event bar
+    if (data.events && data.events.length > 0) {
+      const e = data.events[0];
+      document.getElementById('last-bar').style.display = 'flex';
+      document.getElementById('last-tool').textContent  = e.tool_name;
+      document.getElementById('last-level-badge').innerHTML = badgeHTML(e.level);
+      document.getElementById('last-reason').textContent    = e.reason || '';
+      document.getElementById('last-ts').textContent        = fmtTs(e.ts);
+    }
+  } catch(e) {
+    setOnline(false);
+  }
+}
+
+async function loadAll() {
+  await Promise.all([loadStats(), loadEvents(), loadChainStatus()]);
+}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+
+function renderTable(events) {
+  const tbody = document.getElementById('events-tbody');
+  if (!events.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">
+      <div class="icon">🔍</div>
+      <p>No events match the selected filter</p>
+    </div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = events.map(e => {
+    const rowClass = e.level === 'CRITICAL' ? 'critical' : e.level === 'HIGH' ? 'high' : '';
+    const hookChip = chipHTML(e.hook_type, e.tool_name);
+    const reason   = e.reason
+      ? `<span class="reason alert">${esc(e.reason)}</span>`
+      : `<span class="reason">${esc((e.input_summary||'').slice(0,60))}</span>`;
+    const session  = (e.session_id || '').slice(0, 8) + '…';
+
+    return `<tr class="${rowClass}">
+      <td>${badgeHTML(e.level)}</td>
+      <td>${hookChip}</td>
+      <td><code style="font-size:12px;color:var(--accent)">${esc(e.tool_name)}</code></td>
+      <td>${reason}</td>
+      <td><span style="font-size:11px;color:var(--muted);font-family:monospace">${session}</span></td>
+      <td><span class="ts">${fmtTs(e.ts)}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function badgeHTML(level) {
+  return `<span class="badge ${level}">${level}</span>`;
+}
+
+function chipHTML(hookType, toolName) {
+  if (toolName === 'FSWatcher')     return `<span class="chip fsw">👁️ FSW</span>`;
+  if (toolName === 'ProcessMonitor') return `<span class="chip proc">⚙️ PROC</span>`;
+  const cls = hookType === 'PreToolUse' ? 'pre' : hookType === 'PostToolUse' ? 'post' : '';
+  const lbl = hookType === 'PreToolUse' ? 'Pre' : hookType === 'PostToolUse' ? 'Post' : hookType || '?';
+  return `<span class="chip ${cls}">${lbl}</span>`;
+}
+
+function fmtTs(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  const date = d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Jerusalem' });
+  const time = d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jerusalem' });
+  return `${date} ${time}`;
+}
+
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function setOnline(on) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-txt');
+  dot.style.background   = on ? 'var(--green)'  : 'var(--red)';
+  dot.style.boxShadow    = on ? '0 0 8px var(--green)' : '0 0 8px var(--red)';
+  dot.style.animation    = on ? 'pulse 2s infinite' : 'none';
+  txt.textContent        = on ? 'Collector On' : 'Collector not responding';
+  txt.style.color        = on ? 'var(--green)'  : 'var(--red)';
+}
+
+// ── Behavioral Baseline (MS7.6) ───────────────────────────────────────────────
+
+async function showBaselineDetails() {
+  try {
+    const bl = await fetchJSON('/baseline/status');
+    if (bl.status === 'learning') { alert('🧠 Baseline\n\n' + bl.message + '\n\nEvents so far: ' + bl.events); return; }
+
+    const b = bl.baseline;
+    const tools = (b.top_tools || []).map(t => `  ${t.tool}: ${t.pct}%`).join('\n');
+    const hours = (b.active_hours || []).join(', ');
+    const anomalies = bl.anomalies.length
+      ? '\n⚠️ anomalies:\n' + bl.anomalies.map(a => `  [${a.level}] ${a.msg}`).join('\n')
+      : '\n✅ No anomalies — session normal';
+
+    alert(`🧠 Behavioral Baseline — ${bl.sessions_analyzed} sessions
+
+📊 Historical average:
+  Actions per session: ${b.avg_events_per_session}
+  HIGH per session: ${b.avg_highs_per_session}
+  Active hours: ${hours || 'Not enough data'}
+
+🔧 Common tools:
+${tools}
+
+📍 Current session:
+  Actions: ${bl.current_session?.events}
+  HIGH: ${bl.current_session?.highs}
+${anomalies}`);
+  } catch(e) { alert('Error loading baseline: ' + e.message); }
+}
+
+// ── Hash Chain Verify (MS7.5) ─────────────────────────────────────────────────
+
+async function verifyChain() {
+  const badge = document.getElementById('chain-badge');
+  badge.textContent = '🔗 Checking…';
+  try {
+    const d = await fetchJSON('/audit/verify');
+    if (d.valid) {
+      badge.textContent  = `🔗 ✅ Chain Valid (${d.checked})`;
+      badge.style.color  = '#10b981';
+      badge.style.borderColor = 'rgba(16,185,129,0.3)';
+      badge.style.background  = 'rgba(16,185,129,0.08)';
+    } else {
+      badge.textContent  = `🔗 ❌ Chain BROKEN!`;
+      badge.style.color  = '#ef4444';
+      badge.style.borderColor = 'rgba(239,68,68,0.4)';
+      badge.style.background  = 'rgba(239,68,68,0.1)';
+      alert(`⚠️ Audit log tampered!\n\nBroken at: ${new Date(d.broken_at?.ts).toLocaleString('he-IL')}\nTool: ${d.broken_at?.tool}`);
+    }
+  } catch(e) {
+    badge.textContent = '🔗 Error';
+  }
+}
+
+// auto-load chain status
+async function loadChainStatus() {
+  try {
+    const d = await fetchJSON('/audit/verify');
+    const badge = document.getElementById('chain-badge');
+    if (d.valid) {
+      badge.textContent = `🔗 ✅ ${d.checked} events`;
+    } else {
+      badge.textContent = '🔗 ❌ BROKEN!';
+      badge.style.color = '#ef4444';
+      badge.style.borderColor = 'rgba(239,68,68,0.4)';
+      badge.style.background  = 'rgba(239,68,68,0.1)';
+    }
+  } catch(_) {}
+}
+
+// ── Filter ───────────────────────────────────────────────────────────────────
+
+let _allEvents = [];
+
+function setFilter(f) {
+  currentFilter = f;
+  ['ALL','CRITICAL','HIGH','INFO'].forEach(k => {
+    const id = 'f-' + k.toLowerCase();
+    document.getElementById(id)?.classList.toggle('active', k === f);
+  });
+  loadEvents();
+}
+
+// ── Search (MS6.14b) ──────────────────────────────────────────────────────────
+
+function applySearch() {
+  const q    = (document.getElementById('events-search').value || '').toLowerCase();
+  const tool = (document.getElementById('events-tool-filter').value || '').toLowerCase();
+  const filtered = _allEvents.filter(e => {
+    const matchQ    = !q    || JSON.stringify(e).toLowerCase().includes(q);
+    const matchTool = !tool || (e.tool_name || '').toLowerCase() === tool;
+    return matchQ && matchTool;
+  });
+  renderTable(filtered);
+  document.getElementById('search-count').textContent =
+    (q || tool) ? `${filtered.length} results` : '';
+}
+
+// ── Export HTML (MS6.14c) ──────────────────────────────────────────────────────
+
+async function exportHTML() {
+  try {
+    const data = await fetchJSON('/events?limit=1000');
+    const events = data.events || [];
+    const now = new Date().toLocaleString('he-IL');
+    const rows = events.map(e => {
+      const color = e.level==='CRITICAL'?'#7f1d1d':e.level==='HIGH'?'#431407':e.level==='MEDIUM'?'#422006':'#0c1a0c';
+      const tc    = e.level==='CRITICAL'?'#fca5a5':e.level==='HIGH'?'#fdba74':e.level==='MEDIUM'?'#fde68a':'#86efac';
+      return `<tr style="background:${color}">
+        <td style="color:#94a3b8;font-size:11px">${new Date(e.ts).toLocaleString('he-IL')}</td>
+        <td><span style="background:${tc}22;color:${tc};border:1px solid ${tc}44;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700">${e.level}</span></td>
+        <td style="color:#e2e8f0">${e.tool_name||''}</td>
+        <td style="color:#cbd5e1;font-size:11px">${e.reason||''}</td>
+      </tr>`;
+    }).join('');
+    const html = `<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8">
+<title>FlowGuard Report — ${now}</title>
+<style>body{background:#080c14;color:#e2e8f0;font-family:Segoe UI,Arial,sans-serif;padding:24px}
+h1{color:#0ea5e9;margin-bottom:4px}p{color:#64748b;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}th{background:#0ea5e922;color:#0ea5e9;padding:8px 12px;text-align:right;font-size:12px}
+td{padding:7px 12px;border-bottom:1px solid #1a2540;font-size:12px}</style></head>
+<body><h1>🛡️ FlowGuard — Security Report</h1>
+<p>Generated: ${now} | Total: ${events.length} events</p>
+<table><tr><th>Time</th><th>Level</th><th>Tool</th><th>Reason</th></tr>${rows}</table></body></html>`;
+    const blob = new Blob([html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `FlowGuard-Report-${new Date().toISOString().slice(0,10)}.html`;
+    a.click();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+// ── Auto-refresh ─────────────────────────────────────────────────────────────
+
+function startRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(loadAll, REFRESH_S * 1000);
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+
+function switchTab(tab) {
+  ['events','skills','audit','projects','domains','sessions','settings'].forEach(t => {
+    document.getElementById('view-' + t).style.display = t === tab ? '' : 'none';
+    document.getElementById('tab-'  + t).classList.toggle('active', t === tab);
+  });
+  if (tab === 'audit')    { loadAuditResults(); }
+  if (tab === 'settings') { loadConfig(); loadRetention(); loadNotifSettings(); }
+  if (tab === 'skills')   { loadSkillsRegistry(); }
+  if (tab === 'projects') { loadProjects(); }
+  if (tab === 'domains')  { loadDomains(); loadDomainHistory(); }
+  if (tab === 'sessions') { loadSessions(); }
+}
+
+// ── Sessions (MS7.2) ──────────────────────────────────────────────────────────
+
+const LEVEL_COLOR = { CRITICAL:'var(--red)', HIGH:'var(--orange)', MEDIUM:'var(--yellow)', INFO:'var(--muted2)' };
+const LEVEL_BG    = { CRITICAL:'rgba(239,68,68,0.08)', HIGH:'rgba(249,115,22,0.08)', MEDIUM:'rgba(245,158,11,0.06)', INFO:'' };
+
+async function loadSessions() {
+  const el = document.getElementById('sessions-list');
+  el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px">Loading sessions...</p>';
+  try {
+    const data = await fetchJSON('/sessions?limit=50');
+    const sessions = data.sessions || [];
+    if (!sessions.length) {
+      el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px">No sessions recorded yet</p>';
+      return;
+    }
+    el.innerHTML = sessions.map(s => renderSessionCard(s)).join('');
+  } catch(e) {
+    el.innerHTML = '<p style="color:var(--red);font-size:13px;padding:12px">Error loading sessions</p>';
+  }
+}
+
+function renderSessionCard(s) {
+  const dur = s.last_ts && s.first_ts ? Math.round((s.last_ts - s.first_ts) / 1000) : 0;
+  const durStr = dur < 60 ? `${dur}s` : `${Math.floor(dur/60)}m ${dur%60}s`;
+  const sid8 = (s.session_id || '').slice(0, 8);
+  const color = LEVEL_COLOR[s.max_level] || 'var(--muted2)';
+  const bg    = LEVEL_BG[s.max_level]   || '';
+  const tools = (s.tools || []).slice(0, 6).join(', ');
+  return `
+  <div class="panel" style="padding:0;overflow:hidden;${bg ? 'background:'+bg : ''}">
+    <div style="padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;"
+         onclick="toggleSession('${s.session_id}')">
+      <div style="font-size:20px">📼</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <code style="font-size:12px;color:var(--accent)">${sid8}…</code>
+          <span class="badge ${s.max_level}">${s.max_level}</span>
+          <span style="font-size:11px;color:var(--muted)">${s.count} actions · ${durStr}</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+          ${fmtTs(s.first_ts)} — ${fmtTs(s.last_ts)}
+          ${tools ? '| ' + esc(tools) : ''}
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button onclick="event.stopPropagation();exportSession('${s.session_id}')"
+          style="font-size:10px;padding:3px 8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:#10b981;border-radius:4px;cursor:pointer;">📄 Export</button>
+        <div style="color:var(--muted);font-size:12px;" id="sess-arrow-${sid8}">▼</div>
+      </div>
+    </div>
+    <div id="sess-timeline-${s.session_id}" style="display:none;border-top:1px solid var(--border);padding:10px 18px;">
+      <p style="color:var(--muted);font-size:12px;">Loading timeline...</p>
+    </div>
+  </div>`;
+}
+
+async function toggleSession(sid) {
+  const sid8 = sid.slice(0, 8);
+  const panel = document.getElementById('sess-timeline-' + sid);
+  const arrow = document.getElementById('sess-arrow-' + sid8);
+  if (!panel) return;
+  if (panel.style.display !== 'none') {
+    panel.style.display = 'none';
+    if (arrow) arrow.textContent = '▼';
+    return;
+  }
+  panel.style.display = '';
+  if (arrow) arrow.textContent = '▲';
+  try {
+    const data = await fetchJSON('/sessions/' + encodeURIComponent(sid));
+    const events = data.events || [];
+    if (!events.length) { panel.innerHTML = '<p style="color:var(--muted);font-size:12px;">No events</p>'; return; }
+    panel.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead><tr style="color:var(--muted);border-bottom:1px solid var(--border);">
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Time</th>
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Level</th>
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Tool</th>
+          <th style="text-align:right;padding:4px 8px;font-weight:500;">Description</th>
+        </tr></thead>
+        <tbody>${events.map(e => `
+          <tr style="border-bottom:1px solid rgba(30,45,69,0.5);">
+            <td style="padding:5px 8px;color:var(--muted);white-space:nowrap;font-family:monospace;">${fmtTs(e.ts)}</td>
+            <td style="padding:5px 8px;">${badgeHTML(e.level)}</td>
+            <td style="padding:5px 8px;"><code style="color:var(--accent)">${esc(e.tool_name)}</code></td>
+            <td style="padding:5px 8px;color:var(--muted2);max-width:340px;overflow:hidden;text-overflow:ellipsis;">${esc((e.reason || e.input_summary || '').slice(0,80))}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  } catch(e) {
+    panel.innerHTML = '<p style="color:var(--red);font-size:12px;">Error</p>';
+  }
+}
+
+function buildSessionHTML(sid, events, summary) {
+  const dur = summary ? Math.round((summary.last_ts - summary.first_ts)/1000) : 0;
+  const durStr = dur < 60 ? `${dur}s` : `${Math.floor(dur/60)}m ${dur%60}s`;
+  const rows = events.map(e => `
+    <tr style="border-bottom:1px solid #1e2d45;">
+      <td style="padding:6px 10px;color:#64748b;white-space:nowrap;font-family:monospace;font-size:12px;">${new Date(e.ts).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</td>
+      <td style="padding:6px 10px;"><span style="padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;background:${e.level==='CRITICAL'?'rgba(239,68,68,0.2)':e.level==='HIGH'?'rgba(249,115,22,0.2)':'rgba(100,116,139,0.2)'};color:${e.level==='CRITICAL'?'#ef4444':e.level==='HIGH'?'#f97316':'#94a3b8'}">${e.level}</span></td>
+      <td style="padding:6px 10px;font-family:monospace;color:#0ea5e9;font-size:12px;">${e.tool_name||''}</td>
+      <td style="padding:6px 10px;color:#94a3b8;font-size:12px;max-width:380px;">${(e.reason||e.input_summary||'').slice(0,100)}</td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8">
+<title>FlowGuard — Session ${sid.slice(0,8)}</title>
+<style>
+  body{background:#080c14;color:#e2e8f0;font-family:'Segoe UI',Arial,sans-serif;padding:32px;direction:rtl;}
+  h1{font-size:22px;margin-bottom:4px;} .sub{color:#64748b;font-size:13px;margin-bottom:24px;}
+  .meta{display:flex;gap:24px;margin-bottom:24px;flex-wrap:wrap;}
+  .m{background:#111827;border:1px solid #1e2d45;border-radius:8px;padding:12px 18px;}
+  .ml{font-size:11px;color:#64748b;margin-bottom:2px;} .mv{font-size:16px;font-weight:700;color:#0ea5e9;}
+  table{width:100%;border-collapse:collapse;} th{text-align:right;padding:8px 10px;font-size:11px;color:#64748b;border-bottom:2px solid #1e2d45;font-weight:500;}
+  tr:hover{background:rgba(255,255,255,0.02);}
+  .footer{margin-top:32px;font-size:11px;color:#475569;text-align:center;}
+</style></head><body>
+<h1>📼 FlowGuard — Session Report</h1>
+<div class="sub">Session ID: ${sid}</div>
+<div class="meta">
+  <div class="m"><div class="ml">Total actions</div><div class="mv">${events.length}</div></div>
+  <div class="m"><div class="ml">Duration</div><div class="mv">${durStr}</div></div>
+  <div class="m"><div class="ml">Max level</div><div class="mv" style="color:${summary?.max_level==='CRITICAL'?'#ef4444':summary?.max_level==='HIGH'?'#f97316':'#94a3b8'}">${summary?.max_level||'—'}</div></div>
+  <div class="m"><div class="ml">Start</div><div class="mv" style="font-size:13px;">${new Date(summary?.first_ts||0).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div></div>
+  <div class="m"><div class="ml">End</div><div class="mv" style="font-size:13px;">${new Date(summary?.last_ts||0).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div></div>
+</div>
+<table><thead><tr><th>Time</th><th>Level</th><th>Tool</th><th>Description</th></tr></thead>
+<tbody>${rows}</tbody></table>
+<div class="footer">EHZ-AI | Claude Code Security Monitor | Exported ${new Date().toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div>
+</body></html>`;
+}
+
+async function exportSession(sid) {
+  try {
+    const [sessionData, allData] = await Promise.all([
+      fetchJSON('/sessions/' + encodeURIComponent(sid)),
+      fetchJSON('/sessions?limit=200')
+    ]);
+    const summary = (allData.sessions||[]).find(s => s.session_id === sid);
+    const html = buildSessionHTML(sid, sessionData.events||[], summary);
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `session-${sid.slice(0,8)}-${new Date().toISOString().slice(0,10)}.html`;
+    a.click();
+  } catch(e) { alert('Export error: ' + e.message); }
+}
+
+async function exportAllSessions() {
+  try {
+    const data = await fetchJSON('/sessions?limit=200');
+    const sessions = data.sessions || [];
+    if (!sessions.length) { alert('No sessions to export'); return; }
+
+    // fetch timeline for each session
+    const allTimelines = await Promise.all(
+      sessions.map(s => fetchJSON('/sessions/' + encodeURIComponent(s.session_id)))
+    );
+
+    let allHTML = `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8">
+<title>FlowGuard — All Sessions</title>
+<style>
+  body{background:#080c14;color:#e2e8f0;font-family:'Segoe UI',Arial,sans-serif;padding:32px;direction:rtl;}
+  h1{font-size:24px;margin-bottom:4px;} .sub{color:#64748b;font-size:13px;margin-bottom:32px;}
+  .sess-block{margin-bottom:40px;border:1px solid #1e2d45;border-radius:10px;overflow:hidden;}
+  .sess-header{background:#111827;padding:14px 18px;font-size:14px;font-weight:700;}
+  .sess-meta{color:#64748b;font-size:12px;margin-top:4px;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:right;padding:7px 10px;font-size:11px;color:#64748b;border-bottom:1px solid #1e2d45;background:#0d1424;}
+  td{padding:6px 10px;font-size:12px;border-bottom:1px solid rgba(30,45,69,0.5);}
+  .footer{margin-top:32px;font-size:11px;color:#475569;text-align:center;}
+</style></head><body>
+<h1>📼 FlowGuard — Session Recording Report</h1>
+<div class="sub">${sessions.length} sessions · Exported ${new Date().toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div>`;
+
+    sessions.forEach((s, i) => {
+      const events = allTimelines[i]?.events || [];
+      const dur = Math.round((s.last_ts - s.first_ts)/1000);
+      const durStr = dur < 60 ? `${dur}s` : `${Math.floor(dur/60)}m ${dur%60}s`;
+      allHTML += `<div class="sess-block">
+        <div class="sess-header">📼 ${s.session_id.slice(0,8)}…
+          <span style="font-size:12px;font-weight:400;margin-right:12px;padding:2px 8px;border-radius:3px;background:${s.max_level==='CRITICAL'?'rgba(239,68,68,0.2)':s.max_level==='HIGH'?'rgba(249,115,22,0.2)':'rgba(100,116,139,0.2)'};color:${s.max_level==='CRITICAL'?'#ef4444':s.max_level==='HIGH'?'#f97316':'#94a3b8'}">${s.max_level}</span>
+          <div class="sess-meta">${events.length} actions · ${durStr} · ${new Date(s.first_ts).toLocaleString('en-GB',{timeZone:'Asia/Jerusalem'})}</div>
+        </div>
+        <table><thead><tr><th>Time</th><th>Level</th><th>Tool</th><th>Description</th></tr></thead><tbody>
+        ${events.map(e=>`<tr><td style="color:#64748b;font-family:monospace;">${new Date(e.ts).toLocaleTimeString('en-GB',{timeZone:'Asia/Jerusalem'})}</td><td style="color:${e.level==='CRITICAL'?'#ef4444':e.level==='HIGH'?'#f97316':'#94a3b8'}">${e.level}</td><td style="color:#0ea5e9;font-family:monospace;">${e.tool_name||''}</td><td style="color:#94a3b8;">${(e.reason||e.input_summary||'').slice(0,100)}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    });
+
+    allHTML += `<div class="footer">EHZ-AI | Claude Code Security Monitor | 054-4825276</div></body></html>`;
+
+    const blob = new Blob([allHTML], {type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `sessions-report-${new Date().toISOString().slice(0,10)}.html`;
+    a.click();
+  } catch(e) { alert('Export error: ' + e.message); }
+}
+
+// ── Skills ────────────────────────────────────────────────────────────────────
+
+let lastScanResult = null;
+
+async function loadSkillsRegistry() {
+  try {
+    const data = await fetchJSON('/skills');
+    const reg  = data.skills || {};
+    const names = Object.keys(reg);
+    if (!names.length) return;
+
+    // Build fake skill objects from registry for display
+    const skills = names.map(name => ({
+      name,
+      status:       'OK',
+      hash:         reg[name].hash,
+      findings:     [],
+      is_symlink:   false,
+      last_scanned: reg[name].last_scanned,
+    }));
+    renderSkillsTable(skills);
+  } catch(_) {}
+}
+
+async function runScan() {
+  const btn = document.getElementById('scan-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ Scanning...';
+  document.getElementById('skills-tbody').innerHTML =
+    '<tr><td colspan="5"><div class="loading">Scanning...</div></td></tr>';
+
+  try {
+    const r = await fetch(API + '/skills/scan', { method: 'POST' });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    lastScanResult = data;
+
+    // Update summary
+    const s = data.summary || {};
+    document.getElementById('skills-summary').style.display = 'flex';
+    document.getElementById('sk-total').textContent     = s.total     ?? 0;
+    document.getElementById('sk-ok').textContent        = s.ok        ?? 0;
+    document.getElementById('sk-new').textContent       = s.new       ?? 0;
+    document.getElementById('sk-changed').textContent   = s.changed   ?? 0;
+    document.getElementById('sk-suspicious').textContent= s.suspicious?? 0;
+    document.getElementById('sk-critical').textContent  = s.critical  ?? 0;
+
+    document.getElementById('skills-last-scan').textContent =
+      'Last scan: ' + new Date(s.scanned_at).toLocaleTimeString('he-IL', { timeZone: 'Asia/Jerusalem' });
+
+    renderSkillsTable(data.skills || []);
+  } catch(e) {
+    document.getElementById('skills-tbody').innerHTML =
+      '<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>Scan error — Collector not responding</p></div></td></tr>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '▶ Scan now';
+  }
+}
+
+function renderSkillsTable(skills) {
+  const tbody = document.getElementById('skills-tbody');
+  if (!skills.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="icon">📦</div><p>No skills found</p></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = skills.map(s => {
+    const statusHtml = `<span class="skill-status ${s.status}">${statusIcon(s.status)} ${s.status}</span>`;
+    const symlink    = s.is_symlink ? '<span class="symlink-badge">symlink</span>' : '';
+    const findings   = s.findings && s.findings.length
+      ? s.findings.map(f => `<div class="skill-finding">⚡ [${f.level}] ${esc(f.reason)} — ${esc(f.file)}</div>`).join('')
+      : '';
+    const hash       = s.hash ? `<span style="font-family:monospace;font-size:11px;color:var(--muted)">${s.hash}</span>` : '—';
+    const ts         = s.last_scanned ? new Date(s.last_scanned).toLocaleTimeString('he-IL', { timeZone: 'Asia/Jerusalem', hour:'2-digit', minute:'2-digit' }) : '—';
+
+    return `<tr>
+      <td>${symlink}<b style="color:var(--text)">${esc(s.name)}</b></td>
+      <td>${statusHtml}</td>
+      <td>${findings || '<span style="color:var(--muted);font-size:11px;">—</span>'}</td>
+      <td>${hash}</td>
+      <td><span class="ts">${ts}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function statusIcon(status) {
+  return { OK:'✅', NEW:'🆕', CHANGED:'🔄', SUSPICIOUS:'🔶', CRITICAL:'🚨', ERROR:'❌' }[status] || '?';
+}
+
+// ── Settings ─────────────────────────────────────────────────────────────────
+
+let selectedLevel = 1;
+
+function selectLevel(n) {
+  selectedLevel = n;
+  [0,1,2,3].forEach(i => {
+    document.getElementById('lc' + i).classList.toggle('active-level', i === n);
+  });
+}
+
+async function loadRetention() {
+  try {
+    const r = await fetchJSON('/retention');
+    document.getElementById('ret-days').textContent  = r.retention_days + ' days';
+    document.getElementById('ret-max').textContent   = r.max_events.toLocaleString() + ' events';
+    document.getElementById('ret-total').textContent = r.total_events.toLocaleString();
+  } catch(_) {}
+}
+
+async function clearLogs(days) {
+  const statusEl = document.getElementById('clear-status');
+  const msg = days === 0
+    ? 'Delete all logs?'
+    : `Delete events older than ${days} days?`;
+  if (!confirm(msg)) return;
+
+  statusEl.style.color = 'var(--muted2)';
+  statusEl.textContent = '⟳ Deleting...';
+  try {
+    const body = days > 0 ? { older_than_days: days } : {};
+    const r = await fetch(API + '/events', {
+      method:  'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+    });
+    const data = await r.json();
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = `✅ ${data.msg}`;
+    loadRetention();
+    loadStats();
+  } catch(_) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '❌ Error — Collector not responding';
+  }
+}
+
+async function loadConfig() {
+  try {
+    const cfg = await fetchJSON('/config');
+    selectLevel(cfg.hardening_level ?? 1);
+    document.getElementById('settings-status').textContent = '';
+  } catch(e) {
+    document.getElementById('settings-status').textContent = '⚠️ Cannot load settings — Collector not responding';
+    document.getElementById('settings-status').style.color = 'var(--red)';
+  }
+}
+
+async function saveLevel() {
+  const btn = document.getElementById('save-level-btn');
+  const statusEl = document.getElementById('settings-status');
+  btn.disabled = true;
+  statusEl.textContent = '';
+  try {
+    const r = await fetch(API + '/config', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ hardening_level: selectedLevel }),
+    });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    statusEl.style.color   = 'var(--green)';
+    statusEl.textContent   = `✅ Saved: ${data.emoji} ${data.name} (Level ${data.hardening_level})`;
+  } catch(e) {
+    statusEl.style.color   = 'var(--red)';
+    statusEl.textContent   = '❌ Save error — Collector not responding';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+
+loadAll();
+startRefresh();
+
+// ── File Audit ────────────────────────────────────────────────────────────────
+
+function riskColor(label) {
+  return label === 'CRITICAL' ? 'var(--red)' :
+         label === 'HIGH'     ? 'var(--orange)' :
+         label === 'MEDIUM'   ? 'var(--yellow)' : 'var(--green)';
+}
+
+function auditSummaryCards(s) {
+  if (!s) return '';
+  const cards = [
+    { label: 'Files scanned', val: s.total_files, color: 'var(--accent)' },
+    { label: '✅ OK',       val: s.clean,       color: 'var(--green)'  },
+    { label: '⚠️ MEDIUM',    val: s.medium,      color: 'var(--yellow)' },
+    { label: '🔶 HIGH',      val: s.high,        color: 'var(--orange)' },
+    { label: '🚨 CRITICAL',  val: s.critical,    color: 'var(--red)'    },
+  ];
+  return cards.map(c => `
+    <div style="background:var(--panel2);border:1px solid var(--border2);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:22px;font-weight:800;color:${c.color}">${c.val}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${c.label}</div>
+    </div>`).join('');
+}
+
+function renderAuditTable(files) {
+  const tbody = document.getElementById('audit-tbody');
+  const empty = document.getElementById('audit-empty');
+  if (!files || !files.length) {
+    tbody.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Sort by risk_score descending
+  files.sort((a,b) => b.risk_score - a.risk_score);
+
+  tbody.innerHTML = files.map(f => {
+    const shortPath = f.path.replace(/\\/g,'/').replace('C:/Claude-Repo/','');
+    const color = riskColor(f.risk_label);
+    const findings = f.findings.map(x =>
+      `<span style="color:${riskColor(x.level)};margin-left:6px">● ${x.reason} (line ${x.line})</span>`
+    ).join('<br>');
+    return `<tr style="border-bottom:1px solid var(--border);transition:background 0.1s" onmouseover="this.style.background='var(--panel2)'" onmouseout="this.style.background=''">
+      <td style="padding:8px 12px;color:var(--muted2);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left" title="${f.path}">${shortPath}</td>
+      <td style="padding:8px 12px;text-align:center"><span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700">${f.risk_label}</span></td>
+      <td style="padding:8px 12px;text-align:center;color:${color};font-weight:700">${f.risk_score}</td>
+      <td style="padding:8px 12px;line-height:1.8;font-size:11px;text-align:left">${findings}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function loadAuditSchedule() {
+  try {
+    const r = await fetch(API + '/audit/schedule');
+    const d = await r.json();
+    document.getElementById('audit-next-run').textContent = d.next_run_he || '—';
+  } catch(e) {
+    document.getElementById('audit-next-run').textContent = '—';
+  }
+}
+
+function setAuditLastScan(scanned_at) {
+  const el = document.getElementById('audit-last-scan');
+  if (!scanned_at) { el.textContent = 'Not performed yet'; el.style.color = 'var(--muted)'; return; }
+  const dt = new Date(scanned_at);
+  const now = new Date();
+  const diffMs  = now - dt;
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffH   = Math.floor(diffMin / 60);
+  const diffD   = Math.floor(diffH / 24);
+  let ago = '';
+  if (diffMin < 1)       ago = 'just now';
+  else if (diffMin < 60) ago = `${diffMin} min ago`;
+  else if (diffH < 24)   ago = `${diffH}h ago`;
+  else                   ago = `${diffD}d ago`;
+  el.textContent = dt.toLocaleString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) + '  (' + ago + ')';
+  el.style.color = diffD < 7 ? 'var(--green)' : 'var(--yellow)';
+}
+
+async function loadAuditResults() {
+  loadAuditSchedule();
+  try {
+    const r = await fetch(API + '/audit');
+    const d = await r.json();
+    document.getElementById('audit-summary-cards').innerHTML = auditSummaryCards(d.summary);
+    if (d.summary) {
+      setAuditLastScan(d.summary.scanned_at);
+      document.getElementById('audit-meta').textContent =
+        d.summary.total_files + ' Files | Folder: ' + d.summary.scan_path;
+    } else {
+      setAuditLastScan(null);
+    }
+    renderAuditTable(d.files || []);
+  } catch(e) {
+    document.getElementById('audit-meta').textContent = 'Load error — ' + e.message;
+  }
+}
+
+function resetAuditPath() {
+  document.getElementById('audit-path-input').value = 'C:/Claude-Repo';
+}
+
+function browseAuditPath() {
+  if (window.showDirectoryPicker) {
+    window.showDirectoryPicker().then(dir => {
+      document.getElementById('audit-path-input').value = dir.name;
+    }).catch(() => {});
+  } else {
+    document.getElementById('audit-folder-picker').click();
+  }
+}
+
+function auditFolderSelected(input) {
+  if (input.files && input.files.length > 0) {
+    const path = input.files[0].webkitRelativePath.split('/')[0];
+    document.getElementById('audit-path-input').value = path;
+  }
+}
+
+let auditScanMode = 'full'; // 'full' | 'incremental'
+function setScanMode(mode) {
+  auditScanMode = mode;
+  const full = document.getElementById('scan-mode-full');
+  const inc  = document.getElementById('scan-mode-inc');
+  if (mode === 'full') {
+    full.style.background = '#0ea5e9'; full.style.color = '#fff'; full.style.fontWeight = '700';
+    inc.style.background  = 'transparent'; inc.style.color = 'var(--muted2)'; inc.style.fontWeight = 'normal';
+  } else {
+    inc.style.background  = '#f59e0b'; inc.style.color = '#000'; inc.style.fontWeight = '700';
+    full.style.background = 'transparent'; full.style.color = 'var(--muted2)'; full.style.fontWeight = 'normal';
+  }
+}
+
+async function runAuditScan() {
+  const btn         = document.getElementById('audit-scan-btn');
+  const scanPath    = (document.getElementById('audit-path-input').value || '').trim() || 'C:/Claude-Repo';
+  const incremental = auditScanMode === 'incremental';
+  btn.textContent = incremental ? '⏳ Scanning changes...' : '⏳ Scanning...';
+  btn.disabled = true;
+  document.getElementById('audit-meta').textContent = (incremental ? '⚡ Incremental scan: ' : '🔍 Full scan: ') + scanPath + ' ...';
+  try {
+    const r = await fetch(API + '/audit/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scan_path: scanPath, incremental })
+    });
+    const d = await r.json();
+    document.getElementById('audit-summary-cards').innerHTML = auditSummaryCards(d.summary);
+    if (d.summary) {
+      setAuditLastScan(d.summary.scanned_at);
+      let meta = d.summary.total_files + ' Files | Folder: ' + d.summary.scan_path;
+      if (d.summary.incremental) {
+        meta += ' | ⚡ Scanned ' + (d.summary.incremental_new || 0) + ' new/changed files';
+        if (d.summary.since) {
+          const since = new Date(d.summary.since).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+          meta += ' (since ' + since + ')';
+        }
+      }
+      document.getElementById('audit-meta').textContent = meta;
+    }
+    renderAuditTable(d.files || []);
+  } catch(e) {
+    document.getElementById('audit-meta').textContent = 'Scan error — ' + e.message;
+  } finally {
+    btn.textContent = '▶ Scan now';
+    btn.disabled = false;
+  }
+}
+
+// ── Web Access Allowlist (MS6.9) ──────────────────────────────────────────────
+
+async function loadDomains() {
+  try {
+    const r = await fetch(API + '/domains');
+    const d = await r.json();
+    const list       = d.allowed_domains    || [];
+    const discovered = d.discovered_domains || [];
+
+    // ── Allowed domains ──
+    if (!list.length) {
+      document.getElementById('domains-list').innerHTML =
+        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">No authorized domains</div>';
+    } else {
+      const repMap = {};
+      await Promise.all(list.map(async dom => {
+        try {
+          const r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(dom));
+          if (r2.ok) repMap[dom] = await r2.json();
+        } catch(_) {}
+      }));
+      document.getElementById('domains-list').innerHTML = list.map(dom => {
+        const rep = repMap[dom];
+        const repBadge = rep
+          ? `<span style="background:${rep.color}22;color:${rep.color};border:1px solid ${rep.color}55;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;flex-shrink:0;cursor:help" title="${(rep.reasons||[]).join('\n')}">${rep.score} ${rep.label}</span>`
+          : '';
+        return `
+          <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;">
+            <span style="font-size:13px;">🌐</span>
+            <span style="flex:1;font-size:11px;color:var(--text);">${dom}</span>
+            ${repBadge}
+            <button onclick="removeDomain('${dom}')"
+              style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✕</button>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Auto-discovered domains ──
+    document.getElementById('discovered-count').textContent = discovered.length ? `(${discovered.length})` : '';
+    if (!discovered.length) {
+      document.getElementById('discovered-list').innerHTML =
+        '<div style="color:var(--muted);padding:8px;text-align:center;font-size:11px;">Waiting for searches...</div>';
+    } else {
+      // Sort: suspicious first
+      const sorted = [...discovered].sort((a, b) => a.score - b.score);
+      document.getElementById('discovered-list').innerHTML = sorted.map(item => {
+        const c = item.color || '#f59e0b';
+        return `
+          <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid ${c}33;border-radius:6px;padding:5px 8px;">
+            <span style="font-size:13px;">🔍</span>
+            <span style="flex:1;font-size:11px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.domain}</span>
+            <span style="background:${c}22;color:${c};border:1px solid ${c}55;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">${item.score} ${item.label}</span>
+            <button onclick="approveDomain('${item.domain}')" title="Add to allowlist"
+              style="border:1px solid #10b98166;background:transparent;color:var(--green);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✓</button>
+            <button onclick="removeDomain('${item.domain}')" title="Block"
+              style="border:1px solid var(--red);background:transparent;color:var(--red);border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✕</button>
+          </div>`;
+      }).join('');
+    }
+  } catch(e) {
+    document.getElementById('domains-list').innerHTML = '<div style="color:var(--red)">Error: ' + e.message + '</div>';
+  }
+}
+
+async function approveDomain(domain) {
+  try {
+    await fetch(API + '/domains/approve/' + encodeURIComponent(domain), { method: 'POST' });
+    loadDomains();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function addDomain() {
+  const inp = document.getElementById('domain-add-input');
+  const domain = (inp.value || '').trim();
+  if (!domain) return;
+  try {
+    await fetch(API + '/domains', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain })
+    });
+    inp.value = '';
+    loadDomains();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function removeDomain(domain) {
+  try {
+    await fetch(API + '/domains/' + encodeURIComponent(domain), { method: 'DELETE' });
+    loadDomains();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function loadDomainHistory() {
+  try {
+    const r = await fetch(API + '/domains/history');
+    const d = await r.json();
+    const hist = d.history || [];
+    if (!hist.length) {
+      document.getElementById('domains-history').innerHTML =
+        '<div style="color:var(--muted);padding:12px;text-align:center;">No WebFetch history</div>';
+      return;
+    }
+
+    // Collect unique hosts → fetch reputation in parallel (MS6.10)
+    const hosts = [...new Set(hist.map(h => {
+      try { return new URL(h.url).hostname; } catch(_) { return h.url; }
+    }))];
+    const repMap = {};
+    await Promise.all(hosts.map(async host => {
+      try {
+        const r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(host));
+        if (r2.ok) repMap[host] = await r2.json();
+      } catch(_) {}
+    }));
+
+    document.getElementById('domains-history').innerHTML = hist.map(h => {
+      const isSearch = h.tool === 'WebSearch';
+      let display = '';
+      let host = '';
+      if (isSearch) {
+        display = `🔍 ${h.query || h.reason.replace('WebSearch: ','').replace(/"/g,'')}`;
+      } else {
+        try { host = new URL(h.url).hostname; } catch(_) { host = h.url; }
+        display = host;
+      }
+      const levelColor = h.level === 'CRITICAL' ? 'var(--red)' : h.level === 'HIGH' ? 'var(--orange)' : h.level === 'INFO' ? 'var(--muted2)' : 'var(--green)';
+      const ts = new Date(h.ts).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      const rep = !isSearch && repMap[host];
+      const repBadge = rep
+        ? `<span style="background:${rep.color}22;color:${rep.color};border:1px solid ${rep.color}55;border-radius:3px;padding:1px 6px;font-size:9px;font-weight:700;flex-shrink:0;cursor:help" title="${(rep.reasons||[]).join(' | ')}">${rep.score} ${rep.label}</span>`
+        : '';
+      const toolBadge = isSearch
+        ? `<span style="background:#6366f122;color:#818cf8;border:1px solid #6366f144;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">SEARCH</span>`
+        : `<span style="background:${levelColor}22;color:${levelColor};border:1px solid ${levelColor}44;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">${h.level}</span>`;
+      return `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;background:var(--panel2);border:1px solid var(--border);">
+        ${toolBadge}
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:11px;">${display}</span>
+        ${repBadge}
+        <span style="color:var(--muted);font-size:10px;flex-shrink:0">${ts}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('domains-history').innerHTML = '<div style="color:var(--red)">Error: ' + e.message + '</div>';
+  }
+}
+
+// ── Projects Explorer (MS6.11 + MS6.12) ──────────────────────────────────────
+
+let projectsExpanded = new Set(); // paths of expanded folders
+
+function folderIcon(name) {
+  const n = name.toLowerCase();
+  if (n.includes('agent'))    return '🤖';
+  if (n.includes('security') || n.includes('sec')) return '🔒';
+  if (n.includes('video'))    return '🎬';
+  if (n.includes('game'))     return '🎮';
+  if (n.includes('server'))   return '🖥️';
+  if (n.includes('backup'))   return '💾';
+  if (n.includes('oracle') || n.includes('cloud')) return '☁️';
+  if (n.includes('research')) return '🔬';
+  if (n.includes('tool'))     return '🛠️';
+  if (n.includes('health'))   return '💚';
+  if (n.includes('pilates') || n.includes('renovation')) return '🏢';
+  if (n.includes('local'))    return '💻';
+  if (n.includes('personal')) return '👤';
+  if (n.includes('job'))      return '💼';
+  if (n.includes('skill'))    return '⚡';
+  return '📁';
+}
+
+function timeAgo(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor(diff / 60000);
+  if (d > 30) return '1 month+ ago';
+  if (d > 0)  return `${d}d ago`;
+  if (h > 0)  return `${h}h ago`;
+  return `${m}m ago`;
+}
+
+function renderProjectCard(node) {
+  const expanded = projectsExpanded.has(node.path);
+  const hasChildren = node.children && node.children.length > 0;
+  const icon = folderIcon(node.name);
+  const shortPath = node.path.replace('C:/Claude-Repo/', '');
+
+  const childrenHTML = hasChildren && expanded
+    ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:4px;">
+        ${node.children.map(c => `
+          <div style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:5px;background:var(--panel);font-size:11px;color:var(--muted2);">
+            <span>${folderIcon(c.name)}</span>
+            <span style="flex:1;font-weight:600;color:var(--text);">${c.name}</span>
+            <span style="color:var(--muted);font-size:10px;">${c.files}f ${c.folders}d</span>
+          </div>`).join('')}
+       </div>` : '';
+
+  const noteVal = (node.note || '').replace(/"/g, '&quot;');
+
+  return `<div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.2s;"
+    onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <span style="font-size:22px;line-height:1;">${icon}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${node.name}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px;">${shortPath || 'root'}</div>
+      </div>
+      ${hasChildren ? `<button onclick="toggleProject('${node.path}')"
+        style="border:1px solid var(--border2);background:transparent;color:var(--muted2);border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer;">
+        ${expanded ? '▲' : '▼'} ${node.children.length}
+      </button>` : ''}
+    </div>
+
+    <div style="display:flex;gap:6px;font-size:10px;">
+      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📄 ${node.files} Files</span>
+      <span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted2);">📁 ${node.folders} Folders</span>
+      ${node.last_mod ? `<span style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--muted);">🕐 ${timeAgo(node.last_mod)}</span>` : ''}
+    </div>
+
+    ${childrenHTML}
+
+    <!-- Note (MS6.12) -->
+    <div id="note-display-${btoa(node.path).replace(/[^a-z0-9]/gi,'')}"
+      style="font-size:11px;color:var(--muted2);font-style:italic;${node.note ? '' : 'display:none'}">
+      💬 ${node.note}
+    </div>
+    <div style="display:flex;gap:5px;align-items:center;">
+      <input id="note-input-${btoa(node.path).replace(/[^a-z0-9]/gi,'')}" type="text"
+        value="${noteVal}" placeholder="✏️ Add note to folder..."
+        style="flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:4px 8px;font-size:11px;display:none;"
+        onkeydown="if(event.key==='Enter') saveNote('${node.path}',this.value)" />
+      <button onclick="toggleNoteEdit('${node.path}')"
+        style="border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer;">✏️</button>
+    </div>
+  </div>`;
+}
+
+function toggleProject(p) {
+  if (projectsExpanded.has(p)) projectsExpanded.delete(p);
+  else projectsExpanded.add(p);
+  loadProjects(true); // re-render without fetch
+}
+
+let _projectsData = null;
+
+async function loadProjects(reuseCache) {
+  if (!reuseCache || !_projectsData) {
+    try {
+      const r = await fetch(API + '/projects');
+      _projectsData = await r.json();
+    } catch(e) {
+      document.getElementById('projects-grid').innerHTML =
+        '<div style="color:var(--red);padding:20px;">Error: ' + e.message + '</div>';
+      return;
+    }
+  }
+  const d = _projectsData;
+  document.getElementById('projects-meta').textContent =
+    d.count + ' folders in ' + d.root;
+  document.getElementById('projects-grid').innerHTML =
+    (d.tree || []).map(renderProjectCard).join('');
+}
+
+function toggleNoteEdit(p) {
+  const key = btoa(p).replace(/[^a-z0-9]/gi,'');
+  const inp = document.getElementById('note-input-' + key);
+  inp.style.display = inp.style.display === 'none' ? '' : 'none';
+  if (inp.style.display !== 'none') inp.focus();
+}
+
+async function saveNote(p, note) {
+  try {
+    await fetch(API + '/projects/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: p, note: note.trim() })
+    });
+    _projectsData = null; // invalidate cache
+    loadProjects();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+/* ── NOTIFICATIONS SETTINGS ── */
+let _notifConfig = null;
+
+async function loadNotifSettings() {
+  try {
+    const r = await fetch('http://localhost:3010/notifications/config');
+    _notifConfig = await r.json();
+    applyNotifConfig();
+  } catch(e) {}
+}
+
+function applyNotifConfig() {
+  if (!_notifConfig) return;
+  const tg = _notifConfig.telegram || {};
+  const em = _notifConfig.email || {};
+
+  // Telegram toggle
+  document.getElementById('tg-enabled').checked = !!tg.enabled;
+  document.getElementById('tg-status-label').textContent = tg.enabled ? 'On' : 'Off';
+  document.getElementById('tg-status-label').style.color = tg.enabled ? 'var(--green)' : 'var(--muted)';
+
+  // Email toggle + fields
+  document.getElementById('email-enabled').checked = !!em.enabled;
+  document.getElementById('email-status-label').textContent = em.enabled ? 'On' : 'Off';
+  document.getElementById('email-status-label').style.color = em.enabled ? '#a78bfa' : 'var(--muted)';
+  document.getElementById('email-test-btn').style.display = em.enabled ? 'inline-block' : 'none';
+
+  if (em.smtp_host) document.getElementById('smtp-host').value = em.smtp_host;
+  if (em.smtp_port) document.getElementById('smtp-port').value = em.smtp_port;
+  if (em.smtp_user) document.getElementById('smtp-user').value = em.smtp_user;
+  if (em.smtp_pass) document.getElementById('smtp-pass').value = em.smtp_pass;
+  if (em.from)      document.getElementById('smtp-from').value = em.from;
+  if (em.to)        document.getElementById('smtp-to').value = em.to;
+  if (em.smtp_secure) document.getElementById('smtp-secure').checked = !!em.smtp_secure;
+
+  // Git remotes
+  renderGitRemotes(_notifConfig.git_remotes || []);
+}
+
+function notifToggle(type) {
+  if (type === 'tg') {
+    const on = document.getElementById('tg-enabled').checked;
+    document.getElementById('tg-status-label').textContent = on ? 'On' : 'Off';
+    document.getElementById('tg-status-label').style.color = on ? 'var(--green)' : 'var(--muted)';
+  } else {
+    const on = document.getElementById('email-enabled').checked;
+    document.getElementById('email-status-label').textContent = on ? 'On' : 'Off';
+    document.getElementById('email-status-label').style.color = on ? '#a78bfa' : 'var(--muted)';
+    document.getElementById('email-test-btn').style.display = on ? 'inline-block' : 'none';
+  }
+}
+
+async function saveNotifSettings() {
+  const st = document.getElementById('notif-save-status');
+  const cfg = {
+    telegram: { enabled: document.getElementById('tg-enabled').checked },
+    email: {
+      enabled: document.getElementById('email-enabled').checked,
+      smtp_host: document.getElementById('smtp-host').value.trim(),
+      smtp_port: parseInt(document.getElementById('smtp-port').value) || 587,
+      smtp_user: document.getElementById('smtp-user').value.trim(),
+      smtp_pass: document.getElementById('smtp-pass').value,
+      from:      document.getElementById('smtp-from').value.trim(),
+      to:        document.getElementById('smtp-to').value.trim(),
+      smtp_secure: document.getElementById('smtp-secure').checked
+    },
+    git_remotes: _notifConfig ? (_notifConfig.git_remotes || []) : []
+  };
+  try {
+    const r = await fetch('http://localhost:3010/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cfg)
+    });
+    const j = await r.json();
+    _notifConfig = j;
+    st.textContent = '✅ Saved!';
+    st.style.color = 'var(--green)';
+    setTimeout(() => st.textContent = '', 3000);
+  } catch(e) {
+    st.textContent = '❌ Error: ' + e.message;
+    st.style.color = 'var(--red)';
+  }
+}
+
+async function testTelegram() {
+  const st = document.getElementById('tg-test-status');
+  st.textContent = 'Sending...';
+  st.style.color = 'var(--muted)';
+  try {
+    const r = await fetch('http://localhost:3010/notifications/test-telegram', { method: 'POST' });
+    const j = await r.json();
+    st.textContent = j.ok ? '✅ Sent!' : '❌ ' + (j.error || 'Error');
+    st.style.color = j.ok ? 'var(--green)' : 'var(--red)';
+  } catch(e) {
+    st.textContent = '❌ ' + e.message;
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 5000);
+}
+
+async function testEmail() {
+  const st = document.getElementById('notif-save-status');
+  st.textContent = 'Sending test...';
+  st.style.color = 'var(--muted)';
+  try {
+    const r = await fetch('http://localhost:3010/notifications/test-email', { method: 'POST' });
+    const j = await r.json();
+    st.textContent = j.ok ? '✅ Email sent!' : '❌ ' + (j.error || 'Error');
+    st.style.color = j.ok ? 'var(--green)' : 'var(--red)';
+  } catch(e) {
+    st.textContent = '❌ ' + e.message;
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 6000);
+}
+
+function renderGitRemotes(list) {
+  const el = document.getElementById('git-remotes-list');
+  if (!el) return;
+  el.innerHTML = list.map((r,i) => `
+    <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--green);">
+      🔗 ${r}
+      <button onclick="removeGitRemote(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0 0 0 4px;line-height:1;">×</button>
+    </span>
+  `).join('');
+}
+
+async function addGitRemote() {
+  const input = document.getElementById('new-remote-input');
+  const val = input.value.trim();
+  const st = document.getElementById('remote-status');
+  if (!val) return;
+  if (!_notifConfig) _notifConfig = { git_remotes: [] };
+  if (!_notifConfig.git_remotes) _notifConfig.git_remotes = [];
+  if (_notifConfig.git_remotes.includes(val)) {
+    st.textContent = '⚠️ Already exists';
+    st.style.color = 'var(--yellow)';
+    return;
+  }
+  _notifConfig.git_remotes.push(val);
+  input.value = '';
+  renderGitRemotes(_notifConfig.git_remotes);
+  // auto-save
+  try {
+    await fetch('http://localhost:3010/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_notifConfig)
+    });
+    st.textContent = '✅ Added & saved';
+    st.style.color = 'var(--green)';
+  } catch(e) {
+    st.textContent = '❌ Save error';
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 3000);
+}
+
+async function removeGitRemote(idx) {
+  if (!_notifConfig || !_notifConfig.git_remotes) return;
+  _notifConfig.git_remotes.splice(idx, 1);
+  renderGitRemotes(_notifConfig.git_remotes);
+  const st = document.getElementById('remote-status');
+  try {
+    await fetch('http://localhost:3010/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_notifConfig)
+    });
+    st.textContent = '✅ Removed & saved';
+    st.style.color = 'var(--green)';
+  } catch(e) {
+    st.textContent = '❌ Save error';
+    st.style.color = 'var(--red)';
+  }
+  setTimeout(() => st.textContent = '', 3000);
+}
+</script>
+</body>
+</html>

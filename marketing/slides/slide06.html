@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#030812; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+.grid { position:absolute; inset:0; background-image: linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px); background-size:48px 48px; }
+.orb { position:absolute; width:500px; height:500px; background:radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%); top:40%; left:50%; transform:translate(-50%,-50%); }
+.corner { position:absolute; width:40px; height:40px; border-color:#8b5cf6; border-style:solid; opacity:0.3; }
+.corner-tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+.corner-tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+.corner-br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+
+.header { position:relative; z-index:10; padding:55px 50px 30px; }
+.label { font-size:13px; letter-spacing:3px; color:#8b5cf6; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
+.title { font-size:44px; font-weight:900; color:#fff; line-height:1.1; }
+.title span { color:#8b5cf6; }
+
+.body { position:relative; z-index:10; padding:0 50px; flex:1; display:flex; flex-direction:column; justify-content:center; gap:18px; }
+
+.warning-box {
+  padding:20px 24px;
+  background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25);
+  border-radius:12px; border-left:3px solid #ef4444;
+  font-size:14px; color:rgba(255,255,255,0.6); line-height:1.6;
+}
+.warning-box .title2 { font-size:16px; font-weight:700; color:#ef4444; margin-bottom:6px; }
+
+.check-list { display:flex; flex-direction:column; gap:14px; }
+.check-item {
+  display:flex; align-items:flex-start; gap:16px;
+  padding:18px 22px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;
+}
+.check-icon { font-size:26px; flex-shrink:0; }
+.check-body { flex:1; }
+.check-title { font-size:16px; font-weight:700; color:#fff; margin-bottom:4px; }
+.check-desc { font-size:12px; color:rgba(255,255,255,0.4); line-height:1.5; }
+.check-badge {
+  padding:3px 10px; border-radius:100px;
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  background:rgba(16,185,129,0.15); color:#10b981;
+  flex-shrink:0; align-self:center;
+}
+
+.footer { position:relative; z-index:10; padding:0 50px 50px; }
+.footer-box {
+  padding:18px 22px;
+  background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.25);
+  border-radius:10px; text-align:center;
+  font-size:15px; font-weight:700; color:#a78bfa;
+}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="orb"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="header">
+  <div class="label">🔧 Skills Scanner</div>
+  <div class="title">Claude Skills —<br>A <span>New</span> Attack<br>Surface.</div>
+</div>
+
+<div class="body">
+  <div class="warning-box">
+    <div class="title2">⚠ What is a Claude Code Skill?</div>
+    Custom tools that extend Claude's capabilities. They run code on your machine — and can be tampered with or replaced with malicious versions.
+  </div>
+
+  <div class="check-list">
+    <div class="check-item">
+      <div class="check-icon">🔒</div>
+      <div class="check-body">
+        <div class="check-title">Hash Integrity Check</div>
+        <div class="check-desc">Every skill file hashed on first run. Any modification triggers an immediate alert.</div>
+      </div>
+      <div class="check-badge">LIVE</div>
+    </div>
+    <div class="check-item">
+      <div class="check-icon">🦠</div>
+      <div class="check-body">
+        <div class="check-title">Malicious Pattern Detection</div>
+        <div class="check-desc">Scans skill content for backdoors, RCE patterns, data exfiltration code.</div>
+      </div>
+      <div class="check-badge">LIVE</div>
+    </div>
+    <div class="check-item">
+      <div class="check-icon">📡</div>
+      <div class="check-body">
+        <div class="check-title">Unauthorized Modification Alert</div>
+        <div class="check-desc">Skill changed outside Claude? Instant Telegram notification.</div>
+      </div>
+      <div class="check-badge">LIVE</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-box">Skills registry monitored 24/7 — even when Claude Code is closed</div>
+</div>
+</body>
+</html>

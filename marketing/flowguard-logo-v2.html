@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  background: linear-gradient(135deg, #0a1628 0%, #0d1f3c 50%, #0a1628 100%);
+  width:800px; height:500px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Segoe UI',system-ui,sans-serif;
+  position:relative; overflow:hidden;
+}
+
+/* Background grid */
+body::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(16,185,129,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16,185,129,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Glow behind logo */
+.glow {
+  position:absolute;
+  width:400px; height:400px;
+  background:radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+}
+
+/* Main logo */
+.logo {
+  position:relative; z-index:10;
+  display:flex; align-items:center; gap:32px;
+}
+
+/* Shield */
+.shield-wrap { position:relative; }
+svg.shield { width:110px; height:124px; filter:drop-shadow(0 0 20px rgba(16,185,129,0.5)); }
+
+/* Text */
+.text { display:flex; flex-direction:column; }
+
+.name {
+  font-size:64px; font-weight:900; letter-spacing:-2px; line-height:1;
+}
+.flow  { color:#00d4ff; }
+.guard { color:#ffffff; }
+
+.sub {
+  font-size:12px; font-weight:700; letter-spacing:4px;
+  color:rgba(255,255,255,0.35); text-transform:uppercase;
+  margin-top:6px;
+}
+
+.by {
+  font-size:11px; letter-spacing:2px;
+  color:rgba(16,185,129,0.5); margin-top:3px;
+}
+
+/* Corner marks */
+.corner { position:absolute; width:30px; height:30px; border-color:rgba(16,185,129,0.2); border-style:solid; }
+.tl { top:20px; left:20px; border-width:1px 0 0 1px; }
+.tr { top:20px; right:20px; border-width:1px 1px 0 0; }
+.bl { bottom:20px; left:20px; border-width:0 0 1px 1px; }
+.br { bottom:20px; right:20px; border-width:0 1px 1px 0; }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<div class="logo">
+  <!-- Shield SVG -->
+  <div class="shield-wrap">
+    <svg class="shield" viewBox="0 0 110 124" fill="none">
+      <!-- Outer shield -->
+      <path d="M55 4L8 22v34c0 28.7 20.8 55.5 47 62 26.2-6.5 47-33.3 47-62V22L55 4z"
+        fill="rgba(16,185,129,0.08)"
+        stroke="rgba(16,185,129,0.5)" stroke-width="1.5"/>
+      <!-- Inner shield -->
+      <path d="M55 16L18 30v26c0 22 16 42.5 37 48 21-5.5 37-26 37-48V30L55 16z"
+        fill="rgba(16,185,129,0.06)"
+        stroke="rgba(16,185,129,0.25)" stroke-width="1"/>
+      <!-- F letter -->
+      <text x="55" y="76" text-anchor="middle"
+        font-size="42" font-weight="900" fill="#00d4ff"
+        font-family="Segoe UI, system-ui, sans-serif"
+        style="filter:drop-shadow(0 0 8px rgba(16,185,129,0.9))">F</text>
+      <!-- Top glow dot -->
+      <circle cx="55" cy="4" r="3" fill="#00d4ff" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <!-- Text -->
+  <div class="text">
+    <div class="name">
+      <span class="flow">Flow</span><span class="guard">Guard</span>
+    </div>
+    <div class="sub">AI Security Monitor</div>
+    <div class="by">by EHZ-AI · 054-4825276</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,5762 @@
+{
+  "files": [
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\domain-reputation.js",
+      "size": 4996,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 28
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-09T10:50:13.638Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\rules.js",
+      "size": 16754,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 75
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 93
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 92
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 239
+        }
+      ],
+      "risk_score": 85,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-09T10:50:13.656Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\file-audit-result.json",
+      "size": 154403,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 10
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 15
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 20
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 25
+        }
+      ],
+      "risk_score": 85,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-09T10:50:13.665Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index.html",
+      "size": 72739,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 811
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-09T10:50:13.680Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\workplan.html",
+      "size": 206598,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 601
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 853
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 808
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 607
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 3477
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 808
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 625
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-09T10:50:13.684Z"
+    },
+    {
+      "path": "C:\\Users\\Eran\\AppData\\Local\\Temp\\inc2.json",
+      "size": 107437,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 1
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 1
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "TODO/FIXME עם credentials",
+          "line": 1
+        }
+      ],
+      "risk_score": 90,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:55:41.767Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\agent\\collectors\\Get-ExchangeHealth.ps1",
+      "size": 9962,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 32
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.898Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\file-audit-scanner.js",
+      "size": 7433,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 41
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 55
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 56
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 60
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "TODO/FIXME עם credentials",
+          "line": 62
+        }
+      ],
+      "risk_score": 90,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.910Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\skill-scanner.js",
+      "size": 7153,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 21
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 32
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 31
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 33
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 36
+        }
+      ],
+      "risk_score": 90,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.913Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\test-rules.js",
+      "size": 3358,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "AWS Access Key ID",
+          "line": 19
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "Private key",
+          "line": 22
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 6
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "base64 decode | sh",
+          "line": 9
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 20
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 15
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 18
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 7
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.913Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard-demo.html",
+      "size": 25033,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 564
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 564
+        }
+      ],
+      "risk_score": 45,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.921Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\gap-analysis.html",
+      "size": 36805,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 356
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 356
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 861
+        }
+      ],
+      "risk_score": 65,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.923Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\setup.ps1",
+      "size": 5281,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 25
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.924Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\package.json",
+      "size": 641,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 20
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.928Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\README.md",
+      "size": 484,
+      "ext": ".md",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 20
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.929Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\security-research.html",
+      "size": 48164,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1035
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.929Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\CV\\cv-architect.html",
+      "size": 10864,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 52
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.960Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\CV\\cv-it-manager.html",
+      "size": 13640,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 53
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.962Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\CV\\cv-presale.html",
+      "size": 10591,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 51
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.962Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-demo.BACKUP.html",
+      "size": 34057,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 374
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.974Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-demo.html",
+      "size": 34138,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 375
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.977Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-new.BACKUP.html",
+      "size": 73732,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 890
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 473
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.980Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-new.html",
+      "size": 73732,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 890
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 473
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.985Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\ehz-control-psycho-new.html",
+      "size": 77244,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1085
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.988Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\ehz-control-working.html",
+      "size": 64723,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 672
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.991Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\index-server-current.BACKUP.html",
+      "size": 73732,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 890
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 473
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.994Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\index-server-current.html",
+      "size": 80214,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 916
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.996Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\login-v1-psycho.html",
+      "size": 18828,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 81
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.999Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\eran-hub\\index.html",
+      "size": 36827,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1035
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.005Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\exchange\\Exchange2016-HealthCheck.ps1",
+      "size": 33372,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 121
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.034Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\jobmatch\\jobmatch-demo.html",
+      "size": 24578,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 663
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.051Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\altman\\index.html",
+      "size": 75673,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1010
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 373
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.059Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\altman\\retirement-landing.html",
+      "size": 49840,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 580
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 306
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.064Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\eran-cv\\cv.html",
+      "size": 9904,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 88
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.070Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\eran-cv\\index.html",
+      "size": 13605,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 86
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.072Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop\\index.html",
+      "size": 30613,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 112
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.078Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop\\workplan.html",
+      "size": 43879,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 325
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.080Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\index.html",
+      "size": 52410,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.111Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\node_modules_next_dist_06ld904._.js",
+      "size": 10749,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 7
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.137Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_0vtdjw7._.js",
+      "size": 57147,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.144Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_0qoh8ry._.js",
+      "size": 74701,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 4
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.146Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__08_0f4s._.js",
+      "size": 10659,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.155Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__09z7o2x._.js",
+      "size": 218056,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 8
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 8
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.156Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\_0vf..3w._.js",
+      "size": 44857,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 3
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.165Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\[root-of-the-server]__0j8-xkl._.js",
+      "size": 155920,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.168Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\017zkd9mreg~b.js",
+      "size": 44173,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 3
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.183Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\03~yq9q893hmn.js",
+      "size": 112594,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.184Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\0d3tkj33oycf2.js",
+      "size": 57741,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.186Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\0r7m44~cm1a3r.js",
+      "size": 227314,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.192Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\components\\Navbar.tsx",
+      "size": 7071,
+      "ext": ".tsx",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 60
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.205Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\page.tsx",
+      "size": 9804,
+      "ext": ".tsx",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 137
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 102
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.208Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\server-setup\\backup\\var-www\\altman\\index.html",
+      "size": 46467,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 277
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.241Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\server-setup\\server-setup-workplan.html",
+      "size": 49870,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 531
+        }
+      ],
+      "risk_score": 40,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:49.244Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\campaign-email.html",
+      "size": 21248,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 239
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.302Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\contacts.html",
+      "size": 31356,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 207
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.305Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\help.html",
+      "size": 22338,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 366
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.311Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\public\\index.html",
+      "size": 32494,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 468
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 112
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.317Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\public\\trip-planner.html",
+      "size": 37814,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Google API key",
+          "line": 35
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 38
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.319Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\server.js",
+      "size": 16634,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 313
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.321Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\wa-business-guide.html",
+      "size": 37139,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 658
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.323Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\index.html",
+      "size": 8302,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 141
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 81
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.336Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\profile.html",
+      "size": 7385,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 31
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.339Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\about-preview.html",
+      "size": 7425,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 173
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.347Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\contractors.html",
+      "size": 13323,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 107
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.355Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\index.html",
+      "size": 9426,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 142
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.361Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\profile.html",
+      "size": 14684,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 54
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.363Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\seo\\SKILL.md",
+      "size": 11253,
+      "ext": ".md",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 207
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.381Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית.html",
+      "size": 193539,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "JWT token",
+          "line": 1452
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 103
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 3
+        }
+      ],
+      "risk_score": 45,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:49.412Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\1e1d0fa578acd7aac5116e406e36f55c.css",
+      "size": 79211,
+      "ext": ".css",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 47
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.424Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\d-css-runtime-desktop-one-package-structured-global.min.css",
+      "size": 217488,
+      "ext": ".css",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 22
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.427Z"
+    }
+  ],
+  "all_files": [
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\domain-reputation.js",
+      "size": 4996,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 28
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-09T10:50:13.638Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\hook.js",
+      "size": 7812,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-09T10:50:13.653Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\rules.js",
+      "size": 16754,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 75
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 93
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 92
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 239
+        }
+      ],
+      "risk_score": 85,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-09T10:50:13.656Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\whitelist.json",
+      "size": 2283,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-09T10:50:13.664Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\file-audit-result.json",
+      "size": 154403,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 10
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 15
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 20
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 25
+        }
+      ],
+      "risk_score": 85,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-09T10:50:13.665Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\projects-notes.json",
+      "size": 79,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-09T10:50:13.674Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\server.js",
+      "size": 38677,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-09T10:50:13.674Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index.html",
+      "size": 72739,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 811
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-09T10:50:13.680Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\workplan.html",
+      "size": 206598,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 601
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 853
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 808
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 607
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 3477
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 808
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 625
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-09T10:50:13.684Z"
+    },
+    {
+      "path": "C:\\Users\\Eran\\AppData\\Local\\Temp\\inc2.json",
+      "size": 107437,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 1
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 1
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "TODO/FIXME עם credentials",
+          "line": 1
+        }
+      ],
+      "risk_score": 90,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:55:41.767Z"
+    },
+    {
+      "path": "C:\\Users\\Eran\\AppData\\Local\\Temp\\test-inc.txt",
+      "size": 0,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:55:42.244Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\.claude\\settings.json",
+      "size": 190,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.891Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\.claude\\settings.local.json",
+      "size": 1090,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.892Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\.mcp.json",
+      "size": 117,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.893Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\agent\\agent.py",
+      "size": 19053,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.894Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\agent\\collectors\\Get-ADHealth.ps1",
+      "size": 3300,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.897Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\agent\\collectors\\Get-ExchangeHealth.ps1",
+      "size": 9962,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 32
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.898Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\agent\\collectors\\Get-NutanixHealth.ps1",
+      "size": 3990,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.899Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\agent\\collectors\\Get-VMwareHealth.ps1",
+      "size": 4034,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.901Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\agent\\requirements.txt",
+      "size": 18,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.902Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\claude-agent-bot\\bot.js",
+      "size": 13676,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.903Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\claude-agent-bot\\package-lock.json",
+      "size": 93341,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.905Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\claude-agent-bot\\package.json",
+      "size": 334,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.908Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\claude-bot\\bot.js",
+      "size": 4719,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.909Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\claude-bot\\package.json",
+      "size": 295,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.909Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\file-audit-scanner.js",
+      "size": 7433,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 41
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 55
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 56
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 60
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "TODO/FIXME עם credentials",
+          "line": 62
+        }
+      ],
+      "risk_score": 90,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.910Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\skill-registry.json",
+      "size": 1411,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.912Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\skill-scanner.js",
+      "size": 7153,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 21
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 32
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 31
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "line": 33
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 36
+        }
+      ],
+      "risk_score": 90,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.913Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\test-rules.js",
+      "size": 3358,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "AWS Access Key ID",
+          "line": 19
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "Private key",
+          "line": 22
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 6
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "base64 decode | sh",
+          "line": 9
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 20
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "line": 15
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 18
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 7
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.913Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\schema.sql",
+      "size": 1023,
+      "ext": ".sql",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.918Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\config\\hardening.js",
+      "size": 4331,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.919Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\config\\project-scope.json",
+      "size": 70,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.919Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard-demo.html",
+      "size": 25033,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 564
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 564
+        }
+      ],
+      "risk_score": 45,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.921Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\gap-analysis.html",
+      "size": 36805,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 356
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "line": 356
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 861
+        }
+      ],
+      "risk_score": 65,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:48.923Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\setup.ps1",
+      "size": 5281,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 25
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.924Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\package-lock.json",
+      "size": 78770,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.925Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\package.json",
+      "size": 641,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 20
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.928Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\README.md",
+      "size": 484,
+      "ext": ".md",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 20
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.929Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\security-research.html",
+      "size": 48164,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1035
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.929Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\README.md",
+      "size": 454,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.937Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\agent.js",
+      "size": 3015,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.938Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\bot.js",
+      "size": 8113,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.939Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\brain.js",
+      "size": 3434,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.940Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\collector.js",
+      "size": 3038,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.941Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\dashboard.js",
+      "size": 826,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.942Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\db.js",
+      "size": 2804,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.942Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\package-lock.json",
+      "size": 124729,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.943Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\package.json",
+      "size": 481,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.946Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\server-agent\\public\\index.html",
+      "size": 9842,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.947Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\CLAUDE.md",
+      "size": 6103,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.949Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\architect_quiz.html",
+      "size": 60873,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.950Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\create_presale_docx.py",
+      "size": 29801,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.954Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\create_presale_pdf.py",
+      "size": 37058,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.955Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\create_presale_pdf_v2.py",
+      "size": 31424,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.957Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\CV\\cv-architect.html",
+      "size": 10864,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 52
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.960Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\CV\\cv-it-manager.html",
+      "size": 13640,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 53
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.962Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\CV\\cv-presale.html",
+      "size": 10591,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 51
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.962Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\infra_architect_interview.html",
+      "size": 67571,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.963Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\interview_prep_complete.html",
+      "size": 48112,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.968Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\presale_interview.html",
+      "size": 57044,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.970Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\docs\\project_reorganization_plan.html",
+      "size": 21677,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:48.972Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-demo.BACKUP.html",
+      "size": 34057,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 374
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.974Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-demo.html",
+      "size": 34138,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 375
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.977Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-new.BACKUP.html",
+      "size": 73732,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 890
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 473
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.980Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\control-new.html",
+      "size": 73732,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 890
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 473
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.985Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\ehz-control-psycho-new.html",
+      "size": 77244,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1085
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.988Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\ehz-control-working.html",
+      "size": 64723,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 672
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.991Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\index-server-current.BACKUP.html",
+      "size": 73732,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 890
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 473
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.994Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\index-server-current.html",
+      "size": 80214,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 916
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:48.996Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\login-v1-psycho.html",
+      "size": 18828,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 81
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:48.999Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\README.md",
+      "size": 425,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.001Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\ehz-panel\\spline-login-demos.html",
+      "size": 21350,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.002Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\eran-hub\\index.html",
+      "size": 36827,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1035
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.005Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\eran-hub\\vercel.json",
+      "size": 188,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.007Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\eran.txt",
+      "size": 0,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.007Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\games\\pacman\\pacman.html",
+      "size": 25727,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.010Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\games\\README.md",
+      "size": 278,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.012Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\games\\tetris\\tetris.html",
+      "size": 19049,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.013Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\HZ-Home-Task\\database.js",
+      "size": 3728,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.014Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\HZ-Home-Task\\MEMORY.md",
+      "size": 1080,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.015Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\HZ-Home-Task\\package.json",
+      "size": 349,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.016Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\HZ-Home-Task\\price-compare-workplan.html",
+      "size": 24478,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.017Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\HZ-Home-Task\\public\\index.html",
+      "size": 68307,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.019Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\HZ-Home-Task\\server.js",
+      "size": 16156,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.022Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\HZ-Home-Task\\WORKPLAN.md",
+      "size": 1638,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.023Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\active-directory\\AD-HealthCheck-DEMO.html",
+      "size": 15591,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.025Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\active-directory\\AD-HealthCheck.ps1",
+      "size": 32743,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.027Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\enterprise-vault\\EV-HealthCheck-DEMO.html",
+      "size": 15978,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.029Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\enterprise-vault\\EV-HealthCheck.ps1",
+      "size": 31196,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.031Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\exchange\\Exchange2016-HealthCheck.ps1",
+      "size": 33372,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 121
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.034Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\exchange\\ExchangeHealthCheck-DEMO.html",
+      "size": 16402,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.035Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\networker\\NetWorker-HealthCheck-DEMO.html",
+      "size": 17946,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.037Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\networker\\NetWorker-HealthCheck.ps1",
+      "size": 30156,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.038Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\nutanix\\Nutanix-HealthCheck-DEMO.html",
+      "size": 17492,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.041Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\nutanix\\Nutanix-HealthCheck.ps1",
+      "size": 29145,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.042Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\README.md",
+      "size": 696,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.044Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\vmware\\VMware-HealthCheck-DEMO.html",
+      "size": 17609,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.046Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\it-health-checks\\vmware\\VMware-HealthCheck.ps1",
+      "size": 37037,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.047Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\jobmatch\\header-demo.html",
+      "size": 45666,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.049Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\jobmatch\\jobmatch-demo.html",
+      "size": 24578,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 663
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.051Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\jobmatch\\README.md",
+      "size": 466,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.053Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\jobmatch\\styles-demo.html",
+      "size": 29650,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.054Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\jobmatch\\styles-premium.html",
+      "size": 31141,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.055Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\jobmatch\\wavy-demo.html",
+      "size": 18810,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.056Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\altman\\index.html",
+      "size": 75673,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1010
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 373
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.059Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\altman\\retirement-campaign-workplan.html",
+      "size": 18811,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.062Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\altman\\retirement-landing.html",
+      "size": 49840,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 580
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 306
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.064Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\altman\\server.js",
+      "size": 305,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.066Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\altman\\workplan.html",
+      "size": 62521,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.067Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\eran-cv\\cv.html",
+      "size": 9904,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 88
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.070Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\eran-cv\\index.html",
+      "size": 13605,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 86
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.072Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop\\admin-plan.html",
+      "size": 31885,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.075Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop\\flights-site-workplan.html",
+      "size": 31801,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.076Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop\\index.html",
+      "size": 30613,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 112
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.078Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop\\workplan.html",
+      "size": 43879,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 325
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.080Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\app-path-routes-manifest.json",
+      "size": 178,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.086Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\build-manifest.json",
+      "size": 503,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.087Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\diagnostics\\build-diagnostics.json",
+      "size": 93,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.090Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\diagnostics\\framework.json",
+      "size": 37,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.091Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\diagnostics\\route-bundle-stats.json",
+      "size": 879,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.092Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\export-marker.json",
+      "size": 111,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.093Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\fallback-build-manifest.json",
+      "size": 299,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.093Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\images-manifest.json",
+      "size": 1193,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.094Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\next-minimal-server.js.nft.json",
+      "size": 5544,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.095Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\next-server.js.nft.json",
+      "size": 41082,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.096Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\package.json",
+      "size": 20,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.097Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\prerender-manifest.json",
+      "size": 3956,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.098Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\required-server-files.js",
+      "size": 9327,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.099Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\required-server-files.json",
+      "size": 9298,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.101Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\routes-manifest.json",
+      "size": 1875,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.102Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\favicon.ico\\route\\app-paths-manifest.json",
+      "size": 54,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.107Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\favicon.ico\\route\\build-manifest.json",
+      "size": 151,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.108Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\favicon.ico\\route.js",
+      "size": 412,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.110Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\favicon.ico\\route.js.nft.json",
+      "size": 7165,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.110Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\index.html",
+      "size": 52410,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.111Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page\\app-paths-manifest.json",
+      "size": 28,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.116Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page\\build-manifest.json",
+      "size": 355,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.116Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page\\next-font-manifest.json",
+      "size": 94,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.117Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page\\react-loadable-manifest.json",
+      "size": 2,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.117Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page\\server-reference-manifest.json",
+      "size": 30,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.118Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page.js",
+      "size": 938,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.119Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page.js.nft.json",
+      "size": 7609,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.119Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\page_client-reference-manifest.js",
+      "size": 7993,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.120Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\sitemap.xml\\route\\app-paths-manifest.json",
+      "size": 54,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.121Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\sitemap.xml\\route\\build-manifest.json",
+      "size": 151,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.122Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\sitemap.xml\\route\\server-reference-manifest.json",
+      "size": 30,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.122Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\sitemap.xml\\route.js",
+      "size": 384,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.122Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\sitemap.xml\\route.js.nft.json",
+      "size": 7176,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.123Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\sitemap.xml\\route_client-reference-manifest.js",
+      "size": 316,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.124Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page\\app-paths-manifest.json",
+      "size": 56,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.125Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page\\build-manifest.json",
+      "size": 355,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.126Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page\\next-font-manifest.json",
+      "size": 94,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.126Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page\\react-loadable-manifest.json",
+      "size": 2,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.127Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page\\server-reference-manifest.json",
+      "size": 30,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.128Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page.js",
+      "size": 644,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.128Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page.js.nft.json",
+      "size": 7471,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.128Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error\\page_client-reference-manifest.js",
+      "size": 5924,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.129Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_global-error.html",
+      "size": 9442,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.129Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page\\app-paths-manifest.json",
+      "size": 50,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.131Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page\\build-manifest.json",
+      "size": 355,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.132Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page\\next-font-manifest.json",
+      "size": 94,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.132Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page\\react-loadable-manifest.json",
+      "size": 2,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.133Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page\\server-reference-manifest.json",
+      "size": 30,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.133Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page.js",
+      "size": 865,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.133Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page.js.nft.json",
+      "size": 7722,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.134Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found\\page_client-reference-manifest.js",
+      "size": 6200,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.134Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app\\_not-found.html",
+      "size": 18545,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.135Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\app-paths-manifest.json",
+      "size": 234,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.137Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\node_modules_next_dist_06ld904._.js",
+      "size": 10749,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 7
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.137Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\node_modules_next_dist_esm_build_templates_app-route_0yubv2d.js",
+      "size": 41170,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.138Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\app_layout_tsx_13yf0ls._.js",
+      "size": 3705,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.142Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_09w7yel._.js",
+      "size": 5915,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.143Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_0vtdjw7._.js",
+      "size": 57147,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.144Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_@swc_helpers_cjs__interop_require_default_cjs_11~q6fv._.js",
+      "size": 201,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.145Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_0qoh8ry._.js",
+      "size": 74701,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 4
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.146Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_client_components_0inhx6q._.js",
+      "size": 2520,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.147Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_client_components_builtin_forbidden_0ghu-f7.js",
+      "size": 651,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.148Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_client_components_builtin_global-error_0lgvd_..js",
+      "size": 508,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.149Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_client_components_builtin_unauthorized_0cjv-23.js",
+      "size": 664,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.149Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_esm_build_templates_app-page_002l7yi.js",
+      "size": 22558,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.150Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_esm_build_templates_app-page_02suzhc.js",
+      "size": 22433,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.151Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\node_modules_next_dist_esm_build_templates_app-page_0nsg22r.js",
+      "size": 22161,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.152Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__0.kd7dh._.js",
+      "size": 7283,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.154Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__02hi65f._.js",
+      "size": 828,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.154Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__06-2p1a._.js",
+      "size": 5425,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.155Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__08_0f4s._.js",
+      "size": 10659,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.155Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__09z7o2x._.js",
+      "size": 218056,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 8
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 8
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.156Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__0p4~vx9._.js",
+      "size": 4611,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.160Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[root-of-the-server]__0uk0awy._.js",
+      "size": 1437,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.162Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js",
+      "size": 34233,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.163Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\_0vf..3w._.js",
+      "size": 44857,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 3
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.165Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\_next-internal_server_app_page_actions_09-gtaw.js",
+      "size": 111,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.166Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\_next-internal_server_app__global-error_page_actions_0k77kol.js",
+      "size": 125,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.167Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\ssr\\_next-internal_server_app__not-found_page_actions_0eq97pa.js",
+      "size": 122,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.167Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\[externals]_next_dist_0arv.vj._.js",
+      "size": 1054,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.168Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\[root-of-the-server]__0j8-xkl._.js",
+      "size": 155920,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.168Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\[turbopack]_runtime.js",
+      "size": 34223,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.171Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\_next-internal_server_app_favicon_ico_route_actions_095lj93.js",
+      "size": 124,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.173Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\chunks\\_next-internal_server_app_sitemap_xml_route_actions_036gxb_.js",
+      "size": 124,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.173Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\functions-config-manifest.json",
+      "size": 37,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.174Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\interception-route-rewrite-manifest.js",
+      "size": 48,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.174Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\middleware-build-manifest.js",
+      "size": 535,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.175Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\middleware-manifest.json",
+      "size": 83,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.176Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\next-font-manifest.js",
+      "size": 135,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.176Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\next-font-manifest.json",
+      "size": 94,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.176Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\pages\\404.html",
+      "size": 18545,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.177Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\pages\\500.html",
+      "size": 9442,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.178Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\pages-manifest.json",
+      "size": 58,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.179Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\prefetch-hints.json",
+      "size": 2,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.180Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\server-reference-manifest.js",
+      "size": 138,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.180Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\server\\server-reference-manifest.json",
+      "size": 97,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.180Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\56LNL3affH0ZWouA69OJ9\\_buildManifest.js",
+      "size": 219,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.181Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\56LNL3affH0ZWouA69OJ9\\_clientMiddlewareManifest.js",
+      "size": 96,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.182Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\56LNL3affH0ZWouA69OJ9\\_ssgManifest.js",
+      "size": 80,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.182Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\017zkd9mreg~b.js",
+      "size": 44173,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 3
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.183Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\03~yq9q893hmn.js",
+      "size": 112594,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.184Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\0d3tkj33oycf2.js",
+      "size": 57741,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.186Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\0fsi8lw5utejl.js",
+      "size": 282,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.187Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\0lzt_f802zkzz.css",
+      "size": 26878,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.188Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\0no1b_s-81nqh.js",
+      "size": 195352,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.189Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\0r7m44~cm1a3r.js",
+      "size": 227314,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 1
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 1
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.192Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\11qk_vpw_zwkf.js",
+      "size": 22466,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.195Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\static\\chunks\\turbopack-0f59n7~-m82pz.js",
+      "size": 10547,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.196Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\types\\cache-life.d.ts",
+      "size": 5854,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.198Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\types\\routes.d.ts",
+      "size": 1397,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.200Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.next\\types\\validator.ts",
+      "size": 2095,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.200Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.vercel\\project.json",
+      "size": 122,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.201Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\.vercel\\README.txt",
+      "size": 520,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.201Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\AGENTS.md",
+      "size": 327,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.202Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\components\\DealCard.tsx",
+      "size": 4014,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.203Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\components\\DealsSection.tsx",
+      "size": 8322,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.203Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\components\\GlobeHero.tsx",
+      "size": 3083,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.204Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\components\\Navbar.tsx",
+      "size": 7071,
+      "ext": ".tsx",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 60
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.205Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\components\\PageTabs.tsx",
+      "size": 16620,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.206Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\globals.css",
+      "size": 1878,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.207Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\layout.tsx",
+      "size": 4083,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.207Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\page.tsx",
+      "size": 9804,
+      "ext": ".tsx",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 137
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 102
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.208Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\app\\sitemap.ts",
+      "size": 263,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.209Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\CLAUDE.md",
+      "size": 11,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.209Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\next-env.d.ts",
+      "size": 247,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.209Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\next.config.ts",
+      "size": 133,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.210Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\package-lock.json",
+      "size": 232823,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.210Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\package.json",
+      "size": 620,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.216Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\README.md",
+      "size": 1450,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.218Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\next-stop-flights\\tsconfig.json",
+      "size": 666,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.218Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\docs\\kamatera-server-docs.html",
+      "size": 11627,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.220Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\keys\\CLAUDE.md",
+      "size": 5221,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.221Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\keys\\gmail-setup.html",
+      "size": 27527,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.222Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\keys\\New Text Document.txt",
+      "size": 0,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.223Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\keys\\oracle-server-guide.html",
+      "size": 5359,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.224Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\keys\\server-access.md",
+      "size": 1223,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.224Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\keys\\telegram-guide.html",
+      "size": 29662,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.225Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\README.md",
+      "size": 854,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.227Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\collect-stats.sh",
+      "size": 279,
+      "ext": ".sh",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.229Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\daily-backup.sh",
+      "size": 1382,
+      "ext": ".sh",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.230Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\gmail-to-telegram.js",
+      "size": 2440,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.231Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\monitor-disk.sh",
+      "size": 532,
+      "ext": ".sh",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.232Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\monitor-server.sh",
+      "size": 1273,
+      "ext": ".sh",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.232Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\package-lock.json",
+      "size": 628,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.234Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\package.json",
+      "size": 316,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.234Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\send-daily-backup-email.js",
+      "size": 1106,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.235Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\send-daily-backup-telegram.js",
+      "size": 983,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.236Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\scripts\\weekly-report.sh",
+      "size": 1585,
+      "ext": ".sh",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.237Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\server-setup\\backup\\crontab-opc.txt",
+      "size": 703,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.239Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\server-setup\\backup\\nginx-main.conf",
+      "size": 2375,
+      "ext": ".conf",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.239Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\server-setup\\backup\\var-www\\altman\\index.html",
+      "size": 46467,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 277
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.241Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\oracle\\server-setup\\server-setup-workplan.html",
+      "size": 49870,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "line": 531
+        }
+      ],
+      "risk_score": 40,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:49.244Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\personal\\README.md",
+      "size": 182,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.247Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\personal\\אישי\\ai-comparison.html",
+      "size": 10400,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.248Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\personal\\מידע חשוב על קלוד\\MD CONFIG.txt",
+      "size": 3605,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.250Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\personal\\מידע חשוב על קלוד\\MD.txt",
+      "size": 0,
+      "ext": ".txt",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.252Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\README.md",
+      "size": 1276,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.252Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\bank-jerusalem\\bank_jerusalem_dashboard.html",
+      "size": 32822,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.253Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\barcelona\\barcelona.js",
+      "size": 15868,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.256Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\commvault\\generate_commvault_pdf.py",
+      "size": 65047,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.258Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\commvault\\generate_pdf.js",
+      "size": 61121,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.262Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\commvault\\generate_pdf_v2.js",
+      "size": 45761,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.264Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\commvault\\package-lock.json",
+      "size": 40119,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.266Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\commvault\\package.json",
+      "size": 328,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.269Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\architect_quiz.html",
+      "size": 60873,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.271Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\cocacola_architect_interview.html",
+      "size": 37626,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.275Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\cocacola_core_systems.html",
+      "size": 31231,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.278Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\cocacola_interview_tips.html",
+      "size": 45102,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.280Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\create_presale_docx.py",
+      "size": 29801,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.282Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\create_presale_pdf.py",
+      "size": 37058,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.283Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\create_presale_pdf_v2.py",
+      "size": 31424,
+      "ext": ".py",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.285Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\infra_architect_interview.html",
+      "size": 67571,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.286Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\interview_prep_complete.html",
+      "size": 48112,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.289Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\presale_interview.html",
+      "size": 57044,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.291Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\interview-prep\\project_reorganization_plan.html",
+      "size": 21677,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.293Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\README.md",
+      "size": 365,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.295Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\veeam\\Veeam-DataPlatform-Presentation.html",
+      "size": 59427,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.297Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\campaign-email.html",
+      "size": 21248,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 239
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.302Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\campaign-wa.html",
+      "size": 26120,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.303Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\contacts.html",
+      "size": 31356,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 207
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.305Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\dashboard.html",
+      "size": 9073,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.307Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\deals.html",
+      "size": 15005,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.308Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\flights-site.html",
+      "size": 16662,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.309Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\help.html",
+      "size": 22338,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 366
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.311Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\login.html",
+      "size": 3228,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.313Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\admin\\testimonials.html",
+      "size": 13014,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.313Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\db\\database.js",
+      "size": 4172,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.315Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\package.json",
+      "size": 407,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.316Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\public\\index.html",
+      "size": 32494,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 468
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 112
+        }
+      ],
+      "risk_score": 10,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.317Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\public\\trip-planner.html",
+      "size": 37814,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Google API key",
+          "line": 35
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 38
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.319Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\seo-competitor-report.html",
+      "size": 18566,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.320Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\server.js",
+      "size": 16634,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 313
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.321Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\next-stop\\wa-business-guide.html",
+      "size": 37139,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 658
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.323Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\backup.sh",
+      "size": 3819,
+      "ext": ".sh",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.326Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\calendar-reminder.js",
+      "size": 4706,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.326Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\daily-report.js",
+      "size": 6951,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.326Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\daily-summary.sh",
+      "size": 4659,
+      "ext": ".sh",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.327Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\db.js",
+      "size": 1533,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.327Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\gmail-to-telegram.js",
+      "size": 3270,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.328Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\pilates-app-V1-documentation.html",
+      "size": 25639,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.328Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\calendar.html",
+      "size": 21352,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.331Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\css\\style.css",
+      "size": 7480,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.333Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\dashboard.html",
+      "size": 4891,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.334Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\earnings.html",
+      "size": 10863,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.335Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\index.html",
+      "size": 8302,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 141
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 81
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.336Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\invoices.html",
+      "size": 10106,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.337Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\js\\app.js",
+      "size": 886,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.338Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\profile.html",
+      "size": 7385,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 31
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.339Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\public\\reset-password.html",
+      "size": 3252,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.339Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\routes\\auth.js",
+      "size": 4180,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.340Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\routes\\earnings.js",
+      "size": 12340,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.341Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\routes\\invoices.js",
+      "size": 7092,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.342Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\routes\\lessons.js",
+      "size": 7192,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.342Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\routes\\profile.js",
+      "size": 1503,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.344Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\routes\\studios.js",
+      "size": 1745,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.345Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\pilates\\server.js",
+      "size": 1321,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.345Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\README.md",
+      "size": 704,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.346Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\about-preview.html",
+      "size": 7425,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 173
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.347Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\db.js",
+      "size": 2093,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.348Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\design-preview.html",
+      "size": 35311,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.349Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\package-lock.json",
+      "size": 68922,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.350Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\package.json",
+      "size": 463,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.353Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\budget.html",
+      "size": 13357,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.354Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\contractors.html",
+      "size": 13323,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 107
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.355Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\css\\style.css",
+      "size": 19476,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.357Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\dashboard.html",
+      "size": 9580,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.358Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\expenses.html",
+      "size": 19703,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.360Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\index.html",
+      "size": 9426,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 142
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-08T21:24:49.361Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\payments.html",
+      "size": 19082,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.362Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\profile.html",
+      "size": 14684,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "פלאפון ישראלי",
+          "line": 54
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.363Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\reports.html",
+      "size": 10894,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.365Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\public\\reset-password.html",
+      "size": 3541,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.366Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\renovation-app-V1-documentation.html",
+      "size": 23719,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.367Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\routes\\auth.js",
+      "size": 3706,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.368Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\routes\\budget.js",
+      "size": 977,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.369Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\routes\\contractors.js",
+      "size": 1218,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.370Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\routes\\expenses.js",
+      "size": 2561,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.371Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\routes\\payments.js",
+      "size": 1381,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.371Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\routes\\profile.js",
+      "size": 1888,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.373Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\routes\\reports.js",
+      "size": 24747,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.373Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\server.js",
+      "size": 1456,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.374Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\START.md",
+      "size": 536,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.375Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\server-apps\\renovation\\style_glassmorphism.css",
+      "size": 21541,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.376Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\control-design.md",
+      "size": 13267,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.378Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\README.html",
+      "size": 26495,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.379Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\seo\\SKILL.md",
+      "size": 11253,
+      "ext": ".md",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 207
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.381Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\spline-3d-integration\\examples\\interactive-scene.tsx",
+      "size": 10852,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.383Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\spline-3d-integration\\examples\\react-spline-wrapper.tsx",
+      "size": 2886,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.384Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\spline-3d-integration\\examples\\vanilla-embed.html",
+      "size": 3251,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.384Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\spline-3d-integration\\guides\\PERFORMANCE.md",
+      "size": 7922,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.385Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\spline-3d-integration\\guides\\REACT_INTEGRATION.md",
+      "size": 8284,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.386Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\spline-3d-integration\\guides\\VANILLA_INTEGRATION.md",
+      "size": 6821,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.387Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\SKILL\\spline-3d-integration\\SKILL.md",
+      "size": 12521,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.388Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\cleanup-old-backups.ps1",
+      "size": 721,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.390Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\docs\\ehz-control-panel.html",
+      "size": 34989,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.391Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\docs\\ehz-control-panel.md",
+      "size": 10552,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.392Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\docs\\oracle-server-documentation.md",
+      "size": 18549,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.393Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\docs\\oracle-server-guide.html",
+      "size": 5359,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.395Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\frontend-design-plugin\\.claude-plugin\\plugin.json",
+      "size": 354,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.396Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\frontend-design-plugin\\settings.json",
+      "size": 53,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.397Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\frontend-design-plugin\\skills\\accessibility\\SKILL.md",
+      "size": 1476,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.398Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\frontend-design-plugin\\skills\\color-palette\\SKILL.md",
+      "size": 1345,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.399Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\frontend-design-plugin\\skills\\component\\SKILL.md",
+      "size": 1244,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.399Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\frontend-design-plugin\\skills\\responsive\\SKILL.md",
+      "size": 1311,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.400Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\frontend-design-plugin\\skills\\ui-review\\SKILL.md",
+      "size": 1295,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.401Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\mcp-explainer.html",
+      "size": 17866,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.401Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\notebooklm\\auth.json",
+      "size": 14852,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.403Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\package-lock.json",
+      "size": 6701,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.404Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\package.json",
+      "size": 54,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.405Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\README.md",
+      "size": 409,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.406Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\skills-lock.json",
+      "size": 1096,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.406Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\tiud\\oracle-server-documentation.html",
+      "size": 18659,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.408Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\tiud\\oracle-server-documentation.md",
+      "size": 17227,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.409Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\tiud\\server-agent-documentation.html",
+      "size": 17853,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.410Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית.html",
+      "size": 193539,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "JWT token",
+          "line": 1452
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "line": 103
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 3
+        }
+      ],
+      "risk_score": 45,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-08T21:24:49.412Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\05e66915_home_withFlex_1.min.css",
+      "size": 24932,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.417Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\05e66915_withFlex_1.min.css",
+      "size": 287172,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.419Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\1e1d0fa578acd7aac5116e406e36f55c.css",
+      "size": 79211,
+      "ext": ".css",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 47
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.424Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\bframe.html",
+      "size": 23151,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.426Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\d-css-runtime-desktop-one-package-structured-global.min.css",
+      "size": 217488,
+      "ext": ".css",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "line": 22
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-08T21:24:49.427Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\tools\\אנטרפרייז סוכנות לביטוח _ דף הבית_files\\styles__ltr.css",
+      "size": 83366,
+      "ext": ".css",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.431Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\package-lock.json",
+      "size": 118435,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.434Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\package.json",
+      "size": 812,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.437Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\remotion.config.ts",
+      "size": 117,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.438Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\BankJerusalemVideo.tsx",
+      "size": 3788,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.440Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\components\\AnimatedCounter.tsx",
+      "size": 582,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.442Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\components\\Background.tsx",
+      "size": 1754,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.443Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\components\\SectionTitle.tsx",
+      "size": 2842,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.444Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\constants.ts",
+      "size": 6422,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.445Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\fonts.ts",
+      "size": 131,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.446Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\index.ts",
+      "size": 93,
+      "ext": ".ts",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.446Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\Root.tsx",
+      "size": 412,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.447Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\scenes\\Scene1Intro.tsx",
+      "size": 10573,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.448Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\scenes\\Scene2Financial.tsx",
+      "size": 8091,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.449Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\scenes\\Scene3Market.tsx",
+      "size": 8957,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.449Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\scenes\\Scene4SWOT.tsx",
+      "size": 5269,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.450Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\src\\scenes\\Scene5Strategy.tsx",
+      "size": 9417,
+      "ext": ".tsx",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.451Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\bank-jerusalem-video\\tsconfig.json",
+      "size": 279,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.452Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\README.md",
+      "size": 707,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.453Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\עבודה\\package-lock.json",
+      "size": 504,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.459Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\עבודה\\package.json",
+      "size": 53,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.459Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\video-projects\\עבודה\\slideshow.html",
+      "size": 6177,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-08T21:24:49.460Z"
+    }
+  ],
+  "summary": {
+    "scan_path": "C:/Claude-Repo",
+    "scanned_at": "2026-04-09T10:50:13.872Z",
+    "incremental": true,
+    "since": "2026-04-08T21:55:42.308Z",
+    "total_files": 417,
+    "clean": 347,
+    "medium": 44,
+    "high": 15,
+    "critical": 11,
+    "skipped": 0,
+    "incremental_new": 9
+  }
+}

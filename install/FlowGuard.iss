@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "1.0.3"
+#define AppVersion "1.0.4"
 #define AppPublisher "EHZ-AI"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -69,9 +69,13 @@ Source: "{#SourceDir}\config\*";                  DestDir: "{app}\config"; Flags
 Source: "{#SourceDir}\node_modules\*";             DestDir: "{app}\node_modules"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Install scripts
-Source: "{#SourceDir}\install\setup.ps1";          DestDir: "{app}\install"; Flags: ignoreversion
-Source: "{#SourceDir}\install\autostart.ps1";      DestDir: "{app}\install"; Flags: ignoreversion
-Source: "{#SourceDir}\install\uninstall.ps1";      DestDir: "{app}\install"; Flags: ignoreversion
+Source: "{#SourceDir}\install\setup.ps1";           DestDir: "{app}\install"; Flags: ignoreversion
+Source: "{#SourceDir}\install\autostart.ps1";       DestDir: "{app}\install"; Flags: ignoreversion
+Source: "{#SourceDir}\install\install-service.ps1"; DestDir: "{app}\install"; Flags: ignoreversion
+Source: "{#SourceDir}\install\uninstall.ps1";       DestDir: "{app}\install"; Flags: ignoreversion
+
+; NSSM — Windows Service Manager
+Source: "{#SourceDir}\tools\nssm.exe";              DestDir: "{app}\tools";   Flags: ignoreversion
 
 ; package.json + README
 Source: "{#SourceDir}\package.json";              DestDir: "{app}"; Flags: ignoreversion
@@ -90,16 +94,16 @@ Name: "{userdesktop}\FlowGuard";      Filename: "{app}\dashboard\index.html"; Ic
 ; 1. Run setup wizard (configure Telegram + hooks)
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\setup.ps1"""; WorkingDir: "{app}"; Flags: runhidden waituntilterminated; StatusMsg: "Configuring FlowGuard..."
 
-; 2. Register Task Scheduler (autostart)
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\autostart.ps1"""; WorkingDir: "{app}\install"; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Registering auto-start tasks..."
+; 2. Install Windows Service (autostart)
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\install-service.ps1"""; WorkingDir: "{app}\install"; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Installing FlowGuard as Windows Service..."
 
 ; 3. Open dashboard after install
 Filename: "{app}\dashboard\index.html"; Flags: postinstall nowait shellexec skipifsilent; Description: "Open FlowGuard Dashboard"
 
 [UninstallRun]
-; Remove Task Scheduler tasks
+; Remove Windows Service
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\autostart.ps1"" -Remove"; \
+  Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\install-service.ps1"" -Remove"; \
   Flags: runhidden waituntilterminated
 
 ; Remove hooks from Claude settings.json
