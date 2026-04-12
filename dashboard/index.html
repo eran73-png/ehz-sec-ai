@@ -902,6 +902,7 @@ body {
         <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
           <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">LAST UPDATED</div>
           <div id="update-last-date" style="font-size:13px;font-weight:700;color:var(--text);">—</div>
+          <div id="update-last-time" style="font-size:11px;color:var(--muted2);margin-top:2px;">—</div>
         </div>
         <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
           <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">SOURCE</div>
@@ -1905,8 +1906,14 @@ async function loadUpdateStatus() {
     document.getElementById('update-current').textContent =
       `Version ${data.version || '1.0.0'} · ${data.rules_count || '—'} rules loaded`;
     document.getElementById('update-rules-count').textContent = data.rules_count || '—';
-    document.getElementById('update-last-date').textContent =
-      data.last_updated ? new Date(data.last_updated).toLocaleDateString('en-GB') : 'N/A';
+    if (data.last_updated) {
+      const d = new Date(data.last_updated);
+      document.getElementById('update-last-date').textContent = d.toLocaleDateString('en-GB');
+      document.getElementById('update-last-time').textContent = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    } else {
+      document.getElementById('update-last-date').textContent = 'N/A';
+      document.getElementById('update-last-time').textContent = '';
+    }
     const badge = document.getElementById('update-badge');
     badge.textContent = '✅ Up to date';
     badge.style.background = 'rgba(16,185,129,0.15)';
