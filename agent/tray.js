@@ -1,23 +1,22 @@
 'use strict';
 /**
  * FlowGuard — System Tray (MS8.8)
- * Full tray menu: status, agent toggle, silent mode, stats, recent events, exit
+ * Menu: version, dashboard, collector status, service control, stats, exit
  */
 
 const SysTray  = require('systray2').default;
 const http     = require('http');
 const path     = require('path');
 const os       = require('os');
-const fs       = require('fs');
 const { exec } = require('child_process');
 
+const APP_VERSION    = 'v1.0.4';
 const COLLECTOR_URL  = 'http://localhost:3010';
-const DASHBOARD_URL  = 'http://localhost:3010/dashboard';
 const DASHBOARD_FILE = path.join(__dirname, '..', 'dashboard', 'index.html');
-const DISABLE_FILE   = path.join(__dirname, '..', '.ccsm-disable');
 const ICON_PATH      = path.join(__dirname, 'flowguard.ico');
-const CHECK_INTERVAL = 15000;
+const CHECK_INTERVAL = 10000;
 const PC_NAME        = os.hostname();
+const SERVICE_NAME   = 'FlowGuardCollector';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -32,72 +31,65 @@ function apiGet(urlPath, cb) {
   req.on('error', cb);
 }
 
-function apiPost(urlPath, cb) {
-  const req = http.request(`${COLLECTOR_URL}${urlPath}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Content-Length': 2 },
-    timeout: 3000,
-  });
-  req.on('response', (res) => {
-    let d = '';
-    res.on('data', c => d += c);
-    res.on('end', () => { try { cb(null, JSON.parse(d)); } catch(e) { cb(e); } });
-  });
-  req.on('error', cb);
-  req.write('{}');
-  req.end();
-}
-
-function isAgentDisabled() {
-  return fs.existsSync(DISABLE_FILE);
-}
-
 function openDashboard() {
-  exec(`start "" "${DASHBOARD_URL}"`, (err) => {
-    if (err) exec(`start "" "${DASHBOARD_FILE}"`);
-  });
+  exec(`start "" "${DASHBOARD_FILE}"`);
 }
 
-function logAgentEvent(action, reason) {
-  const body = JSON.stringify({
-    hook_event_name: 'TrayAction',
-    tool_name:       action,
-    session_id:      'tray',
-    level:           'INFO',
-    tool_input:      { action, reason },
-  });
-  const req = http.request(`${COLLECTOR_URL}/event`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
-    timeout: 3000,
-  });
-  req.on('error', () => {});
-  req.write(body);
-  req.end();
+function controlService(action, cb) {
+  const psCmd = action === 'stop'
+    ? `Stop-Service ${SERVICE_NAME} -Force`
+    : `Start-Service ${SERVICE_NAME}`;
+  exec(`powershell -Command "${psCmd}"`, { timeout: 15000 }, (err) => cb(err));
 }
 
 function sep() {
   return { title: '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500', tooltip: '', checked: false, enabled: false };
 }
 
-// ── Menu layout (fixed seq_ids) ───────────────────────────────────────────────
-// 0  : PC info (disabled)
+// ── Menu items ────────────────────────────────────────────────────────────────
+
+// 0  : FlowGuard v1.0.4 | PC: NAME
 // 1  : Open Dashboard
 // 2  : separator
-// 3  : Agent toggle
-// 4  : Silent Mode toggle
+// 3  : Collector status (display only)
+// 4  : Start / Stop Service
 // 5  : separator
-// 6  : Stats line (disabled)
+// 6  : Stats
 // 7  : separator
-// 8  : Exit FlowGuard
+// 8  : Exit
 
-function buildInitMenu(stats, agentDisabled, silentOn) {
+function collectorStatusItem(online) {
+  return {
+    title:   online ? '\u25CF Collector: RUNNING' : '\u25CF Collector: OFFLINE',
+    tooltip: online ? 'Collector is running on port 3010' : 'Collector is not responding',
+    checked: false,
+    enabled: false,
+  };
+}
+
+function serviceControlItem(online) {
+  return online
+    ? { title: '\u25A0 Stop Service',  tooltip: 'Stop FlowGuardCollector Windows Service',  checked: false, enabled: true }
+    : { title: '\u25BA Start Service', tooltip: 'Start FlowGuardCollector Windows Service', checked: false, enabled: true };
+}
+
+function statsItem(stats) {
+  if (!stats || !stats.ok) return { title: 'No data', tooltip: '', checked: false, enabled: false };
+  return {
+    title:   `Events: ${stats.total}  |  Critical: ${stats.critical}  |  High: ${stats.high}  |  ${stats.emoji} ${stats.level}`,
+    tooltip: 'Today\'s security stats',
+    checked: false,
+    enabled: false,
+  };
+}
+
+function buildMenu(stats, online) {
   return [
-    /* 0 */ { title: `FlowGuard | PC: ${PC_NAME}`, tooltip: 'FlowGuard AI Security Monitor', checked: false, enabled: false },
-    /* 1 */ { title: 'Open Dashboard', tooltip: 'Open FlowGuard dashboard in browser', checked: false, enabled: true },
+    /* 0 */ { title: `FlowGuard ${APP_VERSION} | PC: ${PC_NAME}`, tooltip: 'FlowGuard AI Security Monitor', checked: false, enabled: false },
+    /* 1 */ { title: 'Open Dashboard', tooltip: 'Open FlowGuard dashboard', checked: false, enabled: true },
     /* 2 */ sep(),
-    /* 3 */ agentItem(agentDisabled),
-    /* 4 */ silentItem(silentOn),
+    /* 3 */ collectorStatusItem(online),
+    /* 4 */ serviceControlItem(online),
     /* 5 */ sep(),
     /* 6 */ statsItem(stats),
     /* 7 */ sep(),
@@ -105,82 +97,42 @@ function buildInitMenu(stats, agentDisabled, silentOn) {
   ];
 }
 
-function agentItem(disabled) {
-  return disabled
-    ? { title: '[DISABLED] Agent is OFF — click to enable', tooltip: 'Agent is disabled (.ccsm-disable exists)', checked: false, enabled: true }
-    : { title: '[ACTIVE]   Agent is ON  — click to disable', tooltip: 'Click to disable monitoring', checked: false, enabled: true };
-}
-
-function silentItem(silent) {
-  return silent
-    ? { title: '[SILENT]   Silent Mode ON  — click to unmute', tooltip: 'Telegram alerts suppressed', checked: true, enabled: true }
-    : { title: '[ mute ]   Silent Mode OFF — click to mute',   tooltip: 'Click to suppress Telegram alerts', checked: false, enabled: true };
-}
-
-function statsItem(stats) {
-  if (!stats || !stats.ok) return { title: 'Collector: OFFLINE', tooltip: '', checked: false, enabled: false };
-  return {
-    title: `Events: ${stats.total}  |  Critical: ${stats.critical}  |  High: ${stats.high}  |  ${stats.emoji} ${stats.level}`,
-    tooltip: 'Today\'s security stats',
-    checked: false,
-    enabled: false,
-  };
-}
-
-// ── Fetch all data needed for menu ───────────────────────────────────────────
+// ── Fetch data ────────────────────────────────────────────────────────────────
 
 function fetchAll(cb) {
-  let stats = null, silentOn = false, done = 0;
-
-  function finish() {
-    done++;
-    if (done === 2) cb({ stats, silentOn });
-  }
-
-  // Stats + config
   apiGet('/stats', (err, s) => {
-    if (!err && s) {
-      apiGet('/config', (err2, cfg) => {
-        stats = {
+    if (err || !s) return cb({ stats: null, online: false });
+    apiGet('/config', (err2, cfg) => {
+      cb({
+        stats: {
           ok:       true,
           total:    s.total    || 0,
           critical: s.critical || 0,
           high:     s.high     || 0,
           level:    (!err2 && cfg) ? (cfg.name  || 'SOFT') : 'SOFT',
-          emoji:    (!err2 && cfg) ? (cfg.emoji || 'G')    : 'G',
-        };
-        finish();
+          emoji:    (!err2 && cfg) ? (cfg.emoji || '\u26AA') : '\u26AA',
+        },
+        online: true,
       });
-    } else {
-      stats = { ok: false };
-      finish();
-    }
-  });
-
-  // Silent mode
-  apiGet('/silent', (err, s) => {
-    silentOn = (!err && s) ? !!s.silent : false;
-    finish();
+    });
   });
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
+// ── Main ──────────────────────────────────────────────────────────────────────
 
 console.log('[FlowGuard Tray] Starting...');
 
-fetchAll(({ stats, silentOn }) => {
-  const agentDisabled = isAgentDisabled();
-
-  const tooltip = stats && stats.ok
-    ? `FlowGuard | ${stats.emoji} ${stats.level} | ${stats.total} events`
-    : 'FlowGuard — Collector offline';
+fetchAll(({ stats, online }) => {
+  const tooltip = online
+    ? `FlowGuard ${APP_VERSION} | ${stats.emoji} ${stats.level} | ${stats.total} events`
+    : `FlowGuard ${APP_VERSION} — Collector OFFLINE`;
 
   const tray = new SysTray({
     menu: {
       icon:    ICON_PATH,
       title:   '',
       tooltip: tooltip,
-      items:   buildInitMenu(stats, agentDisabled, silentOn),
+      items:   buildMenu(stats, online),
     },
     debug:   false,
     copyDir: true,
@@ -188,59 +140,53 @@ fetchAll(({ stats, silentOn }) => {
 
   console.log('[FlowGuard Tray] Tray icon active');
 
-  // ── Click handler ─────────────────────────────────────────────────────────
+  let _online = online;
+  let _stats  = stats;
+
+  // ── Click handler ───────────────────────────────────────────────────────────
   tray.onClick((action) => {
     const id = action.seq_id;
 
     if (id === 1) {
-      // Open Dashboard
       openDashboard();
 
-    } else if (id === 3) {
-      // Toggle agent enable/disable
-      if (isAgentDisabled()) {
-        try { fs.unlinkSync(DISABLE_FILE); } catch(_) {}
-        logAgentEvent('AGENT START', 'Agent enabled via Tray');
-      } else {
-        try { fs.writeFileSync(DISABLE_FILE, '', 'utf8'); } catch(_) {}
-        logAgentEvent('AGENT STOP', 'Agent disabled via Tray');
-      }
-      const nowDisabled = isAgentDisabled();
-      tray.sendAction({ type: 'update-item', seq_id: 3, item: agentItem(nowDisabled) });
-      tray.sendAction({ type: 'update-tooltip', tooltip: nowDisabled
-        ? 'FlowGuard — AGENT DISABLED'
-        : `FlowGuard | Events: ${(tray._lastStats && tray._lastStats.total) || 0}` });
-
     } else if (id === 4) {
-      // Toggle silent mode
-      apiPost('/silent', (err, r) => {
-        const nowSilent = err ? false : !!r.silent;
-        tray.sendAction({ type: 'update-item', seq_id: 4, item: silentItem(nowSilent) });
+      // Start / Stop Service
+      const action = _online ? 'stop' : 'start';
+      controlService(action, (err) => {
+        if (err) {
+          console.error('[FlowGuard Tray] Service control error:', err.message);
+        }
+        // Wait 3s then refresh status
+        setTimeout(() => {
+          fetchAll(({ stats: s, online: o }) => {
+            _online = o;
+            _stats  = s;
+            tray.sendAction({ type: 'update-item', seq_id: 3, item: collectorStatusItem(o) });
+            tray.sendAction({ type: 'update-item', seq_id: 4, item: serviceControlItem(o) });
+            tray.sendAction({ type: 'update-item', seq_id: 6, item: statsItem(s) });
+          });
+        }, 3000);
       });
 
     } else if (id === 8) {
-      // Exit
       console.log('[FlowGuard Tray] Exiting...');
       tray.kill();
       process.exit(0);
     }
   });
 
-  // ── Periodic refresh ──────────────────────────────────────────────────────
+  // ── Periodic refresh ────────────────────────────────────────────────────────
   setInterval(() => {
-    fetchAll(({ stats: s, silentOn: silent }) => {
-      tray._lastStats = s;
-      const disabled = isAgentDisabled();
-
+    fetchAll(({ stats: s, online: o }) => {
+      _online = o;
+      _stats  = s;
+      tray.sendAction({ type: 'update-item', seq_id: 3, item: collectorStatusItem(o) });
+      tray.sendAction({ type: 'update-item', seq_id: 4, item: serviceControlItem(o) });
       tray.sendAction({ type: 'update-item', seq_id: 6, item: statsItem(s) });
-      tray.sendAction({ type: 'update-item', seq_id: 3, item: agentItem(disabled) });
-      tray.sendAction({ type: 'update-item', seq_id: 4, item: silentItem(silent) });
-
-      const tip = disabled
-        ? 'FlowGuard — AGENT DISABLED'
-        : (s && s.ok
-          ? `FlowGuard | ${s.emoji} ${s.level} | ${s.total} events`
-          : 'FlowGuard — Collector offline');
+      const tip = o
+        ? `FlowGuard ${APP_VERSION} | ${s.emoji} ${s.level} | ${s.total} events`
+        : `FlowGuard ${APP_VERSION} — Collector OFFLINE`;
       tray.sendAction({ type: 'update-tooltip', tooltip: tip });
     });
   }, CHECK_INTERVAL);
