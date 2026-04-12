@@ -330,7 +330,7 @@
       <div style="text-align:center;background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:10px;padding:10px 16px;">
         <div style="font-size:10px;color:var(--muted2);margin-bottom:3px;">בדיקת תקינות</div>
         <div style="font-size:12px;font-weight:700;color:var(--green);">✅ MS1–7: הושלמו</div>
-        <div style="font-size:12px;font-weight:700;color:#0ea5e9;margin-top:2px;">🔄 MS8: בתהליך — 4/11</div>
+        <div style="font-size:12px;font-weight:700;color:#0ea5e9;margin-top:2px;">🔄 MS8: בתהליך — 9/11</div>
       </div>
     </div>
   </div>
@@ -1202,15 +1202,15 @@
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.8 ✅</div>
-      <div class="task-title">Tray Menu מלא + DISABLE / ENABLE Agent</div>
-      <div class="task-desc">תפריט Tray מלא: PC name, Open Dashboard, Agent ON/OFF, Silent Mode, Stats (Events/Critical/High/Level), Exit. כיבוי דרך .ccsm-disable file. AGENT STOP/START נרשמים ל-DB. בוצע: 11.04.2026</div>
-      <div class="task-tags"><span class="tag">tray</span><span class="tag">disable</span><span class="tag">emergency</span></div>
+      <div class="task-title">Tray Menu מלא + Service Control</div>
+      <div class="task-desc">תפריט Tray: FlowGuard v1.0.5 | PC name, Open Dashboard, 🟢/🔴 Collector Status, Start/Stop Service (UAC elevation), Exit. שליטה על FlowGuardCollector Windows Service ישירות מה-Tray. בוצע: 12.04.2026</div>
+      <div class="task-tags"><span class="tag">tray</span><span class="tag">service</span><span class="tag">GUI</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.9 ✅</div>
-      <div class="task-title">Windows Auto-Start (Task Scheduler)</div>
-      <div class="task-desc">FlowGuard-Collector + FlowGuard-Tray נרשמים כ-Scheduled Tasks (AtLogOn). Tray מתחיל 5 שניות אחרי Collector. RestartCount=3. קובץ: install/autostart.ps1. Auto-UAC elevation. בוצע: 11.04.2026</div>
-      <div class="task-tags"><span class="tag">installer</span><span class="tag">windows</span><span class="tag">autostart</span></div>
+      <div class="task-title">Windows Service — NSSM (Auto-Start + Auto-Restart)</div>
+      <div class="task-desc">FlowGuardCollector רשום כ-Windows Service אמיתי באמצעות NSSM. Automatic startup, restart on failure (5s delay), log rotation יומי. קובץ: install/install-service.ps1 + tools/nssm.exe. מחליף את Task Scheduler. בוצע: 12.04.2026</div>
+      <div class="task-tags"><span class="tag">service</span><span class="tag">NSSM</span><span class="tag">autostart</span></div>
     </div>
     <div class="task-cell" style="border-top:2px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.04);">
       <div class="task-num" style="color:#818cf8;">8.10</div>

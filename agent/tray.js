@@ -10,7 +10,7 @@ const path     = require('path');
 const os       = require('os');
 const { exec } = require('child_process');
 
-const APP_VERSION    = 'v1.0.4';
+const APP_VERSION    = 'v1.0.5';
 const COLLECTOR_URL  = 'http://localhost:3010';
 const DASHBOARD_FILE = path.join(__dirname, '..', 'dashboard', 'index.html');
 const ICON_PATH      = path.join(__dirname, 'flowguard.ico');
