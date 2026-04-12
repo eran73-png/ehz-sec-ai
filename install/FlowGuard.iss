@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "1.0.0"
+#define AppVersion "1.0.3"
 #define AppPublisher "EHZ-AI"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"

@@ -78,6 +78,7 @@ db.ensureIndex({ fieldName: 'tool_name' });
 // ─── Hash Chain (MS7.5) ───────────────────────────────────────────────────────
 // lastHash = hash of the last saved event
 let lastHash = 'GENESIS'; // initial value
+let chainResetAt = 0;    // timestamp of last chain reset (0 = never)
 
 function computeHash(doc, prevHash) {
   const payload = JSON.stringify({
@@ -1275,16 +1276,27 @@ app.get('/baseline/status', (req, res) => {
   });
 });
 
+// POST /chain/reset — reset hash chain to GENESIS (without deleting events)
+app.post('/chain/reset', (req, res) => {
+  lastHash     = 'GENESIS';
+  chainResetAt = Date.now();
+  console.log('[FlowGuard] Hash chain reset to GENESIS (events preserved)');
+  res.json({ ok: true, message: 'Hash chain reset to GENESIS. Events preserved.' });
+});
+
 // GET /audit/verify — בדיקת שלמות hash chain (MS7.5)
 app.get('/audit/verify', (req, res) => {
   db.find({ event_hash: { $exists: true } }).sort({ ts: 1 }).exec((err, docs) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (!docs.length) return res.json({ valid: true, checked: 0, message: 'No signed events yet' });
+
+    // Only verify events after last chain reset
+    const toCheck = chainResetAt > 0 ? docs.filter(d => d.ts >= chainResetAt) : docs;
+    if (!toCheck.length) return res.json({ valid: true, checked: 0, message: 'No signed events yet' });
 
     let prevHash = 'GENESIS';
     let broken   = null;
 
-    for (const doc of docs) {
+    for (const doc of toCheck) {
       const expected = computeHash(doc, prevHash);
       if (expected !== doc.event_hash) {
         broken = { ts: doc.ts, tool: doc.tool_name, stored: doc.event_hash?.slice(0,16), expected: expected.slice(0,16) };
@@ -1377,6 +1389,32 @@ function wasRecentHookWrite(filePath) {
   return false;
 }
 
+// Bulk copy detector — counts new files within a time window
+const bulkCopy = { count: 0, timer: null, files: [] };
+const BULK_THRESHOLD = 5;   // files
+const BULK_WINDOW    = 10000; // 10 seconds
+
+function checkBulkCopy(filename) {
+  bulkCopy.count++;
+  bulkCopy.files.push(filename);
+  if (bulkCopy.timer) clearTimeout(bulkCopy.timer);
+  if (bulkCopy.count >= BULK_THRESHOLD) {
+    const count = bulkCopy.count;
+    const files = [...bulkCopy.files];
+    bulkCopy.count = 0; bulkCopy.files = [];
+    const reason = `🚨 FSW: Bulk copy detected — ${count} new files in project within 10s`;
+    db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+      session_id: 'fsw', level: 'CRITICAL', reason, rule_type: 'fsw',
+      hardening_level: 1, input_summary: files.slice(0,5).join(', '), output_summary: 'bulk-copy' });
+    sendTelegram(`🚨 <b>FlowGuard — Bulk Copy Alert</b>\n${count} new files appeared in project within 10 seconds.\nFirst files: <code>${files.slice(0,3).join(', ')}</code>`);
+    console.log(`[FlowGuard] BULK COPY DETECTED — ${count} files`);
+  } else {
+    bulkCopy.timer = setTimeout(() => {
+      bulkCopy.count = 0; bulkCopy.files = [];
+    }, BULK_WINDOW);
+  }
+}
+
 function startFSWatcher() {
   try {
     const watcher = fs.watch(FSW_ROOT, { recursive: true }, (eventType, filename) => {
@@ -1400,22 +1438,32 @@ function startFSWatcher() {
       fswDebounce.set(debounceKey, setTimeout(() => {
         fswDebounce.delete(debounceKey);
 
-        const nameLower = filename.toLowerCase();
+        const nameLower  = filename.toLowerCase();
         const isSensitive = FSW_SENSITIVE.some(s => nameLower.includes(s));
-        // rename = קובץ חדש שהועתק/נוצר מבחוץ → HIGH
-        // change = קובץ קיים שונה → INFO (אלא אם רגיש)
-        const isNewFile = eventType === 'rename';
+        const isRename   = eventType === 'rename';
+        const fileExists = fs.existsSync(fullPath);
+
+        // Deleted file: rename event + file no longer exists
+        const isDeleted  = isRename && !fileExists;
+        const isNewFile  = isRename && fileExists;
+
         let level, reason;
 
-        if (isSensitive) {
+        if (isDeleted) {
+          level  = 'CRITICAL';
+          reason = `🗑️ FSW: File manually DELETED from project — NOT by Claude — ${filename}`;
+          sendTelegram(`🗑️ <b>FlowGuard — File Deleted</b>\nManual deletion detected (NOT by Claude)\n<code>${filename}</code>`);
+        } else if (isSensitive) {
           level  = 'HIGH';
-          reason = `🔍 FSW: Sensitive file ${isNewFile ? 'copied to project' : 'modified'} — ${filename}`;
+          reason = `🔍 FSW: Sensitive file ${isNewFile ? 'manually copied to project — NOT by Claude' : 'modified'} — ${filename}`;
         } else if (isNewFile) {
           level  = 'HIGH';
-          reason = `📥 FSW: New file copied to project — ${filename}`;
+          reason = `📥 FSW: File manually copied to project — NOT by Claude — ${filename}`;
+          checkBulkCopy(filename);
         } else {
-          level  = 'INFO';
-          reason = `🔍 FSW: File changed — ${filename}`;
+          level  = 'HIGH';
+          reason = `📥 FSW: File manually copied to project — NOT by Claude — ${filename}`;
+          checkBulkCopy(filename);
         }
 
         db.insert({

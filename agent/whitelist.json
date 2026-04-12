@@ -108,6 +108,55 @@
       "label": "OK",
       "color": "#84cc16",
       "discovered_at": "2026-04-09T06:47:18.206Z"
+    },
+    {
+      "domain": "www.amflowbikes.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T21:27:09.440Z"
+    },
+    {
+      "domain": "www.pinkbike.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T21:27:09.441Z"
+    },
+    {
+      "domain": "ebike-mtb.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T21:27:09.441Z"
+    },
+    {
+      "domain": "bikerumor.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T21:27:09.441Z"
+    },
+    {
+      "domain": "flowmountainbike.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T21:27:09.441Z"
+    },
+    {
+      "domain": "www.wilsonebikes.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T21:27:09.441Z"
+    },
+    {
+      "domain": "enduro-mtb.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-09T21:27:09.441Z"
     }
   ]
 }

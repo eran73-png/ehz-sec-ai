@@ -77,8 +77,8 @@ $logDir = Join-Path $ProjectDir "logs"
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
 
 $actionCollector = New-ScheduledTaskAction `
-  -Execute $NodeExe `
-  -Argument "`"$CollectorScript`"" `
+  -Execute "powershell.exe" `
+  -Argument "-WindowStyle Hidden -NonInteractive -ExecutionPolicy Bypass -Command `"& '$NodeExe' '$CollectorScript'`"" `
   -WorkingDirectory $ProjectDir
 
 $triggerCollector = New-ScheduledTaskTrigger -AtLogOn
@@ -114,8 +114,8 @@ Write-Host "[2/2] Registering FlowGuard-Tray..." -ForegroundColor Yellow
 
 if (Test-Path $TrayScript) {
   $actionTray = New-ScheduledTaskAction `
-    -Execute $NodeExe `
-    -Argument "`"$TrayScript`"" `
+    -Execute "powershell.exe" `
+    -Argument "-WindowStyle Hidden -NonInteractive -ExecutionPolicy Bypass -Command `"& '$NodeExe' '$TrayScript'`"" `
     -WorkingDirectory $ProjectDir
 
   $triggerTray = New-ScheduledTaskTrigger -AtLogOn
