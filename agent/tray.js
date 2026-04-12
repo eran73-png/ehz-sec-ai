@@ -39,7 +39,12 @@ function controlService(action, cb) {
   const psCmd = action === 'stop'
     ? `Stop-Service ${SERVICE_NAME} -Force`
     : `Start-Service ${SERVICE_NAME}`;
-  exec(`powershell -Command "${psCmd}"`, { timeout: 15000 }, (err) => cb(err));
+  // RunAs required to start/stop Windows Services
+  exec(
+    `powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList '-Command ${psCmd}' -Wait"`,
+    { timeout: 20000 },
+    (err) => cb(err)
+  );
 }
 
 function sep() {
