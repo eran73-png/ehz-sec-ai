@@ -23,7 +23,8 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 # -- Paths ---------------------------------------------------
 $ProjectDir  = Split-Path -Parent $PSScriptRoot
 $NssmExe     = Join-Path $PSScriptRoot "..\tools\nssm.exe"
-$NodeExe     = (Get-Command node -ErrorAction SilentlyContinue)?.Source
+$NodeCmd     = Get-Command node -ErrorAction SilentlyContinue
+$NodeExe     = if ($NodeCmd) { $NodeCmd.Source } else { $null }
 $Collector   = Join-Path $ProjectDir "collector\server.js"
 $ServiceName = "FlowGuardCollector"
 $LogDir      = Join-Path $ProjectDir "logs"
