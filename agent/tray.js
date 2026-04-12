@@ -60,7 +60,7 @@ function sep() {
 
 function collectorStatusItem(online) {
   return {
-    title:   online ? '\u25CF Collector: RUNNING' : '\u25CF Collector: OFFLINE',
+    title:   online ? '\uD83D\uDFE2 Collector: RUNNING' : '\uD83D\uDD34 Collector: OFFLINE',
     tooltip: online ? 'Collector is running on port 3010' : 'Collector is not responding',
     checked: false,
     enabled: false,
@@ -73,16 +73,6 @@ function serviceControlItem(online) {
     : { title: '\u25BA Start Service', tooltip: 'Start FlowGuardCollector Windows Service', checked: false, enabled: true };
 }
 
-function statsItem(stats) {
-  if (!stats || !stats.ok) return { title: 'No data', tooltip: '', checked: false, enabled: false };
-  return {
-    title:   `Events: ${stats.total}  |  Critical: ${stats.critical}  |  High: ${stats.high}  |  ${stats.emoji} ${stats.level}`,
-    tooltip: 'Today\'s security stats',
-    checked: false,
-    enabled: false,
-  };
-}
-
 function buildMenu(stats, online) {
   return [
     /* 0 */ { title: `FlowGuard ${APP_VERSION} | PC: ${PC_NAME}`, tooltip: 'FlowGuard AI Security Monitor', checked: false, enabled: false },
@@ -91,9 +81,7 @@ function buildMenu(stats, online) {
     /* 3 */ collectorStatusItem(online),
     /* 4 */ serviceControlItem(online),
     /* 5 */ sep(),
-    /* 6 */ statsItem(stats),
-    /* 7 */ sep(),
-    /* 8 */ { title: 'Exit FlowGuard', tooltip: 'Stop tray and exit', checked: false, enabled: true },
+    /* 6 */ { title: 'Exit FlowGuard', tooltip: 'Stop tray and exit', checked: false, enabled: true },
   ];
 }
 
@@ -169,7 +157,7 @@ fetchAll(({ stats, online }) => {
         }, 3000);
       });
 
-    } else if (id === 8) {
+    } else if (id === 6) {
       console.log('[FlowGuard Tray] Exiting...');
       tray.kill();
       process.exit(0);
@@ -183,9 +171,8 @@ fetchAll(({ stats, online }) => {
       _stats  = s;
       tray.sendAction({ type: 'update-item', seq_id: 3, item: collectorStatusItem(o) });
       tray.sendAction({ type: 'update-item', seq_id: 4, item: serviceControlItem(o) });
-      tray.sendAction({ type: 'update-item', seq_id: 6, item: statsItem(s) });
       const tip = o
-        ? `FlowGuard ${APP_VERSION} | ${s.emoji} ${s.level} | ${s.total} events`
+        ? `FlowGuard ${APP_VERSION} | Collector RUNNING`
         : `FlowGuard ${APP_VERSION} — Collector OFFLINE`;
       tray.sendAction({ type: 'update-tooltip', tooltip: tip });
     });
