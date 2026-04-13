@@ -301,15 +301,11 @@ function checkScopeRule(event) {
 
 // ─── Rule 6: Git + Env Monitor (MS7.4) ───────────────────────────────────────
 
-// Allowed remotes — any other domain = HIGH
-const ALLOWED_GIT_REMOTES = [
-  'github.com',
-  'ehz-server.duckdns.org',
-  '109.207.76.169',   // Kamatera
-  '35.239.136.8',     // Google Cloud
-  'localhost',
-  '127.0.0.1',
-];
+// Allowed remotes — loaded from whitelist.json (configurable per installation)
+function getAllowedGitRemotes() {
+  const wl = getWhitelist();
+  return wl.git_remotes || ['github.com', 'gitlab.com', 'bitbucket.org', 'localhost', '127.0.0.1'];
+}
 
 // Suspicious commit message patterns
 const SUSPICIOUS_COMMIT_MSG = [
@@ -344,7 +340,7 @@ function checkGitEnvRules(event) {
     const urlMatch = cmd.match(/https?:\/\/([a-zA-Z0-9._-]+)/) || cmd.match(/@([a-zA-Z0-9._-]+)[:/]/);
     if (urlMatch) {
       const host = urlMatch[1].toLowerCase();
-      const isAllowed = ALLOWED_GIT_REMOTES.some(r => host === r || host.endsWith('.' + r));
+      const isAllowed = getAllowedGitRemotes().some(r => host === r || host.endsWith('.' + r));
       if (!isAllowed) {
         return { level: 'HIGH', reason: `🔴 git push to unauthorized server — ${host}`, ruleType: 'git_env' };
       }
@@ -365,7 +361,7 @@ function checkGitEnvRules(event) {
     const urlInCmd = cmd.match(/https?:\/\/([a-zA-Z0-9._-]+)/) || cmd.match(/git@([a-zA-Z0-9._-]+)/);
     if (urlInCmd) {
       const host = urlInCmd[1].toLowerCase();
-      const isAllowed = ALLOWED_GIT_REMOTES.some(r => host === r || host.endsWith('.' + r));
+      const isAllowed = getAllowedGitRemotes().some(r => host === r || host.endsWith('.' + r));
       if (!isAllowed) {
         return { level: 'HIGH', reason: `🔴 git remote changed to unauthorized server — ${host}`, ruleType: 'git_env' };
       }

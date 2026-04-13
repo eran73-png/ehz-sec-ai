@@ -2572,8 +2572,8 @@ function applyNotifConfig() {
   if (em.to)        document.getElementById('smtp-to').value = em.to;
   if (em.smtp_secure) document.getElementById('smtp-secure').checked = !!em.smtp_secure;
 
-  // Git remotes
-  renderGitRemotes(_notifConfig.git_remotes || []);
+  // Git remotes — load from whitelist.json via /config/git-remotes
+  loadGitRemotes();
 }
 
 function notifToggle(type) {
@@ -2665,29 +2665,24 @@ function renderGitRemotes(list) {
   `).join('');
 }
 
-async function addGitRemote() {
-  const input = document.getElementById('new-remote-input');
-  const val = input.value.trim();
-  const st = document.getElementById('remote-status');
-  if (!val) return;
-  if (!_notifConfig) _notifConfig = { git_remotes: [] };
-  if (!_notifConfig.git_remotes) _notifConfig.git_remotes = [];
-  if (_notifConfig.git_remotes.includes(val)) {
-    st.textContent = '⚠️ Already exists';
-    st.style.color = 'var(--yellow)';
-    return;
-  }
-  _notifConfig.git_remotes.push(val);
-  input.value = '';
-  renderGitRemotes(_notifConfig.git_remotes);
-  // auto-save
+let _gitRemotes = [];
+
+async function loadGitRemotes() {
   try {
-    await fetch('http://localhost:3010/notifications/config', {
+    const data = await fetchJSON('/config/git-remotes');
+    _gitRemotes = data.git_remotes || [];
+    renderGitRemotes(_gitRemotes);
+  } catch(e) { renderGitRemotes([]); }
+}
+
+async function saveGitRemotes(st) {
+  try {
+    await fetch(API + '/config/git-remotes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(_notifConfig)
+      body: JSON.stringify({ git_remotes: _gitRemotes })
     });
-    st.textContent = '✅ Added & saved';
+    st.textContent = '✅ Saved';
     st.style.color = 'var(--green)';
   } catch(e) {
     st.textContent = '❌ Save error';
@@ -2696,16 +2691,31 @@ async function addGitRemote() {
   setTimeout(() => st.textContent = '', 3000);
 }
 
+async function addGitRemote() {
+  const input = document.getElementById('new-remote-input');
+  const val = input.value.trim().toLowerCase();
+  const st = document.getElementById('remote-status');
+  if (!val) return;
+  if (_gitRemotes.includes(val)) {
+    st.textContent = '⚠️ Already exists';
+    st.style.color = 'var(--yellow)';
+    return;
+  }
+  _gitRemotes.push(val);
+  input.value = '';
+  renderGitRemotes(_gitRemotes);
+  await saveGitRemotes(st);
+}
+
 async function removeGitRemote(idx) {
-  if (!_notifConfig || !_notifConfig.git_remotes) return;
-  _notifConfig.git_remotes.splice(idx, 1);
-  renderGitRemotes(_notifConfig.git_remotes);
+  _gitRemotes.splice(idx, 1);
+  renderGitRemotes(_gitRemotes);
   const st = document.getElementById('remote-status');
   try {
-    await fetch('http://localhost:3010/notifications/config', {
+    await fetch(API + '/config/git-remotes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(_notifConfig)
+      body: JSON.stringify({ git_remotes: _gitRemotes })
     });
     st.textContent = '✅ Removed & saved';
     st.style.color = 'var(--green)';

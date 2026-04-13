@@ -1337,6 +1337,32 @@ app.post('/notifications/config', (req, res) => {
   res.json({ ok: true });
 });
 
+// ── Git Remotes Config (MS8.10) ──────────────────────────────────────────────
+
+const WHITELIST_PATH = path.join(__dirname, '../agent/whitelist.json');
+
+function loadWhitelist() {
+  try { return JSON.parse(fs.readFileSync(WHITELIST_PATH, 'utf8')); } catch(_) { return {}; }
+}
+
+function saveWhitelist(wl) {
+  fs.writeFileSync(WHITELIST_PATH, JSON.stringify(wl, null, 2), 'utf8');
+}
+
+app.get('/config/git-remotes', (req, res) => {
+  const wl = loadWhitelist();
+  res.json({ git_remotes: wl.git_remotes || ['github.com', 'gitlab.com', 'bitbucket.org', 'localhost', '127.0.0.1'] });
+});
+
+app.post('/config/git-remotes', (req, res) => {
+  const { git_remotes } = req.body || {};
+  if (!Array.isArray(git_remotes)) return res.status(400).json({ ok: false, error: 'git_remotes must be an array' });
+  const wl = loadWhitelist();
+  wl.git_remotes = git_remotes.map(r => r.trim().toLowerCase()).filter(Boolean);
+  saveWhitelist(wl);
+  res.json({ ok: true, git_remotes: wl.git_remotes });
+});
+
 app.post('/notifications/test-email', async (req, res) => {
   try {
     await sendEmail('Test Alert — EHZ-SEC-AI', 'This is a test email from EHZ-SEC-AI.\nIf you received this, email notifications are working correctly.');
