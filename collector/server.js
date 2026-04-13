@@ -14,6 +14,7 @@ const path       = require('path');
 const fs         = require('fs');
 const crypto     = require('crypto');
 const nodemailer = require('nodemailer');
+const os         = require('os');
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 
@@ -343,6 +344,7 @@ app.get('/stats', (req, res) => {
           high:     high     || 0,
           sessions: sessions || 0,
           last_ts:  last[0]  ? last[0].ts : null,
+          pc_name:  os.hostname(),
         });
       });
     });
@@ -1163,10 +1165,11 @@ app.get('/sessions', (req, res) => {
 
 // GET /sessions/:id — timeline מלא של session בודד
 app.get('/sessions/:id', (req, res) => {
-  const sid = req.params.id;
-  db.find({ session_id: sid }).sort({ ts: 1 }).exec((err, docs) => {
+  const sid   = req.params.id;
+  const limit = Math.min(parseInt(req.query.limit) || 500, 500);
+  db.find({ session_id: sid }).sort({ ts: -1 }).limit(limit).exec((err, docs) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json({ session_id: sid, events: docs, count: docs.length });
+    res.json({ session_id: sid, events: docs.reverse(), count: docs.length });
   });
 });
 

@@ -1,10 +1,10 @@
-; ============================================================
-; FlowGuard — Inno Setup Script (MS8.2)
+﻿; ============================================================
+; FlowGuard â€” Inno Setup Script (MS8.2)
 ; AI Security Monitor for Claude Code | by EHZ-AI
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "1.0.7"
+#define AppVersion "2.0.0"
 #define AppPublisher "EHZ-AI"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -74,7 +74,7 @@ Source: "{#SourceDir}\install\autostart.ps1";       DestDir: "{app}\install"; Fl
 Source: "{#SourceDir}\install\install-service.ps1"; DestDir: "{app}\install"; Flags: ignoreversion
 Source: "{#SourceDir}\install\uninstall.ps1";       DestDir: "{app}\install"; Flags: ignoreversion
 
-; NSSM — Windows Service Manager
+; NSSM â€” Windows Service Manager
 Source: "{#SourceDir}\tools\nssm.exe";              DestDir: "{app}\tools";   Flags: ignoreversion
 
 ; package.json + README
@@ -128,3 +128,5 @@ begin
       Result := False;
   end;
 end;
+
+

@@ -1218,6 +1218,22 @@
       <div class="task-desc">Git remotes עברו מ-hardcoded ב-rules.js ל-whitelist.json. ברירת מחדל: github.com, gitlab.com, bitbucket.org. Dashboard UI להוסיף/להסיר שרתים. API: GET/POST /config/git-remotes. הסרת שרתים אישיים מהקוד. בוצע: 13.04.2026</div>
       <div class="task-tags"><span class="tag">installer</span><span class="tag">config</span><span class="tag">git</span></div>
     </div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.11 ✅</div>
+      <div class="task-title">Dashboard V2 — עיצוב מחדש מלא (Sidebar Layout)</div>
+      <div class="task-desc">
+        index-v2.html — עיצוב מקצועי עם תפריט צד שמאל קבוע. 8 מסכים: Dashboard, Events, Sessions, Web Access, File Audit, Skills, Git Monitor, Settings.<br><br>
+        <strong>שינויים עיקריים:</strong><br>
+        • תפריט sidebar כהה (#0f1b2d) + רקע בהיר (#f0f4f8) — סגנון Logistics Pro<br>
+        • תיקון field mapping מלא: session_id, tool_name, ts, risk_label, findings, last_scanned<br>
+        • PC name בשורת ה-topbar — נשלף מ-/stats (pc_name: os.hostname())<br>
+        • Git Remotes: קריאת data.git_remotes (במקום data.remotes)<br>
+        • Skills: המרת אובייקט לרשימה עם Object.entries()<br>
+        • Tray פותח index-v2.html<br><br>
+        קבצים: dashboard/index-v2.html, collector/server.js (pc_name), agent/tray.js. בוצע: 13.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">UI</span><span class="tag">sidebar</span><span class="tag">v2</span></div>
+    </div>
     <div class="task-cell" style="border-top:2px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.04);">
       <div class="task-num" style="color:#f59e0b;">8.12</div>
       <div class="task-title">👁️ FSWatcher — Smart Exclusions (Anti False-Positive)</div>
@@ -1246,6 +1262,19 @@
         <strong>סה"כ:</strong> ~17 קבצי קוד + שינוי תיקייה + rename repo ב-GitHub.
       </div>
       <div class="task-tags"><span class="tag">branding</span><span class="tag">rename</span><span class="tag">git</span></div>
+    </div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.13 ✅</div>
+      <div class="task-title">Auto Version Sync — Single Source of Truth</div>
+      <div class="task-desc">
+        <code>package.json</code> הוא המקור היחיד לגרסה. tray.js קורא גרסה אוטומטית עם <code>require('../package.json').version</code>.<br><br>
+        <strong>build.ps1 חדש:</strong><br>
+        • <code>.\build.ps1</code> — בונה EXE עם גרסה נוכחית<br>
+        • <code>.\build.ps1 -BumpPatch</code> — מעלה x.x.X → מעדכן package.json + FlowGuard.iss → בונה EXE<br>
+        • <code>.\build.ps1 -BumpMinor</code> — מעלה x.X.0<br><br>
+        לא צריך לערוך FlowGuard.iss ידנית לעולם. בוצע: 13.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">build</span><span class="tag">automation</span><span class="tag">versioning</span></div>
     </div>
   </div>
 
@@ -3982,7 +4011,7 @@ Claude מבצע tool call
 <!-- FOOTER -->
 <div class="footer">
   <strong>EHZ-AI</strong> | Claude Code Security Monitor | 054-4825276<br>
-  נוצר: אפריל 2026 | גרסה 1.0
+  נוצר: אפריל 2026 | גרסה 2.0.0 | עודכן: 13.04.2026
 </div>
 
 </body>

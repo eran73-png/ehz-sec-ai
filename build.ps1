@@ -1,86 +1,71 @@
 # ============================================================
-# FlowGuard — Build Script (MS8.1)
-# אורז את כל הפרויקט לתיקיית dist/ מוכנה להתקנה
+# FlowGuard — Build Script
+# קורא גרסה מ-package.json → מעדכן FlowGuard.iss → בונה EXE
 # שימוש: .\build.ps1
+#        .\build.ps1 -BumpPatch     (מעלה x.x.X)
+#        .\build.ps1 -BumpMinor     (מעלה x.X.0)
 # ============================================================
 
-$Version   = "1.0.0"
-$BuildName = "flowguard-v$Version"
-$DistRoot  = "$PSScriptRoot\dist"
-$OutDir    = "$DistRoot\$BuildName"
+param(
+    [switch]$BumpPatch,
+    [switch]$BumpMinor
+)
 
-Write-Host ""
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  FlowGuard Build Script v$Version" -ForegroundColor Cyan
-Write-Host "  by EHZ-AI" -ForegroundColor DarkCyan
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host ""
+$ErrorActionPreference = 'Stop'
+$Root    = $PSScriptRoot
+$PkgFile = Join-Path $Root 'package.json'
+$IssFile = Join-Path $Root 'install\FlowGuard.iss'
+$ISCC    = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
 
-# ── 1. נקה dist ישן ──────────────────────────────────────────
-if (Test-Path $OutDir) {
-    Write-Host "[1/5] Cleaning old build..." -ForegroundColor Yellow
-    Remove-Item -Recurse -Force $OutDir
-}
-New-Item -ItemType Directory -Path $OutDir | Out-Null
-Write-Host "[1/5] Output folder: $OutDir" -ForegroundColor Green
+# ── 1. קרא גרסה נוכחית מ-package.json ──────────────────────
+$pkg     = Get-Content $PkgFile -Raw | ConvertFrom-Json
+$current = $pkg.version
+$parts   = $current -split '\.'
+$major   = [int]$parts[0]
+$minor   = [int]$parts[1]
+$patch   = [int]$parts[2]
 
-# ── 2. העתק קבצי ליבה ────────────────────────────────────────
-Write-Host "[2/5] Copying core files..." -ForegroundColor Yellow
-
-$Folders = @("agent", "collector", "config", "dashboard", "install", "scanner")
-foreach ($f in $Folders) {
-    $src = "$PSScriptRoot\$f"
-    if (Test-Path $src) {
-        Copy-Item -Recurse -Force $src "$OutDir\$f"
-        Write-Host "  + $f\" -ForegroundColor DarkGreen
-    }
+# ── 2. Bump גרסה אם התבקש ──────────────────────────────────
+if ($BumpMinor) {
+    $minor++; $patch = 0
+} elseif ($BumpPatch) {
+    $patch++
 }
 
-# קבצים בודדים
-Copy-Item "$PSScriptRoot\package.json"  "$OutDir\package.json"
-Copy-Item "$PSScriptRoot\README.md"     "$OutDir\README.md" -ErrorAction SilentlyContinue
+$newVersion = "$major.$minor.$patch"
 
-Write-Host "[2/5] Core files copied." -ForegroundColor Green
+# ── 3. עדכן package.json ───────────────────────────────────
+if ($newVersion -ne $current) {
+    $content = Get-Content $PkgFile -Raw
+    $content = $content -replace '"version": "[0-9]+\.[0-9]+\.[0-9]+"', "`"version`": `"$newVersion`""
+    Set-Content $PkgFile $content -Encoding UTF8
+    Write-Host "package.json: $current -> $newVersion" -ForegroundColor Cyan
+} else {
+    Write-Host "package.json: v$newVersion (ללא שינוי)" -ForegroundColor Gray
+}
 
-# ── 3. נקה קבצים מיותרים מה-dist ────────────────────────────
-Write-Host "[3/5] Cleaning unnecessary files..." -ForegroundColor Yellow
+# ── 4. עדכן FlowGuard.iss ──────────────────────────────────
+$iss = Get-Content $IssFile -Raw
+$iss = $iss -replace '#define AppVersion "[0-9]+\.[0-9]+\.[0-9]+"', "#define AppVersion `"$newVersion`""
+Set-Content $IssFile $iss -Encoding UTF8
+Write-Host "FlowGuard.iss: AppVersion = $newVersion" -ForegroundColor Cyan
 
-# מחק .env אם הועתק בטעות
-Remove-Item "$OutDir\agent\.env" -ErrorAction SilentlyContinue
-
-# מחק logs
-Remove-Item -Recurse -Force "$OutDir\collector\*.log" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "$OutDir\collector\ccsm.db" -ErrorAction SilentlyContinue
-
-Write-Host "[3/5] Cleaned." -ForegroundColor Green
-
-# ── 4. npm install --production ──────────────────────────────
-Write-Host "[4/5] Installing production dependencies..." -ForegroundColor Yellow
-Push-Location $OutDir
-    npm install --omit=dev --silent
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "ERROR: npm install failed!" -ForegroundColor Red
-        Pop-Location
-        exit 1
-    }
-Pop-Location
-Write-Host "[4/5] Dependencies installed." -ForegroundColor Green
-
-# ── 5. צור ZIP ───────────────────────────────────────────────
-Write-Host "[5/5] Creating ZIP archive..." -ForegroundColor Yellow
-$ZipPath = "$DistRoot\$BuildName.zip"
-if (Test-Path $ZipPath) { Remove-Item $ZipPath }
-Compress-Archive -Path $OutDir -DestinationPath $ZipPath
-Write-Host "[5/5] ZIP created: $ZipPath" -ForegroundColor Green
-
-# ── סיכום ────────────────────────────────────────────────────
-$ZipSize = [math]::Round((Get-Item $ZipPath).Length / 1MB, 2)
+# ── 5. בנה EXE ──────────────────────────────────────────────
 Write-Host ""
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  BUILD COMPLETE" -ForegroundColor Green
-Write-Host "  Folder : dist\$BuildName\" -ForegroundColor White
-Write-Host "  ZIP    : dist\$BuildName.zip ($ZipSize MB)" -ForegroundColor White
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "Next step: run .\install\setup.ps1" -ForegroundColor DarkCyan
-Write-Host ""
+Write-Host "Building FlowGuard-Setup-v$newVersion.exe..." -ForegroundColor Yellow
+
+if (-not (Test-Path $ISCC)) {
+    Write-Error "Inno Setup לא נמצא: $ISCC"
+    exit 1
+}
+
+& $ISCC $IssFile | Where-Object { $_ -match 'Compiling|Linking|Successfully' }
+
+$exe = Join-Path $Root "dist\FlowGuard-Setup-v$newVersion.exe"
+if (Test-Path $exe) {
+    $size = [math]::Round((Get-Item $exe).Length / 1MB, 1)
+    Write-Host ""
+    Write-Host "OK  dist\FlowGuard-Setup-v$newVersion.exe ($size MB)" -ForegroundColor Green
+} else {
+    Write-Error "Build נכשל -- EXE לא נמצא"
+}

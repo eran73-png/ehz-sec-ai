@@ -10,9 +10,9 @@ const path     = require('path');
 const os       = require('os');
 const { exec } = require('child_process');
 
-const APP_VERSION    = 'v1.0.7';
+const APP_VERSION    = 'v' + require('../package.json').version;
 const COLLECTOR_URL  = 'http://localhost:3010';
-const DASHBOARD_FILE = path.join(__dirname, '..', 'dashboard', 'index.html');
+const DASHBOARD_FILE = path.join(__dirname, '..', 'dashboard', 'index-v2.html');
 const ICON_PATH      = path.join(__dirname, 'flowguard.ico');
 const CHECK_INTERVAL = 10000;
 const PC_NAME        = os.hostname();

@@ -8,3 +8,4 @@ node_modules/
 config/project-scope.json
 config/machine.token
 agent/skill-registry.json
+dist/

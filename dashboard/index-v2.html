@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowGuard — AI Security Monitor</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#f0f4f8; display:flex; height:100vh; overflow:hidden; color:#0f1b2d; }
+
+/* ─── CSS Variables ─── */
+:root {
+  --bg:#f0f4f8;
+  --sidebar:#0f1b2d;
+  --panel:#ffffff;
+  --accent:#00d4ff;
+  --green:#00c853;
+  --red:#ef4444;
+  --orange:#ea580c;
+  --yellow:#f59e0b;
+  --text:#0f1b2d;
+  --muted:#94a3b8;
+  --border:#e2e8f0;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:#f1f5f9; }
+::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:#94a3b8; }
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width:220px; background:var(--sidebar);
+  display:flex; flex-direction:column; flex-shrink:0;
+  position:fixed; top:0; left:0; height:100vh; z-index:100;
+}
+.sidebar-logo {
+  padding:20px 20px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.logo-mark { display:flex; align-items:center; gap:10px; }
+.logo-icon {
+  width:32px; height:32px;
+  background:linear-gradient(135deg,#00d4ff,#0066cc);
+  border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+.logo-text { font-size:15px; font-weight:700; color:#fff; }
+.logo-sub  { font-size:10px; color:rgba(255,255,255,0.4); margin-top:1px; }
+
+.sidebar-label {
+  font-size:9px; font-weight:700; letter-spacing:1.5px;
+  color:rgba(255,255,255,0.25); text-transform:uppercase;
+  padding:18px 20px 6px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 20px; cursor:pointer;
+  font-size:13px; color:rgba(255,255,255,0.5);
+  border-left:3px solid transparent;
+  transition:all .15s; user-select:none;
+}
+.nav-item:hover { color:#fff; background:rgba(255,255,255,0.05); }
+.nav-item.active { color:#00d4ff; background:rgba(0,212,255,0.08); border-left-color:#00d4ff; }
+.nav-item .icon { font-size:15px; width:18px; text-align:center; }
+
+.sidebar-bottom {
+  margin-top:auto; padding:16px 20px;
+  border-top:1px solid rgba(255,255,255,0.07);
+  display:flex; align-items:center; gap:10px;
+}
+.avatar {
+  width:32px; height:32px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(0,102,204,0.2));
+  border:1px solid rgba(0,212,255,0.3);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:#00d4ff; font-weight:700;
+}
+.avatar-info { flex:1; }
+.avatar-name { font-size:12px; color:#fff; font-weight:600; }
+.avatar-role { font-size:10px; color:rgba(255,255,255,0.35); }
+
+/* ─── Main ─── */
+.main { flex:1; margin-left:220px; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ─── Topbar ─── */
+.topbar {
+  background:#fff; padding:0 24px; height:56px;
+  display:flex; align-items:center; gap:16px;
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.topbar-title { font-size:16px; font-weight:700; color:#0f1b2d; flex:1; }
+.topbar-badge {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3);
+  border-radius:20px; padding:4px 12px; font-size:11px; font-weight:700;
+  transition:all .3s;
+}
+.topbar-badge.online { color:#0066cc; }
+.topbar-badge.offline { color:#dc2626; background:rgba(239,68,68,0.1); border-color:rgba(239,68,68,0.3); }
+.status-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--green); transition:background .3s;
+}
+.status-dot.offline { background:var(--red); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.status-dot.online { animation:pulse 2s infinite; }
+
+.topbar-pc { font-size:11px; color:#94a3b8; white-space:nowrap; }
+.topbar-icons { display:flex; gap:8px; }
+.topbar-icon {
+  width:34px; height:34px; border-radius:8px;
+  border:1px solid var(--border); background:#f8fafc;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; cursor:pointer; position:relative;
+  transition:background .15s;
+}
+.topbar-icon:hover { background:#f1f5f9; }
+.notif-dot {
+  position:absolute; top:6px; right:6px;
+  width:7px; height:7px; border-radius:50%;
+  background:#ef4444; border:1.5px solid #fff;
+}
+
+/* ─── Content ─── */
+.content { flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:16px; }
+
+/* ─── Views ─── */
+.view { display:none; flex-direction:column; gap:16px; }
+.view.active { display:flex; }
+
+/* ─── Stats row ─── */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.stat-card { background:#fff; border-radius:12px; padding:16px 18px; border:1px solid var(--border); }
+.stat-label { font-size:10px; font-weight:700; letter-spacing:1px; color:#94a3b8; text-transform:uppercase; margin-bottom:6px; }
+.stat-value { font-size:28px; font-weight:800; color:#0f1b2d; line-height:1; }
+.stat-sub { font-size:11px; color:#64748b; margin-top:4px; }
+.stat-trend { font-size:11px; font-weight:600; margin-top:6px; }
+.trend-up { color:var(--green); }
+.trend-dn { color:var(--red); }
+.trend-neutral { color:#94a3b8; }
+
+/* ─── Middle row ─── */
+.middle-row { display:grid; grid-template-columns:1.2fr 0.8fr; gap:12px; }
+
+/* ─── Panel ─── */
+.panel { background:#fff; border-radius:12px; border:1px solid var(--border); overflow:hidden; }
+.panel-header {
+  padding:14px 18px; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid #f1f5f9;
+}
+.panel-title { font-size:13px; font-weight:700; color:#0f1b2d; }
+.panel-sub { font-size:11px; color:#94a3b8; margin-top:1px; }
+.panel-actions { display:flex; gap:8px; align-items:center; }
+
+.live-badge {
+  background:rgba(0,200,83,0.1); border:1px solid rgba(0,200,83,0.3);
+  color:#00a844; font-size:10px; font-weight:700;
+  padding:3px 8px; border-radius:20px;
+  display:flex; align-items:center; gap:4px;
+}
+.live-dot { width:5px; height:5px; border-radius:50%; background:#00c853; animation:pulse 2s infinite; }
+
+/* ─── Events ─── */
+.event-list { padding:4px 0; max-height:320px; overflow-y:auto; }
+.event-row {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 18px; border-bottom:1px solid #f8fafc; font-size:12px;
+}
+.event-row:last-child { border-bottom:none; }
+.event-row:hover { background:#fafbfc; }
+.event-level {
+  font-size:9px; font-weight:800; letter-spacing:.5px;
+  padding:2px 7px; border-radius:4px; flex-shrink:0; white-space:nowrap;
+}
+.lvl-CRITICAL,.lvl-CRIT { background:#fef2f2; color:#dc2626; }
+.lvl-HIGH { background:#fff7ed; color:#ea580c; }
+.lvl-MEDIUM,.lvl-MED { background:#fefce8; color:#ca8a04; }
+.lvl-LOW { background:#eff6ff; color:#2563eb; }
+.lvl-INFO { background:#f0fdf4; color:#16a34a; }
+.event-text { flex:1; color:#374151; line-height:1.4; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.event-tool { font-size:10px; color:#94a3b8; flex-shrink:0; }
+.event-time { font-size:10px; color:#cbd5e1; flex-shrink:0; min-width:40px; text-align:right; }
+
+/* ─── Security Score ─── */
+.score-body { padding:18px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+.score-ring { width:100px; height:100px; position:relative; }
+.score-ring svg { transform:rotate(-90deg); }
+.ring-bg { fill:none; stroke:#f1f5f9; stroke-width:8; }
+.ring-fg { fill:none; stroke:#00d4ff; stroke-width:8; stroke-linecap:round; stroke-dasharray:283; stroke-dashoffset:57; transition:stroke-dashoffset 1s ease; }
+.score-num { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:22px; font-weight:800; color:#0f1b2d; }
+.score-label { font-size:12px; font-weight:700; color:#64748b; }
+.score-bars { width:100%; display:flex; flex-direction:column; gap:8px; padding:0 18px 18px; }
+.score-bar-row { display:flex; align-items:center; gap:8px; font-size:11px; }
+.score-bar-label { width:70px; color:#64748b; }
+.score-bar-track { flex:1; height:5px; background:#f1f5f9; border-radius:3px; overflow:hidden; }
+.score-bar-fill { height:100%; border-radius:3px; transition:width .8s ease; }
+.score-bar-val { width:28px; text-align:right; font-weight:700; color:#374151; font-size:10px; }
+
+/* ─── Table ─── */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+th {
+  text-align:left; padding:10px 18px;
+  font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  color:#94a3b8; background:#f8fafc; border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+td { padding:11px 18px; border-bottom:1px solid #f1f5f9; color:#374151; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:#f8fafc; }
+.mono { font-family:monospace; font-size:11px; color:#64748b; }
+.tool-chip { background:#f1f5f9; color:#475569; font-size:10px; font-weight:600; padding:2px 8px; border-radius:4px; display:inline-block; }
+.status-chip { font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; display:inline-block; }
+.s-ok   { background:#f0fdf4; color:#16a34a; }
+.s-warn { background:#fff7ed; color:#ea580c; }
+.s-crit { background:#fef2f2; color:#dc2626; }
+.s-info { background:#eff6ff; color:#2563eb; }
+.progress-wrap { display:flex; align-items:center; gap:8px; }
+.progress-bar  { flex:1; height:4px; background:#f1f5f9; border-radius:2px; overflow:hidden; min-width:60px; }
+.progress-fill { height:100%; border-radius:2px; }
+
+/* ─── Buttons ─── */
+.btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600;
+  cursor:pointer; border:none; transition:all .15s; user-select:none;
+}
+.btn-primary { background:#0f1b2d; color:#fff; }
+.btn-primary:hover { background:#1a2d47; }
+.btn-accent  { background:var(--accent); color:#0f1b2d; }
+.btn-accent:hover { background:#00bde0; }
+.btn-outline { background:#fff; color:#374151; border:1px solid var(--border); }
+.btn-outline:hover { background:#f8fafc; }
+.btn-danger  { background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
+.btn-danger:hover { background:#fee2e2; }
+.btn-sm { padding:5px 10px; font-size:11px; }
+
+/* ─── Filter bar ─── */
+.filter-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.filter-select, .filter-input {
+  padding:7px 12px; border-radius:8px; border:1px solid var(--border);
+  font-size:12px; color:#374151; background:#fff; outline:none;
+  transition:border-color .15s;
+}
+.filter-select:focus, .filter-input:focus { border-color:#00d4ff; }
+.filter-input { flex:1; min-width:180px; }
+
+/* ─── Tag ─── */
+.tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; }
+.tag-green  { background:#f0fdf4; color:#16a34a; }
+.tag-red    { background:#fef2f2; color:#dc2626; }
+.tag-blue   { background:#eff6ff; color:#2563eb; }
+.tag-gray   { background:#f1f5f9; color:#475569; }
+.tag-orange { background:#fff7ed; color:#ea580c; }
+
+/* ─── Chain status bar ─── */
+.chain-bar {
+  display:flex; align-items:center; gap:12px; padding:10px 16px;
+  background:#f8fafc; border-bottom:1px solid var(--border); font-size:12px;
+}
+.chain-ok   { color:#16a34a; font-weight:700; }
+.chain-fail { color:#dc2626; font-weight:700; }
+
+/* ─── Session expandable ─── */
+.session-item { border-bottom:1px solid #f1f5f9; }
+.session-item:last-child { border-bottom:none; }
+.session-header {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 18px; cursor:pointer; font-size:12px;
+  transition:background .15s;
+}
+.session-header:hover { background:#f8fafc; }
+.session-toggle { font-size:10px; color:#94a3b8; margin-left:auto; transition:transform .2s; }
+.session-toggle.open { transform:rotate(180deg); }
+.session-events { display:none; background:#fafbfc; border-top:1px solid #f1f5f9; }
+.session-events.open { display:block; }
+
+/* ─── Domain list ─── */
+.domain-row {
+  display:flex; align-items:center; gap:12px; padding:10px 18px;
+  border-bottom:1px solid #f1f5f9; font-size:12px;
+}
+.domain-row:last-child { border-bottom:none; }
+.domain-name { flex:1; color:#374151; font-weight:500; }
+.domain-actions { display:flex; gap:6px; }
+
+/* ─── Skill row ─── */
+.skill-risk-bar { display:flex; align-items:center; gap:6px; }
+.skill-risk-track { width:60px; height:4px; background:#f1f5f9; border-radius:2px; overflow:hidden; }
+.skill-risk-fill  { height:100%; border-radius:2px; }
+
+/* ─── Settings ─── */
+.settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.settings-group { background:#fff; border-radius:12px; border:1px solid var(--border); overflow:hidden; }
+.settings-body { padding:16px 18px; display:flex; flex-direction:column; gap:12px; }
+.setting-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.setting-label { font-size:12px; color:#374151; font-weight:500; }
+.setting-sublabel { font-size:10px; color:#94a3b8; }
+.toggle { position:relative; width:36px; height:20px; cursor:pointer; display:inline-block; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider {
+  position:absolute; inset:0; background:#cbd5e1; border-radius:20px; transition:.3s;
+}
+.toggle-slider::before {
+  content:''; position:absolute; width:14px; height:14px; background:#fff;
+  border-radius:50%; left:3px; top:3px; transition:.3s;
+}
+.toggle input:checked + .toggle-slider { background:#00d4ff; }
+.toggle input:checked + .toggle-slider::before { transform:translateX(16px); }
+.form-input {
+  padding:6px 10px; border:1px solid var(--border); border-radius:6px;
+  font-size:12px; color:#374151; outline:none; width:100%;
+}
+.form-input:focus { border-color:#00d4ff; }
+.form-select {
+  padding:6px 10px; border:1px solid var(--border); border-radius:6px;
+  font-size:12px; color:#374151; outline:none; background:#fff; width:100%;
+}
+
+/* ─── SIEM ─── */
+.siem-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.siem-card {
+  background:#fff; border-radius:12px; border:1px solid var(--border);
+  padding:24px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;
+}
+.siem-icon { font-size:28px; }
+.siem-label { font-size:13px; font-weight:700; color:#374151; }
+.siem-sub { font-size:11px; color:#94a3b8; }
+
+/* ─── Empty state ─── */
+.empty { display:flex; flex-direction:column; align-items:center; gap:8px; padding:40px; color:#94a3b8; font-size:13px; }
+.empty-icon { font-size:28px; }
+
+/* ─── Spinner ─── */
+.spinner {
+  display:inline-block; width:14px; height:14px; border:2px solid #e2e8f0;
+  border-top-color:#00d4ff; border-radius:50%; animation:spin .6s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ─── Toast ─── */
+.toast-container { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
+.toast {
+  background:#0f1b2d; color:#fff; padding:10px 16px; border-radius:10px;
+  font-size:12px; font-weight:600; box-shadow:0 4px 16px rgba(0,0,0,0.25);
+  display:flex; align-items:center; gap:8px; animation:slideIn .3s ease;
+  max-width:300px;
+}
+@keyframes slideIn { from{transform:translateX(60px);opacity:0} to{transform:translateX(0);opacity:1} }
+.toast.success { border-left:3px solid #00c853; }
+.toast.error   { border-left:3px solid #ef4444; }
+.toast.info    { border-left:3px solid #00d4ff; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">&#x1F6E1;&#xFE0F;</div>
+      <div>
+        <div class="logo-text">FlowGuard</div>
+        <div class="logo-sub">AI Security Monitor</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-label">Monitor</div>
+  <div class="nav-item active" data-view="dashboard"><span class="icon">&#x1F4CA;</span> Dashboard</div>
+  <div class="nav-item" data-view="events"><span class="icon">&#x1F4CB;</span> Events</div>
+  <div class="nav-item" data-view="sessions"><span class="icon">&#x1F4FC;</span> Sessions</div>
+  <div class="nav-item" data-view="webaccess"><span class="icon">&#x1F310;</span> Web Access</div>
+
+  <div class="sidebar-label">Security</div>
+  <div class="nav-item" data-view="fileaudit"><span class="icon">&#x1F5C2;&#xFE0F;</span> File Audit</div>
+  <div class="nav-item" data-view="skills"><span class="icon">&#x1F50D;</span> Skills</div>
+  <div class="nav-item" data-view="gitmonitor"><span class="icon">&#x1F517;</span> Git Monitor</div>
+
+  <div class="sidebar-label">System</div>
+  <div class="nav-item" data-view="siem"><span class="icon">&#x1F4E1;</span> SIEM</div>
+  <div class="nav-item" data-view="settings"><span class="icon">&#x2699;&#xFE0F;</span> Settings</div>
+
+  <div class="sidebar-bottom">
+    <div class="avatar">E</div>
+    <div class="avatar-info">
+      <div class="avatar-name">Eran</div>
+      <div class="avatar-role">Admin</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Security Dashboard</div>
+    <div class="topbar-badge online" id="collector-badge">
+      <span class="status-dot online" id="collector-dot"></span>
+      <span id="collector-label">Checking...</span>
+    </div>
+    <div class="topbar-pc" id="pc-name">PC: &#x2014;</div>
+    <div class="topbar-icons">
+      <div class="topbar-icon" id="notif-icon" title="Notifications">
+        &#x1F514;<div class="notif-dot" id="notif-dot" style="display:none"></div>
+      </div>
+      <div class="topbar-icon" style="background:#0f1b2d;color:#00d4ff;border-color:#0f1b2d;font-size:11px;font-weight:800;">FG</div>
+    </div>
+  </div>
+
+  <!-- Content scroll area -->
+  <div class="content">
+
+    <!-- ══════════ VIEW: DASHBOARD ══════════ -->
+    <div class="view active" id="view-dashboard">
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Events</div>
+          <div class="stat-value" id="stat-total">&#x2014;</div>
+          <div class="stat-sub">All time</div>
+          <div class="stat-trend trend-neutral" id="stat-total-sub">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Critical</div>
+          <div class="stat-value" id="stat-critical" style="color:#dc2626;">&#x2014;</div>
+          <div class="stat-sub">Require attention</div>
+          <div class="stat-trend trend-dn" id="stat-critical-sub">&nbsp;</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">High</div>
+          <div class="stat-value" id="stat-high" style="color:#ea580c;">&#x2014;</div>
+          <div class="stat-sub">Flagged events</div>
+          <div class="stat-trend trend-neutral" id="stat-high-sub">&nbsp;</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sessions</div>
+          <div class="stat-value" id="stat-sessions" style="color:#0066cc;">&#x2014;</div>
+          <div class="stat-sub">Recorded</div>
+          <div class="stat-trend trend-neutral" id="stat-sessions-sub">Loading...</div>
+        </div>
+      </div>
+
+      <div class="middle-row">
+
+        <!-- Live Events Feed -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Live Event Feed</div>
+              <div class="panel-sub">Real-time Claude Code activity</div>
+            </div>
+            <div class="live-badge"><span class="live-dot"></span> LIVE</div>
+          </div>
+          <div class="event-list" id="live-events">
+            <div class="empty"><div class="spinner"></div>&nbsp; Loading events...</div>
+          </div>
+        </div>
+
+        <!-- Security Score -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Security Score</div>
+              <div class="panel-sub" id="hardening-label">Hardening: &#x2014;</div>
+            </div>
+          </div>
+          <div class="score-body">
+            <div class="score-ring">
+              <svg viewBox="0 0 100 100" width="100" height="100">
+                <circle class="ring-bg" cx="50" cy="50" r="45"/>
+                <circle class="ring-fg" id="score-ring-fg" cx="50" cy="50" r="45"/>
+              </svg>
+              <div class="score-num" id="score-num">&#x2014;</div>
+            </div>
+            <div class="score-label" id="score-label">Loading...</div>
+          </div>
+          <div class="score-bars">
+            <div class="score-bar-row">
+              <span class="score-bar-label">Secrets</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-secrets" style="width:0%;background:#00c853;"></div></div>
+              <span class="score-bar-val" id="val-secrets">&#x2014;</span>
+            </div>
+            <div class="score-bar-row">
+              <span class="score-bar-label">Network</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-network" style="width:0%;background:#00d4ff;"></div></div>
+              <span class="score-bar-val" id="val-network">&#x2014;</span>
+            </div>
+            <div class="score-bar-row">
+              <span class="score-bar-label">File Scope</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-files" style="width:0%;background:#00d4ff;"></div></div>
+              <span class="score-bar-val" id="val-files">&#x2014;</span>
+            </div>
+            <div class="score-bar-row">
+              <span class="score-bar-label">Git</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-git" style="width:0%;background:#f59e0b;"></div></div>
+              <span class="score-bar-val" id="val-git">&#x2014;</span>
+            </div>
+            <div class="score-bar-row">
+              <span class="score-bar-label">Integrity</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-integrity" style="width:0%;background:#00c853;"></div></div>
+              <span class="score-bar-val" id="val-integrity">&#x2014;</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /middle-row -->
+
+      <!-- Recent Sessions -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Recent Sessions</div>
+            <div class="panel-sub">Claude Code session activity log</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="navigate('sessions')">View All &#x2192;</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Session ID</th>
+                <th>Start Time</th>
+                <th>Events</th>
+                <th>Top Tool</th>
+                <th>Status</th>
+                <th>Risk</th>
+              </tr>
+            </thead>
+            <tbody id="recent-sessions-body">
+              <tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /view-dashboard -->
+
+    <!-- ══════════ VIEW: EVENTS ══════════ -->
+    <div class="view" id="view-events">
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">All Events</div>
+            <div class="panel-sub" id="events-count-label">Loading...</div>
+          </div>
+          <div class="panel-actions">
+            <span id="chain-status-inline" style="font-size:11px;font-weight:600;"></span>
+            <button class="btn btn-danger btn-sm" onclick="resetChain()">Reset Chain</button>
+            <button class="btn btn-outline btn-sm" onclick="loadEvents()">&#x21BB; Refresh</button>
+          </div>
+        </div>
+
+        <div class="chain-bar" id="chain-bar" style="display:none">
+          <span id="chain-status-text"></span>
+          <span style="margin-left:auto;font-size:11px;color:#94a3b8;" id="chain-verified-count"></span>
+        </div>
+
+        <div class="filter-bar" style="padding:12px 18px;background:#f8fafc;border-bottom:1px solid var(--border)">
+          <select class="filter-select" id="filter-level" onchange="renderEventsTable()">
+            <option value="">All Levels</option>
+            <option value="CRITICAL">Critical</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
+            <option value="INFO">Info</option>
+          </select>
+          <select class="filter-select" id="filter-tool" onchange="renderEventsTable()">
+            <option value="">All Tools</option>
+          </select>
+          <input class="filter-input" type="text" id="filter-search" placeholder="Search events..." oninput="renderEventsTable()">
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Level</th>
+                <th>Tool</th>
+                <th>Reason / Description</th>
+                <th>Session</th>
+              </tr>
+            </thead>
+            <tbody id="events-table-body">
+              <tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /view-events -->
+
+    <!-- ══════════ VIEW: SESSIONS ══════════ -->
+    <div class="view" id="view-sessions">
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Sessions</div>
+            <div class="panel-sub" id="sessions-count-label">Loading...</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="loadSessions()">&#x21BB; Refresh</button>
+        </div>
+        <div id="sessions-list">
+          <div class="empty"><div class="spinner"></div>&nbsp; Loading sessions...</div>
+        </div>
+      </div>
+
+    </div><!-- /view-sessions -->
+
+    <!-- ══════════ VIEW: WEB ACCESS ══════════ -->
+    <div class="view" id="view-webaccess">
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Authorized Domains</div>
+            <div class="panel-sub">Whitelisted domains for web access</div>
+          </div>
+          <button class="btn btn-accent btn-sm" onclick="showAddDomainDialog()">+ Add Domain</button>
+        </div>
+        <div id="authorized-domains">
+          <div class="empty"><div class="spinner"></div>&nbsp; Loading...</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Web Access History</div>
+            <div class="panel-sub">WebFetch and WebSearch activity</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Domain / URL</th>
+                <th>Level</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="web-history-body">
+              <tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /view-webaccess -->
+
+    <!-- ══════════ VIEW: FILE AUDIT ══════════ -->
+    <div class="view" id="view-fileaudit">
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">File Integrity Audit</div>
+            <div class="panel-sub">Detect unauthorized file changes</div>
+          </div>
+          <div class="panel-actions">
+            <span id="audit-last-scan" style="font-size:11px;color:#94a3b8;"></span>
+            <button class="btn btn-primary btn-sm" onclick="runAuditScan()" id="audit-scan-btn">&#x25BA; Scan Now</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>File Path</th>
+                <th>Status</th>
+                <th>Size</th>
+                <th>Modified</th>
+                <th>Hash</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body">
+              <tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /view-fileaudit -->
+
+    <!-- ══════════ VIEW: SKILLS ══════════ -->
+    <div class="view" id="view-skills">
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Installed Skills</div>
+            <div class="panel-sub">Claude Code skill files analysis</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="runSkillsScan()" id="skills-scan-btn">&#x25BA; Scan Skills</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Skill Name</th>
+                <th>Path</th>
+                <th>Size</th>
+                <th>Risk Level</th>
+                <th>Last Modified</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="skills-table-body">
+              <tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /view-skills -->
+
+    <!-- ══════════ VIEW: GIT MONITOR ══════════ -->
+    <div class="view" id="view-gitmonitor">
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Git Remote Monitor</div>
+            <div class="panel-sub">Authorized git remotes and push activity</div>
+          </div>
+        </div>
+        <div id="git-remotes-list">
+          <div class="empty"><div class="spinner"></div>&nbsp; Loading...</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Git Events</div>
+            <div class="panel-sub">Recent git push / fetch activity</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Action</th>
+                <th>Remote / Command</th>
+                <th>Level</th>
+              </tr>
+            </thead>
+            <tbody id="git-events-body">
+              <tr><td colspan="4" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /view-gitmonitor -->
+
+    <!-- ══════════ VIEW: SIEM ══════════ -->
+    <div class="view" id="view-siem">
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">SIEM Integration</div>
+            <div class="panel-sub">Security Information and Event Management</div>
+          </div>
+        </div>
+        <div style="padding:20px">
+          <div class="siem-grid">
+            <div class="siem-card">
+              <div class="siem-icon">&#x1F4E4;</div>
+              <div class="siem-label">Syslog Export</div>
+              <div class="siem-sub">Forward events to external SIEM via syslog UDP/TCP</div>
+              <div style="margin-top:12px"><span class="tag tag-gray">Coming Soon</span></div>
+            </div>
+            <div class="siem-card">
+              <div class="siem-icon">&#x1FA9D;</div>
+              <div class="siem-label">Webhook Push</div>
+              <div class="siem-sub">Push critical events to Slack, Teams, or custom endpoint</div>
+              <div style="margin-top:12px"><span class="tag tag-gray">Coming Soon</span></div>
+            </div>
+            <div class="siem-card">
+              <div class="siem-icon">&#x1F4CA;</div>
+              <div class="siem-label">Splunk Integration</div>
+              <div class="siem-sub">HEC token integration for Splunk Enterprise</div>
+              <div style="margin-top:12px"><span class="tag tag-gray">Coming Soon</span></div>
+            </div>
+            <div class="siem-card">
+              <div class="siem-icon">&#x1F50C;</div>
+              <div class="siem-label">REST API</div>
+              <div class="siem-sub">Pull events via REST API &#x2014; active at localhost:3010</div>
+              <div style="margin-top:12px"><span class="tag tag-green">Active</span></div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px">Available REST Endpoints</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/events?limit=200&amp;level=CRITICAL</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/stats</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/sessions</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/audit/verify</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/domains</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">POST http://localhost:3010/chain/reset</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-siem -->
+
+    <!-- ══════════ VIEW: SETTINGS ══════════ -->
+    <div class="view" id="view-settings">
+
+      <div class="settings-grid">
+
+        <!-- Hardening -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">&#x2699;&#xFE0F; Hardening Level</div>
+              <div class="panel-sub">Security enforcement mode</div>
+            </div>
+          </div>
+          <div class="settings-body">
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Hardening Mode</div>
+                <div class="setting-sublabel">How strict to enforce rules</div>
+              </div>
+              <select class="form-select" id="cfg-hardening" style="width:120px" onchange="saveConfig()">
+                <option value="SOFT">SOFT</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="HARD">HARD</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Block Critical Actions</div>
+                <div class="setting-sublabel">Prevent critical risk tool calls</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-block-critical" onchange="saveConfig()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">File System Watcher</div>
+                <div class="setting-sublabel">Monitor file changes in real-time</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-fsw" onchange="saveConfig()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Audit Chain</div>
+                <div class="setting-sublabel">Cryptographic event integrity</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-chain" onchange="saveConfig()"><span class="toggle-slider"></span></label>
+            </div>
+            <div>
+              <div class="setting-label" style="margin-bottom:6px">Log Retention (days)</div>
+              <input class="form-input" type="number" id="cfg-log-retention" placeholder="30" min="1" max="365" onchange="saveConfig()">
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Auto-update Rules</div>
+                <div class="setting-sublabel">Pull rule updates automatically</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-auto-update" onchange="saveConfig()"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">&#x1F514; Notifications</div>
+              <div class="panel-sub">Alert channels configuration</div>
+            </div>
+          </div>
+          <div class="settings-body">
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Desktop Alerts</div>
+                <div class="setting-sublabel">Windows notification pop-ups</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="notif-desktop" onchange="saveNotifications()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Telegram Alerts</div>
+                <div class="setting-sublabel">Send to Telegram bot</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="notif-telegram" onchange="saveNotifications()"><span class="toggle-slider"></span></label>
+            </div>
+            <div>
+              <div class="setting-label" style="margin-bottom:6px">Telegram Token</div>
+              <input class="form-input" type="text" id="notif-telegram-token" placeholder="Bot token..." onchange="saveNotifications()">
+            </div>
+            <div>
+              <div class="setting-label" style="margin-bottom:6px">Chat ID</div>
+              <input class="form-input" type="text" id="notif-chat-id" placeholder="Chat ID..." onchange="saveNotifications()">
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Min Alert Level</div>
+              </div>
+              <select class="form-select" id="notif-min-level" style="width:130px" onchange="saveNotifications()">
+                <option value="CRITICAL">Critical only</option>
+                <option value="HIGH">High+</option>
+                <option value="MEDIUM">Medium+</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Git Remotes -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">&#x1F517; Authorized Git Remotes</div>
+              <div class="panel-sub">Allowed remote repositories</div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="loadGitRemoteSettings()">&#x21BB;</button>
+          </div>
+          <div class="settings-body" id="git-remotes-settings">
+            <div class="empty" style="padding:12px"><div class="spinner"></div>&nbsp; Loading...</div>
+          </div>
+        </div>
+
+        <!-- Updates -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">&#x1F504; Rules &amp; Updates</div>
+              <div class="panel-sub">Rule engine version management</div>
+            </div>
+          </div>
+          <div class="settings-body">
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Current Version</div>
+                <div class="setting-sublabel" id="update-current-version">Loading...</div>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="checkUpdates()">Check</button>
+            </div>
+            <div id="update-available" style="display:none;padding:10px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+              <div style="font-size:12px;font-weight:700;color:#16a34a">Update Available</div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px" id="update-version-label"></div>
+              <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="applyUpdate()">Apply Update</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /view-settings -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+'use strict';
+
+const API = 'http://localhost:3010';
+
+// ── Utility: fetch JSON ──
+async function fetchJSON(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+// ── Utility: HTML escape ──
+function esc(s) {
+  if (s === null || s === undefined) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// ── Utility: truncate ──
+function trunc(s, n) {
+  n = n || 60;
+  if (!s) return '';
+  s = String(s);
+  return s.length > n ? s.substring(0, n) + '\u2026' : s;
+}
+
+// ── Utility: format time ──
+function fmtTime(ts) {
+  if (!ts) return '\u2014';
+  try {
+    var d = new Date(ts);
+    return d.getHours().toString().padStart(2,'0') + ':' +
+           d.getMinutes().toString().padStart(2,'0') + ':' +
+           d.getSeconds().toString().padStart(2,'0');
+  } catch(e) { return String(ts); }
+}
+
+// ── Utility: format date+time ──
+function fmtDT(ts) {
+  if (!ts) return '\u2014';
+  try {
+    var d = new Date(ts);
+    var day = d.getDate().toString().padStart(2,'0');
+    var mon = (d.getMonth()+1).toString().padStart(2,'0');
+    return day + '.' + mon + ' \u2014 ' + fmtTime(ts);
+  } catch(e) { return String(ts); }
+}
+
+// ── Utility: bytes ──
+function fmtBytes(b) {
+  if (!b) return '\u2014';
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+// ── Level badge ──
+function lvlBadge(level) {
+  var l = (level || 'INFO').toUpperCase();
+  var short = l === 'CRITICAL' ? 'CRIT' : l === 'MEDIUM' ? 'MED' : l;
+  return '<span class="event-level lvl-' + l + '">' + short + '</span>';
+}
+
+// ── Level chip (full text) ──
+function lvlChip(level) {
+  var l = (level || 'INFO').toUpperCase();
+  return '<span class="event-level lvl-' + l + '">' + l + '</span>';
+}
+
+// ── Risk progress bar ──
+function riskBar(level) {
+  var map = {
+    CRITICAL: { w:95, c:'#dc2626' },
+    HIGH:     { w:65, c:'#ea580c' },
+    MEDIUM:   { w:40, c:'#ca8a04' },
+    LOW:      { w:20, c:'#2563eb' },
+    INFO:     { w:5,  c:'#16a34a' }
+  };
+  var l = (level || '').toUpperCase();
+  var m = map[l] || map.LOW;
+  return '<div class="progress-wrap">' +
+    '<div class="progress-bar"><div class="progress-fill" style="width:' + m.w + '%;background:' + m.c + '"></div></div>' +
+    '<span style="font-size:10px;font-weight:700;color:' + m.c + '">' + (l || '\u2014') + '</span>' +
+    '</div>';
+}
+
+// ── Toast ──
+function toast(msg, type, dur) {
+  type = type || 'info';
+  dur  = dur  || 3000;
+  var c = document.getElementById('toast-container');
+  var t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = '0';
+    t.style.transition = 'opacity .3s';
+    setTimeout(function() { t.remove(); }, 400);
+  }, dur);
+}
+
+// ── State ──
+var allEvents   = [];
+var allSessions = [];
+var currentView = 'dashboard';
+var prevEventCount = 0;
+
+// ── Navigation ──
+function navigate(view) {
+  document.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('active'); });
+  var nav = document.querySelector('[data-view="' + view + '"]');
+  if (nav) nav.classList.add('active');
+
+  document.querySelectorAll('.view').forEach(function(el) { el.classList.remove('active'); });
+  var vEl = document.getElementById('view-' + view);
+  if (vEl) vEl.classList.add('active');
+
+  var titles = {
+    dashboard: 'Security Dashboard', events: 'Events', sessions: 'Sessions',
+    webaccess: 'Web Access', fileaudit: 'File Audit', skills: 'Skills',
+    gitmonitor: 'Git Monitor', siem: 'SIEM', settings: 'Settings'
+  };
+  document.getElementById('topbar-title').textContent = titles[view] || 'FlowGuard';
+  currentView = view;
+
+  if (view === 'events')     { loadEvents(); }
+  if (view === 'sessions')   { loadSessions(); }
+  if (view === 'webaccess')  { loadWebAccess(); }
+  if (view === 'fileaudit')  { loadAudit(); }
+  if (view === 'skills')     { loadSkills(); }
+  if (view === 'gitmonitor') { loadGitMonitor(); }
+  if (view === 'settings')   { loadSettings(); }
+}
+
+document.querySelectorAll('.nav-item').forEach(function(el) {
+  el.addEventListener('click', function() { navigate(el.dataset.view); });
+});
+
+// ════════ DASHBOARD ════════
+
+async function checkCollector() {
+  var dot   = document.getElementById('collector-dot');
+  var badge = document.getElementById('collector-badge');
+  var label = document.getElementById('collector-label');
+  try {
+    var data = await fetchJSON('/stats');
+    dot.className   = 'status-dot online';
+    badge.className = 'topbar-badge online';
+    label.textContent = 'Collector Active';
+    if (data.pc_name || data.pcName) {
+      document.getElementById('pc-name').textContent = 'PC: ' + (data.pc_name || data.pcName);
+    }
+    return data;
+  } catch(e) {
+    dot.className   = 'status-dot offline';
+    badge.className = 'topbar-badge offline';
+    label.textContent = 'Collector Offline';
+    return null;
+  }
+}
+
+async function loadStats() {
+  try {
+    var data = await fetchJSON('/stats');
+    var total    = data.total    || 0;
+    var critical = data.critical || data.CRITICAL || 0;
+    var high     = data.high     || data.HIGH     || 0;
+    var sessions = data.sessions || 0;
+
+    document.getElementById('stat-total').textContent    = total.toLocaleString();
+    document.getElementById('stat-critical').textContent = critical.toLocaleString();
+    document.getElementById('stat-high').textContent     = high.toLocaleString();
+    document.getElementById('stat-sessions').textContent = sessions.toLocaleString();
+
+    if (data.rules !== undefined) {
+      document.getElementById('stat-sessions-sub').textContent = data.rules + ' rules loaded';
+    }
+    if (data.hardening) {
+      document.getElementById('hardening-label').textContent = 'Hardening: ' + data.hardening;
+    }
+
+    var score = data.score || data.securityScore || calcScore(critical, high, total);
+    updateScoreRing(score);
+
+    var bars = data.scoreBars || data.bars || {};
+    setBar('secrets',   bars.secrets   !== undefined ? bars.secrets   : 90);
+    setBar('network',   bars.network   !== undefined ? bars.network   : 75);
+    setBar('files',     bars.files     !== undefined ? bars.files     : 85);
+    setBar('git',       bars.git       !== undefined ? bars.git       : 60);
+    setBar('integrity', bars.integrity !== undefined ? bars.integrity : 100);
+  } catch(e) {
+    ['stat-total','stat-critical','stat-high','stat-sessions'].forEach(function(id) {
+      document.getElementById(id).textContent = '\u2014';
+    });
+  }
+}
+
+function calcScore(crit, high, total) {
+  var t = Math.max(total, 1);
+  var ratio = Math.max(0, 1 - (crit * 3 + high) / (t + 1));
+  return Math.round(50 + ratio * 50);
+}
+
+function setBar(id, pct) {
+  var fill = document.getElementById('bar-' + id);
+  var val  = document.getElementById('val-' + id);
+  if (fill) fill.style.width = pct + '%';
+  if (val)  val.textContent  = pct + '%';
+}
+
+function updateScoreRing(score) {
+  var s = Math.max(0, Math.min(100, score));
+  var offset = 283 - (s / 100) * 283;
+  var fg = document.getElementById('score-ring-fg');
+  fg.style.strokeDashoffset = offset;
+  document.getElementById('score-num').textContent = s;
+
+  var label = 'EXCELLENT', color = '#00c853';
+  if (s < 40)      { label = 'CRITICAL'; color = '#dc2626'; }
+  else if (s < 60) { label = 'POOR';     color = '#ea580c'; }
+  else if (s < 75) { label = 'FAIR';     color = '#f59e0b'; }
+  else if (s < 90) { label = 'GOOD';     color = '#00d4ff'; }
+
+  fg.style.stroke = color;
+  document.getElementById('score-label').textContent = label + ' \u2014 Protected';
+}
+
+async function loadLiveEvents() {
+  try {
+    var data   = await fetchJSON('/events?limit=10');
+    var events = data.events || data || [];
+    var list   = document.getElementById('live-events');
+
+    if (!events.length) {
+      list.innerHTML = '<div class="empty"><div class="empty-icon">\uD83D\uDCED</div>No events yet</div>';
+      return;
+    }
+
+    // Notification dot if new events appeared
+    if (prevEventCount > 0 && events.length > prevEventCount) {
+      document.getElementById('notif-dot').style.display = 'block';
+    }
+    prevEventCount = events.length;
+
+    list.innerHTML = events.map(function(ev) {
+      var reason = ev.reason || ev.message || ev.description || '\u2014';
+      var tool   = ev.tool_name || ev.tool || ev.type || '';
+      var ts     = ev.ts || ev.timestamp || ev.time;
+      return '<div class="event-row">' +
+        lvlBadge(ev.level) +
+        '<span class="event-text" title="' + esc(reason) + '">' + esc(trunc(reason, 55)) + '</span>' +
+        '<span class="event-tool">' + esc(tool) + '</span>' +
+        '<span class="event-time">' + fmtTime(ts) + '</span>' +
+        '</div>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('live-events').innerHTML =
+      '<div class="empty"><div class="empty-icon">\u26A0\uFE0F</div>Cannot reach API</div>';
+  }
+}
+
+async function loadRecentSessions() {
+  try {
+    var data     = await fetchJSON('/sessions?limit=5');
+    var sessions = data.sessions || data || [];
+    var tbody    = document.getElementById('recent-sessions-body');
+
+    if (!sessions.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">No sessions yet</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = sessions.map(function(s) {
+      var sid     = (s.sessionId || s.id || '\u2014').toString().substring(0, 12);
+      var cnt     = s.eventCount || s.events || 0;
+      var topTool = s.topTool   || s.tool   || '\u2014';
+      var status  = (s.status   || 'DONE').toUpperCase();
+      var risk    = s.riskLevel || s.risk   || 'LOW';
+      var sClass  = status === 'ACTIVE' ? 's-warn' : status === 'FLAGGED' ? 's-crit' : 's-ok';
+      return '<tr>' +
+        '<td><span class="mono">' + esc(sid) + '\u2026</span></td>' +
+        '<td>' + fmtDT(s.startTime || s.start || s.timestamp) + '</td>' +
+        '<td>' + Number(cnt).toLocaleString() + '</td>' +
+        '<td><span class="tool-chip">' + esc(topTool) + '</span></td>' +
+        '<td><span class="status-chip ' + sClass + '">' + status + '</span></td>' +
+        '<td>' + riskBar(risk) + '</td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('recent-sessions-body').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+  }
+}
+
+async function dashboardRefresh() {
+  await Promise.all([checkCollector(), loadStats(), loadLiveEvents(), loadRecentSessions()]);
+}
+
+// ════════ EVENTS ════════
+
+async function loadEvents() {
+  try {
+    var data = await fetchJSON('/events?limit=200');
+    allEvents = data.events || data || [];
+    document.getElementById('events-count-label').textContent = allEvents.length + ' events loaded';
+
+    var tools = [];
+    allEvents.forEach(function(e) {
+      var t = e.tool || e.type || '';
+      if (t && tools.indexOf(t) === -1) tools.push(t);
+    });
+    tools.sort();
+
+    var toolSel = document.getElementById('filter-tool');
+    toolSel.innerHTML = '<option value="">All Tools</option>' +
+      tools.map(function(t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
+
+    loadChainStatus();
+    renderEventsTable();
+  } catch(e) {
+    document.getElementById('events-table-body').innerHTML =
+      '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+  }
+}
+
+async function loadChainStatus() {
+  try {
+    var data   = await fetchJSON('/audit/verify');
+    var bar    = document.getElementById('chain-bar');
+    var txt    = document.getElementById('chain-status-text');
+    var cnt    = document.getElementById('chain-verified-count');
+    var inline = document.getElementById('chain-status-inline');
+    bar.style.display = 'flex';
+    var ok = data.valid || data.ok || data.status === 'ok';
+    txt.innerHTML = ok
+      ? '<span class="chain-ok">\u2713 Chain Integrity: VALID</span>'
+      : '<span class="chain-fail">\u2717 Chain Integrity: BROKEN</span>';
+    if (data.verified) cnt.textContent = data.verified + ' events verified';
+    inline.innerHTML = ok
+      ? '<span style="color:#16a34a;font-size:11px;font-weight:700;">\u2713 Chain OK</span>'
+      : '<span style="color:#dc2626;font-size:11px;font-weight:700;">\u2717 Chain BROKEN</span>';
+  } catch(e) {
+    document.getElementById('chain-status-inline').textContent = '';
+  }
+}
+
+async function resetChain() {
+  if (!confirm('Reset the audit chain? This will clear chain integrity history.')) return;
+  try {
+    var r = await fetch(API + '/chain/reset', { method: 'POST' });
+    if (r.ok) { toast('Chain reset successfully', 'success'); loadChainStatus(); }
+    else toast('Failed to reset chain', 'error');
+  } catch(e) { toast('Cannot reach API', 'error'); }
+}
+
+function renderEventsTable() {
+  var level  = document.getElementById('filter-level').value;
+  var tool   = document.getElementById('filter-tool').value;
+  var search = document.getElementById('filter-search').value.toLowerCase();
+
+  var filtered = allEvents.filter(function(ev) {
+    if (level && (ev.level || '').toUpperCase() !== level) return false;
+    if (tool  && (ev.tool_name || ev.tool || ev.type || '') !== tool) return false;
+    if (search) {
+      var hay = [(ev.reason||''),(ev.message||''),(ev.description||''),(ev.tool_name||ev.tool||'')].join(' ').toLowerCase();
+      if (hay.indexOf(search) === -1) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('events-count-label').textContent = filtered.length + ' / ' + allEvents.length + ' events';
+
+  var tbody = document.getElementById('events-table-body');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">No matching events</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.slice(0, 200).map(function(ev) {
+    var sid    = (ev.session_id || ev.sessionId || ev.session || '').toString().substring(0, 8);
+    var reason = ev.reason || ev.message || ev.description || '\u2014';
+    return '<tr>' +
+      '<td style="white-space:nowrap">' + fmtDT(ev.ts || ev.timestamp || ev.time) + '</td>' +
+      '<td>' + lvlChip(ev.level) + '</td>' +
+      '<td><span class="tool-chip">' + esc(ev.tool_name || ev.tool || ev.type || '\u2014') + '</span></td>' +
+      '<td title="' + esc(reason) + '">' + esc(trunc(reason, 80)) + '</td>' +
+      '<td><span class="mono">' + (esc(sid) || '\u2014') + '</span></td>' +
+      '</tr>';
+  }).join('');
+}
+
+// ════════ SESSIONS ════════
+
+async function loadSessions() {
+  var list = document.getElementById('sessions-list');
+  try {
+    var data = await fetchJSON('/sessions?limit=50');
+    allSessions = data.sessions || data || [];
+    document.getElementById('sessions-count-label').textContent = allSessions.length + ' sessions';
+
+    if (!allSessions.length) {
+      list.innerHTML = '<div class="empty"><div class="empty-icon">\uD83D\uDCED</div>No sessions recorded</div>';
+      return;
+    }
+
+    list.innerHTML = allSessions.map(function(s, i) {
+      var sid    = (s.session_id || s.sessionId || s.id || '—').toString();
+      var risk   = (s.max_level || s.riskLevel || s.risk || 'INFO').toUpperCase();
+      var topTool = (s.tools && s.tools[0]) || s.topTool || s.tool || '—';
+      var evCount = s.count || s.eventCount || s.events || 0;
+      var startTs = s.first_ts || s.startTime || s.start || s.timestamp;
+      var isSpecial = sid === 'proc' || sid === 'system' || sid === 'fsw';
+      var sClass  = isSpecial ? 's-ok' : (risk === 'CRITICAL' ? 's-crit' : risk === 'HIGH' ? 's-warn' : 's-ok');
+      var statusLabel = isSpecial ? 'SYSTEM' : 'DONE';
+      return '<div class="session-item">' +
+        '<div class="session-header" onclick="toggleSession(' + i + ')">' +
+          '<span class="mono">' + esc(sid.substring(0, 28)) + '</span>' +
+          '<span class="tool-chip">' + esc(topTool) + '</span>' +
+          '<span>' + fmtDT(startTs) + '</span>' +
+          '<span style="color:#64748b">' + evCount + ' events</span>' +
+          '<span class="status-chip ' + sClass + '">' + statusLabel + '</span>' +
+          lvlBadge(risk) +
+          '<span class="session-toggle" id="toggle-' + i + '">▼</span>' +
+        '</div>' +
+        '<div class="session-events" id="session-events-' + i + '">' +
+          '<div class="empty" style="padding:12px"><div class="spinner"></div>&nbsp; Loading...</div>' +
+        '</div>' +
+        '</div>';
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">\u26A0\uFE0F</div>Cannot reach API</div>';
+  }
+}
+
+async function toggleSession(idx) {
+  var evDiv  = document.getElementById('session-events-' + idx);
+  var toggle = document.getElementById('toggle-' + idx);
+  var isOpen = evDiv.classList.contains('open');
+
+  if (isOpen) {
+    evDiv.classList.remove('open');
+    toggle.classList.remove('open');
+    return;
+  }
+  evDiv.classList.add('open');
+  toggle.classList.add('open');
+
+  var s   = allSessions[idx];
+  var sid = s.session_id || s.sessionId || s.id || '';
+  if (!sid) { evDiv.innerHTML = '<div class="empty">No session ID</div>'; return; }
+
+  try {
+    var data   = await fetchJSON('/sessions/' + encodeURIComponent(sid) + '?limit=30');
+    var events = (data.events || data || []).slice(0, 30);
+    if (!events.length) {
+      evDiv.innerHTML = '<div class="empty">No events in this session</div>';
+      return;
+    }
+    evDiv.innerHTML = '<div class="event-list" style="max-height:220px;overflow-y:auto;background:#fff">' +
+      events.map(function(ev) {
+        var reason = ev.reason || ev.message || ev.description || '\u2014';
+        return '<div class="event-row">' +
+          lvlBadge(ev.level) +
+          '<span class="event-text" title="' + esc(reason) + '">' + esc(trunc(reason, 60)) + '</span>' +
+          '<span class="event-tool">' + esc(ev.tool_name || ev.tool || ev.type || '') + '</span>' +
+          '<span class="event-time">' + fmtTime(ev.ts || ev.timestamp || ev.time) + '</span>' +
+          '</div>';
+      }).join('') +
+      '</div>';
+  } catch(e) {
+    evDiv.innerHTML = '<div class="empty">Cannot load events</div>';
+  }
+}
+
+// ════════ WEB ACCESS ════════
+
+async function loadWebAccess() {
+  await Promise.all([loadDomains(), loadWebHistory()]);
+}
+
+async function loadDomains() {
+  var container = document.getElementById('authorized-domains');
+  try {
+    var data = await fetchJSON('/domains');
+
+    // API מחזיר: { allowed_domains: [...strings], discovered_domains: [...objects] }
+    var allowed    = data.allowed_domains || data.domains || [];
+    var discovered = data.discovered_domains || [];
+
+    if (!allowed.length && !discovered.length) {
+      container.innerHTML = '<div class="empty"><div class="empty-icon">\uD83C\uDF10</div>No authorized domains</div>';
+      return;
+    }
+
+    var html = '';
+
+    // Authorized (whitelist)
+    if (allowed.length) {
+      html += allowed.map(function(d) {
+        var name = typeof d === 'string' ? d : (d.domain || d.name || '');
+        return '<div class="domain-row">' +
+          '<span class="domain-name">' + esc(name) + '</span>' +
+          '<span class="tag tag-green">AUTHORIZED</span>' +
+          '<div class="domain-actions">' +
+            '<button class="btn btn-danger btn-sm" onclick="domainAction(\'' + esc(name) + '\',\'block\')">Block</button>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    // Discovered (from events)
+    if (discovered.length) {
+      html += '<div style="margin:12px 0 6px;font-size:11px;font-weight:700;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;">Discovered Domains</div>';
+      html += discovered.map(function(d) {
+        var name  = d.domain || d.name || '';
+        var label = d.label || 'OK';
+        var cls   = label === 'TRUSTED' ? 'tag-green' : label === 'SUSPICIOUS' ? 'tag-red' : 'tag-orange';
+        return '<div class="domain-row">' +
+          '<span class="domain-name">' + esc(name) + '</span>' +
+          '<span class="tag ' + cls + '">' + label + '</span>' +
+          '<div class="domain-actions">' +
+            '<button class="btn btn-outline btn-sm" onclick="domainAction(\'' + esc(name) + '\',\'approve\')">Authorize</button>' +
+            '<button class="btn btn-danger btn-sm"  onclick="domainAction(\'' + esc(name) + '\',\'block\')">Block</button>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">\u26A0\uFE0F</div>Cannot reach API</div>';
+  }
+}
+
+async function domainAction(domain, action) {
+  try {
+    await fetch(API + '/domains/' + action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain: domain })
+    });
+    toast('Domain ' + action + 'd: ' + domain, 'success');
+    loadDomains();
+  } catch(e) { toast('Action failed', 'error'); }
+}
+
+function showAddDomainDialog() {
+  var d = prompt('Enter domain to authorize (e.g. github.com):');
+  if (d && d.trim()) domainAction(d.trim(), 'approve');
+}
+
+async function loadWebHistory() {
+  var tbody = document.getElementById('web-history-body');
+  try {
+    var data   = await fetchJSON('/events?limit=100');
+    var events = (data.events || data || []).filter(function(ev) {
+      var t = (ev.tool_name || ev.tool || ev.type || '').toLowerCase();
+      return t.indexOf('web') !== -1 || t.indexOf('fetch') !== -1 ||
+             t.indexOf('search') !== -1 || t.indexOf('http') !== -1;
+    });
+
+    if (!events.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">No web activity</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = events.slice(0, 50).map(function(ev) {
+      var tool = ev.tool_name || ev.tool || ev.type || '\u2014';
+      var type = tool.toLowerCase().indexOf('search') !== -1 ? 'WebSearch' : 'WebFetch';
+      var desc = ev.reason || ev.message || ev.description || '\u2014';
+      return '<tr>' +
+        '<td>' + fmtDT(ev.ts || ev.timestamp || ev.time) + '</td>' +
+        '<td><span class="tool-chip">' + type + '</span></td>' +
+        '<td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(desc) + '">' + esc(trunc(desc, 60)) + '</td>' +
+        '<td>' + lvlBadge(ev.level) + '</td>' +
+        '<td><span class="tag tag-green">OK</span></td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+  }
+}
+
+// ════════ FILE AUDIT ════════
+
+async function loadAudit() {
+  var tbody = document.getElementById('audit-table-body');
+  try {
+    var data  = await fetchJSON('/audit');
+    var files = data.files || data.results || data || [];
+    if (data.lastScan) {
+      document.getElementById('audit-last-scan').textContent = 'Last scan: ' + fmtDT(data.lastScan);
+    }
+    if (!files.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">No audit data \u2014 run a scan</td></tr>';
+      return;
+    }
+    tbody.innerHTML = files.map(function(f) {
+      var risk     = (f.risk_label || f.status || 'OK').toUpperCase();
+      var tagClass = risk === 'CRITICAL' ? 'tag-red' : risk === 'HIGH' ? 'tag-orange' : risk === 'MEDIUM' ? 'tag-orange' : 'tag-green';
+      var findings = (f.findings || []).length;
+      var findingsHtml = findings > 0
+        ? '<span style="color:#ea580c;font-weight:700;">' + findings + ' issue' + (findings>1?'s':'') + '</span>'
+        : '<span style="color:#16a34a;">Clean</span>';
+      return '<tr>' +
+        '<td style="font-family:monospace;font-size:11px;max-width:300px;overflow:hidden;text-overflow:ellipsis" title="' + esc(f.path||'') + '">' + esc((f.path||'').split(/[/\\]/).pop() || '—') + '</td>' +
+        '<td><span class="tag ' + tagClass + '">' + risk + '</span></td>' +
+        '<td>' + findingsHtml + '</td>' +
+        '<td>' + fmtBytes(f.size) + '</td>' +
+        '<td>' + fmtDT(f.scanned_at || f.modified) + '</td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+  }
+}
+
+async function runAuditScan() {
+  var btn = document.getElementById('audit-scan-btn');
+  btn.innerHTML = '<span class="spinner"></span>&nbsp; Scanning...';
+  btn.disabled = true;
+  try {
+    await fetch(API + '/audit/scan', { method: 'POST' });
+    await new Promise(function(res) { setTimeout(res, 1500); });
+    await loadAudit();
+    toast('Scan complete', 'success');
+  } catch(e) { toast('Scan failed', 'error'); }
+  finally { btn.innerHTML = '\u25BA Scan Now'; btn.disabled = false; }
+}
+
+// ════════ SKILLS ════════
+
+async function loadSkills() {
+  var tbody = document.getElementById('skills-table-body');
+  try {
+    var data   = await fetchJSON('/skills');
+    var raw    = data.skills || data || {};
+    // API returns object {name: {hash,first_seen,...}} — convert to array
+    var skills = Array.isArray(raw) ? raw : Object.entries(raw).map(function(e) {
+      return Object.assign({ name: e[0] }, e[1]);
+    });
+    if (!skills.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">No skills found \u2014 run a scan</td></tr>';
+      return;
+    }
+    tbody.innerHTML = skills.map(function(sk) {
+      var risk = (sk.risk || sk.riskLevel || 'LOW').toUpperCase();
+      var riskColors = { CRITICAL:'#dc2626', HIGH:'#ea580c', MEDIUM:'#ca8a04', LOW:'#2563eb', SAFE:'#16a34a' };
+      var riskPcts   = { CRITICAL:95, HIGH:65, MEDIUM:40, LOW:20, SAFE:5 };
+      var rc   = riskColors[risk] || '#94a3b8';
+      var rp   = riskPcts[risk]   || 10;
+      var stat = sk.status || 'APPROVED';
+      var stCls= stat === 'BLOCKED' ? 'tag-red' : stat === 'FLAGGED' ? 'tag-orange' : 'tag-green';
+      return '<tr>' +
+        '<td style="font-weight:600">' + esc(sk.name || sk.skill || '\u2014') + '</td>' +
+        '<td style="font-family:monospace;font-size:10px;color:#64748b;max-width:180px;overflow:hidden;text-overflow:ellipsis">' + esc(trunc(sk.hash || sk.path || '', 40)) + '</td>' +
+        '<td>' + fmtBytes(sk.size) + '</td>' +
+        '<td><div class="skill-risk-bar"><div class="skill-risk-track"><div class="skill-risk-fill" style="width:' + rp + '%;background:' + rc + '"></div></div><span style="font-size:10px;font-weight:700;color:' + rc + '">' + risk + '</span></div></td>' +
+        '<td>' + fmtDT(sk.last_scanned || sk.modified || sk.lastModified) + '</td>' +
+        '<td><span class="tag ' + stCls + '">' + stat + '</span></td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+  }
+}
+
+async function runSkillsScan() {
+  var btn = document.getElementById('skills-scan-btn');
+  btn.innerHTML = '<span class="spinner"></span>&nbsp; Scanning...';
+  btn.disabled = true;
+  try {
+    await fetch(API + '/skills/scan', { method: 'POST' });
+    await new Promise(function(res) { setTimeout(res, 1500); });
+    await loadSkills();
+    toast('Skills scan complete', 'success');
+  } catch(e) { toast('Skills scan failed', 'error'); }
+  finally { btn.innerHTML = '\u25BA Scan Skills'; btn.disabled = false; }
+}
+
+// ════════ GIT MONITOR ════════
+
+async function loadGitMonitor() {
+  await Promise.all([loadGitRemoteList(), loadGitEvents()]);
+}
+
+async function loadGitRemoteList() {
+  var container = document.getElementById('git-remotes-list');
+  try {
+    var data    = await fetchJSON('/config/git-remotes');
+    var remotes = data.git_remotes || data.remotes || data || [];
+    if (!remotes.length) {
+      container.innerHTML = '<div class="empty"><div class="empty-icon">\uD83D\uDD17</div>No authorized remotes configured</div>';
+      return;
+    }
+    container.innerHTML = '<div class="table-wrap"><table>' +
+      '<thead><tr>' +
+        '<th>Remote URL</th>' +
+        '<th>Status</th>' +
+      '</tr></thead><tbody>' +
+      remotes.map(function(r) {
+        var url  = r.url || r;
+        var auth = r.authorized !== false;
+        return '<tr>' +
+          '<td style="font-family:monospace;font-size:11px">' + esc(url) + '</td>' +
+          '<td><span class="tag ' + (auth ? 'tag-green' : 'tag-red') + '">' + (auth ? 'AUTHORIZED' : 'BLOCKED') + '</span></td>' +
+          '</tr>';
+      }).join('') +
+      '</tbody></table></div>';
+  } catch(e) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">\u26A0\uFE0F</div>Cannot reach API</div>';
+  }
+}
+
+async function loadGitEvents() {
+  var tbody = document.getElementById('git-events-body');
+  try {
+    var data   = await fetchJSON('/events?limit=100');
+    var events = (data.events || data || []).filter(function(ev) {
+      var t = (ev.tool_name || ev.tool || ev.type || ev.reason || '').toLowerCase();
+      return t.indexOf('git') !== -1 || t.indexOf('push') !== -1 ||
+             t.indexOf('fetch') !== -1 || t.indexOf('remote') !== -1;
+    });
+    if (!events.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:#94a3b8;">No git activity recorded</td></tr>';
+      return;
+    }
+    tbody.innerHTML = events.slice(0, 40).map(function(ev) {
+      var desc   = ev.reason || ev.message || ev.description || '\u2014';
+      var action = ev.tool_name || ev.tool || ev.type || 'Bash';
+      return '<tr>' +
+        '<td>' + fmtDT(ev.ts || ev.timestamp || ev.time) + '</td>' +
+        '<td><span class="tool-chip">' + esc(action) + '</span></td>' +
+        '<td style="font-family:monospace;font-size:11px;max-width:280px;overflow:hidden;text-overflow:ellipsis" title="' + esc(desc) + '">' + esc(trunc(desc, 60)) + '</td>' +
+        '<td>' + lvlBadge(ev.level) + '</td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+  }
+}
+
+// ════════ SETTINGS ════════
+
+async function loadSettings() {
+  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus()]);
+}
+
+async function loadConfig() {
+  try {
+    var data = await fetchJSON('/config');
+    var cfg  = data.config || data;
+    if (cfg.hardening)                   document.getElementById('cfg-hardening').value        = cfg.hardening;
+    if (cfg.blockCritical !== undefined) document.getElementById('cfg-block-critical').checked  = !!cfg.blockCritical;
+    if (cfg.fsWatcher     !== undefined) document.getElementById('cfg-fsw').checked             = !!cfg.fsWatcher;
+    if (cfg.auditChain    !== undefined) document.getElementById('cfg-chain').checked           = !!cfg.auditChain;
+    if (cfg.logRetention)                document.getElementById('cfg-log-retention').value     = cfg.logRetention;
+    if (cfg.autoUpdate    !== undefined) document.getElementById('cfg-auto-update').checked     = !!cfg.autoUpdate;
+  } catch(e) { /* offline */ }
+}
+
+async function saveConfig() {
+  try {
+    var body = {
+      hardening:    document.getElementById('cfg-hardening').value,
+      blockCritical: document.getElementById('cfg-block-critical').checked,
+      fsWatcher:    document.getElementById('cfg-fsw').checked,
+      auditChain:   document.getElementById('cfg-chain').checked,
+      logRetention: parseInt(document.getElementById('cfg-log-retention').value) || 30,
+      autoUpdate:   document.getElementById('cfg-auto-update').checked
+    };
+    var r = await fetch(API + '/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    toast(r.ok ? 'Settings saved' : 'Save failed', r.ok ? 'success' : 'error');
+  } catch(e) { toast('Cannot save \u2014 API offline', 'error'); }
+}
+
+async function loadNotifConfig() {
+  try {
+    var data = await fetchJSON('/notifications/config');
+    var cfg  = data.config || data;
+    if (cfg.desktop  !== undefined) document.getElementById('notif-desktop').checked          = !!cfg.desktop;
+    if (cfg.telegram !== undefined) document.getElementById('notif-telegram').checked         = !!cfg.telegram;
+    if (cfg.token)                  document.getElementById('notif-telegram-token').value     = cfg.token;
+    if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
+    if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
+  } catch(e) { /* offline */ }
+}
+
+async function saveNotifications() {
+  try {
+    var body = {
+      desktop:  document.getElementById('notif-desktop').checked,
+      telegram: document.getElementById('notif-telegram').checked,
+      token:    document.getElementById('notif-telegram-token').value,
+      chatId:   document.getElementById('notif-chat-id').value,
+      minLevel: document.getElementById('notif-min-level').value
+    };
+    var r = await fetch(API + '/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    toast(r.ok ? 'Notifications saved' : 'Save failed', r.ok ? 'success' : 'error');
+  } catch(e) { toast('Cannot save \u2014 API offline', 'error'); }
+}
+
+async function loadGitRemoteSettings() {
+  var container = document.getElementById('git-remotes-settings');
+  try {
+    var data    = await fetchJSON('/config/git-remotes');
+    var remotes = data.remotes || data || [];
+    var rows = remotes.length
+      ? remotes.map(function(r) {
+          var url = r.url || r;
+          return '<div class="setting-row">' +
+            '<div style="font-family:monospace;font-size:11px;color:#374151;flex:1">' + esc(url) + '</div>' +
+            '<span class="tag tag-green">OK</span>' +
+            '</div>';
+        }).join('')
+      : '<div style="font-size:12px;color:#94a3b8">No remotes configured</div>';
+
+    container.innerHTML = rows +
+      '<div style="display:flex;gap:8px;margin-top:4px">' +
+        '<input class="form-input" type="text" id="new-remote-url" placeholder="github.com/user/repo.git">' +
+        '<button class="btn btn-outline btn-sm" onclick="addGitRemote()">Add</button>' +
+      '</div>';
+  } catch(e) {
+    container.innerHTML = '<div style="font-size:12px;color:#94a3b8">Cannot reach API</div>';
+  }
+}
+
+async function addGitRemote() {
+  var url = document.getElementById('new-remote-url').value.trim();
+  if (!url) return;
+  try {
+    var data    = await fetchJSON('/config/git-remotes');
+    var remotes = (data.remotes || data || []).map(function(r) { return r.url || r; });
+    remotes.push(url);
+    await fetch(API + '/config/git-remotes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ remotes: remotes })
+    });
+    toast('Remote added', 'success');
+    loadGitRemoteSettings();
+  } catch(e) { toast('Failed to add remote', 'error'); }
+}
+
+async function loadUpdateStatus() {
+  try {
+    var data = await fetchJSON('/update/status');
+    document.getElementById('update-current-version').textContent = 'v' + (data.version || data.current || '\u2014');
+  } catch(e) {
+    document.getElementById('update-current-version').textContent = 'Unknown';
+  }
+}
+
+async function checkUpdates() {
+  try {
+    var data = await fetchJSON('/update/check');
+    if (data.available) {
+      document.getElementById('update-available').style.display = 'block';
+      document.getElementById('update-version-label').textContent = 'New version: v' + data.latest;
+    } else {
+      toast('Already up to date', 'info');
+    }
+  } catch(e) { toast('Cannot check updates', 'error'); }
+}
+
+async function applyUpdate() {
+  try {
+    await fetch(API + '/update/apply', { method: 'POST' });
+    toast('Update applied \u2014 restart may be required', 'success');
+    document.getElementById('update-available').style.display = 'none';
+  } catch(e) { toast('Update failed', 'error'); }
+}
+
+// ════════ AUTO-REFRESH ════════
+dashboardRefresh();
+setInterval(dashboardRefresh, 5000);
+</script>
+
+</body>
+</html>
