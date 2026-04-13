@@ -1170,7 +1170,7 @@ body {
     <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
         <span style="font-size:12px;font-weight:700;color:var(--text);">✅ Manually authorized domains</span>
-        <span title="Domains you have manually approved.&#10;&#10;Claude Code will access these sites without triggering a HIGH alert.&#10;Add any server or website you authorize Claude to visit.&#10;&#10;Example: github.com, your-company.com, api.example.com" style="cursor:help;font-size:11px;color:var(--muted);background:rgba(255,255,255,0.07);border:1px solid var(--border2);border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">?</span>
+        <span title="Domains you have manually approved.&#10;&#10;Claude Code will access these sites without triggering a HIGH alert.&#10;Add any server or website you authorize Claude to visit.&#10;&#10;Example: github.com, your-company.com, api.example.com" style="cursor:help;font-size:11px;color:#00d4ff;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);border-radius:50%;width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">?</span>
       </div>
       <div style="display:flex;gap:6px;margin-bottom:12px;">
         <input id="domain-add-input" type="text" placeholder="example.com"
@@ -1186,7 +1186,7 @@ body {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div style="display:flex;align-items:center;gap:6px;">
           <span style="font-size:12px;font-weight:700;color:var(--text);">🔍 Discovered in search <span id="discovered-count" style="color:var(--muted);font-weight:400;font-size:11px;"></span></span>
-          <span title="Domains Claude Code visited automatically during WebSearch or WebFetch.&#10;&#10;FlowGuard detected these sites and scored their reputation (0-100).&#10;&#10;✓ Approve — adds to your allowlist (no more alerts)&#10;✕ Block — any future access = CRITICAL alert&#10;&#10;Domains not approved stay as HIGH alerts." style="cursor:help;font-size:11px;color:var(--muted);background:rgba(255,255,255,0.07);border:1px solid var(--border2);border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">?</span>
+          <span title="Domains Claude Code visited automatically during WebSearch or WebFetch.&#10;&#10;FlowGuard detected these sites and scored their reputation (0-100).&#10;&#10;✓ Approve — adds to your allowlist (no more alerts)&#10;✕ Block — any future access = CRITICAL alert&#10;&#10;Domains not approved stay as HIGH alerts." style="cursor:help;font-size:11px;color:#00d4ff;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);border-radius:50%;width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">?</span>
         </div>
         <div style="font-size:10px;color:var(--muted2);">Approve = add to allowlist | ✕ = Block</div>
       </div>
@@ -1201,7 +1201,7 @@ body {
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;">
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
       <span style="font-size:12px;font-weight:700;color:var(--text);">📜 Web access history — WebFetch + WebSearch</span>
-      <span title="A complete log of every website Claude Code visited on your machine.&#10;&#10;HIGH — domain not on your allowlist (unknown)&#10;SEARCH — a web search query Claude ran&#10;&#10;Each entry shows: domain, reputation score, date &amp; time.&#10;This gives you full visibility into Claude's internet activity." style="cursor:help;font-size:11px;color:var(--muted);background:rgba(255,255,255,0.07);border:1px solid var(--border2);border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">?</span>
+      <span title="A complete log of every website Claude Code visited on your machine.&#10;&#10;HIGH — domain not on your allowlist (unknown)&#10;SEARCH — a web search query Claude ran&#10;&#10;Each entry shows: domain, reputation score, date &amp; time.&#10;This gives you full visibility into Claude's internet activity." style="cursor:help;font-size:11px;color:#00d4ff;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);border-radius:50%;width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">?</span>
     </div>
     <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:500px;overflow-y:auto;font-size:11px;"></div>
   </div>
