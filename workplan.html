@@ -1154,7 +1154,7 @@
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.2 ✅</div>
       <div class="task-title">FlowGuard-Setup.exe (Inno Setup)</div>
-      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 6.9MB (LZMA). כולל: node_modules, hooks, Task Scheduler, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>קובץ: <code>dist/FlowGuard-Setup-v1.0.0.exe</code></div>
+      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.0.0.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0</div>
       <div class="task-tags"><span class="tag">installer</span><span class="tag">Windows</span><span class="tag">Inno Setup</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
@@ -1247,8 +1247,21 @@
       </div>
       <div class="task-tags"><span class="tag">FSWatcher</span><span class="tag">false-positive</span><span class="tag">security</span></div>
     </div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.13 ✅</div>
+      <div class="task-title">Auto Version Sync — Single Source of Truth</div>
+      <div class="task-desc">
+        <code>package.json</code> הוא המקור היחיד לגרסה. tray.js קורא גרסה אוטומטית עם <code>require('../package.json').version</code>.<br><br>
+        <strong>build.ps1 חדש:</strong><br>
+        • <code>.\build.ps1</code> — בונה EXE עם גרסה נוכחית<br>
+        • <code>.\build.ps1 -BumpPatch</code> — מעלה x.x.X → מעדכן package.json + FlowGuard.iss → בונה EXE<br>
+        • <code>.\build.ps1 -BumpMinor</code> — מעלה x.X.0<br><br>
+        לא צריך לערוך FlowGuard.iss ידנית לעולם. בוצע: 13.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">build</span><span class="tag">automation</span><span class="tag">versioning</span></div>
+    </div>
     <div class="task-cell" style="border-top:2px solid rgba(167,139,250,0.3);background:rgba(167,139,250,0.04);">
-      <div class="task-num" style="color:#64748b;">8.11 ⏸</div>
+      <div class="task-num" style="color:#64748b;">8.14 ⏸</div>
       <div class="task-title">🏷️ שינוי שם מלא — EHZ-SEC-AI → FlowGuard <span style="font-size:11px;color:#64748b;">(בהשהייה)</span></div>
       <div class="task-desc">
         שינוי שם הפרויקט בכל הקוד, תיקיות, ו-Git. כרגע השם שונה רק בדפי UI ושיווק.<br><br>
@@ -1262,19 +1275,6 @@
         <strong>סה"כ:</strong> ~17 קבצי קוד + שינוי תיקייה + rename repo ב-GitHub.
       </div>
       <div class="task-tags"><span class="tag">branding</span><span class="tag">rename</span><span class="tag">git</span></div>
-    </div>
-    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
-      <div class="task-num" style="color:var(--green);">8.13 ✅</div>
-      <div class="task-title">Auto Version Sync — Single Source of Truth</div>
-      <div class="task-desc">
-        <code>package.json</code> הוא המקור היחיד לגרסה. tray.js קורא גרסה אוטומטית עם <code>require('../package.json').version</code>.<br><br>
-        <strong>build.ps1 חדש:</strong><br>
-        • <code>.\build.ps1</code> — בונה EXE עם גרסה נוכחית<br>
-        • <code>.\build.ps1 -BumpPatch</code> — מעלה x.x.X → מעדכן package.json + FlowGuard.iss → בונה EXE<br>
-        • <code>.\build.ps1 -BumpMinor</code> — מעלה x.X.0<br><br>
-        לא צריך לערוך FlowGuard.iss ידנית לעולם. בוצע: 13.04.2026
-      </div>
-      <div class="task-tags"><span class="tag">build</span><span class="tag">automation</span><span class="tag">versioning</span></div>
     </div>
   </div>
 
