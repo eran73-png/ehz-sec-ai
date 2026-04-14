@@ -446,6 +446,7 @@ tr:hover td { background:#f8fafc; }
   <div class="sidebar-label">System</div>
   <div class="nav-item" data-view="siem"><span class="icon">&#x1F4E1;</span><span>SIEM</span></div>
   <div class="nav-item" data-view="settings"><span class="icon">&#x2699;&#xFE0F;</span><span>Settings</span></div>
+  <div class="nav-item" data-view="help"><span class="icon">&#x1F4D6;</span><span>Help</span></div>
 
   <div class="sidebar-bottom">
     <div class="avatar">E</div>
@@ -1127,6 +1128,81 @@ tr:hover td { background:#f8fafc; }
 
     </div><!-- /view-settings -->
 
+    <!-- ══ HELP VIEW ══ -->
+    <div class="view" id="view-help">
+      <div class="panel-header">
+        <div class="panel-title">📖 Help & User Guide</div>
+      </div>
+      <div style="padding:32px 40px;max-width:700px;">
+
+        <div style="margin-bottom:32px;">
+          <div style="font-size:13px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;">User Guide</div>
+          <div style="display:grid;gap:14px;">
+
+            <!-- Hebrew -->
+            <div style="display:flex;align-items:center;gap:18px;padding:20px 24px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;cursor:pointer;transition:box-shadow .15s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,212,255,0.10)'" onmouseout="this.style.boxShadow='none'" onclick="openGuide('he')">
+              <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🇮🇱</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:15px;color:#0f172a;">מדריך למשתמש — עברית</div>
+                <div style="font-size:13px;color:#64748b;margin-top:3px;">FlowGuard User Guide · Hebrew · RTL</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:2px;">docs/user-guide.html</div>
+              </div>
+              <div style="color:#00d4ff;font-size:18px;">→</div>
+            </div>
+
+            <!-- English -->
+            <div style="display:flex;align-items:center;gap:18px;padding:20px 24px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;cursor:pointer;transition:box-shadow .15s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,212,255,0.10)'" onmouseout="this.style.boxShadow='none'" onclick="openGuide('en')">
+              <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🇺🇸</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:15px;color:#0f172a;">User Guide — English</div>
+                <div style="font-size:13px;color:#64748b;margin-top:3px;">FlowGuard User Guide · English · LTR</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:2px;">docs/user-guide-en.html</div>
+              </div>
+              <div style="color:#6366f1;font-size:18px;">→</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div style="margin-bottom:32px;">
+          <div style="font-size:13px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;">Quick Reference</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="padding:14px 16px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;">
+              <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:6px;">🚦 Severity Levels</div>
+              <div style="font-size:12px;color:#64748b;line-height:1.8;">
+                <span style="color:#ef4444;font-weight:700;">CRITICAL</span> — Immediate threat<br>
+                <span style="color:#f97316;font-weight:700;">HIGH</span> — Significant anomaly<br>
+                <span style="color:#eab308;font-weight:700;">MEDIUM</span> — Worth checking<br>
+                <span style="color:#6366f1;font-weight:700;">INFO</span> — Normal activity
+              </div>
+            </div>
+            <div style="padding:14px 16px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;">
+              <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:6px;">🔒 Hardening Modes</div>
+              <div style="font-size:12px;color:#64748b;line-height:1.8;">
+                <span style="font-weight:700;">SOFT</span> — Monitor only<br>
+                <span style="font-weight:700;">MEDIUM</span> — Warn + confirm<br>
+                <span style="font-weight:700;">HARD</span> — Auto-block CRITICAL
+              </div>
+            </div>
+            <div style="padding:14px 16px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;">
+              <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:6px;">🌙 Quiet Hours</div>
+              <div style="font-size:12px;color:#64748b;line-height:1.8;">Suppresses Telegram alerts at night.<br>Events still logged to DB.<br>Default: 23:00 – 07:00</div>
+            </div>
+            <div style="padding:14px 16px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;">
+              <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:6px;">📡 Telegram Setup</div>
+              <div style="font-size:12px;color:#64748b;line-height:1.8;">Token → @BotFather<br>Chat ID → @userinfobot<br>Set in Settings → Notifications</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:16px 20px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;font-size:13px;color:#64748b;">
+          <strong style="color:#374151;">FlowGuard v2.0.2</strong> · AI Security Monitor for Claude Code · by EHZ-AI<br>
+          <span style="font-size:11px;">054-4825276</span>
+        </div>
+
+      </div>
+    </div><!-- /view-help -->
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -1258,7 +1334,7 @@ function navigate(view) {
   var titles = {
     dashboard: 'Security Dashboard', events: 'Events', sessions: 'Sessions',
     webaccess: 'Web Access', fileaudit: 'File Audit', skills: 'Skills',
-    gitmonitor: 'Git Monitor', siem: 'SIEM', settings: 'Settings'
+    gitmonitor: 'Git Monitor', siem: 'SIEM', settings: 'Settings', help: 'Help'
   };
   document.getElementById('topbar-title').textContent = titles[view] || 'FlowGuard';
   currentView = view;
@@ -2055,6 +2131,19 @@ async function loadGitEvents() {
 }
 
 // ════════ SETTINGS ════════
+
+function openGuide(lang) {
+  var base = window.location.href.replace(/\/[^/]*$/, '/');
+  var file = lang === 'en' ? 'docs/user-guide-en.html' : 'docs/user-guide.html';
+  // If opened as file://, build path relative to dashboard folder
+  var url;
+  if (window.location.protocol === 'file:') {
+    url = window.location.href.replace('dashboard/index-v2.html', file);
+  } else {
+    url = '/dashboard/../' + file;
+  }
+  window.open(url, '_blank');
+}
 
 async function loadSettings() {
   await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours()]);
