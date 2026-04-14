@@ -1920,7 +1920,14 @@
     <div class="task-cell">
       <div class="task-num" style="color:#00d4ff;">12.5</div>
       <div class="task-title">פרק 4 — Security: File Audit, Skills, Git Monitor</div>
-      <div class="task-desc">File Audit — אילו קבצים עוקבים. Skills Scanner — YARA + hash integrity. Git Monitor — push לשרתים לא מורשים.</div>
+      <div class="task-desc">
+        <strong>File Audit</strong> — סריקת קבצים לגילוי API keys, סיסמאות, PII. כיצד לקרוא ממצאים (CRITICAL/HIGH/MEDIUM), מה כל snippet אומר, ומה לעשות.<br><br>
+        <strong>Skills Scanner</strong> — בדיקת תקינות סקילים של Claude Code (hash integrity). גילוי שינויים לא מורשים בסקילים.<br><br>
+        <strong>Git Monitor</strong> — שני חלקים:<br>
+        &nbsp;&nbsp;• <em>Git Remote Monitor</em> — רשימת השרתים המורשים לקבל push (github.com, gitlab.com וכו'). אם Claude ינסה לדחוף קוד לשרת לא ברשימה — FlowGuard יתריע.<br>
+        &nbsp;&nbsp;• <em>Git Events</em> — היסטוריה של כל push/fetch שקלוד ביצע: מתי, לאיזה remote, ואיזו פקודה.<br>
+        <em>למה חשוב:</em> מונע העלאת קוד לשרתים לא מוכרים ללא ידיעתך.
+      </div>
       <div class="task-tags"><span class="tag">Security</span><span class="tag">Skills</span><span class="tag">Git</span></div>
     </div>
     <div class="task-cell">
