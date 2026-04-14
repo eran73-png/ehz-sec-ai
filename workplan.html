@@ -1156,7 +1156,7 @@
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.2 ✅</div>
       <div class="task-title">FlowGuard-Setup.exe (Inno Setup)</div>
-      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.0.0.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0</div>
+      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.0.1.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0 → v2.0.1</div>
       <div class="task-tags"><span class="tag">installer</span><span class="tag">Windows</span><span class="tag">Inno Setup</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
@@ -4091,7 +4091,21 @@ Claude מבצע tool call
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.0.0</span></td>
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.0.1</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">14.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          Events: Last 100/200/500/1000/All selector — הסרת חסימת 200 שורות בטבלה.<br>
+          Quiet Hours: תיקון CORS preflight (OPTIONS handler) — שמירה מהדשבורד עובדת.<br>
+          Settings: FSWatcher Exclusions panel — צפייה, הוספה והסרת exclusions.<br>
+          Settings: tooltips (?) על כל הגדרה עם הסבר מה עושה.<br>
+          Web Access: עיצוב 2 עמודות (allowed + discovered שמאל, history ימין).<br>
+          File Audit: שורות מורחבות עם explain אנגלי + snippet קוד. toolbar: Full/Changed/Export Excel.<br>
+          File Audit: Hide build files filter. סריקה מהנתיב שנבחר (Browse).<br>
+          file-audit-scanner.js: explain fields לכל AUDIT_PATTERN + snippet מהקוד.
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;color:#94a3b8;font-weight:600;">v2.0.0</td>
         <td style="padding:10px 12px;color:var(--muted);">13.04.2026</td>
         <td style="padding:10px 12px;color:var(--text);">Dashboard V2 — sidebar layout, 9 views, field mapping מלא. Auto version sync (package.json). build.ps1 -BumpPatch/-BumpMinor. PC name בtopbar. /sessions/:id עם limit. dist/ מחוץ ל-git.</td>
       </tr>
