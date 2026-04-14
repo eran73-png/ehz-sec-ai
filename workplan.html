@@ -1156,7 +1156,7 @@
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.2 ✅</div>
       <div class="task-title">FlowGuard-Setup.exe (Inno Setup)</div>
-      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.0.1.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0 → v2.0.1</div>
+      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.1.0.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0 → v2.0.1 → v2.1.0</div>
       <div class="task-tags"><span class="tag">installer</span><span class="tag">Windows</span><span class="tag">Inno Setup</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
@@ -4098,7 +4098,23 @@ Claude מבצע tool call
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.0.1</span></td>
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.0</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">14.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          Installer v2.1.0 — בדיקה על מחשב נקי (Windows Server 2022, Kamatera).<br>
+          תיקון: WizardSmallImageFile הוסר (BMP בלבד) → גרסה 2.0.3.<br>
+          תיקון: Dashboard נפתח ל-index-v2.html (לא index.html הישן).<br>
+          תיקון: whitelist.json נוקה — ללא נתונים אישיים, discovered_domains ריק.<br>
+          תיקון: Service לא עלה אוטומטית → Start-Service מפורש אחרי install.<br>
+          תיקון: autostart.ps1 רשם Collector ב-Task Scheduler + Service → התנגשות → autostart.ps1 רושם Tray בלבד.<br>
+          תיקון: Tray לא הופיע (Task Scheduler עם SYSTEM) → Startup folder shortcut + start-tray.bat.<br>
+          שיפור: לוגו Shield ב-wizard banner ו-small (BMP), ICO מלא multi-size.<br>
+          שיפור: Publisher = FlowGuard (לא EHZ-AI).<br>
+          שיפור: Tray ללא גרסה — "FlowGuard | PC: hostname".
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;color:#94a3b8;font-weight:600;">v2.0.1</td>
         <td style="padding:10px 12px;color:var(--muted);">14.04.2026</td>
         <td style="padding:10px 12px;color:var(--text);">
           Events: Last 100/200/500/1000/All selector — הסרת חסימת 200 שורות בטבלה.<br>

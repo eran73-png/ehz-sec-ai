@@ -1,5 +1,5 @@
 {
-  "comment": "EHZ-SEC-AI Whitelist — domains/commands/paths that never trigger alerts",
+  "comment": "FlowGuard default whitelist — trusted domains, commands and paths",
   "git_remotes": [
     "github.com",
     "gitlab.com",
@@ -22,7 +22,6 @@
     "microsoft.com",
     "visualstudio.com",
     "aka.ms",
-    "ehz-server.duckdns.org",
     "telegram.org",
     "api.telegram.org",
     "localhost",
@@ -50,16 +49,8 @@
     "Set-Location",
     "Write-Host"
   ],
-  "paths": [
-    "C:/Claude-Repo/agents/EHZ-SEC-AI/",
-    "C:/Users/Eran/.claude/",
-    "C:/Users/Eran/AppData/Local/Temp/"
-  ],
-  "allowed_paths": [
-    "C:/Claude-Repo",
-    "C:/Users/Eran/.claude",
-    "C:/Users/Eran/AppData/Local/Temp"
-  ],
+  "paths": [],
+  "allowed_paths": [],
   "allowed_domains": [
     "github.com",
     "raw.githubusercontent.com",
@@ -75,214 +66,14 @@
     "microsoft.com",
     "visualstudio.com",
     "aka.ms",
-    "ehz-server.duckdns.org",
     "telegram.org",
     "api.telegram.org",
     "localhost",
     "127.0.0.1",
-    "duckdns.org",
     "wikipedia.org",
     "npmjs.org",
     "yarnpkg.com",
-    "al-tours.co.il",
     "openai.com"
   ],
-  "discovered_domains": [
-    {
-      "domain": "en.wikipedia.org",
-      "score": 100,
-      "label": "TRUSTED",
-      "color": "#10b981",
-      "discovered_at": "2026-04-09T06:47:18.206Z"
-    },
-    {
-      "domain": "www.uefa.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T06:47:18.206Z"
-    },
-    {
-      "domain": "sports.yahoo.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T06:47:18.206Z"
-    },
-    {
-      "domain": "allsportdb.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T06:47:18.206Z"
-    },
-    {
-      "domain": "www.amflowbikes.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T21:27:09.440Z"
-    },
-    {
-      "domain": "www.pinkbike.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T21:27:09.441Z"
-    },
-    {
-      "domain": "ebike-mtb.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T21:27:09.441Z"
-    },
-    {
-      "domain": "bikerumor.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T21:27:09.441Z"
-    },
-    {
-      "domain": "flowmountainbike.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T21:27:09.441Z"
-    },
-    {
-      "domain": "www.wilsonebikes.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T21:27:09.441Z"
-    },
-    {
-      "domain": "enduro-mtb.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-09T21:27:09.441Z"
-    },
-    {
-      "domain": "pitchbook.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "machinecircuit.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "www.greatplacetowork.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "rocketreach.co",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "www.glassdoor.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "leadiq.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "www.zoominfo.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "abilityjobs.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.959Z"
-    },
-    {
-      "domain": "www.washingtontechnology.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:24.960Z"
-    },
-    {
-      "domain": "www.wwt.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:25.624Z"
-    },
-    {
-      "domain": "craft.co",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:25.624Z"
-    },
-    {
-      "domain": "www.indeed.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:25.624Z"
-    },
-    {
-      "domain": "wwtglobal.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:25.624Z"
-    },
-    {
-      "domain": "www.omniapartners.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:25.624Z"
-    },
-    {
-      "domain": "www.businesswire.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:28.935Z"
-    },
-    {
-      "domain": "www.netapp.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:28.935Z"
-    },
-    {
-      "domain": "swottemplate.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-13T13:42:28.935Z"
-    }
-  ]
+  "discovered_domains": []
 }

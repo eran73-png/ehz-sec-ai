@@ -4,8 +4,8 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.0.2"
-#define AppPublisher "EHZ-AI"
+#define AppVersion "2.1.0"
+#define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
 #define OutputDir  "C:\Claude-Repo\agents\EHZ-SEC-AI\dist"
@@ -26,7 +26,8 @@ SetupIconFile={#SourceDir}\agent\flowguard.ico
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
-WizardSmallImageFile={#SourceDir}\agent\flowguard.ico
+WizardImageFile={#SourceDir}\agent\wizard-banner.bmp
+WizardSmallImageFile={#SourceDir}\agent\wizard-small.bmp
 PrivilegesRequired=admin
 DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\agent\flowguard.ico
@@ -74,6 +75,7 @@ Source: "{#SourceDir}\install\setup.ps1";           DestDir: "{app}\install"; Fl
 Source: "{#SourceDir}\install\autostart.ps1";       DestDir: "{app}\install"; Flags: ignoreversion
 Source: "{#SourceDir}\install\install-service.ps1"; DestDir: "{app}\install"; Flags: ignoreversion
 Source: "{#SourceDir}\install\uninstall.ps1";       DestDir: "{app}\install"; Flags: ignoreversion
+Source: "{#SourceDir}\install\start-tray.bat";     DestDir: "{app}\install"; Flags: ignoreversion
 
 ; NSSM â€” Windows Service Manager
 Source: "{#SourceDir}\tools\nssm.exe";              DestDir: "{app}\tools";   Flags: ignoreversion
@@ -87,9 +89,10 @@ Name: "{app}\logs"
 Name: "{app}\collector"
 
 [Icons]
-Name: "{group}\FlowGuard Dashboard";  Filename: "{app}\dashboard\index.html"; IconFilename: "{app}\agent\flowguard.ico"
+Name: "{group}\FlowGuard Dashboard";  Filename: "{app}\dashboard\index-v2.html"; IconFilename: "{app}\agent\flowguard.ico"
 Name: "{group}\Uninstall FlowGuard"; Filename: "{uninstallexe}"
-Name: "{userdesktop}\FlowGuard";      Filename: "{app}\dashboard\index.html"; IconFilename: "{app}\agent\flowguard.ico"; Tasks: desktopicon
+Name: "{userdesktop}\FlowGuard";      Filename: "{app}\dashboard\index-v2.html"; IconFilename: "{app}\agent\flowguard.ico"; Tasks: desktopicon
+Name: "{userstartup}\FlowGuard Tray"; Filename: "{app}\install\start-tray.bat"; IconFilename: "{app}\agent\flowguard.ico"; Tasks: autostart
 
 [Run]
 ; 1. Run setup wizard (configure Telegram + hooks)
@@ -98,8 +101,14 @@ Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\i
 ; 2. Install Windows Service (autostart)
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\install-service.ps1"""; WorkingDir: "{app}\install"; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Installing FlowGuard as Windows Service..."
 
-; 3. Open dashboard after install
-Filename: "{app}\dashboard\index.html"; Flags: postinstall nowait shellexec skipifsilent; Description: "Open FlowGuard Dashboard"
+; 3. Start the service (ensure it's running after install)
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Start-Sleep 2; Start-Service FlowGuardCollector -ErrorAction SilentlyContinue"""; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Starting FlowGuard..."
+
+; 4. Launch Tray immediately after install
+Filename: "{app}\install\start-tray.bat"; Flags: nowait runhidden; Tasks: autostart; StatusMsg: "Starting FlowGuard Tray..."
+
+; 5. Open dashboard after install
+Filename: "{app}\dashboard\index-v2.html"; Flags: postinstall nowait shellexec skipifsilent; Description: "Open FlowGuard Dashboard"
 
 [UninstallRun]
 ; Remove Windows Service

@@ -80,7 +80,7 @@ function serviceControlItem(online) {
 
 function buildMenu(stats, online) {
   return [
-    /* 0 */ { title: `FlowGuard ${APP_VERSION} | PC: ${PC_NAME}`, tooltip: 'FlowGuard AI Security Monitor', checked: false, enabled: false },
+    /* 0 */ { title: `FlowGuard | PC: ${PC_NAME}`, tooltip: 'FlowGuard AI Security Monitor', checked: false, enabled: false },
     /* 1 */ { title: 'Open Dashboard', tooltip: 'Open FlowGuard dashboard', checked: false, enabled: true },
     /* 2 */ sep(),
     /* 3 */ collectorStatusItem(online),
@@ -117,8 +117,8 @@ console.log('[FlowGuard Tray] Starting...');
 
 fetchAll(({ stats, online }) => {
   const tooltip = online
-    ? `FlowGuard ${APP_VERSION} | ${stats.emoji} ${stats.level} | ${stats.total} events`
-    : `FlowGuard ${APP_VERSION} — Collector OFFLINE`;
+    ? `FlowGuard | ${stats.emoji} ${stats.level} | ${stats.total} events`
+    : `FlowGuard — Collector OFFLINE`;
 
   const tray = new SysTray({
     menu: {
@@ -177,8 +177,8 @@ fetchAll(({ stats, online }) => {
       tray.sendAction({ type: 'update-item', seq_id: 3, item: collectorStatusItem(o) });
       tray.sendAction({ type: 'update-item', seq_id: 4, item: serviceControlItem(o) });
       const tip = o
-        ? `FlowGuard ${APP_VERSION} | Collector RUNNING`
-        : `FlowGuard ${APP_VERSION} — Collector OFFLINE`;
+        ? `FlowGuard | Collector RUNNING`
+        : `FlowGuard — Collector OFFLINE`;
       tray.sendAction({ type: 'update-tooltip', tooltip: tip });
     });
   }, CHECK_INTERVAL);

@@ -70,46 +70,17 @@ Write-Host "[OK] Node.js: $NodeExe" -ForegroundColor Green
 Write-Host "[OK] Collector: $CollectorScript" -ForegroundColor Green
 Write-Host ""
 
-# -- Task 1: FlowGuard-Collector ---------------------------------
-Write-Host "[1/2] Registering FlowGuard-Collector..." -ForegroundColor Yellow
-
+# -- Collector runs as Windows Service (FlowGuardCollector) -- skip Task Scheduler for it
 $logDir = Join-Path $ProjectDir "logs"
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
 
-$actionCollector = New-ScheduledTaskAction `
-  -Execute "powershell.exe" `
-  -Argument "-WindowStyle Hidden -NonInteractive -ExecutionPolicy Bypass -Command `"& '$NodeExe' '$CollectorScript'`"" `
-  -WorkingDirectory $ProjectDir
-
-$triggerCollector = New-ScheduledTaskTrigger -AtLogOn
-
-$settingsCollector = New-ScheduledTaskSettingsSet `
-  -ExecutionTimeLimit (New-TimeSpan -Hours 0) `
-  -RestartCount 3 `
-  -RestartInterval (New-TimeSpan -Minutes 1) `
-  -StartWhenAvailable `
-  -MultipleInstances IgnoreNew
-
-$principalCollector = New-ScheduledTaskPrincipal `
-  -UserId $env:USERNAME `
-  -LogonType Interactive `
-  -RunLevel Highest
-
+# Remove old collector task if exists from previous installs
 if (Get-ScheduledTask -TaskName $TaskCollector -ErrorAction SilentlyContinue) {
   Unregister-ScheduledTask -TaskName $TaskCollector -Confirm:$false
+  Write-Host "  [OK] Removed old Collector task (now runs as Windows Service)" -ForegroundColor DarkGray
 }
 
-Register-ScheduledTask `
-  -TaskName    $TaskCollector `
-  -Action      $actionCollector `
-  -Trigger     $triggerCollector `
-  -Settings    $settingsCollector `
-  -Principal   $principalCollector `
-  -Description "FlowGuard AI Security Monitor - Collector (port 3010)" | Out-Null
-
-Write-Host "  [OK] $TaskCollector registered - starts at login" -ForegroundColor Green
-
-# -- Task 2: FlowGuard-Tray --------------------------------------
+# -- Task: FlowGuard-Tray --------------------------------------
 Write-Host "[2/2] Registering FlowGuard-Tray..." -ForegroundColor Yellow
 
 if (Test-Path $TrayScript) {
@@ -154,11 +125,11 @@ if (Test-Path $TrayScript) {
 Write-Host ""
 Write-Host "[*] Verifying..." -ForegroundColor Yellow
 
-$t1 = Get-ScheduledTask -TaskName $TaskCollector -ErrorAction SilentlyContinue
-$t2 = Get-ScheduledTask -TaskName $TaskTray      -ErrorAction SilentlyContinue
+$svc = Get-Service -Name "FlowGuardCollector" -ErrorAction SilentlyContinue
+$t2  = Get-ScheduledTask -TaskName $TaskTray -ErrorAction SilentlyContinue
 
-if ($t1) { Write-Host "  [OK] $TaskCollector - $($t1.State)" -ForegroundColor Green }
-if ($t2) { Write-Host "  [OK] $TaskTray - $($t2.State)"      -ForegroundColor Green }
+if ($svc) { Write-Host "  [OK] FlowGuardCollector Service - $($svc.Status)" -ForegroundColor Green }
+if ($t2)  { Write-Host "  [OK] $TaskTray - $($t2.State)" -ForegroundColor Green }
 
 # -- Done --------------------------------------------------------
 Write-Host ""
