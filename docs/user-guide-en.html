@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowGuard — User Guide</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a1628;
+    --bg2:      #0f1e36;
+    --bg3:      #162040;
+    --cyan:     #00d4ff;
+    --cyan2:    #00a8cc;
+    --text:     #e2e8f0;
+    --muted:    #94a3b8;
+    --border:   rgba(0,212,255,0.15);
+    --red:      #ef4444;
+    --orange:   #f97316;
+    --yellow:   #eab308;
+    --green:    #10b981;
+    --purple:   #8b5cf6;
+    --sidebar-w: 260px;
+  }
+
+  html { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; line-height: 1.7; }
+
+  /* ── Layout ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    border-left: none;
+    position: fixed;
+    top: 0; left: 0; right: auto;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 40px;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sidebar-logo .fg-badge {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: linear-gradient(135deg, #00d4ff, #0ea5e9);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 14px; color: #0a1628; flex-shrink: 0;
+  }
+  .sidebar-logo .fg-name { font-weight: 700; color: var(--cyan); font-size: 15px; line-height: 1.2; }
+  .sidebar-logo .fg-sub  { font-size: 11px; color: var(--muted); }
+
+  .toc-section { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .toc-section-title {
+    padding: 4px 20px 6px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: var(--cyan); text-transform: uppercase;
+  }
+  .toc-link {
+    display: block; padding: 6px 20px;
+    color: var(--muted); text-decoration: none; font-size: 13px;
+    transition: all .15s; border-left: 3px solid transparent; border-right: none;
+  }
+  .toc-link:hover { color: var(--text); background: rgba(0,212,255,0.05); }
+  .toc-link.active { color: var(--cyan); border-left-color: var(--cyan); background: rgba(0,212,255,0.07); }
+  .toc-link .num { display: inline-block; width: 22px; color: var(--cyan); font-weight: 600; font-size: 12px; }
+
+  /* ── Main Content ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    margin-right: 0;
+    padding: 0;
+    flex: 1;
+    max-width: 860px;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(160deg, #0a1628 0%, #0f2044 50%, #0a1628 100%);
+    padding: 80px 60px 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: -80px; left: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cover-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 20px; padding: 4px 14px; margin-bottom: 24px;
+    font-size: 12px; color: var(--cyan); font-weight: 600;
+  }
+  .cover-badge::before { content: '●'; font-size: 8px; }
+  .cover h1 { font-size: 42px; font-weight: 800; line-height: 1.15; margin-bottom: 12px; }
+  .cover h1 span { color: var(--cyan); }
+  .cover .subtitle { font-size: 18px; color: var(--muted); margin-bottom: 40px; }
+  .cover-meta {
+    display: flex; gap: 32px; flex-wrap: wrap;
+  }
+  .cover-meta-item { font-size: 13px; color: var(--muted); }
+  .cover-meta-item strong { color: var(--text); display: block; font-size: 14px; }
+
+  /* ── Chapter ── */
+  .chapter {
+    padding: 60px 60px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    scroll-margin-top: 20px;
+  }
+  .chapter:last-child { border-bottom: none; }
+
+  .chapter-header {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 32px;
+  }
+  .chapter-num {
+    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--cyan), var(--cyan2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: #0a1628;
+  }
+  .chapter-title-block h2 { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .chapter-title-block .chapter-sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 36px; scroll-margin-top: 20px; }
+  .section h3 {
+    font-size: 17px; font-weight: 700; color: var(--cyan);
+    margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section h3 .icon { font-size: 16px; }
+  .section p { color: var(--text); margin-bottom: 12px; }
+  .section ul, .section ol { padding-left: 20px; padding-right: 0; margin-bottom: 12px; }
+  .section li { color: var(--text); margin-bottom: 6px; }
+  .section li::marker { color: var(--cyan); }
+
+  /* ── Info Box ── */
+  .info-box {
+    background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px; padding: 16px 20px; margin: 16px 0;
+    font-size: 14px;
+  }
+  .info-box.warn  { background: rgba(249,115,22,0.07); border-color: rgba(249,115,22,0.3); }
+  .info-box.tip   { background: rgba(16,185,129,0.07); border-color: rgba(16,185,129,0.3); }
+  .info-box.danger{ background: rgba(239,68,68,0.07);  border-color: rgba(239,68,68,0.3);  }
+  .info-box-title { font-weight: 700; margin-bottom: 6px; font-size: 13px; color: var(--cyan); text-transform: uppercase; letter-spacing: .5px; }
+  .info-box.warn  .info-box-title { color: var(--orange); }
+  .info-box.tip   .info-box-title { color: var(--green); }
+  .info-box.danger .info-box-title { color: var(--red); }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 12px;
+    font-size: 11px; font-weight: 700; letter-spacing: .4px; vertical-align: middle;
+  }
+  .badge.critical { background: rgba(239,68,68,.15);  color: #f87171; border: 1px solid rgba(239,68,68,.3); }
+  .badge.high     { background: rgba(249,115,22,.15); color: #fb923c; border: 1px solid rgba(249,115,22,.3); }
+  .badge.medium   { background: rgba(234,179,8,.15);  color: #fbbf24; border: 1px solid rgba(234,179,8,.3); }
+  .badge.info     { background: rgba(99,102,241,.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,.3); }
+  .badge.ok       { background: rgba(16,185,129,.15); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
+
+  /* ── Table ── */
+  .guide-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .guide-table th {
+    text-align: left; padding: 10px 14px;
+    background: var(--bg3); color: var(--cyan);
+    font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .guide-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
+  .guide-table tr:last-child td { border-bottom: none; }
+  .guide-table tr:hover td { background: rgba(0,212,255,0.03); }
+  .guide-table td:first-child { color: var(--cyan); font-weight: 600; white-space: nowrap; }
+
+  /* ── Step ── */
+  .steps { counter-reset: step; margin: 16px 0; }
+  .step {
+    display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start;
+  }
+  .step-num {
+    counter-increment: step;
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--cyan), var(--cyan2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #0a1628;
+  }
+  .step-num::after { content: counter(step); }
+  .step-body { flex: 1; padding-top: 4px; }
+  .step-body strong { display: block; font-size: 15px; margin-bottom: 4px; }
+  .step-body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  /* ── Architecture Diagram ── */
+  .arch {
+    display: flex; align-items: center; gap: 0;
+    justify-content: center; margin: 24px 0; flex-wrap: wrap;
+  }
+  .arch-box {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 20px; text-align: center; min-width: 130px;
+  }
+  .arch-box .arch-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+  .arch-box .arch-label { font-size: 13px; font-weight: 700; color: var(--text); }
+  .arch-box .arch-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .arch-arrow { color: var(--cyan); font-size: 22px; padding: 0 8px; }
+
+  /* ── Print ── */
+  @media print {
+    .sidebar { display: none; }
+    .main { margin-left: 0; max-width: 100%; }
+    .chapter { page-break-before: always; padding: 40px 40px 30px; }
+    .cover { page-break-before: avoid; }
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="fg-badge">FG</div>
+      <div>
+        <div class="fg-name">FlowGuard</div>
+        <div class="fg-sub">User Guide v2.0</div>
+      </div>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-section-title">Introduction</div>
+      <a class="toc-link" href="#cover">Cover Page</a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-section-title">Chapters</div>
+      <a class="toc-link" href="#ch1"><span class="num">1</span> What is FlowGuard?</a>
+      <a class="toc-link" href="#ch2"><span class="num">2</span> Installation</a>
+      <a class="toc-link" href="#ch3"><span class="num">3</span> Dashboard &amp; Events</a>
+      <a class="toc-link" href="#ch4"><span class="num">4</span> File Audit</a>
+      <a class="toc-link" href="#ch5"><span class="num">5</span> Git Monitor</a>
+      <a class="toc-link" href="#ch6"><span class="num">6</span> Settings — Every Control</a>
+      <a class="toc-link" href="#ch7"><span class="num">7</span> System Tray</a>
+      <a class="toc-link" href="#ch8"><span class="num">8</span> Telegram Alerts</a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-section-title">Appendix</div>
+      <a class="toc-link" href="#faq">FAQ</a>
+      <a class="toc-link" href="#glossary">Glossary</a>
+    </div>
+
+    <div style="padding:20px;margin-top:auto;">
+      <button onclick="window.print()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:rgba(0,212,255,0.08);color:var(--cyan);cursor:pointer;font-size:13px;font-weight:600;">🖨️ Export PDF</button>
+    </div>
+  </nav>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <main class="main">
+
+    <!-- COVER -->
+    <section class="cover" id="cover">
+      <div class="cover-badge">EHZ-AI · Version 2.0 · April 2026</div>
+      <h1><span>FlowGuard</span><br>User Guide</h1>
+      <p class="subtitle">AI Security Monitor for Claude Code</p>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><strong>Version</strong>v2.0.1</div>
+        <div class="cover-meta-item"><strong>Date</strong>April 2026</div>
+        <div class="cover-meta-item"><strong>Developed by</strong>EHZ-AI</div>
+        <div class="cover-meta-item"><strong>Platform</strong>Windows 10/11</div>
+      </div>
+    </section>
+
+    <!-- ══ CH1 — What is FlowGuard ══ -->
+    <section class="chapter" id="ch1">
+      <div class="chapter-header">
+        <div class="chapter-num">1</div>
+        <div class="chapter-title-block">
+          <h2>What is FlowGuard?</h2>
+          <div class="chapter-sub">Understanding the product, what it does, and why you need it</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🛡️</span> The Problem We Solve</h3>
+        <p>Claude Code is an extremely powerful AI tool — it can write code, run commands, access files, and communicate with external services. But what happens the moment it acts on your behalf?</p>
+        <p>FlowGuard sits between Claude Code and your machine, tracking every action in real time.</p>
+        <div class="info-box">
+          <div class="info-box-title">Example</div>
+          Claude Code runs a <code>curl | bash</code> command late at night, downloading a script from the internet and executing it. FlowGuard detects this and sends you an alert on Telegram.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">⚙️</span> How FlowGuard Works</h3>
+        <div class="arch">
+          <div class="arch-box">
+            <span class="arch-icon">🤖</span>
+            <div class="arch-label">Claude Code</div>
+            <div class="arch-sub">Performs actions</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box" style="border-color:rgba(0,212,255,0.4);">
+            <span class="arch-icon">🪝</span>
+            <div class="arch-label">Hook</div>
+            <div class="arch-sub">Intercepts every action</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box">
+            <span class="arch-icon">🗄️</span>
+            <div class="arch-label">Collector</div>
+            <div class="arch-sub">Stores &amp; analyzes</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box">
+            <span class="arch-icon">📊</span>
+            <div class="arch-label">Dashboard</div>
+            <div class="arch-sub">Management interface</div>
+          </div>
+        </div>
+        <ul>
+          <li><strong>Hook</strong> — Registered in Claude Code settings. Every action Claude performs passes through it.</li>
+          <li><strong>Collector</strong> — A Node.js server running in the background as a Windows Service. Receives events, saves them to the DB, and sends alerts.</li>
+          <li><strong>Dashboard</strong> — A visual interface for viewing all activity, managing settings, and performing security analysis.</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📋</span> What Does FlowGuard Monitor?</h3>
+        <table class="guide-table">
+          <thead><tr><th>What Is Monitored</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Every tool Claude uses</td><td>Edit, Bash, WebFetch, Read, Write and more — all are logged</td></tr>
+            <tr><td>Dangerous commands</td><td>curl|bash, base64 decode, deletion commands — flagged as CRITICAL</td></tr>
+            <tr><td>File changes</td><td>FSWatcher tracks files that were copied, deleted, or manually modified</td></tr>
+            <tr><td>Network access</td><td>WebFetch, WebSearch — every URL accessed</td></tr>
+            <tr><td>Git operations</td><td>Push to unauthorized servers triggers an immediate alert</td></tr>
+            <tr><td>Secrets in code</td><td>File Audit detects API keys, passwords, and PII in files</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🚦</span> Severity Levels</h3>
+        <table class="guide-table">
+          <thead><tr><th>Level</th><th>What It Means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge critical">CRITICAL</span></td><td>Immediate danger — requires attention right now</td><td>curl|bash, file deletion, Private Key in code</td></tr>
+            <tr><td><span class="badge high">HIGH</span></td><td>Significant anomaly that requires investigation</td><td>GitHub Token in code, MongoDB credentials</td></tr>
+            <tr><td><span class="badge medium">MEDIUM</span></td><td>Suspicious — worth reviewing</td><td>HTTP (not HTTPS), eval(), Israeli phone number in code</td></tr>
+            <tr><td><span class="badge info">INFO</span></td><td>Informational only — routine logging</td><td>New process started, session began</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ CH2 — Installation ══ -->
+    <section class="chapter" id="ch2">
+      <div class="chapter-header">
+        <div class="chapter-num">2</div>
+        <div class="chapter-title-block">
+          <h2>Installation</h2>
+          <div class="chapter-sub">From Setup.exe to an open, monitoring Dashboard</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📋</span> System Requirements</h3>
+        <ul>
+          <li>Windows 10 / 11 (64-bit)</li>
+          <li>Claude Code CLI installed (<code>claude</code> in terminal)</li>
+          <li>Administrator privileges for installation</li>
+          <li>~50MB free disk space</li>
+        </ul>
+        <div class="info-box tip">
+          <div class="info-box-title">Tip</div>
+          Node.js is bundled inside the installer — no need to install it separately.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🚀</span> Installation Steps</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Run FlowGuard-Setup.exe</strong>
+              <p>Right-click → "Run as administrator". Approve the UAC prompt.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Choose installation folder</strong>
+              <p>Default: <code>C:\FlowGuard\</code>. You may change this.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Config Wizard — Configure Telegram</strong>
+              <p>Enter your Bot Token and Chat ID to receive alerts. You can skip this and configure it later via the Dashboard.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Choose Hardening Level</strong>
+              <p>SOFT (monitoring only) / MEDIUM / HARD (active blocking). Start with SOFT.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Done — FlowGuard is running</strong>
+              <p>The Collector starts as a Windows Service. The FlowGuard icon appears in the System Tray. Open the Dashboard from the tray icon.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">✅</span> Verify Everything Works</h3>
+        <ul>
+          <li>In the System Tray — FlowGuard icon with a green circle 🟢</li>
+          <li>When opening the Dashboard — "Collector Active" is shown in green</li>
+          <li>Run any command in Claude Code and verify an event appears in the Dashboard</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ CH3 — Dashboard ══ -->
+    <section class="chapter" id="ch3">
+      <div class="chapter-header">
+        <div class="chapter-num">3</div>
+        <div class="chapter-title-block">
+          <h2>Dashboard &amp; Events</h2>
+          <div class="chapter-sub">How to read the screen and understand what is happening</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🗂️</span> Dashboard Screens</h3>
+        <table class="guide-table">
+          <thead><tr><th>Screen</th><th>What You Will Find</th></tr></thead>
+          <tbody>
+            <tr><td>Dashboard</td><td>General overview: Events today, severity levels, active Sessions, Collector status</td></tr>
+            <tr><td>Events</td><td>All recorded events — filter by level, tool, text search, and choose quantity (100–All)</td></tr>
+            <tr><td>Sessions</td><td>Every Claude Code conversation — start time, end time, how many actions were performed</td></tr>
+            <tr><td>Web Access</td><td>Sites that were accessed, approved sites vs. newly discovered ones</td></tr>
+            <tr><td>File Audit</td><td>Scan files to detect secrets and PII</td></tr>
+            <tr><td>Git Monitor</td><td>Authorized Git servers + push/fetch history</td></tr>
+            <tr><td>Skills Scanner</td><td>Integrity check for Claude Code skills</td></tr>
+            <tr><td>Settings</td><td>All settings, Telegram, Quiet Hours, Exclusions</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📊</span> Reading the Events Screen</h3>
+        <p>Each row in the table represents one action that Claude performed:</p>
+        <table class="guide-table">
+          <thead><tr><th>Column</th><th>What It Is</th></tr></thead>
+          <tbody>
+            <tr><td>Time</td><td>Exact date and time of the action</td></tr>
+            <tr><td>Level</td><td>Severity level: CRITICAL / HIGH / MEDIUM / INFO</td></tr>
+            <tr><td>Tool</td><td>The tool Claude used (Edit, Bash, WebFetch…)</td></tr>
+            <tr><td>Description</td><td>Description of what was done. If long — click "show more ▼" for full details</td></tr>
+            <tr><td>Session</td><td>First 8 characters of the Session ID — click in Sessions for full details</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box tip">
+          <div class="info-box-title">Tip — Filtering Events</div>
+          Use the filter dropdowns at the top: choose a level (CRITICAL only), a tool (FSWatcher), or type a free-text search. The "Last 500 / All" dropdown controls how many events are loaded.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🔗</span> Audit Chain — Record Integrity</h3>
+        <p>FlowGuard stores a hash for every event and links it to the previous hash (similar to a blockchain). This allows you to verify that no event has been deleted or altered.</p>
+        <ul>
+          <li><strong>Chain Valid ✅</strong> — All records are intact and unmodified</li>
+          <li><strong>Chain Broken ❌</strong> — Someone deleted or manually modified an event</li>
+        </ul>
+        <div class="info-box warn">
+          <div class="info-box-title">Note</div>
+          Clicking "Reset Chain" resets the chain and starts fresh — this action is irreversible.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CH4 — File Audit ══ -->
+    <section class="chapter" id="ch4">
+      <div class="chapter-header">
+        <div class="chapter-num">4</div>
+        <div class="chapter-title-block">
+          <h2>File Audit</h2>
+          <div class="chapter-sub">Scanning files to detect secrets, API keys, and sensitive information</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🔍</span> What Does File Audit Do?</h3>
+        <p>Scans code files in a folder you choose, looking for sensitive information that should not be in code — API keys, passwords, credit card numbers, and more.</p>
+        <div class="info-box danger">
+          <div class="info-box-title">Why This Matters</div>
+          Code pushed to GitHub with an API key inside can be stolen within minutes. FlowGuard catches this before it happens.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🛠️</span> How to Run a Scan</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Select a folder</strong>
+              <p>Click "Browse" to choose a folder, or leave the default (C:/Claude-Repo).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Choose scan type</strong>
+              <p><strong>Full Scan</strong> — all files. <strong>Changed Only</strong> — only files that changed since the last scan (faster).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Click "Scan Now"</strong>
+              <p>The scan runs in the background. Results appear in the table.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📖</span> Reading Results</h3>
+        <p>Each row in the table = a file with a finding. Click the row to expand and see details:</p>
+        <ul>
+          <li><strong>Reason</strong> — Type of finding (e.g., "Hardcoded password")</li>
+          <li><strong>Explain</strong> — Plain-language explanation of the risk</li>
+          <li><strong>Line</strong> — Line number in the file</li>
+          <li><strong>Snippet</strong> — The portion of code where the issue was found</li>
+        </ul>
+
+        <table class="guide-table">
+          <thead><tr><th>Finding</th><th>Meaning</th><th>What to Do</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge critical">CRITICAL</span> OpenAI API key</td><td>API key exposed in code</td><td>Revoke the key immediately, switch to environment variables (.env)</td></tr>
+            <tr><td><span class="badge critical">CRITICAL</span> curl|sh</td><td>Downloading and executing a script from the internet</td><td>Verify what the script does and whether you intentionally added it</td></tr>
+            <tr><td><span class="badge high">HIGH</span> Hardcoded password</td><td>Password written directly in the code</td><td>Move to environment variables or a .env file outside of git</td></tr>
+            <tr><td><span class="badge high">HIGH</span> JWT token</td><td>Hardcoded authentication token</td><td>Remove from code — generate at runtime, do not store it</td></tr>
+            <tr><td><span class="badge medium">MEDIUM</span> eval()</td><td>Dynamic code execution</td><td>Check whether the input is trusted — replace with JSON.parse where possible</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">⚙️</span> Additional Options</h3>
+        <ul>
+          <li><strong>Hide build/generated files</strong> — Filters out node_modules, dist, and similar directories that generate many false positives</li>
+          <li><strong>Export Excel</strong> — Export all findings to a CSV file for reporting</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ CH5 — Git Monitor ══ -->
+    <section class="chapter" id="ch5">
+      <div class="chapter-header">
+        <div class="chapter-num">5</div>
+        <div class="chapter-title-block">
+          <h2>Git Monitor</h2>
+          <div class="chapter-sub">Tracking Git operations and preventing code leaks</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🌐</span> Git Remote Monitor</h3>
+        <p>A list of servers authorized to receive <code>git push</code> from your machine. If Claude Code attempts to push code to a server not on this list — you will receive an alert.</p>
+        <table class="guide-table">
+          <thead><tr><th>Server</th><th>What It Is</th></tr></thead>
+          <tbody>
+            <tr><td>github.com</td><td>GitHub — the most popular Git service</td></tr>
+            <tr><td>gitlab.com</td><td>GitLab — an alternative to GitHub</td></tr>
+            <tr><td>bitbucket.org</td><td>Bitbucket — Atlassian's Git service</td></tr>
+            <tr><td>localhost / 127.0.0.1</td><td>A local Git server on your own machine</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box tip">
+          <div class="info-box-title">Custom Server?</div>
+          If you have a private Git server (e.g., <code>ehz-server.duckdns.org</code>) — add it under Settings → Authorized Git Remotes.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📜</span> Git Events</h3>
+        <p>A history of all push/fetch operations that Claude performed — when, to which server, and which command was run.</p>
+        <div class="info-box">
+          <div class="info-box-title">Why Is It Empty?</div>
+          Git Events are only populated when Claude runs git commands through the Hook. If you pushed directly from a terminal — that will not be logged here.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">⚠️</span> What Happens When an Unauthorized Push Is Detected?</h3>
+        <ul>
+          <li>An event is created at <span class="badge high">HIGH</span> level in the Events table</li>
+          <li>An alert is sent to Telegram (if configured)</li>
+          <li>In HARD mode — the command may be blocked</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ CH6 — Settings ══ -->
+    <section class="chapter" id="ch6">
+      <div class="chapter-header">
+        <div class="chapter-num">6</div>
+        <div class="chapter-title-block">
+          <h2>Settings — Every Control Explained</h2>
+          <div class="chapter-sub">A full explanation of every setting and what it does</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🔒</span> Security Settings</h3>
+        <table class="guide-table">
+          <thead><tr><th>Setting</th><th>Description</th><th>Recommendation</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Hardening Mode</td>
+              <td><strong>SOFT</strong> — monitoring only, no blocking.<br><strong>MEDIUM</strong> — blocks suspicious actions with confirmation.<br><strong>HARD</strong> — automatically blocks CRITICAL actions.</td>
+              <td>Start with SOFT, move to MEDIUM after one week</td>
+            </tr>
+            <tr>
+              <td>Block Critical Actions</td>
+              <td>When enabled — FlowGuard blocks CRITICAL commands (such as curl|bash) before they are executed.</td>
+              <td>Enable in MEDIUM/HARD mode</td>
+            </tr>
+            <tr>
+              <td>File System Watcher</td>
+              <td>Monitors changes in the project folder. Detects files that were copied, deleted, or modified without Claude's involvement.</td>
+              <td>Recommended to always keep enabled</td>
+            </tr>
+            <tr>
+              <td>Audit Chain</td>
+              <td>Every event receives a hash linked to the previous one. Guarantees integrity — no event can be deleted without detection.</td>
+              <td>Always enabled</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📦</span> Data Settings</h3>
+        <table class="guide-table">
+          <thead><tr><th>Setting</th><th>Description</th><th>Recommendation</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Log Retention</td>
+              <td>How many days to keep events in the DB. After this period they are deleted automatically. Default: 30 days.</td>
+              <td>30 days for regular use, 90 for compliance needs</td>
+            </tr>
+            <tr>
+              <td>Auto-update Rules</td>
+              <td>FlowGuard automatically updates its detection rules from GitHub. When off — the current rules remain in place.</td>
+              <td>Recommended to always keep enabled</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🔔</span> Alert Settings</h3>
+        <table class="guide-table">
+          <thead><tr><th>Setting</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Desktop Alerts</td>
+              <td>Pop-up notification from the System Tray for every anomalous event. Does not require an internet connection.</td>
+            </tr>
+            <tr>
+              <td>Telegram Alerts</td>
+              <td>Sends a message to Telegram with event details. Arrives within seconds. Requires a Bot Token + Chat ID.</td>
+            </tr>
+            <tr>
+              <td>Min Alert Level</td>
+              <td>The minimum level for sending an alert:<br>
+                <strong>CRITICAL only</strong> — only the most severe issues.<br>
+                <strong>HIGH+</strong> — CRITICAL + HIGH.<br>
+                <strong>MEDIUM+</strong> — includes minor anomalies (more noise).
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🌙</span> Quiet Hours</h3>
+        <p>During quiet hours (default: 23:00–07:00) — FlowGuard continues to log events to the DB, but does not send Telegram messages.</p>
+        <div class="info-box tip">
+          <div class="info-box-title">Useful</div>
+          Nightly backups trigger many file operations — without Quiet Hours you will receive dozens of messages overnight. With Quiet Hours everything is saved and you review it in the morning.
+        </div>
+        <table class="guide-table">
+          <thead><tr><th>Setting</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Enable Quiet Hours</td><td>Enable/disable the entire feature</td></tr>
+            <tr><td>From</td><td>Start time of the silence window (default: 23:00)</td></tr>
+            <tr><td>To</td><td>End time of the silence window (default: 07:00)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📂</span> FSWatcher Exclusions</h3>
+        <p>Folders and files that the FSWatcher ignores. Useful for preventing false positives from directories that change constantly.</p>
+        <ul>
+          <li>Defaults: <code>node_modules</code>, <code>.git</code>, <code>backups</code></li>
+          <li>Add a folder via Settings → type the folder name → Add</li>
+          <li>Remove an existing exclusion by clicking ✕</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🔗</span> Authorized Git Remotes</h3>
+        <p>List of Git servers authorized to receive pushes. Any server not on this list will trigger an alert.</p>
+        <p>To add a private server: type part of the address (e.g., <code>ehz-server.duckdns.org</code>) and click Add.</p>
+      </div>
+    </section>
+
+    <!-- ══ CH7 — System Tray ══ -->
+    <section class="chapter" id="ch7">
+      <div class="chapter-header">
+        <div class="chapter-num">7</div>
+        <div class="chapter-title-block">
+          <h2>System Tray</h2>
+          <div class="chapter-sub">Quick control without opening the Dashboard</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🖥️</span> The Tray Icon</h3>
+        <p>Right-clicking the icon in the taskbar (bottom-right corner) opens a menu:</p>
+        <table class="guide-table">
+          <thead><tr><th>Item</th><th>What It Does</th></tr></thead>
+          <tbody>
+            <tr><td>FlowGuard v2.0.1</td><td>Shows the current version</td></tr>
+            <tr><td>Open Dashboard</td><td>Opens the Dashboard interface in the browser</td></tr>
+            <tr><td>🟢 Collector Active</td><td>Current status — green = active, red = stopped</td></tr>
+            <tr><td>Stop Service / Start Service</td><td>Stop/start the Collector (requires UAC)</td></tr>
+            <tr><td>Exit</td><td>Closes the tray icon (the Collector continues running)</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box">
+          <div class="info-box-title">Note</div>
+          Closing the tray icon does not stop the Collector. The Collector is a Windows Service that runs in the background at all times, even without the tray icon.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CH8 — Telegram ══ -->
+    <section class="chapter" id="ch8">
+      <div class="chapter-header">
+        <div class="chapter-num">8</div>
+        <div class="chapter-title-block">
+          <h2>Setting Up Telegram</h2>
+          <div class="chapter-sub">Receive alerts directly on your phone</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🤖</span> Creating a Bot</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Open @BotFather on Telegram</strong>
+              <p>Search for "BotFather" on Telegram and start a conversation.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Send /newbot</strong>
+              <p>Give the bot a name (e.g., "FlowGuard Bot") and then a username (must end in bot, e.g., "flowguard_mybot").</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Receive your Bot Token</strong>
+              <p>BotFather will send a string in the format <code>123456789:AAFxxxxx...</code> — this is your Token.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Find your Chat ID</strong>
+              <p>Start a conversation with @userinfobot on Telegram → send any message → it will return your ID (a number, e.g., <code>123456789</code>).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Enter in FlowGuard Settings</strong>
+              <p>Settings → Telegram Token + Chat ID → Save. Click "Test" to verify.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FAQ ══ -->
+    <section class="chapter" id="faq">
+      <div class="chapter-header">
+        <div class="chapter-num" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);font-size:20px;">?</div>
+        <div class="chapter-title-block">
+          <h2>Frequently Asked Questions</h2>
+          <div class="chapter-sub">FAQ</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Does FlowGuard slow down Claude Code?</h3>
+        <p>No. The Hook adds less than 5ms per action. There is no noticeable impact on performance.</p>
+      </div>
+      <div class="section">
+        <h3>What happens if the Collector stops working?</h3>
+        <p>Claude Code continues to work without issue — the Hook will fail silently if there is no Collector. There will be no monitoring until the Collector is back online. The Windows Service is configured to restart automatically after a failure.</p>
+      </div>
+      <div class="section">
+        <h3>Does FlowGuard send any data to the internet?</h3>
+        <p>No. All data is stored locally on your machine. The only outbound communication is Telegram alerts (which you enable and configure yourself) and rule updates from GitHub (which can be disabled).</p>
+      </div>
+      <div class="section">
+        <h3>I received a CRITICAL alert from a nightly backup — what do I do?</h3>
+        <p>Configure Quiet Hours (Settings → Quiet Hours) to cover the backup window. Backups will continue to be logged in the DB but no Telegram alerts will be sent.</p>
+      </div>
+      <div class="section">
+        <h3>File Audit found an API key — what do I do?</h3>
+        <ol>
+          <li>Revoke the key immediately in the provider's dashboard (OpenAI, AWS, etc.)</li>
+          <li>Generate a new key</li>
+          <li>Move the key to a <code>.env</code> file and make sure it is in <code>.gitignore</code></li>
+          <li>In the code — use <code>process.env.API_KEY</code> instead of the literal value</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ══ GLOSSARY ══ -->
+    <section class="chapter" id="glossary">
+      <div class="chapter-header">
+        <div class="chapter-num" style="background:linear-gradient(135deg,#10b981,#059669);font-size:16px;">📖</div>
+        <div class="chapter-title-block">
+          <h2>Glossary</h2>
+          <div class="chapter-sub">Key terms explained</div>
+        </div>
+      </div>
+      <div class="section">
+        <table class="guide-table">
+          <thead><tr><th>Term</th><th>Explanation</th></tr></thead>
+          <tbody>
+            <tr><td>Hook</td><td>Code registered in Claude Code that runs before/after every action</td></tr>
+            <tr><td>Collector</td><td>The FlowGuard server that receives events from the Hook and stores them</td></tr>
+            <tr><td>FSWatcher</td><td>File System Watcher — a mechanism that monitors changes in folders</td></tr>
+            <tr><td>Audit Chain</td><td>A hash chain that guarantees record integrity</td></tr>
+            <tr><td>Hardening Level</td><td>Protection level: SOFT=monitoring, MEDIUM=warnings, HARD=blocking</td></tr>
+            <tr><td>PII</td><td>Personally Identifiable Information — identifying personal data (phone, ID number, etc.)</td></tr>
+            <tr><td>Session</td><td>A single Claude Code conversation from start to finish</td></tr>
+            <tr><td>SIEM</td><td>Security Information and Event Management — a security event management system</td></tr>
+            <tr><td>Bot Token</td><td>Access key for a Telegram bot — obtained from @BotFather</td></tr>
+            <tr><td>Chat ID</td><td>Unique identifier of a Telegram conversation — obtained from @userinfobot</td></tr>
+            <tr><td>Quiet Hours</td><td>Silence window — FlowGuard does not send Telegram messages but continues to log</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="text-align:center;padding:40px 0 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:40px;">
+        <div style="font-size:28px;margin-bottom:12px;">🛡️</div>
+        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.0.1</div>
+        <div style="margin-top:6px;">AI Security Monitor for Claude Code · by EHZ-AI</div>
+        <div style="margin-top:4px;">054-4825276</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Active TOC highlight on scroll
+  var sections = document.querySelectorAll('[id]');
+  var links    = document.querySelectorAll('.toc-link');
+
+  function setActive() {
+    var scrollY = window.scrollY + 80;
+    var current = '';
+    sections.forEach(function(s) {
+      if (s.offsetTop <= scrollY) current = s.id;
+    });
+    links.forEach(function(l) {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  // Smooth scroll
+  links.forEach(function(l) {
+    l.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(l.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
