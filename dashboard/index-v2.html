@@ -1195,6 +1195,73 @@ tr:hover td { background:#f8fafc; }
           </div>
         </div>
 
+        <!-- Claude Code Installation Guide -->
+        <div style="margin-bottom:32px;">
+          <div style="font-size:13px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;">How to Install Claude Code</div>
+
+          <!-- Step 1 — Node.js -->
+          <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:12px;">
+            <div style="background:#f8fafc;padding:12px 18px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;">
+              <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;flex-shrink:0;">1</div>
+              <strong style="color:#0f172a;font-size:14px;">Install Node.js</strong>
+              <span style="font-size:12px;color:#94a3b8;margin-right:auto;">Required runtime</span>
+              <a href="https://nodejs.org" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#0f172a;color:#00d4ff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;">⬇ Download nodejs.org</a>
+            </div>
+            <div style="padding:14px 18px;font-size:13px;color:#374151;line-height:1.8;">
+              Go to <strong>nodejs.org</strong> → Download the <strong>LTS version</strong> (recommended) → Run the installer → Keep all defaults → Click Finish.<br>
+              <span style="color:#64748b;font-size:12px;">After installation, open Terminal and verify: <code style="background:#f1f5f9;padding:1px 6px;border-radius:4px;">node --version</code></span>
+            </div>
+          </div>
+
+          <!-- Step 2 — Install Claude Code -->
+          <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:12px;">
+            <div style="background:#f8fafc;padding:12px 18px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;">
+              <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#00d4ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;flex-shrink:0;">2</div>
+              <strong style="color:#0f172a;font-size:14px;">Install Claude Code CLI</strong>
+              <span style="font-size:12px;color:#94a3b8;margin-right:auto;">via npm</span>
+              <a href="https://docs.anthropic.com/en/docs/claude-code/getting-started" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#0f172a;color:#00d4ff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;">📄 Official Docs</a>
+            </div>
+            <div style="padding:14px 18px;font-size:13px;color:#374151;line-height:1.8;">
+              Open <strong>Command Prompt</strong> or <strong>PowerShell</strong> and run:<br>
+              <code style="display:block;background:#0f172a;color:#00d4ff;padding:10px 14px;border-radius:8px;margin:8px 0;font-size:13px;letter-spacing:.3px;">npm install -g @anthropic-ai/claude-code</code>
+              Wait for the installation to finish (1–2 minutes).
+            </div>
+          </div>
+
+          <!-- Step 3 — Login -->
+          <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:12px;">
+            <div style="background:#f8fafc;padding:12px 18px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;">
+              <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;flex-shrink:0;">3</div>
+              <strong style="color:#0f172a;font-size:14px;">Login to Anthropic</strong>
+              <span style="font-size:12px;color:#94a3b8;margin-right:auto;">One-time authentication</span>
+              <a href="https://console.anthropic.com" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#0f172a;color:#00d4ff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;">🔑 console.anthropic.com</a>
+            </div>
+            <div style="padding:14px 18px;font-size:13px;color:#374151;line-height:1.8;">
+              Run in terminal:<br>
+              <code style="display:block;background:#0f172a;color:#00d4ff;padding:10px 14px;border-radius:8px;margin:8px 0;font-size:13px;">claude</code>
+              A browser window will open → login with your Anthropic account → authorize. Done — Claude Code is ready.
+            </div>
+          </div>
+
+          <!-- Step 4 — Install FlowGuard -->
+          <div style="border:1px solid rgba(0,212,255,0.3);border-radius:12px;overflow:hidden;background:rgba(0,212,255,0.03);">
+            <div style="background:rgba(0,212,255,0.07);padding:12px 18px;border-bottom:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;gap:10px;">
+              <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#0ea5e9);display:flex;align-items:center;justify-content:center;color:#0a1628;font-weight:800;font-size:12px;flex-shrink:0;">4</div>
+              <strong style="color:#0f172a;font-size:14px;">Install FlowGuard</strong>
+              <span style="font-size:12px;color:#64748b;margin-right:auto;">Security monitor for Claude Code</span>
+            </div>
+            <div style="padding:14px 18px;font-size:13px;color:#374151;line-height:1.8;">
+              Run <strong>FlowGuard-Setup.exe</strong> as Administrator → follow the wizard → FlowGuard will automatically register itself as a hook inside Claude Code.<br>
+              <span style="color:#10b981;font-weight:600;">✓ After installation, every Claude Code action is monitored and logged here.</span>
+            </div>
+          </div>
+
+          <!-- Requirements note -->
+          <div style="margin-top:12px;padding:12px 16px;background:#fefce8;border:1px solid #fde047;border-radius:8px;font-size:12px;color:#713f12;">
+            <strong>System Requirements:</strong> Windows 10/11 (64-bit) · Node.js v18+ · ~50MB free disk space · Administrator rights for installation
+          </div>
+        </div>
+
         <div style="padding:16px 20px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;font-size:13px;color:#64748b;">
           <strong style="color:#374151;">FlowGuard v2.0.2</strong> · AI Security Monitor for Claude Code · by EHZ-AI<br>
           <span style="font-size:11px;">054-4825276</span>
