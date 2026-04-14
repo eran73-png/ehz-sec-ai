@@ -58,6 +58,7 @@ Source: "{#SourceDir}\collector\server.js";        DestDir: "{app}\collector"; F
 
 ; Dashboard
 Source: "{#SourceDir}\dashboard\*";               DestDir: "{app}\dashboard"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourceDir}\docs\*";                   DestDir: "{app}\docs";      Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Scanner
 Source: "{#SourceDir}\scanner\*";                 DestDir: "{app}\scanner"; Flags: ignoreversion recursesubdirs createallsubdirs
