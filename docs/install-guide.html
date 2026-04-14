@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowGuard — Installation Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a1628; --bg2: #0f1e36; --bg3: #162040;
+    --cyan: #00d4ff; --cyan2: #00a8cc;
+    --text: #e2e8f0; --muted: #94a3b8; --border: rgba(0,212,255,0.15);
+    --green: #10b981; --orange: #f97316; --blue: #0078d4; --purple: #8b5cf6;
+  }
+  html { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; line-height: 1.7; min-height: 100vh; }
+
+  .page { max-width: 720px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  /* Cover */
+  .cover { text-align: center; padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+  .cover .fg-badge { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, #00d4ff, #0ea5e9); font-weight: 900; font-size: 24px; color: #0a1628; margin-bottom: 20px; }
+  .cover h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+  .cover h1 span { color: var(--cyan); }
+  .cover .sub { color: var(--muted); font-size: 16px; margin-bottom: 24px; }
+  .cover .tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .cover .tag { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25); border-radius: 20px; padding: 3px 14px; font-size: 12px; color: var(--cyan); font-weight: 600; }
+
+  /* Section title */
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+  /* Step card */
+  .step { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 14px; background: var(--bg2); }
+  .step-header { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); background: var(--bg3); }
+  .step-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+  .step-title { font-weight: 700; font-size: 15px; color: var(--text); flex: 1; }
+  .step-badge { font-size: 11px; color: var(--muted); }
+  .step-link { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: var(--cyan); border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; transition: background .15s; }
+  .step-link:hover { background: rgba(0,212,255,0.2); }
+  .step-body { padding: 16px 20px; font-size: 14px; color: #cbd5e1; line-height: 1.8; }
+  .step-body strong { color: var(--text); }
+  code.cmd { display: block; background: #060e1c; color: var(--cyan); padding: 12px 16px; border-radius: 8px; margin: 10px 0; font-size: 14px; font-family: 'Consolas', monospace; letter-spacing: .3px; border: 1px solid rgba(0,212,255,0.2); }
+  code.inline { background: rgba(255,255,255,0.07); padding: 1px 7px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 13px; color: #7dd3fc; }
+
+  /* FlowGuard step — highlight */
+  .step.fg { border-color: rgba(0,212,255,0.35); }
+  .step.fg .step-header { background: rgba(0,212,255,0.07); border-bottom-color: rgba(0,212,255,0.2); }
+
+  /* Requirements */
+  .req { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.3); border-radius: 10px; padding: 14px 18px; font-size: 13px; color: #fde68a; margin: 24px 0; }
+  .req strong { color: #fbbf24; }
+
+  /* Footer */
+  .footer { text-align: center; margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  .footer strong { color: var(--cyan); }
+
+  /* Print */
+  @media print {
+    html { background: #fff; color: #111; }
+    .step { border-color: #ccc; background: #f9f9f9; }
+    .step-header { background: #f1f5f9; }
+    code.cmd { background: #1e293b; }
+    .step-link { border-color: #0ea5e9; color: #0ea5e9; }
+    .cover .tag { background: #e0f2fe; border-color: #bae6fd; color: #0369a1; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="fg-badge">FG</div>
+    <h1><span>FlowGuard</span> — Installation Guide</h1>
+    <p class="sub">Complete setup: Git · VS Code · Node.js · Claude Code · FlowGuard</p>
+    <div class="tags">
+      <span class="tag">Windows 10 / 11</span>
+      <span class="tag">v2.0.2</span>
+      <span class="tag">by EHZ-AI</span>
+    </div>
+  </div>
+
+  <!-- Requirements -->
+  <div class="req">
+    <strong>Before you start:</strong> Make sure you have a stable internet connection and an Anthropic account (<a href="https://console.anthropic.com" target="_blank" style="color:#fbbf24;">console.anthropic.com</a>). All software below is free.
+  </div>
+
+  <div class="section-title">Installation Steps — in order</div>
+
+  <!-- Step 1 — Git -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;">1</div>
+      <div class="step-title">Install Git</div>
+      <span class="step-badge">Version control · required by Claude Code</span>
+      <a class="step-link" href="https://git-scm.com/download/win" target="_blank">⬇ git-scm.com</a>
+    </div>
+    <div class="step-body">
+      Go to <strong>git-scm.com/download/win</strong> → download the installer → run it → keep all defaults → click Finish.<br>
+      Verify in terminal: <code class="inline">git --version</code>
+    </div>
+  </div>
+
+  <!-- Step 2 — VSCode -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#0078d4,#005fa3);color:#fff;">2</div>
+      <div class="step-title">Install VS Code</div>
+      <span class="step-badge">Recommended code editor</span>
+      <a class="step-link" href="https://code.visualstudio.com" target="_blank">⬇ code.visualstudio.com</a>
+    </div>
+    <div class="step-body">
+      Download <strong>VS Code</strong> for Windows → run installer → during setup check <strong>"Add to PATH"</strong> → Finish.<br>
+      Verify: <code class="inline">code --version</code>
+    </div>
+  </div>
+
+  <!-- Step 3 — Node.js -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;">3</div>
+      <div class="step-title">Install Node.js</div>
+      <span class="step-badge">JavaScript runtime · required for Claude Code & FlowGuard</span>
+      <a class="step-link" href="https://nodejs.org" target="_blank">⬇ nodejs.org</a>
+    </div>
+    <div class="step-body">
+      Go to <strong>nodejs.org</strong> → download the <strong>LTS version</strong> (recommended) → run installer → keep all defaults → Finish.<br>
+      Verify: <code class="inline">node --version</code> and <code class="inline">npm --version</code>
+    </div>
+  </div>
+
+  <!-- Step 4 — Claude Code -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#0ea5e9,#00d4ff);color:#0a1628;">4</div>
+      <div class="step-title">Install Claude Code CLI</div>
+      <span class="step-badge">via npm</span>
+      <a class="step-link" href="https://docs.anthropic.com/en/docs/claude-code/getting-started" target="_blank">📄 Official Docs</a>
+    </div>
+    <div class="step-body">
+      Open <strong>Command Prompt</strong> or <strong>PowerShell</strong> and run:
+      <code class="cmd">npm install -g @anthropic-ai/claude-code</code>
+      Wait 1–2 minutes for the installation to complete.
+    </div>
+  </div>
+
+  <!-- Step 5 — Login -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;">5</div>
+      <div class="step-title">Login to Anthropic</div>
+      <span class="step-badge">One-time authentication</span>
+      <a class="step-link" href="https://console.anthropic.com" target="_blank">🔑 console.anthropic.com</a>
+    </div>
+    <div class="step-body">
+      Run in terminal:
+      <code class="cmd">claude</code>
+      A browser window opens → sign in with your Anthropic account → authorize → return to terminal.<br>
+      <strong style="color:var(--green);">✓ Claude Code is ready. Try: <code class="inline">claude "hello"</code></strong>
+    </div>
+  </div>
+
+  <!-- Step 6 — FlowGuard -->
+  <div class="step fg">
+    <div class="step-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#00d4ff,#0ea5e9);color:#0a1628;">6</div>
+      <div class="step-title">Install FlowGuard</div>
+      <span class="step-badge">Security monitor for Claude Code</span>
+    </div>
+    <div class="step-body">
+      Run <strong>FlowGuard-Setup.exe</strong> as Administrator → follow the setup wizard → FlowGuard registers itself automatically as a Claude Code hook.<br><br>
+      After installation:
+      <ul style="padding-left:18px;margin-top:6px;color:#94a3b8;font-size:13px;line-height:2;">
+        <li>FlowGuard icon appears in System Tray 🟢</li>
+        <li>Open Dashboard → every Claude Code action is now monitored</li>
+        <li>Configure Telegram alerts in Settings for real-time notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <strong>FlowGuard v2.0.2</strong> · AI Security Monitor for Claude Code · by EHZ-AI<br>
+    <span style="font-size:11px;margin-top:4px;display:block;">054-4825276 · <a href="http://localhost:3010/docs/user-guide-en.html" style="color:var(--cyan);">Full User Guide →</a></span>
+  </div>
+
+</div>
+</body>
+</html>
