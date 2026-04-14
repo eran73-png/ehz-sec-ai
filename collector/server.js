@@ -237,6 +237,8 @@ app.use(express.json());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
 
@@ -317,7 +319,7 @@ app.get('/recent', (req, res) => {
 
 // GET /events — Dashboard feed
 app.get('/events', (req, res) => {
-  const limit  = Math.min(parseInt(req.query.limit)  || 100, 500);
+  const limit  = Math.min(parseInt(req.query.limit)  || 100, 9999);
   const level  = req.query.level || null;
 
   const query = level ? { level } : {};
@@ -1394,11 +1396,59 @@ app.get('/fsw/status', (req, res) => {
   });
 });
 
+// GET /fsw/quiet-hours
+app.get('/fsw/quiet-hours', (req, res) => {
+  res.json({ ...quietHoursConfig, active: isQuietHour() });
+});
+
+// POST /fsw/quiet-hours
+app.post('/fsw/quiet-hours', (req, res) => {
+  const { enabled, from, to } = req.body || {};
+  if (enabled !== undefined) quietHoursConfig.enabled = !!enabled;
+  if (from !== undefined) quietHoursConfig.from = parseInt(from);
+  if (to   !== undefined) quietHoursConfig.to   = parseInt(to);
+  res.json({ ok: true, ...quietHoursConfig, active: isQuietHour() });
+});
+
+// POST /fsw/exclude — add exclusion
+app.post('/fsw/exclude', (req, res) => {
+  const { entry } = req.body || {};
+  if (!entry || typeof entry !== 'string') return res.status(400).json({ error: 'entry required' });
+  FSW_EXCLUDE.add(entry.trim());
+  res.json({ ok: true, exclude: [...FSW_EXCLUDE] });
+});
+
+// DELETE /fsw/exclude — remove exclusion
+app.delete('/fsw/exclude', (req, res) => {
+  const { entry } = req.body || {};
+  if (!entry) return res.status(400).json({ error: 'entry required' });
+  FSW_EXCLUDE.delete(entry.trim());
+  res.json({ ok: true, exclude: [...FSW_EXCLUDE] });
+});
+
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
 const FSW_ROOT    = 'C:/Claude-Repo';
 const FSW_EXCLUDE = new Set(['node_modules', '.git', 'backups', 'ccsm.db', 'hook.log', '.ccsm-disable', '.ccsm-silent']);
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
+
+// ─── Quiet Hours ──────────────────────────────────────────────────────────────
+let quietHoursConfig = { enabled: true, from: 23, to: 7 }; // 23:00–07:00
+
+function isQuietHour() {
+  if (!quietHoursConfig.enabled) return false;
+  const h = new Date().getHours();
+  const { from, to } = quietHoursConfig;
+  return from > to ? (h >= from || h < to) : (h >= from && h < to);
+}
+
+function fswSendTelegram(msg) {
+  if (isQuietHour()) {
+    console.log('[FSW] Quiet hours — Telegram suppressed:', msg.slice(0, 60));
+    return;
+  }
+  sendTelegram(msg);
+}
 
 // קבצים שנכתבו ע"י Claude בשניות האחרונות — למנוע כפילות עם Write Guard
 const recentHookWrites = new Map(); // path → timestamp
@@ -1481,7 +1531,7 @@ function startFSWatcher() {
         if (isDeleted) {
           level  = 'CRITICAL';
           reason = `🗑️ FSW: File manually DELETED from project — NOT by Claude — ${filename}`;
-          sendTelegram(`🗑️ <b>FlowGuard — File Deleted</b>\nManual deletion detected (NOT by Claude)\n<code>${filename}</code>`);
+          fswSendTelegram(`🗑️ <b>FlowGuard — File Deleted</b>\nManual deletion detected (NOT by Claude)\n<code>${filename}</code>`);
         } else if (isSensitive) {
           level  = 'HIGH';
           reason = `🔍 FSW: Sensitive file ${isNewFile ? 'manually copied to project — NOT by Claude' : 'modified'} — ${filename}`;
@@ -1510,7 +1560,7 @@ function startFSWatcher() {
 
         if (level === 'HIGH') {
           const emoji = isSensitive ? '🔑' : '📥';
-          sendTelegram(`${emoji} <b>FlowGuard — FSWatcher</b>\n${reason}\n<code>${filename}</code>`);
+          fswSendTelegram(`${emoji} <b>FlowGuard — FSWatcher</b>\n${reason}\n<code>${filename}</code>`);
         }
       }, 3000)); // 3 שניות debounce
     });

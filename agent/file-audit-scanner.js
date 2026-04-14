@@ -34,32 +34,32 @@ const MAX_FILE_SIZE = 500 * 1024; // 500KB
 
 const AUDIT_PATTERNS = [
   // CRITICAL
-  { level: 'CRITICAL', re: /sk-[A-Za-z0-9]{48}/,                          reason: 'OpenAI API key' },
-  { level: 'CRITICAL', re: /sk-ant-[A-Za-z0-9\-_]{40,}/,                  reason: 'Anthropic API key' },
-  { level: 'CRITICAL', re: /AKIA[0-9A-Z]{16}/,                            reason: 'AWS Access Key ID' },
-  { level: 'CRITICAL', re: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH)\s+PRIVATE\s+KEY/i, reason: 'Private key' },
-  { level: 'CRITICAL', re: /curl[^\n]*\|\s*(ba)?sh/i,                     reason: 'curl|sh — pipe to shell' },
-  { level: 'CRITICAL', re: /base64\s+(-d|--decode)[^\n]*\|\s*(ba)?sh/i,   reason: 'base64 decode | sh' },
+  { level: 'CRITICAL', re: /sk-[A-Za-z0-9]{48}/,                          reason: 'OpenAI API key',           explain: 'An OpenAI API key is hardcoded in this file. If leaked, anyone can use your account and rack up charges.' },
+  { level: 'CRITICAL', re: /sk-ant-[A-Za-z0-9\-_]{40,}/,                  reason: 'Anthropic API key',        explain: 'An Anthropic (Claude) API key is exposed. Revoke it immediately at console.anthropic.com.' },
+  { level: 'CRITICAL', re: /AKIA[0-9A-Z]{16}/,                            reason: 'AWS Access Key ID',        explain: 'An Amazon AWS access key is in the file. A leak could expose your cloud infrastructure or cause massive billing.' },
+  { level: 'CRITICAL', re: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH)\s+PRIVATE\s+KEY/i, reason: 'Private key',     explain: 'A private SSH/SSL key is stored in code. This is like leaving your server password in plain sight.' },
+  { level: 'CRITICAL', re: /curl[^\n]*\|\s*(ba)?sh/i,                     reason: 'curl|sh — pipe to shell',  explain: 'Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.' },
+  { level: 'CRITICAL', re: /base64\s+(-d|--decode)[^\n]*\|\s*(ba)?sh/i,   reason: 'base64 decode | sh',       explain: 'Hidden command encoded in Base64 is being decoded and executed directly. Common technique to disguise malicious code.' },
 
   // HIGH
-  { level: 'HIGH', re: /AIza[0-9A-Za-z\-_]{30,}/,                        reason: 'Google API key' },
-  { level: 'HIGH', re: /ghp_[A-Za-z0-9]{36}/,                            reason: 'GitHub PAT' },
-  { level: 'HIGH', re: /sk_live_[0-9a-zA-Z]{24}/,                        reason: 'Stripe Secret Key' },
-  { level: 'HIGH', re: /SG\.[A-Za-z0-9._-]{22,}\.[A-Za-z0-9._-]{22,}/,  reason: 'SendGrid API key' },
-  { level: 'HIGH', re: /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,     reason: 'JWT token' },
-  { level: 'HIGH', re: /password\s*[=:]\s*["']?\S{6,}/i,                 reason: 'Hardcoded password' },
-  { level: 'HIGH', re: /mongodb(\+srv)?:\/\/[^:]+:[^@]+@/i,              reason: 'MongoDB credentials' },
-  { level: 'HIGH', re: /postgres(ql)?:\/\/[^:]+:[^@]+@/i,                reason: 'PostgreSQL credentials' },
-  { level: 'HIGH', re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'כרטיס Visa' },
-  { level: 'HIGH', re: /\b3[47][0-9]{13}\b/,                             reason: 'כרטיס Amex' },
-  { level: 'HIGH', re: /\.onion/i,                                        reason: 'TOR .onion address' },
-  { level: 'HIGH', re: /ngrok/i,                                          reason: 'ngrok tunnel' },
+  { level: 'HIGH', re: /AIza[0-9A-Za-z\-_]{30,}/,                        reason: 'Google API key',            explain: 'A Google API key (Maps, Gmail, etc.) is exposed. Could result in unauthorized usage billed to your account.' },
+  { level: 'HIGH', re: /ghp_[A-Za-z0-9]{36}/,                            reason: 'GitHub Personal Access Token', explain: 'A GitHub PAT gives full read/write access to your repositories. Revoke it immediately in GitHub settings.' },
+  { level: 'HIGH', re: /sk_live_[0-9a-zA-Z]{24}/,                        reason: 'Stripe Secret Key',         explain: 'A live Stripe secret key is exposed. Anyone with this key can access payment data and charge customers.' },
+  { level: 'HIGH', re: /SG\.[A-Za-z0-9._-]{22,}\.[A-Za-z0-9._-]{22,}/,  reason: 'SendGrid API key',          explain: 'A SendGrid key is exposed. It can be used to send spam or phishing emails in your name.' },
+  { level: 'HIGH', re: /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,     reason: 'JWT token',                 explain: 'A JWT authentication token is hardcoded. If leaked, someone can impersonate an authenticated user.' },
+  { level: 'HIGH', re: /password\s*[=:]\s*["']?\S{6,}/i,                 reason: 'Hardcoded password',        explain: 'A password is written directly in the code. Anyone who reads this file can see it.' },
+  { level: 'HIGH', re: /mongodb(\+srv)?:\/\/[^:]+:[^@]+@/i,              reason: 'MongoDB credentials',       explain: 'MongoDB username and password are embedded in the code. This gives full database access to anyone who sees it.' },
+  { level: 'HIGH', re: /postgres(ql)?:\/\/[^:]+:[^@]+@/i,                reason: 'PostgreSQL credentials',    explain: 'PostgreSQL username and password are in the code. Full database access is exposed.' },
+  { level: 'HIGH', re: /\b4[0-9]{3}[\s-]?[0-9]{4}[\s-]?[0-9]{4}[\s-]?[0-9]{4}\b/, reason: 'Visa card number', explain: 'A Visa credit card number was found. Storing card numbers in code violates PCI-DSS compliance.' },
+  { level: 'HIGH', re: /\b3[47][0-9]{13}\b/,                             reason: 'Amex card number',          explain: 'An American Express card number was found in the file.' },
+  { level: 'HIGH', re: /\.onion/i,                                        reason: 'TOR .onion address',        explain: 'A TOR hidden service address was found. Why is this code connecting to an anonymous network?' },
+  { level: 'HIGH', re: /ngrok/i,                                          reason: 'ngrok tunnel',              explain: 'ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.' },
 
   // MEDIUM
-  { level: 'MEDIUM', re: /\b05[0-9]{1}[-\s]?[0-9]{7}\b/,                reason: 'פלאפון ישראלי' },
-  { level: 'MEDIUM', re: /eval\s*\(/i,                                    reason: 'eval() call' },
-  { level: 'MEDIUM', re: /http:\/\/(?!localhost|127\.0\.0\.1)/i,          reason: 'Non-HTTPS URL' },
-  { level: 'MEDIUM', re: /TODO.*password|FIXME.*secret/i,                 reason: 'TODO/FIXME עם credentials' },
+  { level: 'MEDIUM', re: /\b05[0-9]{1}[-\s]?[0-9]{7}\b/,                reason: 'Israeli phone number',      explain: 'An Israeli phone number was found in the code. Check if this is personal data that should not be here.' },
+  { level: 'MEDIUM', re: /eval\s*\(/i,                                    reason: 'eval() call',               explain: 'eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.' },
+  { level: 'MEDIUM', re: /http:\/\/(?!localhost|127\.0\.0\.1)/i,          reason: 'Non-HTTPS URL',             explain: 'An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.' },
+  { level: 'MEDIUM', re: /TODO.*password|FIXME.*secret/i,                 reason: 'TODO/FIXME with credentials', explain: 'A comment marks that a password or secret has not been properly handled yet.' },
 ];
 
 // ─── Risk Score ───────────────────────────────────────────────────────────────
@@ -113,9 +113,11 @@ function scanFile(filePath) {
           // Avoid duplicate reason per file
           if (!result.findings.some(f => f.reason === pattern.reason)) {
             result.findings.push({
-              level:  pattern.level,
-              reason: pattern.reason,
-              line:   i + 1,
+              level:   pattern.level,
+              reason:  pattern.reason,
+              explain: pattern.explain || '',
+              line:    i + 1,
+              snippet: lines[i].trim().slice(0, 120),
             });
           }
           break;

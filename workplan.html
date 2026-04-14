@@ -389,6 +389,8 @@
     </div>
     <div class="ms-row" data-status="pending" data-num="11" data-name="English Alert Strings">
     </div>
+    <div class="ms-row" data-status="pending" data-num="12" data-name="חוברת הדרכה — User Guide">
+    </div>
     <div style="margin:4px 0 8px 0;padding:8px 14px;background:rgba(100,116,139,0.08);border:1px solid rgba(100,116,139,0.2);border-radius:8px;font-size:11px;color:#64748b;">
       <b style="color:#94a3b8;">MS14–15 — עתידי (לאחר פידבק שוק)</b> &nbsp;·&nbsp; Domain/AD &nbsp;·&nbsp; Block Mode
     </div>
@@ -1876,6 +1878,74 @@
       <div class="task-title">ProcessMonitor — Linux/macOS</div>
       <div class="task-desc">Get-Process (PowerShell) לא זמין. חלופה: /proc filesystem (Linux) + ps command (macOS). refactor getProcessList() לפי OS.</div>
       <div class="task-tags"><span class="tag">cross-platform</span><span class="tag">process</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 12 — USER GUIDE -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(0,212,255,0.3);">
+  <div class="phase-header" style="background:rgba(0,212,255,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#00d4ff,#0066cc);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">12</div>
+    <div class="phase-info">
+      <h3>MS12 — חוברת הדרכה (User Guide)</h3>
+      <p>מדריך מלא למוצר — כל מסך, כל כפתור, כל הגדרה — לפורמט HTML + PDF</p>
+    </div>
+    <div class="phase-status" style="background:rgba(0,212,255,0.12);color:#00d4ff;border:1px solid rgba(0,212,255,0.3);">📋 מתוכנן</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num" style="color:#00d4ff;">12.1</div>
+      <div class="task-title">מבנה ועיצוב החוברת</div>
+      <div class="task-desc">בניית תבנית HTML מעוצבת לחוברת — כהה, branded, FlowGuard colors. ניווט בתוך הדף, תוכן עניינים, כותרות פרק. ייצוא PDF מהדפדפן.</div>
+      <div class="task-tags"><span class="tag">HTML</span><span class="tag">PDF</span><span class="tag">Design</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#00d4ff;">12.2</div>
+      <div class="task-title">פרק 1 — מה זה FlowGuard</div>
+      <div class="task-desc">הסבר על המוצר, למה צריך אותו, איך עובד (Hook → Collector → Dashboard), ומה הוא מגן עליך מפני.</div>
+      <div class="task-tags"><span class="tag">Overview</span><span class="tag">Architecture</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#00d4ff;">12.3</div>
+      <div class="task-title">פרק 2 — התקנה</div>
+      <div class="task-desc">מדריך שלב-שלב: הרצת Setup Wizard, הגדרת Telegram, בחירת Hardening Level, ווידוא שה-Collector פועל.</div>
+      <div class="task-tags"><span class="tag">Setup</span><span class="tag">Wizard</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#00d4ff;">12.4</div>
+      <div class="task-title">פרק 3 — Dashboard ו-Events</div>
+      <div class="task-desc">הסבר על כל מסך: Dashboard, Events, Sessions, Web Access. מה כל עמודה אומרת, איך לקרוא alerts, מה לעשות כשמגיע Critical.</div>
+      <div class="task-tags"><span class="tag">Dashboard</span><span class="tag">Events</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#00d4ff;">12.5</div>
+      <div class="task-title">פרק 4 — Security: File Audit, Skills, Git Monitor</div>
+      <div class="task-desc">File Audit — אילו קבצים עוקבים. Skills Scanner — YARA + hash integrity. Git Monitor — push לשרתים לא מורשים.</div>
+      <div class="task-tags"><span class="tag">Security</span><span class="tag">Skills</span><span class="tag">Git</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#00d4ff;">12.6</div>
+      <div class="task-title">פרק 5 — Settings: הסבר כל כפתור</div>
+      <div class="task-desc">
+        טבלה מלאה עם הסבר לכל הגדרה:<br>
+        <strong>Hardening Mode</strong> — SOFT / MEDIUM / HARD<br>
+        <strong>Block Critical Actions</strong> — מה נחסם ומתי<br>
+        <strong>File System Watcher</strong> — אילו קבצים, למה<br>
+        <strong>Audit Chain</strong> — תקינות הרשומות (blockchain-style)<br>
+        <strong>Log Retention</strong> — כמה ימים לשמור events<br>
+        <strong>Auto-update Rules</strong> — עדכון אוטומטי<br>
+        <strong>Desktop Alerts</strong> — Pop-up מה-System Tray<br>
+        <strong>Telegram Alerts</strong> — הגדרת Bot Token + Chat ID<br>
+        <strong>Min Alert Level</strong> — Critical / High+ / Medium+<br>
+        <strong>Authorized Git Remotes</strong> — רשימת שרתים מורשים
+      </div>
+      <div class="task-tags"><span class="tag">Settings</span><span class="tag">Reference</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#00d4ff;">12.7</div>
+      <div class="task-title">פרק 6 — SIEM ו-System Tray</div>
+      <div class="task-desc">SIEM — ייצוא לכלי חיצוניים (Splunk, QRadar). System Tray — Start/Stop, status, פתיחת Dashboard.</div>
+      <div class="task-tags"><span class="tag">SIEM</span><span class="tag">Tray</span></div>
     </div>
   </div>
 </div>

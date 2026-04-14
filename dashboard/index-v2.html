@@ -55,14 +55,67 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:#f0f4f8; display:
 }
 .nav-item {
   display:flex; align-items:center; gap:10px;
-  padding:10px 20px; cursor:pointer;
+  padding:10px 12px 10px 20px; cursor:pointer;
   font-size:13px; color:rgba(255,255,255,0.5);
   border-left:3px solid transparent;
   transition:all .15s; user-select:none;
 }
 .nav-item:hover { color:#fff; background:rgba(255,255,255,0.05); }
 .nav-item.active { color:#00d4ff; background:rgba(0,212,255,0.08); border-left-color:#00d4ff; }
-.nav-item .icon { font-size:15px; width:18px; text-align:center; }
+.nav-item .icon { font-size:15px; width:18px; text-align:center; flex-shrink:0; }
+.help-btn {
+  flex-shrink:0;
+  width:18px; height:18px; border-radius:50%;
+  background:rgba(0,212,255,0.25); color:#00d4ff;
+  font-size:10px; font-weight:800;
+  display:inline-block; text-align:center; line-height:18px;
+  cursor:pointer; transition:all .15s;
+  border:1px solid rgba(0,212,255,0.4);
+}
+.help-btn:hover { background:#00d4ff !important; color:#0f1b2d !important; transform:scale(1.15); }
+
+/* ─── Help Panel ─── */
+.help-overlay {
+  position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0); pointer-events:none;
+  transition:background .2s;
+}
+.help-overlay.open { background:rgba(0,0,0,0.25); pointer-events:all; }
+.help-panel {
+  position:fixed; top:0; right:-360px; width:340px; height:100vh;
+  background:#fff; z-index:1000; box-shadow:-4px 0 24px rgba(0,0,0,0.12);
+  display:flex; flex-direction:column; transition:right .25s cubic-bezier(.4,0,.2,1);
+}
+.help-panel.open { right:0; }
+.help-panel-header {
+  padding:20px 20px 16px; border-bottom:1px solid #e2e8f0;
+  display:flex; align-items:center; gap:12px;
+}
+.help-panel-icon { font-size:22px; }
+.help-panel-title { font-size:15px; font-weight:700; color:#0f1b2d; flex:1; }
+.help-panel-close {
+  width:28px; height:28px; border-radius:50%; border:none;
+  background:#f1f5f9; cursor:pointer; font-size:14px; color:#64748b;
+  display:flex; align-items:center; justify-content:center; transition:all .15s;
+}
+.help-panel-close:hover { background:#e2e8f0; color:#0f1b2d; }
+.help-panel-body { padding:20px; overflow-y:auto; flex:1; }
+.help-section { margin-bottom:20px; }
+.help-section-title {
+  font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  color:#64748b; margin-bottom:8px;
+}
+.help-item {
+  display:flex; gap:10px; padding:10px 12px; border-radius:8px;
+  background:#f8fafc; margin-bottom:6px; border:1px solid #e2e8f0;
+}
+.help-item-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+.help-item-text { font-size:12px; line-height:1.6; color:#374151; }
+.help-item-text strong { color:#0f1b2d; display:block; margin-bottom:2px; font-size:12px; }
+.help-tip {
+  background:rgba(0,212,255,0.07); border:1px solid rgba(0,212,255,0.2);
+  border-radius:8px; padding:10px 12px; font-size:11px; color:#0066cc;
+  line-height:1.6; margin-top:12px;
+}
 
 .sidebar-bottom {
   margin-top:auto; padding:16px 20px;
@@ -285,6 +338,14 @@ tr:hover td { background:#f8fafc; }
 .domain-name { flex:1; color:#374151; font-weight:500; }
 .domain-actions { display:flex; gap:6px; }
 
+/* ─── Audit expand row ─── */
+.audit-toggle { background:none; border:none; cursor:pointer; color:#94a3b8; font-size:12px; padding:2px 4px; border-radius:4px; transition:.2s; }
+.audit-toggle:hover { background:#f1f5f9; color:#374151; }
+.audit-detail-row td { padding:0 !important; border-bottom:1px solid #f1f5f9; }
+.audit-detail-inner { padding:10px 16px 12px 48px; background:#fafafa; display:flex; flex-direction:column; gap:5px; }
+.audit-finding { display:flex; align-items:flex-start; gap:8px; font-size:11px; color:#374151; line-height:1.4; }
+.audit-finding-icon { flex-shrink:0; font-size:13px; }
+
 /* ─── Skill row ─── */
 .skill-risk-bar { display:flex; align-items:center; gap:6px; }
 .skill-risk-track { width:60px; height:4px; background:#f1f5f9; border-radius:2px; overflow:hidden; }
@@ -295,8 +356,12 @@ tr:hover td { background:#f8fafc; }
 .settings-group { background:#fff; border-radius:12px; border:1px solid var(--border); overflow:hidden; }
 .settings-body { padding:16px 18px; display:flex; flex-direction:column; gap:12px; }
 .setting-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.setting-label { font-size:12px; color:#374151; font-weight:500; }
+.setting-label { font-size:12px; color:#374151; font-weight:500; display:flex; align-items:center; gap:5px; }
 .setting-sublabel { font-size:10px; color:#94a3b8; }
+/* ─── Inline help tooltips ─── */
+.tip-icon { width:14px; height:14px; border-radius:50%; background:#e2e8f0; color:#64748b; font-size:9px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; cursor:help; position:relative; flex-shrink:0; }
+.tip-icon::after { content:attr(data-tip); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#1e293b; color:#f1f5f9; font-size:11px; font-weight:400; line-height:1.4; padding:7px 10px; border-radius:7px; white-space:normal; width:220px; z-index:999; pointer-events:none; opacity:0; transition:opacity .15s; text-align:left; box-shadow:0 4px 16px rgba(0,0,0,.3); }
+.tip-icon:hover::after { opacity:1; }
 .toggle { position:relative; width:36px; height:20px; cursor:pointer; display:inline-block; }
 .toggle input { opacity:0; width:0; height:0; }
 .toggle-slider {
@@ -368,19 +433,19 @@ tr:hover td { background:#f8fafc; }
   </div>
 
   <div class="sidebar-label">Monitor</div>
-  <div class="nav-item active" data-view="dashboard"><span class="icon">&#x1F4CA;</span> Dashboard</div>
-  <div class="nav-item" data-view="events"><span class="icon">&#x1F4CB;</span> Events</div>
-  <div class="nav-item" data-view="sessions"><span class="icon">&#x1F4FC;</span> Sessions</div>
-  <div class="nav-item" data-view="webaccess"><span class="icon">&#x1F310;</span> Web Access</div>
+  <div class="nav-item active" data-view="dashboard"><span class="icon">&#x1F4CA;</span><span>Dashboard</span></div>
+  <div class="nav-item" data-view="events"><span class="icon">&#x1F4CB;</span><span>Events</span></div>
+  <div class="nav-item" data-view="sessions"><span class="icon">&#x1F4FC;</span><span>Sessions</span></div>
+  <div class="nav-item" data-view="webaccess"><span class="icon">&#x1F310;</span><span>Web Access</span></div>
 
   <div class="sidebar-label">Security</div>
-  <div class="nav-item" data-view="fileaudit"><span class="icon">&#x1F5C2;&#xFE0F;</span> File Audit</div>
-  <div class="nav-item" data-view="skills"><span class="icon">&#x1F50D;</span> Skills</div>
-  <div class="nav-item" data-view="gitmonitor"><span class="icon">&#x1F517;</span> Git Monitor</div>
+  <div class="nav-item" data-view="fileaudit"><span class="icon">&#x1F5C2;&#xFE0F;</span><span>File Audit</span></div>
+  <div class="nav-item" data-view="skills"><span class="icon">&#x1F50D;</span><span>Skills</span></div>
+  <div class="nav-item" data-view="gitmonitor"><span class="icon">&#x1F517;</span><span>Git Monitor</span></div>
 
   <div class="sidebar-label">System</div>
-  <div class="nav-item" data-view="siem"><span class="icon">&#x1F4E1;</span> SIEM</div>
-  <div class="nav-item" data-view="settings"><span class="icon">&#x2699;&#xFE0F;</span> Settings</div>
+  <div class="nav-item" data-view="siem"><span class="icon">&#x1F4E1;</span><span>SIEM</span></div>
+  <div class="nav-item" data-view="settings"><span class="icon">&#x2699;&#xFE0F;</span><span>Settings</span></div>
 
   <div class="sidebar-bottom">
     <div class="avatar">E</div>
@@ -390,6 +455,17 @@ tr:hover td { background:#f8fafc; }
     </div>
   </div>
 </aside>
+
+<!-- ═══════════════════ HELP PANEL ═══════════════════ -->
+<div class="help-overlay" id="help-overlay" onclick="closeHelp()"></div>
+<div class="help-panel" id="help-panel">
+  <div class="help-panel-header">
+    <div class="help-panel-icon" id="help-panel-icon">📖</div>
+    <div class="help-panel-title" id="help-panel-title">Help</div>
+    <button class="help-panel-close" onclick="closeHelp()">✕</button>
+  </div>
+  <div class="help-panel-body" id="help-panel-body"></div>
+</div>
 
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <div class="main">
@@ -572,6 +648,13 @@ tr:hover td { background:#f8fafc; }
             <option value="">All Tools</option>
           </select>
           <input class="filter-input" type="text" id="filter-search" placeholder="Search events..." oninput="renderEventsTable()">
+          <select class="filter-select" id="filter-limit" onchange="loadEvents()" style="margin-left:auto;">
+            <option value="100">Last 100</option>
+            <option value="200" selected>Last 200</option>
+            <option value="500">Last 500</option>
+            <option value="1000">Last 1000</option>
+            <option value="9999">All</option>
+          </select>
         </div>
 
         <div class="table-wrap">
@@ -615,42 +698,54 @@ tr:hover td { background:#f8fafc; }
     <!-- ══════════ VIEW: WEB ACCESS ══════════ -->
     <div class="view" id="view-webaccess">
 
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Authorized Domains</div>
-            <div class="panel-sub">Whitelisted domains for web access</div>
-          </div>
-          <button class="btn btn-accent btn-sm" onclick="showAddDomainDialog()">+ Add Domain</button>
-        </div>
-        <div id="authorized-domains">
-          <div class="empty"><div class="spinner"></div>&nbsp; Loading...</div>
-        </div>
-      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
 
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Web Access History</div>
-            <div class="panel-sub">WebFetch and WebSearch activity</div>
+        <!-- Left: Allowed + Discovered -->
+        <div style="display:flex;flex-direction:column;gap:12px;">
+
+          <!-- Manually authorized -->
+          <div class="panel" style="padding:16px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+              <span style="font-size:12px;font-weight:700;color:#374151;">✅ Manually authorized domains</span>
+              <span class="tip-icon" data-tip="Domains you approved manually. Claude Code can visit these without a HIGH alert. Add any server or website you authorize Claude to use.">?</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:12px;">
+              <input id="domain-add-input" type="text" placeholder="example.com" class="form-input" style="flex:1;"
+                onkeydown="if(event.key==='Enter') addDomain()" />
+              <button class="btn btn-accent btn-sm" onclick="addDomain()">+ Add</button>
+            </div>
+            <div id="domains-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;">
+              <div class="empty"><div class="spinner"></div>&nbsp; Loading...</div>
+            </div>
+          </div>
+
+          <!-- Auto-discovered -->
+          <div class="panel" style="padding:16px;border-color:rgba(99,102,241,0.3);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:12px;font-weight:700;color:#374151;">🔍 Discovered in search <span id="discovered-count" style="color:#94a3b8;font-weight:400;font-size:11px;"></span></span>
+                <span class="tip-icon" data-tip="Domains Claude visited automatically during WebSearch/WebFetch. Approve = add to allowlist. Block = any future access triggers CRITICAL alert.">?</span>
+              </div>
+              <div style="font-size:10px;color:#94a3b8;">Approve = allowlist | ✕ = Block</div>
+            </div>
+            <div id="discovered-list" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;">
+              <div style="color:#94a3b8;padding:8px;text-align:center;font-size:11px;">Waiting for searches...</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: History -->
+        <div class="panel" style="padding:16px;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+            <span style="font-size:12px;font-weight:700;color:#374151;">📜 Web access history — WebFetch + WebSearch</span>
+            <span class="tip-icon" data-tip="Full log of every website Claude visited. HIGH = domain not on allowlist. SEARCH = web search query. Each entry shows domain, reputation score, and timestamp.">?</span>
+          </div>
+          <div id="domains-history" style="display:flex;flex-direction:column;gap:5px;max-height:500px;overflow-y:auto;font-size:11px;">
+            <div style="color:#94a3b8;padding:12px;text-align:center;">Loading...</div>
           </div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Type</th>
-                <th>Domain / URL</th>
-                <th>Level</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="web-history-body">
-              <tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
-            </tbody>
-          </table>
-        </div>
+
       </div>
 
     </div><!-- /view-webaccess -->
@@ -659,29 +754,59 @@ tr:hover td { background:#f8fafc; }
     <div class="view" id="view-fileaudit">
 
       <div class="panel">
-        <div class="panel-header">
+        <div class="panel-header" style="flex-wrap:wrap;gap:10px;">
           <div>
             <div class="panel-title">File Integrity Audit</div>
             <div class="panel-sub">Detect unauthorized file changes</div>
           </div>
-          <div class="panel-actions">
+          <div class="panel-actions" style="flex-wrap:wrap;gap:6px;">
+            <!-- Path input + Browse -->
+            <div style="display:flex;align-items:center;gap:4px;">
+              <input id="audit-path-input" type="text" value="C:/Claude-Repo" class="form-input"
+                style="width:180px;font-family:monospace;font-size:11px;" placeholder="C:/Claude-Repo" />
+              <button class="btn btn-outline btn-sm" onclick="browseAuditPath()" title="Browse folder">📁 Browse</button>
+              <input type="file" id="audit-folder-picker" webkitdirectory style="display:none" onchange="auditFolderSelected(this)">
+            </div>
+            <!-- Scan mode toggle -->
+            <div style="display:flex;align-items:center;gap:2px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:2px;">
+              <button id="scan-mode-full" onclick="setScanMode('full')"
+                style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:#0ea5e9;color:#fff;font-weight:700;">
+                🔍 Full
+              </button>
+              <button id="scan-mode-inc" onclick="setScanMode('incremental')"
+                style="border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;background:transparent;color:#94a3b8;">
+                ⚡ Changed only
+              </button>
+            </div>
+            <!-- Scan + Export -->
+            <button class="btn btn-primary btn-sm" onclick="runAuditScan()" id="audit-scan-btn">&#x25BA; Scan now</button>
+            <a href="http://localhost:3010/audit/export" style="text-decoration:none;" target="_blank">
+              <button class="btn btn-sm" style="background:transparent;border:1px solid #10b98166;color:#10b981;">&#x2193; Export Excel</button>
+            </a>
             <span id="audit-last-scan" style="font-size:11px;color:#94a3b8;"></span>
-            <button class="btn btn-primary btn-sm" onclick="runAuditScan()" id="audit-scan-btn">&#x25BA; Scan Now</button>
           </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 18px;background:#f8fafc;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#374151;cursor:pointer;">
+            <input type="checkbox" id="audit-hide-build" checked onchange="renderAuditTable()">
+            Hide build/generated files <span style="font-size:10px;color:#94a3b8;">(.next, node_modules, dist, build, chunks)</span>
+          </label>
+          <span id="audit-filter-count" style="margin-left:auto;font-size:11px;color:#94a3b8;"></span>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>File Path</th>
+                <th style="width:32px"></th>
+                <th>File</th>
+                <th>Folder</th>
                 <th>Status</th>
+                <th>Issues</th>
                 <th>Size</th>
-                <th>Modified</th>
-                <th>Hash</th>
               </tr>
             </thead>
             <tbody id="audit-table-body">
-              <tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
+              <tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">Loading...</td></tr>
             </tbody>
           </table>
         </div>
@@ -832,7 +957,7 @@ tr:hover td { background:#f8fafc; }
           <div class="settings-body">
             <div class="setting-row">
               <div>
-                <div class="setting-label">Hardening Mode</div>
+                <div class="setting-label">Hardening Mode <span class="tip-icon" data-tip="SOFT = alerts only, no blocking. MEDIUM = block critical threats automatically. HARD = block all high+critical, require manual approval.">?</span></div>
                 <div class="setting-sublabel">How strict to enforce rules</div>
               </div>
               <select class="form-select" id="cfg-hardening" style="width:120px" onchange="saveConfig()">
@@ -843,32 +968,32 @@ tr:hover td { background:#f8fafc; }
             </div>
             <div class="setting-row">
               <div>
-                <div class="setting-label">Block Critical Actions</div>
+                <div class="setting-label">Block Critical Actions <span class="tip-icon" data-tip="When ON: FlowGuard will automatically stop Claude from executing tool calls classified as CRITICAL risk (e.g. encoded PowerShell, credential exfiltration). When OFF: only logs the event.">?</span></div>
                 <div class="setting-sublabel">Prevent critical risk tool calls</div>
               </div>
               <label class="toggle"><input type="checkbox" id="cfg-block-critical" onchange="saveConfig()"><span class="toggle-slider"></span></label>
             </div>
             <div class="setting-row">
               <div>
-                <div class="setting-label">File System Watcher</div>
+                <div class="setting-label">File System Watcher <span class="tip-icon" data-tip="Monitors your files for suspicious changes in real-time. Detects when sensitive files (.env, keys) are modified or new scripts are dropped. Useful for catching malware that writes files to disk.">?</span></div>
                 <div class="setting-sublabel">Monitor file changes in real-time</div>
               </div>
               <label class="toggle"><input type="checkbox" id="cfg-fsw" onchange="saveConfig()"><span class="toggle-slider"></span></label>
             </div>
             <div class="setting-row">
               <div>
-                <div class="setting-label">Audit Chain</div>
+                <div class="setting-label">Audit Chain <span class="tip-icon" data-tip="Links each security event with a cryptographic hash to the previous one — like a blockchain. This makes it impossible to delete or modify events from the log without detection. Required for forensic-grade audit trails.">?</span></div>
                 <div class="setting-sublabel">Cryptographic event integrity</div>
               </div>
               <label class="toggle"><input type="checkbox" id="cfg-chain" onchange="saveConfig()"><span class="toggle-slider"></span></label>
             </div>
             <div>
-              <div class="setting-label" style="margin-bottom:6px">Log Retention (days)</div>
+              <div class="setting-label" style="margin-bottom:6px">Log Retention (days) <span class="tip-icon" data-tip="How many days to keep security events in the database. After this period, old events are deleted automatically. Default: 30 days. Set higher for compliance (90–365).">?</span></div>
               <input class="form-input" type="number" id="cfg-log-retention" placeholder="30" min="1" max="365" onchange="saveConfig()">
             </div>
             <div class="setting-row">
               <div>
-                <div class="setting-label">Auto-update Rules</div>
+                <div class="setting-label">Auto-update Rules <span class="tip-icon" data-tip="Automatically downloads the latest detection rules from the FlowGuard update server. When OFF, you must apply updates manually from the 'Rules &amp; Updates' panel below.">?</span></div>
                 <div class="setting-sublabel">Pull rule updates automatically</div>
               </div>
               <label class="toggle"><input type="checkbox" id="cfg-auto-update" onchange="saveConfig()"><span class="toggle-slider"></span></label>
@@ -887,29 +1012,29 @@ tr:hover td { background:#f8fafc; }
           <div class="settings-body">
             <div class="setting-row">
               <div>
-                <div class="setting-label">Desktop Alerts</div>
+                <div class="setting-label">Desktop Alerts <span class="tip-icon" data-tip="Show Windows notification pop-ups (bottom-right corner) whenever a security event is detected. Works even when the dashboard is closed — as long as FlowGuard is running in the system tray.">?</span></div>
                 <div class="setting-sublabel">Windows notification pop-ups</div>
               </div>
               <label class="toggle"><input type="checkbox" id="notif-desktop" onchange="saveNotifications()"><span class="toggle-slider"></span></label>
             </div>
             <div class="setting-row">
               <div>
-                <div class="setting-label">Telegram Alerts</div>
+                <div class="setting-label">Telegram Alerts <span class="tip-icon" data-tip="Send real-time alerts to your Telegram chat. You'll receive a message on your phone within 2 seconds of any security event. Requires a Bot Token and Chat ID (see fields below).">?</span></div>
                 <div class="setting-sublabel">Send to Telegram bot</div>
               </div>
               <label class="toggle"><input type="checkbox" id="notif-telegram" onchange="saveNotifications()"><span class="toggle-slider"></span></label>
             </div>
             <div>
-              <div class="setting-label" style="margin-bottom:6px">Telegram Token</div>
+              <div class="setting-label" style="margin-bottom:6px">Telegram Token <span class="tip-icon" data-tip="The API token for your Telegram bot. Get it from @BotFather on Telegram: send /newbot, follow the steps, and copy the token it gives you (format: 123456789:ABC...).">?</span></div>
               <input class="form-input" type="text" id="notif-telegram-token" placeholder="Bot token..." onchange="saveNotifications()">
             </div>
             <div>
-              <div class="setting-label" style="margin-bottom:6px">Chat ID</div>
+              <div class="setting-label" style="margin-bottom:6px">Chat ID <span class="tip-icon" data-tip="Your personal Telegram Chat ID — the number that identifies where to send messages. To find it: open a chat with @userinfobot on Telegram and it will reply with your ID.">?</span></div>
               <input class="form-input" type="text" id="notif-chat-id" placeholder="Chat ID..." onchange="saveNotifications()">
             </div>
             <div class="setting-row">
               <div>
-                <div class="setting-label">Min Alert Level</div>
+                <div class="setting-label">Min Alert Level <span class="tip-icon" data-tip="The minimum severity level that triggers a notification. 'Critical only' = fewest alerts. 'High+' = Critical + High events. 'Medium+' = all events including medium risk. Start with High+ to avoid noise.">?</span></div>
               </div>
               <select class="form-select" id="notif-min-level" style="width:130px" onchange="saveNotifications()">
                 <option value="CRITICAL">Critical only</option>
@@ -925,7 +1050,7 @@ tr:hover td { background:#f8fafc; }
           <div class="panel-header">
             <div>
               <div class="panel-title">&#x1F517; Authorized Git Remotes</div>
-              <div class="panel-sub">Allowed remote repositories</div>
+              <div class="panel-sub">Allowed remote repositories — <span class="tip-icon" style="display:inline-flex;vertical-align:middle" data-tip="Git remotes added here are considered 'trusted'. Any git push to an unlisted remote (e.g. a hacker's server) will trigger a HIGH alert. Add your GitHub/GitLab/Bitbucket repo URLs here.">?</span></div>
             </div>
             <button class="btn btn-outline btn-sm" onclick="loadGitRemoteSettings()">&#x21BB;</button>
           </div>
@@ -945,7 +1070,7 @@ tr:hover td { background:#f8fafc; }
           <div class="settings-body">
             <div class="setting-row">
               <div>
-                <div class="setting-label">Current Version</div>
+                <div class="setting-label">Current Version <span class="tip-icon" data-tip="The version of FlowGuard's detection rule engine currently installed. Click 'Check' to see if a newer version with improved rules is available.">?</span></div>
                 <div class="setting-sublabel" id="update-current-version">Loading...</div>
               </div>
               <button class="btn btn-outline btn-sm" onclick="checkUpdates()">Check</button>
@@ -954,6 +1079,46 @@ tr:hover td { background:#f8fafc; }
               <div style="font-size:12px;font-weight:700;color:#16a34a">Update Available</div>
               <div style="font-size:11px;color:#64748b;margin-top:2px" id="update-version-label"></div>
               <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="applyUpdate()">Apply Update</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+        <!-- FSWatcher Exclusions + Quiet Hours -->
+        <div class="settings-group" style="grid-column:1/-1;">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">🚫 FSWatcher Exclusions &amp; Quiet Hours</div>
+              <div class="panel-sub">Control what FSWatcher monitors and when Telegram alerts are sent</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span id="quiet-hours-status" style="font-size:11px;font-weight:700;"></span>
+              <button class="btn btn-outline btn-sm" onclick="loadFswExclusions();loadQuietHours()">↺ Refresh</button>
+            </div>
+          </div>
+          <!-- Quiet Hours -->
+          <div style="padding:14px 18px;border-bottom:1px solid #f1f5f9;background:#fafafa;">
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;">🌙 Quiet Hours — suppress Telegram alerts at night (events still logged)</div>
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+              <label class="toggle" title="Enable quiet hours"><input type="checkbox" id="qh-enabled" onchange="saveQuietHours()"><span class="toggle-slider"></span></label>
+              <span style="font-size:12px;color:#374151;">From</span>
+              <select class="form-select" id="qh-from" style="width:90px;" onchange="saveQuietHours()"></select>
+              <span style="font-size:12px;color:#374151;">To</span>
+              <select class="form-select" id="qh-to" style="width:90px;" onchange="saveQuietHours()"></select>
+              <span style="font-size:11px;color:#94a3b8;">Default: 23:00 – 07:00</span>
+            </div>
+          </div>
+          <div class="settings-body">
+            <div style="display:flex;gap:8px;margin-bottom:4px;">
+              <input class="form-input" type="text" id="fsw-excl-input" placeholder="e.g. backups, myapp, .next" style="flex:1;">
+              <button class="btn btn-accent btn-sm" onclick="addFswExclusion()">+ Add</button>
+            </div>
+            <div style="font-size:11px;color:#94a3b8;margin-bottom:10px;">
+              Enter a folder name, file name, or path segment. Any file whose path contains this string will be ignored by FSWatcher.
+            </div>
+            <div id="fsw-excl-list" style="display:flex;flex-wrap:wrap;gap:8px;">
+              <div class="empty"><div class="spinner"></div>&nbsp; Loading...</div>
             </div>
           </div>
         </div>
@@ -1275,7 +1440,9 @@ async function dashboardRefresh() {
 
 async function loadEvents() {
   try {
-    var data = await fetchJSON('/events?limit=200');
+    var limitSel = document.getElementById('filter-limit');
+    var limit = limitSel ? limitSel.value : 200;
+    var data = await fetchJSON('/events?limit=' + limit);
     allEvents = data.events || data || [];
     document.getElementById('events-count-label').textContent = allEvents.length + ' events loaded';
 
@@ -1351,17 +1518,32 @@ function renderEventsTable() {
     return;
   }
 
-  tbody.innerHTML = filtered.slice(0, 200).map(function(ev) {
+  tbody.innerHTML = filtered.map(function(ev, i) {
     var sid    = (ev.session_id || ev.sessionId || ev.session || '').toString().substring(0, 8);
     var reason = ev.reason || ev.message || ev.description || '\u2014';
+    var isLong = reason.length > 100;
+    var preview = isLong ? esc(reason.slice(0, 100)) + '<span id="ev-dots-' + i + '">… <button onclick="evExpand(' + i + ')" style="border:none;background:none;color:#0ea5e9;cursor:pointer;font-size:11px;padding:0;">show more ▼</button></span><span id="ev-full-' + i + '" style="display:none">' + esc(reason.slice(100)) + ' <button onclick="evCollapse(' + i + ')" style="border:none;background:none;color:#94a3b8;cursor:pointer;font-size:11px;padding:0;">▲</button></span>' : esc(reason);
     return '<tr>' +
-      '<td style="white-space:nowrap">' + fmtDT(ev.ts || ev.timestamp || ev.time) + '</td>' +
+      '<td style="white-space:nowrap;color:#64748b;font-size:11px;">' + fmtDT(ev.ts || ev.timestamp || ev.time) + '</td>' +
       '<td>' + lvlChip(ev.level) + '</td>' +
       '<td><span class="tool-chip">' + esc(ev.tool_name || ev.tool || ev.type || '\u2014') + '</span></td>' +
-      '<td title="' + esc(reason) + '">' + esc(trunc(reason, 80)) + '</td>' +
+      '<td style="line-height:1.5;word-break:break-word;">' + preview + '</td>' +
       '<td><span class="mono">' + (esc(sid) || '\u2014') + '</span></td>' +
       '</tr>';
   }).join('');
+}
+
+function evExpand(i) {
+  var dots = document.getElementById('ev-dots-' + i);
+  var full = document.getElementById('ev-full-' + i);
+  if (dots) dots.style.display = 'none';
+  if (full) full.style.display = 'inline';
+}
+function evCollapse(i) {
+  var dots = document.getElementById('ev-dots-' + i);
+  var full = document.getElementById('ev-full-' + i);
+  if (dots) dots.style.display = 'inline';
+  if (full) full.style.display = 'none';
 }
 
 // ════════ SESSIONS ════════
@@ -1450,157 +1632,314 @@ async function toggleSession(idx) {
 // ════════ WEB ACCESS ════════
 
 async function loadWebAccess() {
-  await Promise.all([loadDomains(), loadWebHistory()]);
+  await Promise.all([loadDomains(), loadDomainHistory()]);
 }
 
 async function loadDomains() {
-  var container = document.getElementById('authorized-domains');
   try {
-    var data = await fetchJSON('/domains');
+    var r = await fetch(API + '/domains');
+    var d = await r.json();
+    var list       = d.allowed_domains    || [];
+    var discovered = d.discovered_domains || [];
 
-    // API מחזיר: { allowed_domains: [...strings], discovered_domains: [...objects] }
-    var allowed    = data.allowed_domains || data.domains || [];
-    var discovered = data.discovered_domains || [];
-
-    if (!allowed.length && !discovered.length) {
-      container.innerHTML = '<div class="empty"><div class="empty-icon">\uD83C\uDF10</div>No authorized domains</div>';
-      return;
-    }
-
-    var html = '';
-
-    // Authorized (whitelist)
-    if (allowed.length) {
-      html += allowed.map(function(d) {
-        var name = typeof d === 'string' ? d : (d.domain || d.name || '');
-        return '<div class="domain-row">' +
-          '<span class="domain-name">' + esc(name) + '</span>' +
-          '<span class="tag tag-green">AUTHORIZED</span>' +
-          '<div class="domain-actions">' +
-            '<button class="btn btn-danger btn-sm" onclick="domainAction(\'' + esc(name) + '\',\'block\')">Block</button>' +
-          '</div>' +
+    // ── Allowed domains ──
+    if (!list.length) {
+      document.getElementById('domains-list').innerHTML =
+        '<div style="color:#94a3b8;padding:8px;text-align:center;font-size:11px;">No authorized domains</div>';
+    } else {
+      var repMap = {};
+      await Promise.all(list.map(async function(dom) {
+        try {
+          var r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(dom));
+          if (r2.ok) repMap[dom] = await r2.json();
+        } catch(_) {}
+      }));
+      document.getElementById('domains-list').innerHTML = list.map(function(dom) {
+        var rep = repMap[dom];
+        var repBadge = rep
+          ? '<span style="background:' + rep.color + '22;color:' + rep.color + ';border:1px solid ' + rep.color + '55;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;flex-shrink:0;cursor:help" title="' + (rep.reasons||[]).join('\n') + '">' + rep.score + ' ' + rep.label + '</span>'
+          : '';
+        return '<div style="display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;">' +
+          '<span style="font-size:13px;">🌐</span>' +
+          '<span style="flex:1;font-size:11px;color:#374151;">' + esc(dom) + '</span>' +
+          repBadge +
+          '<button onclick="removeDomain(\'' + esc(dom) + '\')" style="border:1px solid #ef4444;background:transparent;color:#ef4444;border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✕</button>' +
           '</div>';
       }).join('');
     }
 
-    // Discovered (from events)
-    if (discovered.length) {
-      html += '<div style="margin:12px 0 6px;font-size:11px;font-weight:700;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;">Discovered Domains</div>';
-      html += discovered.map(function(d) {
-        var name  = d.domain || d.name || '';
-        var label = d.label || 'OK';
-        var cls   = label === 'TRUSTED' ? 'tag-green' : label === 'SUSPICIOUS' ? 'tag-red' : 'tag-orange';
-        return '<div class="domain-row">' +
-          '<span class="domain-name">' + esc(name) + '</span>' +
-          '<span class="tag ' + cls + '">' + label + '</span>' +
-          '<div class="domain-actions">' +
-            '<button class="btn btn-outline btn-sm" onclick="domainAction(\'' + esc(name) + '\',\'approve\')">Authorize</button>' +
-            '<button class="btn btn-danger btn-sm"  onclick="domainAction(\'' + esc(name) + '\',\'block\')">Block</button>' +
-          '</div>' +
+    // ── Auto-discovered domains ──
+    document.getElementById('discovered-count').textContent = discovered.length ? '(' + discovered.length + ')' : '';
+    if (!discovered.length) {
+      document.getElementById('discovered-list').innerHTML =
+        '<div style="color:#94a3b8;padding:8px;text-align:center;font-size:11px;">Waiting for searches...</div>';
+    } else {
+      var sorted = discovered.slice().sort(function(a,b){ return a.score - b.score; });
+      document.getElementById('discovered-list').innerHTML = sorted.map(function(item) {
+        var c = item.color || '#f59e0b';
+        return '<div style="display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid ' + c + '33;border-radius:6px;padding:5px 8px;">' +
+          '<span style="font-size:13px;">🔍</span>' +
+          '<span style="flex:1;font-size:11px;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(item.domain) + '</span>' +
+          '<span style="background:' + c + '22;color:' + c + ';border:1px solid ' + c + '55;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">' + item.score + ' ' + item.label + '</span>' +
+          '<button onclick="approveDomain(\'' + esc(item.domain) + '\')" title="Add to allowlist" style="border:1px solid #10b98166;background:transparent;color:#10b981;border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✓</button>' +
+          '<button onclick="removeDomain(\'' + esc(item.domain) + '\')" title="Block" style="border:1px solid #ef4444;background:transparent;color:#ef4444;border-radius:4px;padding:1px 6px;font-size:11px;cursor:pointer;">✕</button>' +
           '</div>';
       }).join('');
     }
-
-    container.innerHTML = html;
   } catch(e) {
-    container.innerHTML = '<div class="empty"><div class="empty-icon">\u26A0\uFE0F</div>Cannot reach API</div>';
+    document.getElementById('domains-list').innerHTML = '<div style="color:#ef4444">Error: ' + e.message + '</div>';
   }
 }
 
-async function domainAction(domain, action) {
+async function approveDomain(domain) {
   try {
-    await fetch(API + '/domains/' + action, {
+    await fetch(API + '/domains/approve/' + encodeURIComponent(domain), { method: 'POST' });
+    loadDomains();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function addDomain() {
+  var inp = document.getElementById('domain-add-input');
+  var domain = (inp.value || '').trim();
+  if (!domain) return;
+  try {
+    await fetch(API + '/domains', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ domain: domain })
     });
-    toast('Domain ' + action + 'd: ' + domain, 'success');
+    inp.value = '';
     loadDomains();
-  } catch(e) { toast('Action failed', 'error'); }
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
-function showAddDomainDialog() {
-  var d = prompt('Enter domain to authorize (e.g. github.com):');
-  if (d && d.trim()) domainAction(d.trim(), 'approve');
-}
-
-async function loadWebHistory() {
-  var tbody = document.getElementById('web-history-body');
+async function removeDomain(domain) {
   try {
-    var data   = await fetchJSON('/events?limit=100');
-    var events = (data.events || data || []).filter(function(ev) {
-      var t = (ev.tool_name || ev.tool || ev.type || '').toLowerCase();
-      return t.indexOf('web') !== -1 || t.indexOf('fetch') !== -1 ||
-             t.indexOf('search') !== -1 || t.indexOf('http') !== -1;
-    });
+    await fetch(API + '/domains/' + encodeURIComponent(domain), { method: 'DELETE' });
+    loadDomains();
+  } catch(e) { alert('Error: ' + e.message); }
+}
 
-    if (!events.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">No web activity</td></tr>';
+async function loadDomainHistory() {
+  try {
+    var r = await fetch(API + '/domains/history');
+    var d = await r.json();
+    var hist = d.history || [];
+    if (!hist.length) {
+      document.getElementById('domains-history').innerHTML =
+        '<div style="color:#94a3b8;padding:12px;text-align:center;">No WebFetch history</div>';
       return;
     }
-
-    tbody.innerHTML = events.slice(0, 50).map(function(ev) {
-      var tool = ev.tool_name || ev.tool || ev.type || '\u2014';
-      var type = tool.toLowerCase().indexOf('search') !== -1 ? 'WebSearch' : 'WebFetch';
-      var desc = ev.reason || ev.message || ev.description || '\u2014';
-      return '<tr>' +
-        '<td>' + fmtDT(ev.ts || ev.timestamp || ev.time) + '</td>' +
-        '<td><span class="tool-chip">' + type + '</span></td>' +
-        '<td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(desc) + '">' + esc(trunc(desc, 60)) + '</td>' +
-        '<td>' + lvlBadge(ev.level) + '</td>' +
-        '<td><span class="tag tag-green">OK</span></td>' +
-        '</tr>';
+    var hosts = [...new Set(hist.map(function(h) {
+      try { return new URL(h.url).hostname; } catch(_) { return h.url; }
+    }))];
+    var repMap = {};
+    await Promise.all(hosts.map(async function(host) {
+      try {
+        var r2 = await fetch(API + '/domains/reputation/' + encodeURIComponent(host));
+        if (r2.ok) repMap[host] = await r2.json();
+      } catch(_) {}
+    }));
+    document.getElementById('domains-history').innerHTML = hist.map(function(h) {
+      var isSearch = h.tool === 'WebSearch';
+      var display = '', host = '';
+      if (isSearch) {
+        display = '🔍 ' + (h.query || (h.reason||'').replace('WebSearch: ','').replace(/"/g,''));
+      } else {
+        try { host = new URL(h.url).hostname; } catch(_) { host = h.url; }
+        display = host;
+      }
+      var lc = h.level === 'CRITICAL' ? '#ef4444' : h.level === 'HIGH' ? '#f97316' : h.level === 'INFO' ? '#94a3b8' : '#10b981';
+      var ts = new Date(h.ts).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      var rep = !isSearch && repMap[host];
+      var repBadge = rep
+        ? '<span style="background:' + rep.color + '22;color:' + rep.color + ';border:1px solid ' + rep.color + '55;border-radius:3px;padding:1px 6px;font-size:9px;font-weight:700;flex-shrink:0;cursor:help" title="' + (rep.reasons||[]).join(' | ') + '">' + rep.score + ' ' + rep.label + '</span>'
+        : '';
+      var toolBadge = isSearch
+        ? '<span style="background:#6366f122;color:#818cf8;border:1px solid #6366f144;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">SEARCH</span>'
+        : '<span style="background:' + lc + '22;color:' + lc + ';border:1px solid ' + lc + '44;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0">' + h.level + '</span>';
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;background:#f8fafc;border:1px solid #e2e8f0;">' +
+        toolBadge +
+        '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#374151;font-size:11px;">' + esc(display) + '</span>' +
+        repBadge +
+        '<span style="color:#94a3b8;font-size:10px;flex-shrink:0">' + ts + '</span>' +
+        '</div>';
     }).join('');
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+    document.getElementById('domains-history').innerHTML = '<div style="color:#ef4444">Error: ' + e.message + '</div>';
   }
 }
 
 // ════════ FILE AUDIT ════════
 
+var BUILD_DIRS = ['.next', 'node_modules', 'dist', 'build', 'chunks', '.nuxt', 'out', '__pycache__', '.cache'];
+
+function isBuildFile(path) {
+  var p = (path || '').replace(/\\/g, '/').toLowerCase();
+  return BUILD_DIRS.some(function(d) { return p.indexOf('/' + d + '/') !== -1 || p.indexOf('/' + d) === p.length - d.length - 1; });
+}
+
+function shortPath(fullPath) {
+  // Return last 2 meaningful segments as folder context
+  var parts = (fullPath || '').replace(/\\/g, '/').split('/').filter(Boolean);
+  if (parts.length <= 2) return parts.join('/');
+  return '\u2026/' + parts.slice(-3, -1).join('/');
+}
+
+var auditAllFiles = [];
+
 async function loadAudit() {
   var tbody = document.getElementById('audit-table-body');
   try {
     var data  = await fetchJSON('/audit');
-    var files = data.files || data.results || data || [];
+    auditAllFiles = data.files || data.results || data || [];
     if (data.lastScan) {
       document.getElementById('audit-last-scan').textContent = 'Last scan: ' + fmtDT(data.lastScan);
     }
-    if (!files.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">No audit data \u2014 run a scan</td></tr>';
-      return;
-    }
-    tbody.innerHTML = files.map(function(f) {
-      var risk     = (f.risk_label || f.status || 'OK').toUpperCase();
-      var tagClass = risk === 'CRITICAL' ? 'tag-red' : risk === 'HIGH' ? 'tag-orange' : risk === 'MEDIUM' ? 'tag-orange' : 'tag-green';
-      var findings = (f.findings || []).length;
-      var findingsHtml = findings > 0
-        ? '<span style="color:#ea580c;font-weight:700;">' + findings + ' issue' + (findings>1?'s':'') + '</span>'
-        : '<span style="color:#16a34a;">Clean</span>';
-      return '<tr>' +
-        '<td style="font-family:monospace;font-size:11px;max-width:300px;overflow:hidden;text-overflow:ellipsis" title="' + esc(f.path||'') + '">' + esc((f.path||'').split(/[/\\]/).pop() || '—') + '</td>' +
-        '<td><span class="tag ' + tagClass + '">' + risk + '</span></td>' +
-        '<td>' + findingsHtml + '</td>' +
-        '<td>' + fmtBytes(f.size) + '</td>' +
-        '<td>' + fmtDT(f.scanned_at || f.modified) + '</td>' +
-        '</tr>';
-    }).join('');
+    renderAuditTable();
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">Cannot reach API</td></tr>';
+  }
+}
+
+function renderAuditTable() {
+  var tbody = document.getElementById('audit-table-body');
+  var hideBuild = document.getElementById('audit-hide-build');
+  var doHide = hideBuild && hideBuild.checked;
+
+  if (!auditAllFiles.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">No audit data \u2014 run a scan</td></tr>';
+    return;
+  }
+
+  var filtered = doHide ? auditAllFiles.filter(function(f){ return !isBuildFile(f.path||''); }) : auditAllFiles;
+  var hidden   = auditAllFiles.length - filtered.length;
+  var countEl  = document.getElementById('audit-filter-count');
+  if (countEl) countEl.textContent = hidden ? hidden + ' build/generated files hidden' : '';
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">All files are build/generated files. Uncheck the filter to see them.</td></tr>';
+    return;
+  }
+
+  var rows = '';
+  filtered.forEach(function(f, i) {
+    var fullPath = f.path || '';
+    var fileName = fullPath.split(/[/\\]/).pop() || '—';
+    var folder   = shortPath(fullPath);
+    var risk     = (f.risk_label || f.status || 'OK').toUpperCase();
+    var tagClass = risk === 'CRITICAL' ? 'tag-red' : risk === 'HIGH' ? 'tag-orange' : risk === 'MEDIUM' ? 'tag-orange' : 'tag-green';
+    var findings = f.findings || [];
+    var hasFindings = findings.length > 0;
+    var issueColor  = risk === 'CRITICAL' ? '#ef4444' : risk === 'HIGH' ? '#f97316' : '#f59e0b';
+    var issueHtml   = hasFindings
+      ? '<span style="color:' + issueColor + ';font-weight:700;cursor:pointer;">' + findings.length + ' issue' + (findings.length>1?'s':'') + '</span>'
+      : '<span style="color:#16a34a;">✓ Clean</span>';
+    var toggleBtn = hasFindings
+      ? '<button class="audit-toggle" onclick="toggleAuditRow(\'a' + i + '\')" id="audit-toggle-a' + i + '">▶</button>'
+      : '';
+
+    rows += '<tr style="cursor:' + (hasFindings?'pointer':'default') + ';" onclick="' + (hasFindings?'toggleAuditRow(\'a'+i+'\')':'') + '">' +
+      '<td style="width:32px;text-align:center;">' + toggleBtn + '</td>' +
+      '<td style="font-family:monospace;font-size:12px;font-weight:600;color:#1e293b;" title="' + esc(fullPath) + '">' + esc(fileName) + '</td>' +
+      '<td style="font-size:11px;color:#94a3b8;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + esc(fullPath) + '">' + esc(folder) + '</td>' +
+      '<td><span class="tag ' + tagClass + '">' + risk + '</span></td>' +
+      '<td>' + issueHtml + '</td>' +
+      '<td style="color:#94a3b8;font-size:11px;">' + fmtBytes(f.size) + '</td>' +
+      '</tr>';
+
+    if (hasFindings) {
+      var findingRows = findings.map(function(fi) {
+        if (typeof fi === 'string') { try { fi = JSON.parse(fi); } catch(_) {} }
+        var sev     = typeof fi === 'object' ? (fi.level || fi.severity || '').toUpperCase() : '';
+        var reason  = typeof fi === 'object' ? (fi.reason || fi.description || fi.message || fi.rule || fi.type || '') : String(fi);
+        var explain = typeof fi === 'object' ? (fi.explain || '') : '';
+        var line    = typeof fi === 'object' ? (fi.line || fi.line_number || null) : null;
+        var snippet = typeof fi === 'object' ? (fi.snippet || '') : '';
+        var sevColor = sev === 'CRITICAL' ? '#ef4444' : sev === 'HIGH' ? '#f97316' : sev === 'MEDIUM' ? '#f59e0b' : '#64748b';
+        var sevBadge = sev ? '<span style="background:' + sevColor + '22;color:' + sevColor + ';border:1px solid ' + sevColor + '44;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;flex-shrink:0;">' + sev + '</span>' : '';
+        var lineHtml = line ? '<span style="background:#f1f5f9;color:#64748b;border-radius:3px;padding:1px 6px;font-size:9px;font-weight:600;flex-shrink:0;">Line ' + line + '</span>' : '';
+        var icon = sev === 'CRITICAL' ? '🔴' : sev === 'HIGH' ? '🟠' : sev === 'MEDIUM' ? '🟡' : '⚪';
+        var explainHtml = explain
+          ? '<div style="margin-top:3px;margin-left:22px;font-size:11px;color:#64748b;line-height:1.5;">' + esc(explain) + '</div>'
+          : '';
+        var snippetHtml = snippet
+          ? '<div style="margin-top:4px;margin-left:22px;background:#1e293b;color:#e2e8f0;font-family:monospace;font-size:11px;padding:6px 10px;border-radius:5px;white-space:pre;overflow-x:auto;border-left:3px solid ' + sevColor + ';">' + esc(snippet) + '</div>'
+          : '';
+        return '<div class="audit-finding" style="flex-direction:column;align-items:flex-start;">' +
+          '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
+          '<span class="audit-finding-icon">' + icon + '</span>' + sevBadge + lineHtml +
+          '<span style="color:#374151;font-weight:600;">' + esc(reason || 'Unknown issue') + '</span>' +
+          '</div>' +
+          explainHtml +
+          snippetHtml +
+          '</div>';
+      }).join('');
+      rows += '<tr class="audit-detail-row" id="audit-detail-a' + i + '" style="display:none;">' +
+        '<td colspan="6"><div class="audit-detail-inner">' + findingRows + '</div></td>' +
+        '</tr>';
+    }
+  });
+  tbody.innerHTML = rows;
+}
+
+function toggleAuditRow(id) {
+  var detail = document.getElementById('audit-detail-' + id);
+  var toggle = document.getElementById('audit-toggle-' + id);
+  if (!detail) return;
+  var open = detail.style.display !== 'none';
+  detail.style.display = open ? 'none' : 'table-row';
+  if (toggle) toggle.textContent = open ? '▶' : '▼';
+}
+
+var auditScanMode = 'full';
+
+function setScanMode(mode) {
+  auditScanMode = mode;
+  var full = document.getElementById('scan-mode-full');
+  var inc  = document.getElementById('scan-mode-inc');
+  if (!full || !inc) return;
+  if (mode === 'full') {
+    full.style.background = '#0ea5e9'; full.style.color = '#fff'; full.style.fontWeight = '700';
+    inc.style.background  = 'transparent'; inc.style.color = '#94a3b8'; inc.style.fontWeight = 'normal';
+  } else {
+    inc.style.background  = '#f59e0b'; inc.style.color = '#000'; inc.style.fontWeight = '700';
+    full.style.background = 'transparent'; full.style.color = '#94a3b8'; full.style.fontWeight = 'normal';
+  }
+}
+
+function browseAuditPath() {
+  document.getElementById('audit-folder-picker').click();
+}
+
+function auditFolderSelected(input) {
+  if (input.files && input.files.length > 0) {
+    var path = input.files[0].webkitRelativePath.split('/')[0];
+    var inp = document.getElementById('audit-path-input');
+    if (inp) inp.value = path;
   }
 }
 
 async function runAuditScan() {
-  var btn = document.getElementById('audit-scan-btn');
-  btn.innerHTML = '<span class="spinner"></span>&nbsp; Scanning...';
+  var btn       = document.getElementById('audit-scan-btn');
+  var scanPath  = (document.getElementById('audit-path-input').value || '').trim() || 'C:/Claude-Repo';
+  var incremental = auditScanMode === 'incremental';
+  btn.innerHTML = '<span class="spinner"></span>&nbsp;' + (incremental ? 'Scanning changes...' : 'Scanning...');
   btn.disabled = true;
   try {
-    await fetch(API + '/audit/scan', { method: 'POST' });
-    await new Promise(function(res) { setTimeout(res, 1500); });
+    var r = await fetch(API + '/audit/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scan_path: scanPath, incremental: incremental })
+    });
+    var d = await r.json();
+    if (d.summary && d.summary.scanned_at) {
+      document.getElementById('audit-last-scan').textContent = 'Last scan: ' + fmtDT(d.summary.scanned_at);
+    }
     await loadAudit();
-    toast('Scan complete', 'success');
+    toast((incremental ? '⚡ Incremental' : '🔍 Full') + ' scan complete', 'success');
   } catch(e) { toast('Scan failed', 'error'); }
-  finally { btn.innerHTML = '\u25BA Scan Now'; btn.disabled = false; }
+  finally { btn.innerHTML = '\u25BA Scan now'; btn.disabled = false; }
 }
 
 // ════════ SKILLS ════════
@@ -1718,7 +2057,7 @@ async function loadGitEvents() {
 // ════════ SETTINGS ════════
 
 async function loadSettings() {
-  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus()]);
+  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours()]);
 }
 
 async function loadConfig() {
@@ -1781,6 +2120,103 @@ async function saveNotifications() {
     });
     toast(r.ok ? 'Notifications saved' : 'Save failed', r.ok ? 'success' : 'error');
   } catch(e) { toast('Cannot save \u2014 API offline', 'error'); }
+}
+
+function buildHourOptions(selectId, selectedVal) {
+  var sel = document.getElementById(selectId);
+  if (!sel) return;
+  sel.innerHTML = Array.from({length:24}, function(_,i) {
+    var label = (i < 10 ? '0' : '') + i + ':00';
+    return '<option value="' + i + '"' + (i === selectedVal ? ' selected' : '') + '>' + label + '</option>';
+  }).join('');
+}
+
+async function loadQuietHours() {
+  // Always populate dropdowns first with defaults
+  buildHourOptions('qh-from', 23);
+  buildHourOptions('qh-to',   7);
+  var en = document.getElementById('qh-enabled');
+  if (en) en.checked = true;
+  try {
+    var d = await fetchJSON('/fsw/quiet-hours');
+    var fromVal = (d.from !== undefined) ? parseInt(d.from) : 23;
+    var toVal   = (d.to   !== undefined) ? parseInt(d.to)   : 7;
+    buildHourOptions('qh-from', fromVal);
+    buildHourOptions('qh-to',   toVal);
+    if (en) en.checked = (d.enabled !== false);
+    var stat = document.getElementById('quiet-hours-status');
+    if (stat) {
+      stat.textContent = (d.enabled !== false) ? (d.active ? '🌙 Quiet now — Telegram paused' : '🔔 Alerts active') : '🔔 Quiet hours disabled';
+      stat.style.color = d.active ? '#8b5cf6' : '#10b981';
+    }
+  } catch(e) {}
+}
+
+async function saveQuietHours() {
+  var enabled = document.getElementById('qh-enabled').checked;
+  var from    = parseInt(document.getElementById('qh-from').value);
+  var to      = parseInt(document.getElementById('qh-to').value);
+  try {
+    var r = await fetch(API + '/fsw/quiet-hours', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled, from, to })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    await loadQuietHours();
+    toast('Quiet hours saved', 'success');
+  } catch(e) { toast('Error saving quiet hours: ' + e.message, 'error'); }
+}
+
+async function loadFswExclusions() {
+  var list = document.getElementById('fsw-excl-list');
+  try {
+    var data = await fetchJSON('/fsw/status');
+    var excl = data.exclude || [];
+    if (!excl.length) {
+      list.innerHTML = '<span style="color:#94a3b8;font-size:12px;">No exclusions configured</span>';
+      return;
+    }
+    list.innerHTML = excl.map(function(e) {
+      var isBuiltin = ['node_modules','.git','ccsm.db','hook.log','.ccsm-disable','.ccsm-silent'].includes(e);
+      return '<div style="display:flex;align-items:center;gap:6px;background:' + (isBuiltin?'#f1f5f9':'#eff6ff') + ';border:1px solid ' + (isBuiltin?'#e2e8f0':'#bfdbfe') + ';border-radius:6px;padding:4px 10px;">' +
+        '<span style="font-family:monospace;font-size:12px;color:#374151;">' + esc(e) + '</span>' +
+        (isBuiltin
+          ? '<span style="font-size:9px;color:#94a3b8;font-weight:700;">BUILT-IN</span>'
+          : '<button onclick="removeFswExclusion(\'' + esc(e) + '\')" style="border:none;background:none;color:#94a3b8;cursor:pointer;font-size:13px;padding:0;line-height:1;" title="Remove">✕</button>') +
+        '</div>';
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<span style="color:#ef4444;font-size:12px;">Cannot reach API</span>';
+  }
+}
+
+async function addFswExclusion() {
+  var inp = document.getElementById('fsw-excl-input');
+  var entry = (inp.value || '').trim();
+  if (!entry) return;
+  try {
+    await fetch(API + '/fsw/exclude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ entry })
+    });
+    inp.value = '';
+    toast('Exclusion added: ' + entry, 'success');
+    loadFswExclusions();
+  } catch(e) { toast('Error adding exclusion', 'error'); }
+}
+
+async function removeFswExclusion(entry) {
+  try {
+    await fetch(API + '/fsw/exclude', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ entry })
+    });
+    toast('Exclusion removed: ' + entry, 'success');
+    loadFswExclusions();
+  } catch(e) { toast('Error removing exclusion', 'error'); }
 }
 
 async function loadGitRemoteSettings() {
@@ -1857,6 +2293,269 @@ async function applyUpdate() {
 // ════════ AUTO-REFRESH ════════
 dashboardRefresh();
 setInterval(dashboardRefresh, 5000);
+
+// ════════ HELP PANEL ════════
+
+var HELP_CONTENT = {
+  dashboard: {
+    icon: '📊',
+    title: 'Dashboard — Security Overview',
+    sections: [
+      {
+        title: 'KPI Cards',
+        items: [
+          { icon: '🔴', text: '<strong>Critical</strong> — פעולות שנחסמו או חשודות מאוד. דורשות תשומת לב מיידית.' },
+          { icon: '🟠', text: '<strong>High</strong> — פעולות בסיכון גבוה שעברו אבל תועדו.' },
+          { icon: '🟢', text: '<strong>Sessions</strong> — מספר שיחות Claude Code שנרשמו.' },
+          { icon: '📈', text: '<strong>Total Events</strong> — כל האירועים שנאספו מאז ההתקנה.' }
+        ]
+      },
+      {
+        title: 'Security Posture',
+        items: [
+          { icon: '🛡️', text: '<strong>Hardening Level</strong> — רמת האכיפה הנוכחית (SOFT/MEDIUM/HARD).' },
+          { icon: '🔗', text: '<strong>Integrity</strong> — שרשרת ביקורת קריפטוגרפית. 100% = לא טויל.' },
+          { icon: '📋', text: '<strong>Recent Events</strong> — 5 האירועים האחרונים בזמן אמת.' }
+        ]
+      }
+    ],
+    tip: 'הדשבורד מתרענן כל 5 שניות אוטומטית.'
+  },
+  events: {
+    icon: '📋',
+    title: 'Events — יומן אירועים',
+    sections: [
+      {
+        title: 'מה זה Event?',
+        items: [
+          { icon: '🪝', text: '<strong>PreToolUse</strong> — Claude ניסה להשתמש בכלי (Bash, Write, WebFetch...). FlowGuard בדק ואישר/חסם.' },
+          { icon: '✅', text: '<strong>PostToolUse</strong> — הכלי פעל. FlowGuard בדק את הפלט.' },
+          { icon: '⚙️', text: '<strong>ProcessMonitor</strong> — תהליך חדש נפתח במחשב (cmd, node, powershell...).' }
+        ]
+      },
+      {
+        title: 'רמות סיכון',
+        items: [
+          { icon: '🔴', text: '<strong>CRITICAL</strong> — API key, סיסמה, פקודה מסוכנת. דורש בדיקה.' },
+          { icon: '🟠', text: '<strong>HIGH</strong> — גישה לאתר לא מורשה, git push לשרת לא ידוע.' },
+          { icon: '🟡', text: '<strong>MEDIUM</strong> — URL לא מאובטח, pattern חשוד.' },
+          { icon: '🔵', text: '<strong>INFO</strong> — תיעוד בלבד, לא סיכון.' }
+        ]
+      }
+    ],
+    tip: 'השתמש בפילטרים למעלה לסינון לפי רמה, כלי, או חיפוש חופשי.'
+  },
+  sessions: {
+    icon: '📼',
+    title: 'Sessions — שיחות Claude Code',
+    sections: [
+      {
+        title: 'מה זה Session?',
+        items: [
+          { icon: '💬', text: '<strong>Session ID</strong> — מזהה ייחודי של שיחה אחת עם Claude Code. כל הרצה נפרדת של claude מקבלת ID חדש.' },
+          { icon: '🔴', text: '<strong>CRIT/HIGH</strong> — Session שהכיל אירוע בסיכון גבוה. כדאי לבדוק.' },
+          { icon: '⚙️', text: '<strong>SYSTEM/proc</strong> — אירועי מערכת פנימיים (Process Monitor, Rules Update).' }
+        ]
+      },
+      {
+        title: 'שימוש',
+        items: [
+          { icon: '▼', text: '<strong>לחץ על session</strong> — רואים 30 האירועים האחרונים של אותה שיחה.' },
+          { icon: '🔍', text: '<strong>Session ID</strong> — ניתן לחפש event ספציפי בטאב Events לפי ID זה.' }
+        ]
+      }
+    ],
+    tip: 'session "proc" מכיל אלפי אירועי Process Monitor — נורמלי לחלוטין.'
+  },
+  webaccess: {
+    icon: '🌐',
+    title: 'Web Access — גישה לאינטרנט',
+    sections: [
+      {
+        title: 'Authorized Domains',
+        items: [
+          { icon: '✅', text: '<strong>Whitelist</strong> — דומיינים שאושרו ידנית. Claude יכול לגשת אליהם ללא התראה.' },
+          { icon: '➕', text: '<strong>הוספה</strong> — לחץ "+ Add Domain" להוסיף דומיין לרשימה הלבנה.' },
+          { icon: '🚫', text: '<strong>Block</strong> — חסום דומיין לחלוטין (כל ניסיון גישה → CRITICAL).' }
+        ]
+      },
+      {
+        title: 'Discovered Domains',
+        items: [
+          { icon: '🔍', text: '<strong>Discovered</strong> — דומיינים שClaude ניגש אליהם בפועל ולא היו ב-Whitelist.' },
+          { icon: '📊', text: '<strong>Score</strong> — ציון מוניטין (0-100). 65+ = בטוח, מתחת ל-30 = חשוד.' }
+        ]
+      }
+    ],
+    tip: 'WebFetch ו-WebSearch מוגבלים אוטומטית לדומיינים ב-Whitelist. כל גישה מחוץ לרשימה = התראה HIGH.'
+  },
+  fileaudit: {
+    icon: '🗂️',
+    title: 'File Audit — סריקת קבצים',
+    sections: [
+      {
+        title: 'מה נסרק?',
+        items: [
+          { icon: '📁', text: '<strong>C:/Claude-Repo/</strong> — כל הקבצים בתיקיית הפרויקט, כולל subfolders.' },
+          { icon: '🔍', text: '<strong>22 Patterns</strong> — API Keys, סיסמאות, URL לא מאובטח, TOR addresses, eval(), base64|sh ועוד.' },
+          { icon: '📊', text: '<strong>Risk Score</strong> — CRITICAL=40, HIGH=20, MEDIUM=5 לכל ממצא. מקסימום 100.' }
+        ]
+      },
+      {
+        title: 'תוצאות',
+        items: [
+          { icon: '🔴', text: '<strong>CRITICAL/HIGH</strong> — קובץ מכיל מידע רגיש. יש לבדוק ולהסיר.' },
+          { icon: '🟢', text: '<strong>OK/Clean</strong> — לא נמצאו ממצאים חשודים בקובץ.' },
+          { icon: '▶', text: '<strong>Scan Now</strong> — הפעל סריקה מחודשת על כל הקבצים.' }
+        ]
+      }
+    ],
+    tip: 'הסריקה רצה אוטומטית כל לילה ב-01:00. ממצא ב-domain-reputation.js = נורמלי (קובץ בדיקה).'
+  },
+  skills: {
+    icon: '🔍',
+    title: 'Skills — סריקת סקילים',
+    sections: [
+      {
+        title: 'מה זה Skill?',
+        items: [
+          { icon: '📄', text: '<strong>Skill</strong> — קובץ markdown שClaude יכול לטעון ולהריץ כ"פקודה". נמצאים ב-~/.claude/skills/ ו-~/.agents/skills/.' },
+          { icon: '⚠️', text: '<strong>סיכון</strong> — Skill זדוני יכול לתת הוראות מסוכנות לClaude ללא ידיעתך.' },
+          { icon: '🔒', text: '<strong>Hash</strong> — כל Skill מקבל חתימה. שינוי בקובץ = hash חדש = התראה.' }
+        ]
+      },
+      {
+        title: 'סטטוסים',
+        items: [
+          { icon: '✅', text: '<strong>APPROVED</strong> — Skill ידוע ובטוח.' },
+          { icon: '🚩', text: '<strong>FLAGGED</strong> — Skill חדש או שונה. דורש אישור.' },
+          { icon: '🚫', text: '<strong>BLOCKED</strong> — Skill חסום, לא ייטען.' }
+        ]
+      }
+    ],
+    tip: 'לחץ "Scan Skills" לסריקה מחודשת. Skill חדש שמופיע פתאום = חשד לזיהום.'
+  },
+  gitmonitor: {
+    icon: '🔗',
+    title: 'Git Monitor — ניטור Push/Fetch',
+    sections: [
+      {
+        title: 'Authorized Remotes',
+        items: [
+          { icon: '✅', text: '<strong>Whitelist</strong> — שרתי Git מורשים. Push לשרת שלא ברשימה = התראה HIGH.' },
+          { icon: '➕', text: '<strong>הוספה</strong> — הכנס hostname בלבד (ללא https://). לדוגמה: github.com' },
+          { icon: '🏠', text: '<strong>ברירת מחדל</strong> — github.com, gitlab.com, bitbucket.org, localhost.' }
+        ]
+      },
+      {
+        title: 'Git Events',
+        items: [
+          { icon: '📤', text: '<strong>Push</strong> — שליחת קוד לשרת. מנוטר תמיד.' },
+          { icon: '📥', text: '<strong>Fetch/Pull</strong> — משיכת קוד. מנוטר אם השרת לא ברשימה.' },
+          { icon: '🔀', text: '<strong>Remote Add</strong> — הוספת שרת Git חדש = CRITICAL אוטומטי.' }
+        ]
+      }
+    ],
+    tip: 'הוסף את שרת הgit הפנימי שלך לרשימה כדי למנוע false positives.'
+  },
+  siem: {
+    icon: '📡',
+    title: 'SIEM — Security Integration',
+    sections: [
+      {
+        title: 'מה זה SIEM?',
+        items: [
+          { icon: '📡', text: '<strong>SIEM</strong> — Security Information and Event Management. מערכת שאוספת logs מכל המקורות במקום אחד.' },
+          { icon: '🔗', text: '<strong>Splunk / Elastic</strong> — FlowGuard יכול לשלוח events ל-SIEM ארגוני דרך Webhook.' },
+          { icon: '📊', text: '<strong>Syslog</strong> — פורמט סטנדרטי שכל SIEM תומך בו.' }
+        ]
+      },
+      {
+        title: 'אינטגרציות זמינות',
+        items: [
+          { icon: '🟠', text: '<strong>Splunk HEC</strong> — HTTP Event Collector. דורש token ו-URL.' },
+          { icon: '🟣', text: '<strong>Elastic SIEM</strong> — דרך Logstash או Elasticsearch API.' },
+          { icon: '🔵', text: '<strong>Webhook</strong> — כל מערכת שמקבלת JSON — Teams, Slack, פתרון פנימי.' }
+        ]
+      }
+    ],
+    tip: 'SIEM integration מתוכנן לגרסה עתידית. כרגע FlowGuard שולח התראות דרך Telegram.'
+  },
+  settings: {
+    icon: '⚙️',
+    title: 'Settings — הגדרות מערכת',
+    sections: [
+      {
+        title: 'Hardening Level',
+        items: [
+          { icon: '🟢', text: '<strong>SOFT</strong> — תיעוד בלבד. לא חוסם שום פעולה. מומלץ להתחלה.' },
+          { icon: '🟡', text: '<strong>MEDIUM</strong> — חוסם פעולות CRITICAL. מתריע על HIGH.' },
+          { icon: '🔴', text: '<strong>HARD</strong> — חוסם CRITICAL + HIGH. מצב מקסימלי.' }
+        ]
+      },
+      {
+        title: 'Notifications',
+        items: [
+          { icon: '📱', text: '<strong>Telegram</strong> — הכנס Bot Token + Chat ID לקבלת התראות. הגדר מינימום רמה למנוע spam.' },
+          { icon: '🔔', text: '<strong>Desktop Alerts</strong> — חלון popup ב-Windows (בפיתוח).' }
+        ]
+      },
+      {
+        title: 'Authorized Git Remotes',
+        items: [
+          { icon: '🔗', text: '<strong>Remote</strong> — הוסף hostname של שרת Git מורשה. Push לשרת אחר = HIGH alert.' }
+        ]
+      },
+      {
+        title: 'Rules & Updates',
+        items: [
+          { icon: '🔄', text: '<strong>Current Version</strong> — גרסת מנוע הזיהוי הנוכחית.' },
+          { icon: '⬆️', text: '<strong>Check for Updates</strong> — FlowGuard בודק עדכוני חתימות כל 6 שעות.' }
+        ]
+      }
+    ],
+    tip: 'אחרי שמירת הגדרות Hardening — הן נכנסות לתוקף מיידית ללא restart.'
+  }
+};
+
+function showHelp(view, event) {
+  event.stopPropagation();
+  var content = HELP_CONTENT[view];
+  if (!content) return;
+
+  document.getElementById('help-panel-icon').textContent  = content.icon;
+  document.getElementById('help-panel-title').textContent = content.title;
+
+  var html = '';
+  content.sections.forEach(function(sec) {
+    html += '<div class="help-section">';
+    html += '<div class="help-section-title">' + sec.title + '</div>';
+    sec.items.forEach(function(item) {
+      html += '<div class="help-item">' +
+        '<div class="help-item-icon">' + item.icon + '</div>' +
+        '<div class="help-item-text">' + item.text + '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+  });
+  if (content.tip) {
+    html += '<div class="help-tip">💡 ' + content.tip + '</div>';
+  }
+
+  document.getElementById('help-panel-body').innerHTML = html;
+  document.getElementById('help-overlay').classList.add('open');
+  document.getElementById('help-panel').classList.add('open');
+}
+
+function closeHelp() {
+  document.getElementById('help-overlay').classList.remove('open');
+  document.getElementById('help-panel').classList.remove('open');
+}
+
+// Close with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeHelp();
+});
 </script>
 
 </body>
