@@ -1387,6 +1387,7 @@ app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
 // GET /dashboard — serve dashboard HTML (for tray icon)
 app.use('/dashboard', express.static(path.join(__dirname, '..', 'dashboard')));
+app.use('/docs',      express.static(path.join(__dirname, '..', 'docs')));
 
 // GET /fsw/status — סטטוס ה-FSWatcher
 app.get('/fsw/status', (req, res) => {
