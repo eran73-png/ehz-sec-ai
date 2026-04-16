@@ -1480,7 +1480,7 @@ app.post('/diag/collect', (req, res) => {
     return res.status(500).json({ ok: false, error: 'collect.ps1 not found at ' + diagScript });
   }
 
-  const cmd = `powershell -ExecutionPolicy Bypass -File "${diagScript}"`;
+  const cmd = `powershell -ExecutionPolicy Bypass -File "${diagScript}" -NoOpen -NoMail`;
   exec(cmd, { timeout: 120000 }, (err, stdout, stderr) => {
     if (err) {
       return res.status(500).json({ ok: false, error: err.message, stderr: stderr });
