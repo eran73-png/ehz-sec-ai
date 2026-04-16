@@ -52,15 +52,60 @@
   "paths": [],
   "allowed_paths": [],
   "fsw_exclude": [
-    { "folder": "node_modules", "enabled": true,  "recommended": true,  "description": "npm packages — very large, never suspicious" },
-    { "folder": ".git",         "enabled": true,  "recommended": true,  "description": "Git internal files" },
-    { "folder": "dist",         "enabled": true,  "recommended": true,  "description": "Build output folder" },
-    { "folder": "build",        "enabled": false, "recommended": true,  "description": "Build output folder (alternative name)" },
-    { "folder": "out",          "enabled": false, "recommended": true,  "description": "Build output folder (alternative name)" },
-    { "folder": ".next",        "enabled": false, "recommended": true,  "description": "Next.js build cache" },
-    { "folder": "coverage",     "enabled": false, "recommended": true,  "description": "Test coverage reports" },
-    { "folder": ".cache",       "enabled": false, "recommended": true,  "description": "Build tool cache" },
-    { "folder": "tmp",          "enabled": false, "recommended": true,  "description": "Temporary files" }
+    {
+      "folder": "node_modules",
+      "enabled": true,
+      "recommended": true,
+      "description": "npm packages — very large, never suspicious"
+    },
+    {
+      "folder": ".git",
+      "enabled": true,
+      "recommended": true,
+      "description": "Git internal files"
+    },
+    {
+      "folder": "dist",
+      "enabled": true,
+      "recommended": true,
+      "description": "Build output folder"
+    },
+    {
+      "folder": "build",
+      "enabled": false,
+      "recommended": true,
+      "description": "Build output folder (alternative name)"
+    },
+    {
+      "folder": "out",
+      "enabled": false,
+      "recommended": true,
+      "description": "Build output folder (alternative name)"
+    },
+    {
+      "folder": ".next",
+      "enabled": false,
+      "recommended": true,
+      "description": "Next.js build cache"
+    },
+    {
+      "folder": "coverage",
+      "enabled": false,
+      "recommended": true,
+      "description": "Test coverage reports"
+    },
+    {
+      "folder": ".cache",
+      "enabled": false,
+      "recommended": true,
+      "description": "Build tool cache"
+    },
+    {
+      "folder": "tmp",
+      "enabled": false,
+      "recommended": true,
+      "description": "Temporary files"
+    }
   ],
   "allowed_domains": [
     "github.com",
@@ -84,7 +129,8 @@
     "wikipedia.org",
     "npmjs.org",
     "yarnpkg.com",
-    "openai.com"
+    "openai.com",
+    "flowguard-site.vercel.app"
   ],
   "discovered_domains": [
     {

