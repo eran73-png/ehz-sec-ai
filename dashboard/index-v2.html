@@ -786,12 +786,19 @@ tr:hover td { background:#f8fafc; }
             <span id="audit-last-scan" style="font-size:11px;color:#94a3b8;"></span>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 18px;background:#f8fafc;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 18px;background:#f8fafc;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;flex-wrap:wrap;">
           <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#374151;cursor:pointer;">
             <input type="checkbox" id="audit-hide-build" checked onchange="renderAuditTable()">
             Hide build/generated files <span style="font-size:10px;color:#94a3b8;">(.next, node_modules, dist, build, chunks)</span>
           </label>
-          <span id="audit-filter-count" style="margin-left:auto;font-size:11px;color:#94a3b8;"></span>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+            <input type="text" id="audit-search" placeholder="&#x1F50D; Search file, path, issue..." oninput="renderAuditTable()"
+              style="padding:4px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:6px;outline:none;width:220px;background:#fff;color:#374151;"
+              onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e2e8f0'">
+            <button onclick="document.getElementById('audit-search').value='';renderAuditTable();" title="Clear search"
+              style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:15px;padding:2px 4px;line-height:1;">&#x2715;</button>
+            <span id="audit-filter-count" style="font-size:11px;color:#94a3b8;white-space:nowrap;"></span>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
@@ -1085,21 +1092,16 @@ tr:hover td { background:#f8fafc; }
 
       </div>
 
-        <!-- FSWatcher Exclusions + Quiet Hours -->
-        <div class="settings-group" style="grid-column:1/-1;">
+        <!-- Quiet Hours card -->
+        <div class="settings-group">
           <div class="panel-header">
             <div>
-              <div class="panel-title">🚫 FSWatcher Exclusions &amp; Quiet Hours</div>
-              <div class="panel-sub">Control what FSWatcher monitors and when Telegram alerts are sent</div>
+              <div class="panel-title">🌙 Quiet Hours</div>
+              <div class="panel-sub">Suppress Telegram alerts at night — events still logged</div>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span id="quiet-hours-status" style="font-size:11px;font-weight:700;"></span>
-              <button class="btn btn-outline btn-sm" onclick="loadFswExclusions();loadQuietHours()">↺ Refresh</button>
-            </div>
+            <span id="quiet-hours-status" style="font-size:11px;font-weight:700;"></span>
           </div>
-          <!-- Quiet Hours -->
-          <div style="padding:14px 18px;border-bottom:1px solid #f1f5f9;background:#fafafa;">
-            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;">🌙 Quiet Hours — suppress Telegram alerts at night (events still logged)</div>
+          <div class="settings-body">
             <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
               <label class="toggle" title="Enable quiet hours"><input type="checkbox" id="qh-enabled" onchange="saveQuietHours()"><span class="toggle-slider"></span></label>
               <span style="font-size:12px;color:#374151;">From</span>
@@ -1109,17 +1111,28 @@ tr:hover td { background:#f8fafc; }
               <span style="font-size:11px;color:#94a3b8;">Default: 23:00 – 07:00</span>
             </div>
           </div>
-          <div class="settings-body">
-            <div style="display:flex;gap:8px;margin-bottom:4px;">
-              <input class="form-input" type="text" id="fsw-excl-input" placeholder="e.g. backups, myapp, .next" style="flex:1;">
-              <button class="btn btn-accent btn-sm" onclick="addFswExclusion()">+ Add</button>
+        </div>
+
+        <!-- FSWatcher Exclusions card -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">🚫 FSWatcher Exclusions</div>
+              <div class="panel-sub">Folders FlowGuard will not monitor</div>
             </div>
-            <div style="font-size:11px;color:#94a3b8;margin-bottom:10px;">
-              Enter a folder name, file name, or path segment. Any file whose path contains this string will be ignored by FSWatcher.
-            </div>
-            <div id="fsw-excl-list" style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="loadFswExclusions()">↺</button>
+          </div>
+          <div class="settings-body" style="max-height:320px;overflow-y:auto;">
+            <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Recommended</div>
+            <div id="fsw-recommended-list" style="display:grid;gap:6px;margin-bottom:16px;">
               <div class="empty"><div class="spinner"></div>&nbsp; Loading...</div>
             </div>
+            <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Custom</div>
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+              <input class="form-input" type="text" id="fsw-excl-input" placeholder="folder name..." style="flex:1;">
+              <button class="btn btn-accent btn-sm" onclick="addFswCustomExclusion()">+ Add</button>
+            </div>
+            <div id="fsw-custom-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
         </div>
 
@@ -1300,10 +1313,6 @@ tr:hover td { background:#f8fafc; }
           </div>
         </div>
 
-        <div style="padding:16px 20px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;font-size:13px;color:#64748b;">
-          <strong style="color:#374151;">FlowGuard v2.0.2</strong> · AI Security Monitor for Claude Code · by EHZ-AI<br>
-          <span style="font-size:11px;">054-4825276</span>
-        </div>
 
       </div>
     </div><!-- /view-help -->
@@ -1968,12 +1977,14 @@ function shortPath(fullPath) {
 }
 
 var auditAllFiles = [];
+var auditAllFilesRaw = []; // all scanned files including clean ones
 
 async function loadAudit() {
   var tbody = document.getElementById('audit-table-body');
   try {
     var data  = await fetchJSON('/audit');
-    auditAllFiles = data.files || data.results || data || [];
+    auditAllFiles    = data.files || data.results || data || [];
+    auditAllFilesRaw = data.all_files || auditAllFiles;
     if (data.lastScan) {
       document.getElementById('audit-last-scan').textContent = 'Last scan: ' + fmtDT(data.lastScan);
     }
@@ -1995,11 +2006,38 @@ function renderAuditTable() {
 
   var filtered = doHide ? auditAllFiles.filter(function(f){ return !isBuildFile(f.path||''); }) : auditAllFiles;
   var hidden   = auditAllFiles.length - filtered.length;
+
+  // Search filter
+  var searchEl = document.getElementById('audit-search');
+  var q = searchEl ? searchEl.value.trim().toLowerCase() : '';
+  if (q) {
+    // Search across ALL scanned files (including clean ones), not just findings
+    var searchBase = auditAllFilesRaw.length ? auditAllFilesRaw : filtered;
+    var hideBuildForSearch = doHide;
+    filtered = searchBase.filter(function(f) {
+      if (hideBuildForSearch && isBuildFile(f.path || '')) return false;
+      var p = (f.path || '').toLowerCase();
+      if (p.includes(q)) return true;
+      var findings = f.findings || [];
+      return findings.some(function(fi) {
+        var reason  = typeof fi === 'object' ? (fi.reason || fi.description || '') : String(fi);
+        var explain = typeof fi === 'object' ? (fi.explain || '') : '';
+        return reason.toLowerCase().includes(q) || explain.toLowerCase().includes(q);
+      });
+    });
+  }
+
   var countEl  = document.getElementById('audit-filter-count');
-  if (countEl) countEl.textContent = hidden ? hidden + ' build/generated files hidden' : '';
+  var parts = [];
+  if (hidden) parts.push(hidden + ' build files hidden');
+  if (q) parts.push(filtered.length + ' result' + (filtered.length !== 1 ? 's' : ''));
+  if (countEl) countEl.textContent = parts.join(' · ');
 
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">All files are build/generated files. Uncheck the filter to see them.</td></tr>';
+    var msg = q
+      ? 'No files found matching <b>' + esc(q) + '</b> — try searching in English (e.g. "VISA" not "ויזה")'
+      : 'All files are build/generated files. Uncheck the filter to see them.';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">' + msg + '</td></tr>';
     return;
   }
 
@@ -2354,55 +2392,88 @@ async function saveQuietHours() {
   } catch(e) { toast('Error saving quiet hours: ' + e.message, 'error'); }
 }
 
+var fswExcludeData = []; // cached full list
+
 async function loadFswExclusions() {
-  var list = document.getElementById('fsw-excl-list');
+  var recList = document.getElementById('fsw-recommended-list');
+  var cusList = document.getElementById('fsw-custom-list');
   try {
-    var data = await fetchJSON('/fsw/status');
-    var excl = data.exclude || [];
-    if (!excl.length) {
-      list.innerHTML = '<span style="color:#94a3b8;font-size:12px;">No exclusions configured</span>';
-      return;
-    }
-    list.innerHTML = excl.map(function(e) {
-      var isBuiltin = ['node_modules','.git','ccsm.db','hook.log','.ccsm-disable','.ccsm-silent'].includes(e);
-      return '<div style="display:flex;align-items:center;gap:6px;background:' + (isBuiltin?'#f1f5f9':'#eff6ff') + ';border:1px solid ' + (isBuiltin?'#e2e8f0':'#bfdbfe') + ';border-radius:6px;padding:4px 10px;">' +
-        '<span style="font-family:monospace;font-size:12px;color:#374151;">' + esc(e) + '</span>' +
-        (isBuiltin
-          ? '<span style="font-size:9px;color:#94a3b8;font-weight:700;">BUILT-IN</span>'
-          : '<button onclick="removeFswExclusion(\'' + esc(e) + '\')" style="border:none;background:none;color:#94a3b8;cursor:pointer;font-size:13px;padding:0;line-height:1;" title="Remove">✕</button>') +
-        '</div>';
+    var data = await fetchJSON('/fsw/exclude');
+    fswExcludeData = data.fsw_exclude || [];
+    var recommended = fswExcludeData.filter(function(e) { return e.recommended; });
+    var custom      = fswExcludeData.filter(function(e) { return !e.recommended; });
+
+    // Recommended — grid with toggles
+    recList.innerHTML = recommended.map(function(e) {
+      var id = 'fswt-' + e.folder.replace(/[^a-z0-9]/gi,'_');
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;background:' + (e.enabled ? '#f0fdf4' : '#fafafa') + ';">' +
+        '<div>' +
+          '<span style="font-family:monospace;font-size:12px;font-weight:700;color:#1e293b;">' + esc(e.folder) + '</span>' +
+          '<span style="font-size:11px;color:#94a3b8;margin-left:8px;">' + esc(e.description || '') + '</span>' +
+        '</div>' +
+        '<label class="toggle" title="' + (e.enabled ? 'Click to stop excluding' : 'Click to exclude') + '">' +
+          '<input type="checkbox" ' + (e.enabled ? 'checked' : '') + ' onchange="toggleFswExclusion(\'' + esc(e.folder) + '\', this.checked)">' +
+          '<span class="toggle-slider"></span>' +
+        '</label>' +
+      '</div>';
     }).join('');
+
+    // Custom — tags with X
+    cusList.innerHTML = custom.length
+      ? custom.map(function(e) {
+          return '<div style="display:flex;align-items:center;gap:6px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:4px 10px;">' +
+            '<span style="font-family:monospace;font-size:12px;color:#374151;">' + esc(e.folder) + '</span>' +
+            '<button onclick="removeFswCustomExclusion(\'' + esc(e.folder) + '\')" style="border:none;background:none;color:#94a3b8;cursor:pointer;font-size:13px;padding:0;line-height:1;" title="Remove">✕</button>' +
+          '</div>';
+        }).join('')
+      : '<span style="font-size:11px;color:#94a3b8;">No custom exclusions</span>';
+
   } catch(e) {
-    list.innerHTML = '<span style="color:#ef4444;font-size:12px;">Cannot reach API</span>';
+    recList.innerHTML = '<span style="color:#ef4444;font-size:12px;">Cannot reach API</span>';
   }
 }
 
-async function addFswExclusion() {
-  var inp = document.getElementById('fsw-excl-input');
-  var entry = (inp.value || '').trim();
-  if (!entry) return;
+async function toggleFswExclusion(folder, enabled) {
+  fswExcludeData = fswExcludeData.map(function(e) {
+    return e.folder === folder ? Object.assign({}, e, { enabled: enabled }) : e;
+  });
   try {
     await fetch(API + '/fsw/exclude', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ entry })
+      body: JSON.stringify({ fsw_exclude: fswExcludeData })
+    });
+    toast((enabled ? 'Excluding: ' : 'Watching: ') + folder, 'success');
+    loadFswExclusions();
+  } catch(e) { toast('Error saving', 'error'); }
+}
+
+async function addFswCustomExclusion() {
+  var inp = document.getElementById('fsw-excl-input');
+  var folder = (inp.value || '').trim();
+  if (!folder) return;
+  try {
+    await fetch(API + '/fsw/exclude/custom', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ folder })
     });
     inp.value = '';
-    toast('Exclusion added: ' + entry, 'success');
+    toast('Exclusion added: ' + folder, 'success');
     loadFswExclusions();
   } catch(e) { toast('Error adding exclusion', 'error'); }
 }
 
-async function removeFswExclusion(entry) {
+async function removeFswCustomExclusion(folder) {
   try {
-    await fetch(API + '/fsw/exclude', {
+    await fetch(API + '/fsw/exclude/custom', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ entry })
+      body: JSON.stringify({ folder })
     });
-    toast('Exclusion removed: ' + entry, 'success');
+    toast('Removed: ' + folder, 'success');
     loadFswExclusions();
-  } catch(e) { toast('Error removing exclusion', 'error'); }
+  } catch(e) { toast('Error removing', 'error'); }
 }
 
 async function loadGitRemoteSettings() {
@@ -2450,7 +2521,13 @@ async function addGitRemote() {
 async function loadUpdateStatus() {
   try {
     var data = await fetchJSON('/update/status');
-    document.getElementById('update-current-version').textContent = 'v' + (data.version || data.current || '\u2014');
+    var appVer  = data.app_version  ? 'v' + data.app_version  : '\u2014';
+    var ruleVer = data.version || data.current || '\u2014';
+    document.getElementById('update-current-version').textContent = 'v' + ruleVer;
+    var av = document.getElementById('help-app-version');
+    var ai = document.getElementById('help-version-inline');
+    if (av) av.textContent = appVer;
+    if (ai) ai.textContent = appVer;
   } catch(e) {
     document.getElementById('update-current-version').textContent = 'Unknown';
   }

@@ -89,6 +89,12 @@
   .phase-arrow { color: var(--muted); font-size: 18px; margin: 0 4px; }
 
   /* ── SECTION TITLE ── */
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700; }
+  .badge-critical { background:#ef444422; color:#ef4444; border:1px solid #ef444444; }
+  .badge-high     { background:#f9731622; color:#f97316; border:1px solid #f9731644; }
+  .badge-medium   { background:#f59e0b22; color:#f59e0b; border:1px solid #f59e0b44; }
+  .badge-ok       { background:#10b98122; color:#10b981; border:1px solid #10b98144; }
+
   .section-title {
     font-size: 11px;
     font-weight: 700;
@@ -358,7 +364,7 @@
       <div style="font-size:10px;color:var(--muted2);">Milestones הושלמו!</div>
     </div>
     <div style="background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.25);border-radius:10px;padding:10px 14px;text-align:center;">
-      <div style="font-size:22px;font-weight:900;color:#0ea5e9;">11.04</div>
+      <div style="font-size:22px;font-weight:900;color:#0ea5e9;">15.04</div>
       <div style="font-size:10px;color:var(--muted2);">עדכון אחרון</div>
     </div>
   </div>
@@ -1156,7 +1162,7 @@
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.2 ✅</div>
       <div class="task-title">FlowGuard-Setup.exe (Inno Setup)</div>
-      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.1.0.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0 → v2.0.1 → v2.1.0</div>
+      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.1.1.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0 → v2.0.1 → v2.1.0 → v2.1.1</div>
       <div class="task-tags"><span class="tag">installer</span><span class="tag">Windows</span><span class="tag">Inno Setup</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
@@ -1236,18 +1242,21 @@
       </div>
       <div class="task-tags"><span class="tag">dashboard</span><span class="tag">UI</span><span class="tag">sidebar</span><span class="tag">v2</span></div>
     </div>
-    <div class="task-cell" style="border-top:2px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.04);">
-      <div class="task-num" style="color:#f59e0b;">8.12</div>
-      <div class="task-title">👁️ FSWatcher — Smart Exclusions (Anti False-Positive)</div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.12 ✅</div>
+      <div class="task-title">👁️ FSWatcher — Smart Exclusions (User-Configurable)</div>
       <div class="task-desc">
-        FSWatcher מייצר false positives על פעולות git/build לגיטימיות.<br><br>
-        <strong>הבעיה:</strong> git commit עם קבצים חדשים, Inno Setup build, גיבוי cp -r — כולם נתפסים כ"העתקה ידנית חשודה" וגורמים להתראות Telegram מיותרות. אם יש 20 התראות FALSE ביום — התראה אמיתית תיבלע.<br><br>
-        <strong>הפתרון:</strong><br>
-        • Whitelist תיקיות: <code>.git\</code>, <code>dist\</code>, <code>node_modules\</code>, <code>marketing\</code>, <code>NOTEBOOKLM\</code>, <code>backups\</code><br>
-        • FSWatcher ינטר רק ליבה: <code>agent\</code>, <code>collector\</code>, <code>dashboard\</code>, <code>install\</code>, <code>config\</code><br>
-        • אפס false positives מ-git/build פעולות
+        פתרון גלובלי — מתאים לכל משתמש, לא hardcoded למחשב ספציפי.<br><br>
+        <strong>מה בוצע (16.04.2026):</strong><br>
+        • <code>whitelist.json</code> — section חדש <code>fsw_exclude</code> עם 9 תיקיות מומלצות, כל אחת עם enabled/disabled<br>
+        • ברירות מחדל ON: <code>node_modules</code>, <code>.git</code>, <code>dist</code> — אוניברסליות לכל פרויקט<br>
+        • שאר המומלצות OFF: <code>build</code>, <code>out</code>, <code>.next</code>, <code>coverage</code>, <code>.cache</code>, <code>tmp</code><br>
+        • <code>FSW_ALWAYS_EXCLUDE</code> — קבצים פנימיים שאינם ניתנים לשינוי (<code>ccsm.db</code>, <code>hook.log</code>)<br>
+        • API: <code>GET/POST /fsw/exclude</code> + <code>POST/DELETE /fsw/exclude/custom</code><br>
+        • Dashboard Settings: שני כרטיסים שווים — Quiet Hours + FSWatcher Exclusions<br>
+        • UI: toggles לכל מומלצת + custom exclusions עם Add/Remove
       </div>
-      <div class="task-tags"><span class="tag">FSWatcher</span><span class="tag">false-positive</span><span class="tag">security</span></div>
+      <div class="task-tags"><span class="tag">FSWatcher</span><span class="tag">configurable</span><span class="tag">dashboard-UI</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.13 ✅</div>
@@ -1262,8 +1271,73 @@
       </div>
       <div class="task-tags"><span class="tag">build</span><span class="tag">automation</span><span class="tag">versioning</span></div>
     </div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.14 ✅</div>
+      <div class="task-title">🌐 אתר שיווקי — FlowGuard Marketing Site</div>
+      <div class="task-desc">
+        אתר סטטי דו-לשוני (EN/HE) עם toggle שפה.<br><br>
+        <strong>דפים:</strong> index.html, download.html, demo.html, about.html<br>
+        <strong>סקשנים ב-index:</strong> Hero → מה זה FlowGuard (פרק 1 מהמדריך) → תמונת דשבורד → Dashboard Views → Features (9 כרטיסים) → How It Works → Video → FAQ → About Strip<br>
+        <strong>כפתורי הורדה:</strong> מצביעים על <code>files/FlowGuard-Setup-v2.1.1.exe</code><br><br>
+        <strong>פריסה:</strong> Vercel — <a href="https://flowguard-site.vercel.app" style="color:var(--accent);">flowguard-site.vercel.app</a><br>
+        <strong>Git:</strong> <a href="https://github.com/eran73-png/flowguard-site" style="color:var(--accent);">github.com/eran73-png/flowguard-site</a><br>
+        <strong>deploy:</strong> <code>cd C:/Claude-Repo/local-apps/flowguard-site && vercel --prod</code><br>
+        <strong>⚠️ עדיין חסר:</strong> קובץ EXE בתיקיית files/ + סרטוני וידאו
+      </div>
+      <div class="task-tags"><span class="tag">marketing</span><span class="tag">vercel</span><span class="tag">website</span></div>
+    </div>
+    <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
+      <div class="task-num" style="color:var(--green);">8.16 ✅</div>
+      <div class="task-title">🔔 FSWatcher — תיקון רמות Alert (Anti False-Positive)</div>
+      <div class="task-desc">
+        FSWatcher הציג HIGH על כל שינוי קובץ בתוך הפרויקט — גם על עבודה רגילה של Claude.<br><br>
+        <strong>הבעיה:</strong> כאשר Claude משתמש ב-Bash tool (cp, mv) במקום Edit/Write — FSWatcher לא יכול לזהות מי כתב את הקובץ. כל קובץ בתוך הפרויקט קיבל HIGH + Telegram.<br><br>
+        <strong>הפתרון (v2.1.4):</strong><br>
+        • קובץ רגיל נוסף/שונה בפרויקט → <code>LOW</code> (היה HIGH)<br>
+        • קובץ sensitive נוסף/שונה → <code>HIGH</code> (ללא שינוי)<br>
+        • קובץ נמחק → <code>CRITICAL</code> (ללא שינוי)<br>
+        • Bulk copy 5+ קבצים ב-10 שניות → <code>CRITICAL</code> (ללא שינוי)<br>
+        • Telegram נשלח רק על HIGH/CRITICAL — לא על LOW<br><br>
+        <strong>לוגיקה:</strong> אם הקובץ בתוך תיקיית הפרויקט ואינו sensitive — כנראה עבודה לגיטימית. FlowGuard לא יכול לדעת אם זה Claude או אדם, לכן LOW (מוצג בלוג, לא שולח Telegram). בוצע: 15.04.2026
+      </div>
+      <div class="task-tags"><span class="tag">FSWatcher</span><span class="tag">false-positive</span><span class="tag">alert-levels</span></div>
+    </div>
+    <div class="task-cell" style="border-top:2px solid rgba(14,165,233,0.3);background:rgba(14,165,233,0.04);">
+      <div class="task-num" style="color:var(--green);">8.17 ✅</div>
+      <div class="task-title">🧠 FSWatcher — Behavioral Learning (Smart Detection)</div>
+      <div class="task-desc">
+        המערכת לומדת דפוסי התנהגות חוזרים ומבדילה בין עבודה רגילה לאיום אמיתי.<br><br>
+        <strong>3 שכבות זיהוי:</strong><br><br>
+
+        <strong>שכבה 1 — Claude Session Memory:</strong><br>
+        כל קובץ שנגעה בו Claude דרך Edit/Write hooks נשמר לכל אורך הסשן (לא רק 30 שניות).
+        אם FSWatcher רואה שינוי באותו קובץ → INFO בלבד, ללא Telegram.<br><br>
+
+        <strong>שכבה 2 — Frequency Counter:</strong><br>
+        קובץ שמשתנה חזור ושנה = עבודה אקטיבית, לא איום.<br>
+        • 1-2 שינויים → LOW (ברירת מחדל)<br>
+        • 3+ שינויים בסשן → INFO<br>
+        • 10+ שינויים בסשן → suppress (לא מוצג כלל)<br>
+        מאופס כל 24 שעות.<br><br>
+
+        <strong>שכבה 3 — Time Pattern Learning (NeDB):</strong><br>
+        שאילתה על 7 ימים אחרונים: "האם הקובץ הזה השתנה באותה שעה (±1h) ב-3+ ימים?"<br>
+        כן → <code>KNOWN_PATTERN</code> — INFO בלבד, ללא Telegram.<br>
+        דוגמאות שמזוהות אוטומטית: גיבוי לילי 03:00, Health Check בוקר, Log rotation חצות, CI/CD build artifacts.<br><br>
+
+        <strong>File-Set Pattern:</strong><br>
+        אם 5+ קבצים משתנים יחד באותה שעה ב-3+ ימים → <code>SCHEDULED_TASK</code> → suppress לגמרי.<br><br>
+
+        <strong>טבלת רמות סופית:</strong><br>
+        קובץ sensitive → HIGH | קובץ נמחק → CRITICAL | Bulk copy → CRITICAL<br>
+        קובץ חדש לא מוכר → LOW | Claude session file → INFO | Frequency 3+ → INFO<br>
+        Frequency 10+ → suppress | KNOWN_PATTERN → INFO | SCHEDULED_TASK → suppress<br><br>
+        <strong>קובץ משתנה:</strong> <code>collector/server.js</code> | גרסה: <code>v2.1.4</code>
+      </div>
+      <div class="task-tags"><span class="tag">FSWatcher</span><span class="tag">behavioral-learning</span><span class="tag">AI</span><span class="tag">pattern-detection</span></div>
+    </div>
     <div class="task-cell" style="border-top:2px solid rgba(167,139,250,0.3);background:rgba(167,139,250,0.04);">
-      <div class="task-num" style="color:#64748b;">8.14 ⏸</div>
+      <div class="task-num" style="color:#64748b;">8.15 ⏸</div>
       <div class="task-title">🏷️ שינוי שם מלא — EHZ-SEC-AI → FlowGuard <span style="font-size:11px;color:#64748b;">(בהשהייה)</span></div>
       <div class="task-desc">
         שינוי שם הפרויקט בכל הקוד, תיקיות, ו-Git. כרגע השם שונה רק בדפי UI ושיווק.<br><br>
@@ -3913,7 +3987,7 @@ Claude מבצע tool call
     <div>מערכת ניטור ואבטחה לפעילות Claude Code.</div>
     <div>Agent hooks → Collector → Dashboard → Telegram</div>
     <div style="margin-top:8px;color:var(--text);">## מצב נוכחי</div>
-    <div style="color:var(--green);">✅ Milestones 1–7 הושלמו | ⏳ Milestone 8 הבא</div>
+    <div style="color:var(--green);">✅ Milestones 1–8 הושלמו | 🌐 אתר שיווקי deployed ל-Vercel | ⏳ הבא: MS9 Linux</div>
     <div style="margin-top:8px;color:var(--text);">## התקנה</div>
     <div>ראה workplan.html לתוכנית מלאה</div>
     <div style="margin-top:8px;color:var(--text);">## פותח על ידי</div>
@@ -4098,7 +4172,43 @@ Claude מבצע tool call
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.0</span></td>
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#10b981,#0ea5e9);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.4</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">15.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          🧠 <strong>FSWatcher Behavioral Learning (MS8.17):</strong><br>
+          • שכבה 1 — Claude Session Memory: קבצים שנגעה בהם Claude נזכרים לכל אורך הסשן → INFO בלבד<br>
+          • שכבה 2 — Frequency Counter: 3+ שינויים → INFO | 10+ → suppress אוטומטי<br>
+          • שכבה 3 — Time Pattern Learning: שאילתת NeDB על 7 ימים → KNOWN_PATTERN (גיבוי לילי, Health Check וכו')<br>
+          • File-Set Pattern: 5+ קבצים משתנים ביחד באותה שעה ב-3+ ימים → SCHEDULED_TASK → suppress<br><br>
+          🔔 <strong>FSWatcher Alert Level Fix (MS8.16):</strong><br>
+          • קובץ רגיל בפרויקט → LOW (היה HIGH) | ללא Telegram על LOW<br>
+          • רמות HIGH/CRITICAL שמורות לאיומים אמיתיים בלבד
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;color:#94a3b8;font-weight:600;">v2.1.3</td>
+        <td style="padding:10px 12px;color:var(--muted);">15.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          סריקת Office files (docx/xlsx/pptx) — unzipper לחילוץ טקסט מ-ZIP.<br>
+          סריקת קבצים ללא סיומת (VISA, passwords וכו').<br>
+          תיקון: checkScopeRule — allowed_paths ריק לא מייצר false positive HIGH.<br>
+          File Audit: תיבת חיפוש — מחפשת בכל הקבצים כולל Hebrew filenames.<br>
+          Help page: ניקוי לוגו כרטיס (הוסר לפי בקשה).<br>
+          server.js: runFileAudit async + app_version ב-getRulesInfo.
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.1</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">15.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          תיקון: חלון CMD נסגר — החלפת start-tray.bat ב-start-tray.vbs (WScript שקט).<br>
+          שיפור: לוגו אחיד — Shield cyan מ-marketing assets בדאשבורד (שמאל + ימין).<br>
+          שיפור: Wizard BMP (banner + small) עם לוגו FlowGuard.<br>
+          נבדק: Windows Server 2022 נקי — Service עולה, Tray עולה, Dashboard נכון. ✅
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;color:#94a3b8;font-weight:600;">v2.1.0</span></td>
         <td style="padding:10px 12px;color:var(--muted);">14.04.2026</td>
         <td style="padding:10px 12px;color:var(--text);">
           Installer v2.1.0 — בדיקה על מחשב נקי (Windows Server 2022, Kamatera).<br>
@@ -4171,10 +4281,68 @@ Claude מבצע tool call
   </table>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     דוגמאות זיהוי אמיתיות — File Audit Scanner (15.04.2026)
+═══════════════════════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">🔍 דוגמאות זיהוי אמיתיות — File Audit Scanner</div>
+  <div class="section-sub">ממצאים שנרשמו בסריקות אמיתיות על C:/Claude-Repo | עודכן 15.04.2026</div>
+
+  <table class="ms-table" style="margin-top:16px;">
+    <thead>
+      <tr>
+        <th>קובץ</th>
+        <th>רמה</th>
+        <th>ממצא</th>
+        <th>הסבר</th>
+        <th>דוגמה מהקוד</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:monospace;font-size:12px;">ויזה.docx</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>Visa card number</td>
+        <td>מספר כרטיס אשראי נמצא בתוך קובץ Word. פגיעה ב-PCI-DSS.</td>
+        <td><code style="background:#1e293b;color:#e2e8f0;padding:3px 8px;border-radius:4px;font-size:11px;border-left:3px solid #f97316;">ויזה 4580980102572767</code></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:12px;">[JS bundle]</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>JWT token</td>
+        <td>טוקן JWT hardcoded בקוד. אם דלף, אפשר להתחזות למשתמש מאומת.</td>
+        <td><code style="background:#1e293b;color:#e2e8f0;padding:3px 8px;border-radius:4px;font-size:11px;border-left:3px solid #f97316;">rtCommonProps["common.mapbox.token"] = 'pk.eyJ1IjoiZGFubnliMTIzIiwiYSI6ImNqMGljZ256dzAwMDAycXBkdWxwbDgzeXYifQ...'</code></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:12px;">[JS file]</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>Hardcoded password</td>
+        <td>סיסמה כתובה ישירות בקוד. כל מי שקורא את הקובץ רואה אותה.</td>
+        <td><code style="background:#1e293b;color:#e2e8f0;padding:3px 8px;border-radius:4px;font-size:11px;border-left:3px solid #f97316;">password: 'Incorrect name/password combination',</code></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:12px;">[HTML file]</td>
+        <td><span class="badge badge-medium">MEDIUM</span></td>
+        <td>Non-HTTPS URL</td>
+        <td>URL לא מוצפן (HTTP). התעבורה נשלחת בטקסט גלוי ואפשר ליירט.</td>
+        <td><code style="background:#1e293b;color:#e2e8f0;padding:3px 8px;border-radius:4px;font-size:11px;border-left:3px solid #f59e0b;">&lt;html xmlns="http://www.w3.org/1999/xhtml"...</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:16px;padding:12px 16px;background:#0f1f10;border:1px solid #10b98133;border-radius:8px;font-size:13px;color:#86efac;">
+    <strong>💡 הערות על הממצאים:</strong><br>
+    • <strong>ויזה.docx</strong> — הדגמה של יכולת סריקת Office (docx/xlsx/pptx) שנוספה ב-v2.1.3<br>
+    • <strong>JWT token</strong> — Mapbox public token — לא חמור, אך מדגים את הגילוי<br>
+    • <strong>Hardcoded password</strong> — string "Incorrect name/password..." הפעיל את הכלל (false positive אפשרי בהודעות שגיאה)<br>
+    • <strong>Non-HTTPS</strong> — XML namespace URLs ב-HTML מפעילים את הכלל (false positive נפוץ — אפשר לכוונן)
+  </div>
+</div>
+
 <!-- FOOTER -->
 <div class="footer">
   <strong>EHZ-AI</strong> | Claude Code Security Monitor | 054-4825276<br>
-  נוצר: אפריל 2026 | גרסה 2.0.0 | עודכן: 13.04.2026
+  נוצר: אפריל 2026 | גרסה 2.1.4 | עודכן: 16.04.2026
 </div>
 
 </body>

@@ -51,6 +51,17 @@
   ],
   "paths": [],
   "allowed_paths": [],
+  "fsw_exclude": [
+    { "folder": "node_modules", "enabled": true,  "recommended": true,  "description": "npm packages — very large, never suspicious" },
+    { "folder": ".git",         "enabled": true,  "recommended": true,  "description": "Git internal files" },
+    { "folder": "dist",         "enabled": true,  "recommended": true,  "description": "Build output folder" },
+    { "folder": "build",        "enabled": false, "recommended": true,  "description": "Build output folder (alternative name)" },
+    { "folder": "out",          "enabled": false, "recommended": true,  "description": "Build output folder (alternative name)" },
+    { "folder": ".next",        "enabled": false, "recommended": true,  "description": "Next.js build cache" },
+    { "folder": "coverage",     "enabled": false, "recommended": true,  "description": "Test coverage reports" },
+    { "folder": ".cache",       "enabled": false, "recommended": true,  "description": "Build tool cache" },
+    { "folder": "tmp",          "enabled": false, "recommended": true,  "description": "Temporary files" }
+  ],
   "allowed_domains": [
     "github.com",
     "raw.githubusercontent.com",
@@ -75,5 +86,1217 @@
     "yarnpkg.com",
     "openai.com"
   ],
-  "discovered_domains": []
+  "discovered_domains": [
+    {
+      "domain": "www.glassdoor.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:48.705Z"
+    },
+    {
+      "domain": "en.wikipedia.org",
+      "score": 100,
+      "label": "TRUSTED",
+      "color": "#10b981",
+      "discovered_at": "2026-04-14T20:31:48.706Z"
+    },
+    {
+      "domain": "www.calcalistech.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:48.706Z"
+    },
+    {
+      "domain": "www.ynetnews.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:48.706Z"
+    },
+    {
+      "domain": "www.secrettelaviv.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:48.706Z"
+    },
+    {
+      "domain": "www.clay.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:48.706Z"
+    },
+    {
+      "domain": "www.dnb.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:48.706Z"
+    },
+    {
+      "domain": "www.cvowl.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "www.tealhq.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "www.glassdoor.co.uk",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "www.indeed.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "startup.jobs",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "www.finalroundai.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "resources.workable.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "www.simplilearn.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "teravexa.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "www.zippia.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:31:54.070Z"
+    },
+    {
+      "domain": "kanini.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.837Z"
+    },
+    {
+      "domain": "unito.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.838Z"
+    },
+    {
+      "domain": "www.fixify.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.838Z"
+    },
+    {
+      "domain": "www.getint.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.838Z"
+    },
+    {
+      "domain": "www.okta.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.838Z"
+    },
+    {
+      "domain": "support.atlassian.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.838Z"
+    },
+    {
+      "domain": "www.reco.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.838Z"
+    },
+    {
+      "domain": "community.atlassian.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.838Z"
+    },
+    {
+      "domain": "i3solutions.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.839Z"
+    },
+    {
+      "domain": "help.okta.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:18.839Z"
+    },
+    {
+      "domain": "www.ziprecruiter.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.064Z"
+    },
+    {
+      "domain": "jobs.chronicle.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.064Z"
+    },
+    {
+      "domain": "hcsonline.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.064Z"
+    },
+    {
+      "domain": "www.jamf.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.064Z"
+    },
+    {
+      "domain": "support.jamf.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.064Z"
+    },
+    {
+      "domain": "in.indeed.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.066Z"
+    },
+    {
+      "domain": "community.jamf.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.066Z"
+    },
+    {
+      "domain": "www.higheredjobs.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:21.066Z"
+    },
+    {
+      "domain": "stackshare.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:23.058Z"
+    },
+    {
+      "domain": "monday.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:32.758Z"
+    },
+    {
+      "domain": "www.kustomer.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:32.758Z"
+    },
+    {
+      "domain": "www.workato.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:32.758Z"
+    },
+    {
+      "domain": "help-desk-migration.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:32.758Z"
+    },
+    {
+      "domain": "exalate.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:32.758Z"
+    },
+    {
+      "domain": "www.payoneer.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:33.617Z"
+    },
+    {
+      "domain": "jobs.techaviv.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:33.617Z"
+    },
+    {
+      "domain": "careercenter.mafsi.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:42.065Z"
+    },
+    {
+      "domain": "www.whitecarrot.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:42.065Z"
+    },
+    {
+      "domain": "resumehead.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:42.065Z"
+    },
+    {
+      "domain": "www.upwork.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:42.065Z"
+    },
+    {
+      "domain": "www.velvetjobs.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:42.065Z"
+    },
+    {
+      "domain": "www.linkedin.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:42.065Z"
+    },
+    {
+      "domain": "www.betterteam.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:42.065Z"
+    },
+    {
+      "domain": "aws.amazon.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:43.822Z"
+    },
+    {
+      "domain": "www.edstellar.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:43.822Z"
+    },
+    {
+      "domain": "www.netcomlearning.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:43.822Z"
+    },
+    {
+      "domain": "medium.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:43.822Z"
+    },
+    {
+      "domain": "www.whizlabs.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:43.822Z"
+    },
+    {
+      "domain": "www.builtinnyc.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:54.523Z"
+    },
+    {
+      "domain": "builtin.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:39:54.523Z"
+    },
+    {
+      "domain": "www.atlassian.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:03.225Z"
+    },
+    {
+      "domain": "www.dice.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:03.225Z"
+    },
+    {
+      "domain": "www.zendesk.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:04.468Z"
+    },
+    {
+      "domain": "www.grazitti.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:04.468Z"
+    },
+    {
+      "domain": "www.codleo.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:04.468Z"
+    },
+    {
+      "domain": "support.zendesk.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:04.468Z"
+    },
+    {
+      "domain": "www.cxtoday.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:04.468Z"
+    },
+    {
+      "domain": "www.globenewswire.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:15.477Z"
+    },
+    {
+      "domain": "jobgether.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:15.477Z"
+    },
+    {
+      "domain": "prepinsta.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:24.157Z"
+    },
+    {
+      "domain": "dailyremote.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:27.433Z"
+    },
+    {
+      "domain": "www.remoterocketship.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:27.433Z"
+    },
+    {
+      "domain": "job-boards.greenhouse.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:27.433Z"
+    },
+    {
+      "domain": "www.refontelearning.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:27.433Z"
+    },
+    {
+      "domain": "clarusway.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:27.433Z"
+    },
+    {
+      "domain": "remotive.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:27.433Z"
+    },
+    {
+      "domain": "roadmap.sh",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-14T20:40:27.433Z"
+    },
+    {
+      "domain": "www.welcometothejungle.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:35.024Z"
+    },
+    {
+      "domain": "kubernetes.slack.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:35.024Z"
+    },
+    {
+      "domain": "skyscrapers.eu",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:35.024Z"
+    },
+    {
+      "domain": "kubernetes.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:35.024Z"
+    },
+    {
+      "domain": "meltano.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:35.024Z"
+    },
+    {
+      "domain": "developers.redhat.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:35.024Z"
+    },
+    {
+      "domain": "www.sentinelone.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:48.308Z"
+    },
+    {
+      "domain": "app.joinrise.co",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:48.308Z"
+    },
+    {
+      "domain": "www.miniorange.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:48.308Z"
+    },
+    {
+      "domain": "www.capitalonecareers.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:48.543Z"
+    },
+    {
+      "domain": "www.ashokit.in",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-14T20:40:48.543Z"
+    },
+    {
+      "domain": "www.amazon.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:48.543Z"
+    },
+    {
+      "domain": "www.coursera.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:40:48.543Z"
+    },
+    {
+      "domain": "boards.greenhouse.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:15.514Z"
+    },
+    {
+      "domain": "www.usecanyon.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:26.459Z"
+    },
+    {
+      "domain": "www.splunk.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:26.459Z"
+    },
+    {
+      "domain": "synechron.wd1.myworkdayjobs.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:26.459Z"
+    },
+    {
+      "domain": "jobright.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:26.459Z"
+    },
+    {
+      "domain": "www.moveworkforward.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.377Z"
+    },
+    {
+      "domain": "www.glassdoor.co.in",
+      "score": 50,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-14T20:41:44.377Z"
+    },
+    {
+      "domain": "www.softwareadvice.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.377Z"
+    },
+    {
+      "domain": "www.proofhub.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.377Z"
+    },
+    {
+      "domain": "www.greatplacetowork.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.377Z"
+    },
+    {
+      "domain": "workspace.google.com",
+      "score": 100,
+      "label": "TRUSTED",
+      "color": "#10b981",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "www.computerworld.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "www.happeo.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "keystonecorp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "www.geeksforgeeks.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "jumpcloud.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "thedigitalnonprofit.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "www.trustedtechteam.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "www.zluri.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:44.594Z"
+    },
+    {
+      "domain": "www.4cornerresources.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:45.659Z"
+    },
+    {
+      "domain": "www.wiz.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:45.659Z"
+    },
+    {
+      "domain": "www.huntress.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:45.659Z"
+    },
+    {
+      "domain": "enhancv.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:45.659Z"
+    },
+    {
+      "domain": "www.manageengine.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:54.659Z"
+    },
+    {
+      "domain": "www.theknowledgeacademy.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:54.659Z"
+    },
+    {
+      "domain": "itsm.tools",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-14T20:41:54.659Z"
+    },
+    {
+      "domain": "minteddesign.zendesk.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:55.858Z"
+    },
+    {
+      "domain": "homestaycom.zendesk.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:55.858Z"
+    },
+    {
+      "domain": "payoneer.custhelp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:55.858Z"
+    },
+    {
+      "domain": "payoneer.pissedconsumer.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:55.858Z"
+    },
+    {
+      "domain": "mindrift.zendesk.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:55.858Z"
+    },
+    {
+      "domain": "docs.datadoghq.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:56.746Z"
+    },
+    {
+      "domain": "okta.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:56.746Z"
+    },
+    {
+      "domain": "webflow.nextmv.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:56.746Z"
+    },
+    {
+      "domain": "www.datadoghq.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:41:56.746Z"
+    },
+    {
+      "domain": "infohub.custhelp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:06.148Z"
+    },
+    {
+      "domain": "docs.oracle.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:06.148Z"
+    },
+    {
+      "domain": "cx.rightnow.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:06.148Z"
+    },
+    {
+      "domain": "virtuos.custhelp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:06.148Z"
+    },
+    {
+      "domain": "www.oracle.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:06.148Z"
+    },
+    {
+      "domain": "dev.to",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "www.getmonetizely.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "www.graphapp.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "betterstack.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "signoz.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "sematext.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "www.landbase.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "www.atatus.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:08.569Z"
+    },
+    {
+      "domain": "us.seibert.group",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-14T20:42:17.218Z"
+    },
+    {
+      "domain": "ttpsc.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:17.218Z"
+    },
+    {
+      "domain": "www.clovity.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-14T20:42:17.218Z"
+    },
+    {
+      "domain": "www.crunchbase.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.097Z"
+    },
+    {
+      "domain": "www.seedtable.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.098Z"
+    },
+    {
+      "domain": "www.israel21c.org",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.098Z"
+    },
+    {
+      "domain": "iamondemand.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.098Z"
+    },
+    {
+      "domain": "www.timesofisrael.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.098Z"
+    },
+    {
+      "domain": "www.wake-up.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.746Z"
+    },
+    {
+      "domain": "www.kycisrael.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.746Z"
+    },
+    {
+      "domain": "hrtoday.in",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-15T07:30:39.746Z"
+    },
+    {
+      "domain": "www.cyberdb.co",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.746Z"
+    },
+    {
+      "domain": "www.cybereason.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:39.746Z"
+    },
+    {
+      "domain": "pitchmeai.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:52.214Z"
+    },
+    {
+      "domain": "il.linkedin.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:52.214Z"
+    },
+    {
+      "domain": "www.cybersecurityjobs.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:52.214Z"
+    },
+    {
+      "domain": "www.cyberseek.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:30:52.214Z"
+    },
+    {
+      "domain": "jobs.weekday.works",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-15T07:30:52.214Z"
+    },
+    {
+      "domain": "thehackernews.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "www.securityweek.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "krebsonsecurity.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "www.brightdefense.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "cybersecurityventures.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "reports.weforum.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "www.kerberus.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "www.csis.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:05.415Z"
+    },
+    {
+      "domain": "www.helpnetsecurity.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:14.836Z"
+    },
+    {
+      "domain": "www.cybersecurityjobsite.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:14.836Z"
+    },
+    {
+      "domain": "acsmi.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:14.836Z"
+    },
+    {
+      "domain": "www.techneeds.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:14.836Z"
+    },
+    {
+      "domain": "www.zoominfo.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:16.314Z"
+    },
+    {
+      "domain": "www.sygnia.co",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:28.399Z"
+    },
+    {
+      "domain": "upsecurity.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:28.399Z"
+    },
+    {
+      "domain": "www.goodfirms.co",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:28.399Z"
+    },
+    {
+      "domain": "www.ciso.inc",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-15T07:31:28.399Z"
+    },
+    {
+      "domain": "www.penligent.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:44.207Z"
+    },
+    {
+      "domain": "app.stationx.net",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:44.207Z"
+    },
+    {
+      "domain": "motionrecruitment.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-15T07:31:44.208Z"
+    }
+  ]
 }

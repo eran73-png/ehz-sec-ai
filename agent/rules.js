@@ -257,6 +257,9 @@ function checkScopeRule(event) {
   const wl    = getWhitelist();
   const allowedPaths = wl.allowed_paths || [];
 
+  // If no allowed_paths configured → skip scope check entirely
+  if (!allowedPaths.length) return null;
+
   // ── File tools: check file_path / path parameter ──
   if (FILE_SCOPE_TOOLS.includes(tool)) {
     const rawPath = input.file_path || input.path || '';

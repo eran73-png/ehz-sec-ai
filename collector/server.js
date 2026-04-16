@@ -142,21 +142,22 @@ function checkWeeklyScan() {
     console.log('[Weekly Scan] Starting automatic weekly scan...');
     try {
       if (!fileAuditScanner) return;
-      const result = fileAuditScanner.runFileAudit(fileAuditScanner.DEFAULT_SCAN_PATH);
-      fs.writeFileSync(AUDIT_RESULT_FILE, JSON.stringify(result, null, 2), 'utf8');
-      const critCount = result.files.filter(f => f.risk_label === 'CRITICAL').length;
-      sendTelegram(
-        `📋 <b>FlowGuard — Weekly Auto Scan</b>\n` +
-        `📁 ${result.summary.total_files} files scanned\n` +
-        `🚨 CRITICAL: ${result.summary.critical} | HIGH: ${result.summary.high} | MEDIUM: ${result.summary.medium}\n` +
-        `✅ Clean: ${result.summary.clean}`
-      );
-      if (critCount > 0) {
-        result.files.filter(f => f.risk_label === 'CRITICAL').forEach(f => {
-          sendTelegram(`🚨 <b>CRITICAL</b>\n📄 ${f.path}\n⚡ ${f.findings.map(x => x.reason).join(', ')}`);
-        });
-      }
-      console.log(`[Weekly Scan] Done — ${result.summary.total_files} files, ${critCount} CRITICAL`);
+      fileAuditScanner.runFileAudit(fileAuditScanner.DEFAULT_SCAN_PATH).then(result => {
+        fs.writeFileSync(AUDIT_RESULT_FILE, JSON.stringify(result, null, 2), 'utf8');
+        const critCount = result.files.filter(f => f.risk_label === 'CRITICAL').length;
+        sendTelegram(
+          `📋 <b>FlowGuard — Weekly Auto Scan</b>\n` +
+          `📁 ${result.summary.total_files} files scanned\n` +
+          `🚨 CRITICAL: ${result.summary.critical} | HIGH: ${result.summary.high} | MEDIUM: ${result.summary.medium}\n` +
+          `✅ Clean: ${result.summary.clean}`
+        );
+        if (critCount > 0) {
+          result.files.filter(f => f.risk_label === 'CRITICAL').forEach(f => {
+            sendTelegram(`🚨 <b>CRITICAL</b>\n📄 ${f.path}\n⚡ ${f.findings.map(x => x.reason).join(', ')}`);
+          });
+        }
+        console.log(`[Weekly Scan] Done — ${result.summary.total_files} files, ${critCount} CRITICAL`);
+      }).catch(e => { console.error('[Weekly Scan] Error:', e.message); });
     } catch(e) {
       console.error('[Weekly Scan] Error:', e.message);
     }
@@ -365,10 +366,13 @@ function getRulesInfo() {
     // ספירת חוקים מתוך הקובץ עצמו
     const src = require('fs').readFileSync(rulesPath, 'utf8');
     const rulesCount = (src.match(/level\s*:/g) || []).length;
+    let appVersion = '?';
+    try { appVersion = require('../package.json').version; } catch(_) {}
     return {
       version:      r.RULES_VERSION || '1.0.0',
       last_updated: r.RULES_UPDATED || null,
-      rules_count:  rulesCount
+      rules_count:  rulesCount,
+      app_version:  appVersion,
     };
   } catch(e) { return { version: '1.0.0', last_updated: null, rules_count: '?' }; }
 }
@@ -801,7 +805,7 @@ app.get('/audit/export', async (req, res) => {
 // POST /audit/scan — run scan now
 // body: { scan_path, incremental } (all optional)
 //   incremental=true → scan only files modified since last scan's scanned_at
-app.post('/audit/scan', (req, res) => {
+app.post('/audit/scan', async (req, res) => {
   if (!fileAuditScanner) return res.status(500).json({ error: 'file-audit-scanner not available' });
   try {
     const body        = req.body || {};
@@ -817,7 +821,7 @@ app.post('/audit/scan', (req, res) => {
       } catch (_) {}
     }
 
-    const result = fileAuditScanner.runFileAudit(scanPath, { incremental, since_iso });
+    const result = await fileAuditScanner.runFileAudit(scanPath, { incremental, since_iso });
 
     // In incremental mode: merge new findings with previous full results
     if (incremental && fs.existsSync(AUDIT_RESULT_FILE)) {
@@ -1411,27 +1415,77 @@ app.post('/fsw/quiet-hours', (req, res) => {
   res.json({ ok: true, ...quietHoursConfig, active: isQuietHour() });
 });
 
-// POST /fsw/exclude — add exclusion
-app.post('/fsw/exclude', (req, res) => {
-  const { entry } = req.body || {};
-  if (!entry || typeof entry !== 'string') return res.status(400).json({ error: 'entry required' });
-  FSW_EXCLUDE.add(entry.trim());
-  res.json({ ok: true, exclude: [...FSW_EXCLUDE] });
+// GET /fsw/exclude — return full list with recommended + enabled state
+app.get('/fsw/exclude', (req, res) => {
+  try {
+    const wl = JSON.parse(fs.readFileSync(path.join(__dirname, '../agent/whitelist.json'), 'utf8'));
+    res.json({ ok: true, fsw_exclude: wl.fsw_exclude || [], always_exclude: [...FSW_ALWAYS_EXCLUDE] });
+  } catch(e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
-// DELETE /fsw/exclude — remove exclusion
-app.delete('/fsw/exclude', (req, res) => {
-  const { entry } = req.body || {};
-  if (!entry) return res.status(400).json({ error: 'entry required' });
-  FSW_EXCLUDE.delete(entry.trim());
-  res.json({ ok: true, exclude: [...FSW_EXCLUDE] });
+// POST /fsw/exclude — update exclusion list (full list from UI)
+app.post('/fsw/exclude', (req, res) => {
+  const { fsw_exclude } = req.body || {};
+  if (!Array.isArray(fsw_exclude)) return res.status(400).json({ error: 'fsw_exclude array required' });
+  try {
+    const wlPath = path.join(__dirname, '../agent/whitelist.json');
+    const wl = JSON.parse(fs.readFileSync(wlPath, 'utf8'));
+    wl.fsw_exclude = fsw_exclude;
+    fs.writeFileSync(wlPath, JSON.stringify(wl, null, 2), 'utf8');
+    // Reload into memory
+    FSW_EXCLUDE = loadFswExclude();
+    res.json({ ok: true, fsw_exclude: wl.fsw_exclude, active_exclude: [...FSW_EXCLUDE] });
+  } catch(e) { res.status(500).json({ ok: false, error: e.message }); }
+});
+
+// POST /fsw/exclude/custom — add a custom folder
+app.post('/fsw/exclude/custom', (req, res) => {
+  const { folder } = req.body || {};
+  if (!folder || typeof folder !== 'string') return res.status(400).json({ error: 'folder required' });
+  try {
+    const wlPath = path.join(__dirname, '../agent/whitelist.json');
+    const wl = JSON.parse(fs.readFileSync(wlPath, 'utf8'));
+    wl.fsw_exclude = wl.fsw_exclude || [];
+    if (!wl.fsw_exclude.find(e => e.folder === folder.trim())) {
+      wl.fsw_exclude.push({ folder: folder.trim(), enabled: true, recommended: false, description: 'Custom exclusion' });
+    }
+    fs.writeFileSync(wlPath, JSON.stringify(wl, null, 2), 'utf8');
+    FSW_EXCLUDE = loadFswExclude();
+    res.json({ ok: true, fsw_exclude: wl.fsw_exclude });
+  } catch(e) { res.status(500).json({ ok: false, error: e.message }); }
+});
+
+// DELETE /fsw/exclude/custom — remove a custom folder
+app.delete('/fsw/exclude/custom', (req, res) => {
+  const { folder } = req.body || {};
+  if (!folder) return res.status(400).json({ error: 'folder required' });
+  try {
+    const wlPath = path.join(__dirname, '../agent/whitelist.json');
+    const wl = JSON.parse(fs.readFileSync(wlPath, 'utf8'));
+    wl.fsw_exclude = (wl.fsw_exclude || []).filter(e => e.folder !== folder.trim());
+    fs.writeFileSync(wlPath, JSON.stringify(wl, null, 2), 'utf8');
+    FSW_EXCLUDE = loadFswExclude();
+    res.json({ ok: true, fsw_exclude: wl.fsw_exclude });
+  } catch(e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
-const FSW_ROOT    = 'C:/Claude-Repo';
-const FSW_EXCLUDE = new Set(['node_modules', '.git', 'backups', 'ccsm.db', 'hook.log', '.ccsm-disable', '.ccsm-silent']);
+const FSW_ROOT      = 'C:/Claude-Repo';
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
+
+// Always-excluded internal files (not user-configurable)
+const FSW_ALWAYS_EXCLUDE = new Set(['ccsm.db', 'hook.log', '.ccsm-disable', '.ccsm-silent']);
+
+// User-configurable exclusions — loaded from whitelist.json
+function loadFswExclude() {
+  try {
+    const wl = JSON.parse(fs.readFileSync(path.join(__dirname, '../agent/whitelist.json'), 'utf8'));
+    const entries = wl.fsw_exclude || [];
+    return new Set(entries.filter(e => e.enabled).map(e => e.folder));
+  } catch { return new Set(['node_modules', '.git', 'dist']); }
+}
+let FSW_EXCLUDE = loadFswExclude();
 
 // ─── Quiet Hours ──────────────────────────────────────────────────────────────
 let quietHoursConfig = { enabled: true, from: 23, to: 7 }; // 23:00–07:00
@@ -1458,7 +1512,10 @@ const fswDebounce = new Map(); // path → timeout handle
 let fswActive = false;
 
 function markHookWrite(filePath) {
-  recentHookWrites.set(filePath.toLowerCase().replace(/\\/g, '/'), Date.now());
+  const key = filePath.toLowerCase().replace(/\\/g, '/');
+  recentHookWrites.set(key, Date.now());
+  // Layer 1: שמור לזיכרון הסשן כקובץ שנגעה בו Claude
+  claudeSessionFiles.add(key);
 }
 function wasRecentHookWrite(filePath) {
   const key = filePath.toLowerCase().replace(/\\/g, '/');
@@ -1467,6 +1524,79 @@ function wasRecentHookWrite(filePath) {
   if (Date.now() - ts < 8000) return true;
   recentHookWrites.delete(key);
   return false;
+}
+
+// ─── Behavioral Learning ───────────────────────────────────────────────────────
+
+// Layer 1 — Claude Session Memory
+// כל קובץ שנגעה בו Claude (Edit/Write hooks) נזכר לכל הסשן
+const claudeSessionFiles = new Set(); // path keys
+
+// Layer 2 — Frequency Counter (per session, reset daily)
+// סופר כמה פעמים כל קובץ השתנה — קובץ שמשתנה הרבה = עבודה רגילה
+const fileChangeCounter = new Map(); // path → count
+// איפוס יומי בחצות
+setInterval(() => {
+  fileChangeCounter.clear();
+  console.log('[FlowGuard] Behavioral counters reset (daily)');
+}, 24 * 60 * 60 * 1000);
+
+function incrementFileCounter(filePath) {
+  const key = filePath.toLowerCase().replace(/\\/g, '/');
+  fileChangeCounter.set(key, (fileChangeCounter.get(key) || 0) + 1);
+  return fileChangeCounter.get(key);
+}
+
+// Layer 3 — Time Pattern Learning (NeDB query)
+// בודק האם הקובץ משתנה באותה שעה (±1h) ב-3+ ימים מהשבוע האחרון
+async function isKnownTimePattern(filePath) {
+  try {
+    const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    const currentHour  = new Date().getHours();
+    const events = await new Promise((resolve, reject) =>
+      db.find({ hook_type: 'FSWatcher', input_summary: filePath, ts: { $gte: sevenDaysAgo } },
+        (err, docs) => err ? reject(err) : resolve(docs))
+    );
+    if (events.length < 3) return false;
+    // בדוק: כמה events קרו בשעה דומה (±1h)?
+    const sameHourHits = events.filter(e => {
+      const h = new Date(e.ts).getHours();
+      return Math.abs(h - currentHour) <= 1 || Math.abs(h - currentHour) >= 23;
+    });
+    // 3+ hits באותה שעה = דפוס חוזר
+    return sameHourHits.length >= 3;
+  } catch { return false; }
+}
+
+// בודק האם קבוצת קבצים משתנה יחד באותה שעה ב-3+ ימים = scheduled task
+const recentGroupFiles = { hour: -1, files: new Set(), timer: null };
+
+function trackGroupChange(filePath) {
+  const h = new Date().getHours();
+  if (recentGroupFiles.hour !== h) {
+    recentGroupFiles.hour  = h;
+    recentGroupFiles.files = new Set();
+  }
+  recentGroupFiles.files.add(filePath.toLowerCase().replace(/\\/g, '/'));
+}
+
+async function isScheduledTaskGroup() {
+  if (recentGroupFiles.files.size < 5) return false;
+  try {
+    const sevenDaysAgo  = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    const currentHour   = new Date().getHours();
+    // בדוק אחד הקבצים מהקבוצה — אם הוא KNOWN_PATTERN, כנראה כל הקבוצה scheduled
+    const samplePath = [...recentGroupFiles.files][0];
+    const events = await new Promise((resolve, reject) =>
+      db.find({ hook_type: 'FSWatcher', input_summary: samplePath, ts: { $gte: sevenDaysAgo } },
+        (err, docs) => err ? reject(err) : resolve(docs))
+    );
+    const sameHourHits = events.filter(e => {
+      const h = new Date(e.ts).getHours();
+      return Math.abs(h - currentHour) <= 1 || Math.abs(h - currentHour) >= 23;
+    });
+    return sameHourHits.length >= 3;
+  } catch { return false; }
 }
 
 // Bulk copy detector — counts new files within a time window
@@ -1501,7 +1631,7 @@ function startFSWatcher() {
       if (!filename) return;
       // סינון תיקיות מוחרגות
       const parts = filename.replace(/\\/g, '/').split('/');
-      if (parts.some(p => FSW_EXCLUDE.has(p))) return;
+      if (parts.some(p => FSW_EXCLUDE.has(p) || FSW_ALWAYS_EXCLUDE.has(p))) return;
       // סינון קבצים זמניים
       if (filename.endsWith('.tmp') || filename.endsWith('~')) return;
 
@@ -1515,54 +1645,95 @@ function startFSWatcher() {
       if (fswDebounce.has(debounceKey)) {
         clearTimeout(fswDebounce.get(debounceKey));
       }
-      fswDebounce.set(debounceKey, setTimeout(() => {
+      fswDebounce.set(debounceKey, setTimeout(async () => {
         fswDebounce.delete(debounceKey);
 
-        const nameLower  = filename.toLowerCase();
+        const nameLower   = filename.toLowerCase();
         const isSensitive = FSW_SENSITIVE.some(s => nameLower.includes(s));
-        const isRename   = eventType === 'rename';
-        const fileExists = fs.existsSync(fullPath);
+        const isRename    = eventType === 'rename';
+        const fileExists  = fs.existsSync(fullPath);
+        const fileKey     = fullPath.toLowerCase().replace(/\\/g, '/');
 
         // Deleted file: rename event + file no longer exists
-        const isDeleted  = isRename && !fileExists;
-        const isNewFile  = isRename && fileExists;
+        const isDeleted = isRename && !fileExists;
+        const isNewFile = isRename && fileExists;
 
-        let level, reason;
-
+        // --- מחיקה ו-sensitive — תמיד HIGH/CRITICAL, ללא בדיקת דפוסים ---
         if (isDeleted) {
-          level  = 'CRITICAL';
-          reason = `🗑️ FSW: File manually DELETED from project — NOT by Claude — ${filename}`;
-          fswSendTelegram(`🗑️ <b>FlowGuard — File Deleted</b>\nManual deletion detected (NOT by Claude)\n<code>${filename}</code>`);
-        } else if (isSensitive) {
-          level  = 'HIGH';
-          reason = `🔍 FSW: Sensitive file ${isNewFile ? 'manually copied to project — NOT by Claude' : 'modified'} — ${filename}`;
-        } else if (isNewFile) {
-          level  = 'HIGH';
-          reason = `📥 FSW: File manually copied to project — NOT by Claude — ${filename}`;
-          checkBulkCopy(filename);
-        } else {
-          level  = 'HIGH';
-          reason = `📥 FSW: File manually copied to project — NOT by Claude — ${filename}`;
-          checkBulkCopy(filename);
+          db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+            session_id: 'fsw', level: 'CRITICAL', rule_type: 'fsw', hardening_level: 1,
+            reason: `🗑️ FSW: File DELETED — ${filename}`,
+            input_summary: fullPath, output_summary: eventType });
+          fswSendTelegram(`🗑️ <b>FlowGuard — File Deleted</b>\n<code>${filename}</code>`);
+          return;
+        }
+        if (isSensitive) {
+          const reason = `🔍 FSW: Sensitive file ${isNewFile ? 'added' : 'modified'} — ${filename}`;
+          db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+            session_id: 'fsw', level: 'HIGH', rule_type: 'fsw', hardening_level: 1,
+            reason, input_summary: fullPath, output_summary: eventType });
+          fswSendTelegram(`🔑 <b>FlowGuard — Sensitive File</b>\n${reason}`);
+          return;
         }
 
-        db.insert({
-          ts:            Date.now(),
-          hook_type:     'FSWatcher',
-          tool_name:     'FSWatcher',
-          session_id:    'fsw',
-          level,
-          reason,
-          rule_type:     'fsw',
-          hardening_level: 1,
-          input_summary: fullPath,
-          output_summary: eventType,
-        });
+        // --- Behavioral Learning: 3 שכבות ---
 
-        if (level === 'HIGH') {
-          const emoji = isSensitive ? '🔑' : '📥';
-          fswSendTelegram(`${emoji} <b>FlowGuard — FSWatcher</b>\n${reason}\n<code>${filename}</code>`);
+        // Layer 1: Claude Session Memory — קובץ שנגעה בו Claude בסשן הזה
+        if (claudeSessionFiles.has(fileKey)) {
+          db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+            session_id: 'fsw', level: 'INFO', rule_type: 'fsw', hardening_level: 1,
+            reason: `🤖 FSW: File touched by Claude this session — ${filename}`,
+            input_summary: fullPath, output_summary: eventType });
+          return; // אין Telegram
         }
+
+        // Layer 2: Frequency Counter — קובץ שמשתנה חזור ושנה
+        const changeCount = incrementFileCounter(fileKey);
+        if (changeCount >= 10) {
+          // 10+ שינויים — suppress לגמרי (לא נשמר ב-DB)
+          return;
+        }
+        if (changeCount >= 3) {
+          db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+            session_id: 'fsw', level: 'INFO', rule_type: 'fsw', hardening_level: 1,
+            reason: `🔄 FSW: Active work file (${changeCount}x today) — ${filename}`,
+            input_summary: fullPath, output_summary: eventType });
+          return; // אין Telegram
+        }
+
+        // Layer 3: Time Pattern Learning — גיבוי לילי, scheduled task וכו'
+        trackGroupChange(fullPath);
+        const [knownPattern, scheduledGroup] = await Promise.all([
+          isKnownTimePattern(fullPath),
+          isScheduledTaskGroup()
+        ]);
+
+        if (scheduledGroup) {
+          db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+            session_id: 'fsw', level: 'INFO', rule_type: 'fsw', hardening_level: 1,
+            reason: `⏰ FSW: SCHEDULED_TASK detected — ${filename}`,
+            input_summary: fullPath, output_summary: eventType });
+          return; // suppress — no Telegram
+        }
+        if (knownPattern) {
+          db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+            session_id: 'fsw', level: 'INFO', rule_type: 'fsw', hardening_level: 1,
+            reason: `📅 FSW: KNOWN_PATTERN (recurring at this hour) — ${filename}`,
+            input_summary: fullPath, output_summary: eventType });
+          return; // suppress — no Telegram
+        }
+
+        // --- ברירת מחדל: LOW (לא מוכר, לא דפוס, לא sensitive) ---
+        const level  = 'LOW';
+        const reason = isNewFile
+          ? `📥 FSW: New file in project — ${filename}`
+          : `📝 FSW: File modified — ${filename}`;
+        if (isNewFile) checkBulkCopy(filename);
+
+        db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+          session_id: 'fsw', level, rule_type: 'fsw', hardening_level: 1,
+          reason, input_summary: fullPath, output_summary: eventType });
+        // LOW — no Telegram
       }, 3000)); // 3 שניות debounce
     });
 

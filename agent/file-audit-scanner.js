@@ -7,9 +7,12 @@
  * מחזיר: { files[], summary }
  */
 
-const fs     = require('fs');
-const path   = require('path');
-const crypto = require('crypto');
+const fs       = require('fs');
+const path     = require('path');
+const crypto   = require('crypto');
+
+let unzipper;
+try { unzipper = require('unzipper'); } catch (_) {}
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -22,11 +25,26 @@ const EXCLUDE_DIRS = new Set([
 ]);
 
 const SCAN_EXTENSIONS = new Set([
+  '',    // extensionless files (VISA, credentials, passwords, etc.)
   '.js', '.ts', '.jsx', '.tsx', '.py', '.sh', '.ps1', '.psm1',
   '.json', '.env', '.yml', '.yaml', '.xml', '.config',
   '.txt', '.md', '.html', '.css', '.sql', '.rb', '.php',
   '.conf', '.cfg', '.ini', '.toml', '.properties',
+  '.docx', '.xlsx', '.pptx', '.odt', '.ods', '.odp',
 ]);
+
+// Office XML formats (ZIP-based) — need special text extraction
+const OFFICE_EXTENSIONS = new Set(['.docx', '.xlsx', '.pptx', '.odt', '.ods', '.odp']);
+
+// Which XML entries to read per format
+const OFFICE_XML_ENTRIES = {
+  '.docx': ['word/document.xml'],
+  '.odt':  ['content.xml'],
+  '.xlsx': ['xl/sharedStrings.xml'],
+  '.ods':  ['content.xml'],
+  '.pptx': null, // all ppt/slides/slide*.xml — matched by prefix
+  '.odp':  ['content.xml'],
+};
 
 const MAX_FILE_SIZE = 500 * 1024; // 500KB
 
@@ -81,9 +99,27 @@ function riskLabel(score) {
   return 'OK';
 }
 
+// ─── Office Text Extractor ────────────────────────────────────────────────────
+
+async function readOfficeText(filePath, ext) {
+  if (!unzipper) return '';
+  try {
+    const zip = await unzipper.Open.file(filePath);
+    const targets = OFFICE_XML_ENTRIES[ext];
+    const entries = zip.files.filter(f => {
+      if (targets) return targets.includes(f.path);
+      // pptx/odp slides: match any ppt/slides/slide*.xml
+      return /^ppt\/slides\/slide\d+\.xml$/.test(f.path);
+    });
+    const texts = await Promise.all(entries.map(e => e.buffer().then(b => b.toString('utf8'))));
+    // Strip XML tags, collapse whitespace
+    return texts.join(' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  } catch (_) { return ''; }
+}
+
 // ─── File Scanner ─────────────────────────────────────────────────────────────
 
-function scanFile(filePath) {
+async function scanFile(filePath) {
   const result = {
     path:     filePath,
     size:     0,
@@ -103,14 +139,17 @@ function scanFile(filePath) {
       return result;
     }
 
-    const content = fs.readFileSync(filePath, 'utf8');
-    const lines   = content.split('\n');
+    let content;
+    if (OFFICE_EXTENSIONS.has(result.ext)) {
+      content = await readOfficeText(filePath, result.ext);
+    } else {
+      content = fs.readFileSync(filePath, 'utf8');
+    }
+    const lines = content.split('\n');
 
     for (const pattern of AUDIT_PATTERNS) {
-      // Find line number for better reporting
       for (let i = 0; i < lines.length; i++) {
         if (pattern.re.test(lines[i])) {
-          // Avoid duplicate reason per file
           if (!result.findings.some(f => f.reason === pattern.reason)) {
             result.findings.push({
               level:   pattern.level,
@@ -135,7 +174,7 @@ function scanFile(filePath) {
 
 // ─── Directory Walker ─────────────────────────────────────────────────────────
 
-function walkDir(dirPath, results, sinceMs) {
+async function walkDir(dirPath, promises, sinceMs) {
   let entries;
   try { entries = fs.readdirSync(dirPath, { withFileTypes: true }); }
   catch (_) { return; }
@@ -146,7 +185,7 @@ function walkDir(dirPath, results, sinceMs) {
     const fullPath = path.join(dirPath, entry.name);
 
     if (entry.isDirectory()) {
-      walkDir(fullPath, results, sinceMs);
+      await walkDir(fullPath, promises, sinceMs);
     } else if (entry.isFile()) {
       const ext = path.extname(entry.name).toLowerCase();
       if (!SCAN_EXTENSIONS.has(ext)) continue;
@@ -159,7 +198,7 @@ function walkDir(dirPath, results, sinceMs) {
         } catch (_) {}
       }
 
-      results.push(scanFile(fullPath));
+      promises.push(scanFile(fullPath));
     }
   }
 }
@@ -172,16 +211,17 @@ function walkDir(dirPath, results, sinceMs) {
  * @param {boolean} opts.incremental - true → סרוק רק קבצים שהשתנו מאז הסריקה האחרונה
  * @param {string}  opts.since_iso  - ISO timestamp — "מאז מתי" (משמש אם incremental=true)
  */
-function runFileAudit(scanPath, opts = {}) {
+async function runFileAudit(scanPath, opts = {}) {
   const targetPath = scanPath || DEFAULT_SCAN_PATH;
-  const files      = [];
+  const promises   = [];
 
   let sinceMs = null;
   if (opts.incremental && opts.since_iso) {
     sinceMs = new Date(opts.since_iso).getTime();
   }
 
-  walkDir(targetPath, files, sinceMs);
+  await walkDir(targetPath, promises, sinceMs);
+  const files = await Promise.all(promises);
 
   const withFindings = files.filter(f => f.findings.length > 0);
 
