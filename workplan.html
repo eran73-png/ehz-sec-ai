@@ -1906,7 +1906,139 @@
   </div>
 </div>
 
+<!-- MS11 — DIAGNOSTICS & SUPPORT -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(239,68,68,0.3);">
+  <div class="phase-header" style="background:rgba(239,68,68,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#ef4444,#ea580c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS11</div>
+    <div class="phase-info">
+      <h3>MS11 — Diagnostics &amp; Support Tool</h3>
+      <p>כלי אבחון ותמיכה למקרים של כשלון התקנה או באגים בשטח</p>
+    </div>
+    <div class="phase-status" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">🚀 בעבודה</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num" style="color:#ef4444;">11.1</div>
+      <div class="task-title">📦 Diagnostics Collector Script</div>
+      <div class="task-desc">
+        <code>FlowGuard-Diagnostics.ps1</code> — סקריפט PowerShell שנארז עם ההתקנה.<br><br>
+        <strong>אוסף:</strong><br>
+        • Inno Setup install log (%TEMP%\Setup Log*.txt)<br>
+        • Windows Event Log — source "FlowGuard Collector"<br>
+        • Service logs (stdout/stderr)<br>
+        • config: whitelist.json, package.json, .env (מצונזר — ללא tokens)<br>
+        • System info: OS version, Node.js version, user permissions, admin status<br>
+        • Folder structure: קבצים ב-C:\Program Files\FlowGuard\<br>
+        • פלט ל-ZIP: <code>FlowGuard-Diag-&lt;hostname&gt;-&lt;date&gt;.zip</code>
+      </div>
+      <div class="task-tags"><span class="tag">powershell</span><span class="tag">diagnostics</span><span class="tag">zip</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#ef4444;">11.2</div>
+      <div class="task-title">☁️ Upload Endpoint (Vercel)</div>
+      <div class="task-desc">
+        Serverless function ב-Vercel: <code>POST /api/diag</code><br><br>
+        <strong>מקבל:</strong> ZIP + hostname + email<br>
+        <strong>שומר:</strong> Vercel Blob Storage או S3<br>
+        <strong>מודיע:</strong> Telegram לערן — "New diagnostic report from &lt;hostname&gt;"<br><br>
+        <strong>אבטחה:</strong> טוקן חד-פעמי, rate limit 5/hour לכל IP, מחיקה אוטומטית אחרי 30 יום.
+      </div>
+      <div class="task-tags"><span class="tag">vercel</span><span class="tag">serverless</span><span class="tag">upload</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#ef4444;">11.3</div>
+      <div class="task-title">🖱️ Dashboard Button — Export Diagnostics</div>
+      <div class="task-desc">
+        כפתור ב-Settings: "Export &amp; Upload Diagnostics"<br><br>
+        • לוחצים → מריץ את הסקריפט → מעלה → מציג לינק/קוד אסמכתא<br>
+        • המשתמש שולח את קוד האסמכתא בטלגרם/מייל<br>
+        • ערן פותח את הדוח בלוח בקרה מיוחד ב-Vercel
+      </div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">ui</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#ef4444;">11.4</div>
+      <div class="task-title">🆘 Standalone Mode (התקנה כשלה)</div>
+      <div class="task-desc">
+        כשההתקנה נכשלה, FlowGuard לא פועל כלל — איך לאסוף לוגים?<br><br>
+        <strong>פתרון:</strong><br>
+        • <code>FlowGuard-Diagnostics.exe</code> עצמאי בדף ההורדה<br>
+        • רץ ללא FlowGuard מותקן<br>
+        • אוסף רק קבצים גלובליים (Setup logs, Event Viewer)<br>
+        • מעלה לאותו endpoint
+      </div>
+      <div class="task-tags"><span class="tag">standalone</span><span class="tag">recovery</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#ef4444;">11.5</div>
+      <div class="task-title">🔒 Sanitization — הסרת מידע רגיש</div>
+      <div class="task-desc">
+        לפני שליחת הדוח — להסיר:<br>
+        • TELEGRAM_TOKEN / TELEGRAM_CHAT_ID מה-.env<br>
+        • API keys, passwords, tokens<br>
+        • שמות משתמשים מחוץ להקשר (username → [USER])<br>
+        • נתיבים אישיים (C:\Users\XXX → C:\Users\[USER])<br><br>
+        המשתמש מאשר לפני העלאה: "Preview contents" button.
+      </div>
+      <div class="task-tags"><span class="tag">privacy</span><span class="tag">security</span><span class="tag">sanitization</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#ef4444;">11.6</div>
+      <div class="task-title">📊 Admin Dashboard — Diag Reports</div>
+      <div class="task-desc">
+        דף פרטי לערן: <code>flowguard-site.vercel.app/admin/diag</code><br><br>
+        • רשימת כל הדיווחים שהתקבלו<br>
+        • filter: hostname, date, error signature<br>
+        • פתיחת ZIP inline + preview של הקבצים<br>
+        • פטור מ-auth בסיסי (Vercel password protection)
+      </div>
+      <div class="task-tags"><span class="tag">admin</span><span class="tag">dashboard</span><span class="tag">support</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- PHASE 9 — LINUX & macOS -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(168,85,247,0.3);">
+  <div class="phase-header" style="background:rgba(168,85,247,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#a855f7,#6366f1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS10</div>
+    <div class="phase-info">
+      <h3>MS10 — Auto-Update System</h3>
+      <p>עדכון אוטומטי של FlowGuard — rules engine + app version</p>
+    </div>
+    <div class="phase-status" style="background:rgba(168,85,247,0.12);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">💡 מתוכנן</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">10.1</div>
+      <div class="task-title">🔄 Rules Auto-Update</div>
+      <div class="task-desc">
+        עדכון אוטומטי של קובץ הכללים מהאינטרנט — כמו antivirus signatures.<br><br>
+        <strong>איך עובד:</strong><br>
+        • שרת מרכזי מחזיק <code>rules-manifest.json</code> עם גרסה + URL להורדה<br>
+        • FlowGuard בודק כל 24 שעות: האם יש גרסת rules חדשה?<br>
+        • אם כן — מוריד, מאמת hash, מחליף בלי restart<br>
+        • Dashboard מציג: Current Rules Version + "Check for Updates" button<br><br>
+        <strong>יתרון:</strong> תיקוני כללים (false positives, כללים חדשים) מגיעים לכל המשתמשים אוטומטית.
+      </div>
+      <div class="task-tags"><span class="tag">auto-update</span><span class="tag">rules</span><span class="tag">security</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">10.2</div>
+      <div class="task-title">🚀 App Auto-Update</div>
+      <div class="task-desc">
+        עדכון אוטומטי של FlowGuard עצמו — ללא הורדה ידנית של EXE.<br><br>
+        <strong>איך עובד:</strong><br>
+        • בדיקת <code>latest-version.json</code> בשרת מרכזי<br>
+        • אם יש גרסה חדשה — Toast בדשבורד: "v2.1.5 available — Download"<br>
+        • לחיצה → הורדת EXE החדש → הרצה אוטומטית (silent install)<br>
+        • Windows: <code>msiexec /i /qn</code> או Inno Setup silent flags<br><br>
+        <strong>שלב ראשון:</strong> notification בלבד (לא silent) — המשתמש מאשר.
+      </div>
+      <div class="task-tags"><span class="tag">auto-update</span><span class="tag">installer</span><span class="tag">notification</span></div>
+    </div>
+  </div>
+</div>
+
 <div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
   <div class="phase-header" style="background:rgba(16,185,129,0.05);">
     <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#0ea5e9);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">9</div>
@@ -4172,6 +4304,17 @@ Claude מבצע tool call
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#ef4444,#ea580c);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.5</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">16.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          🐛 <strong>Critical Bugfix — Installer (Field Report):</strong><br>
+          • <code>start-tray.vbs</code> hardcoded ל-<code>C:\FlowGuard</code> — נכשל בכל התקנה לנתיב אחר<br>
+          • משתמש שהתקין ל-<code>C:\Program Files\FlowGuard</code> קיבל <code>Error 0x80070002 "The system cannot find the file specified"</code> בסוף ההתקנה<br>
+          • <strong>תיקון:</strong> שימוש ב-FileSystemObject לקביעה דינמית של appDir לפי מיקום הסקריפט<br>
+          • עכשיו עובד עם <strong>כל נתיב התקנה</strong> — C:\FlowGuard, C:\Program Files\FlowGuard, D:\Apps\FlowGuard, וכו'
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
         <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#10b981,#0ea5e9);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.4</span></td>
         <td style="padding:10px 12px;color:var(--muted);">15.04.2026</td>
         <td style="padding:10px 12px;color:var(--text);">
@@ -4342,7 +4485,7 @@ Claude מבצע tool call
 <!-- FOOTER -->
 <div class="footer">
   <strong>EHZ-AI</strong> | Claude Code Security Monitor | 054-4825276<br>
-  נוצר: אפריל 2026 | גרסה 2.1.4 | עודכן: 16.04.2026
+  נוצר: אפריל 2026 | גרסה 2.1.5 | עודכן: 16.04.2026
 </div>
 
 </body>
