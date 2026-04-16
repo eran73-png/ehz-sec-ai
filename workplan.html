@@ -2163,6 +2163,93 @@
   </div>
 </div>
 
+<!-- MS13 — USAGE METRICS (OPTIONAL) -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(251,191,36,0.3);">
+  <div class="phase-header" style="background:rgba(251,191,36,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS13</div>
+    <div class="phase-info">
+      <h3>MS13 — Usage Metrics &amp; Claude.ai Integration</h3>
+      <p>מדידת שימוש — Local tracking + אינטגרציה אופציונלית עם Claude.ai subscription dashboard</p>
+    </div>
+    <div class="phase-status" style="background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);">💡 אופציה להמשך</div>
+  </div>
+
+  <div style="padding:14px 20px;background:rgba(251,191,36,0.05);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted2);">
+    <strong>רקע:</strong> Claude.ai מציג דשבורד שימוש (All models %, Sonnet %, routine runs, Extra usage $). אין API רשמי לנתונים אלה. שילוב דורש web scraping או browser extension.<br>
+    <strong>גישה מומלצת:</strong> להתחיל עם Local Tracking מהיר ואמין (מ-hook.js), ולהוסיף Claude.ai sync רק כ-opt-in.
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num" style="color:#fbbf24;">13.1</div>
+      <div class="task-title">📊 Local Session Tracker</div>
+      <div class="task-desc">
+        מעקב מקומי מדויק מתוך ה-hooks שכבר פעילים:<br>
+        • מספר sessions היום / השבוע / החודש<br>
+        • מספר tool calls לפי סוג (Bash, Edit, Write, Read, ...)<br>
+        • זמני פעילות — שעות היום העמוסות<br>
+        • עלות מוערכת (tokens × pricing)<br><br>
+        <strong>מקור נתונים:</strong> NeDB הקיים — עמודות <code>hook_type</code>, <code>tool_name</code>, <code>ts</code>, <code>session_id</code>.<br>
+        <strong>מורכבות:</strong> 🟢 נמוכה — יום עבודה
+      </div>
+      <div class="task-tags"><span class="tag">local</span><span class="tag">nedb</span><span class="tag">metrics</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#fbbf24;">13.2</div>
+      <div class="task-title">📈 Usage Dashboard Tab</div>
+      <div class="task-desc">
+        טאב חדש בדשבורד: "Usage" — גרפים ו-KPIs:<br>
+        • קו יומי — sessions בכל שעה<br>
+        • עוגה — פילוח tool calls<br>
+        • Heatmap — ימי השבוע × שעות<br>
+        • השוואה היסטורית — השבוע vs שבוע שעבר<br><br>
+        <strong>Library:</strong> Chart.js (קל) או ApexCharts (יפה יותר).
+      </div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">charts</span><span class="tag">ui</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#fbbf24;">13.3</div>
+      <div class="task-title">🌐 Claude.ai Sync (Opt-In)</div>
+      <div class="task-desc">
+        אינטגרציה אופציונלית עם Claude.ai subscription dashboard.<br><br>
+        <strong>איך עובד:</strong><br>
+        • כפתור ב-Settings: "Connect to Claude.ai"<br>
+        • פתיחת חלון Playwright (embedded) — המשתמש מתחבר<br>
+        • Session cookies נשמרים מקומית בלבד (מוצפנים)<br>
+        • FlowGuard מושך פעם בשעה: All models %, Sonnet %, Extra $<br>
+        • הצגה בדשבורד Usage tab<br><br>
+        <strong>מורכבות:</strong> 🟠 בינונית — 3-4 ימים. דורש תחזוקה כשה-UI של Claude.ai משתנה.<br>
+        <strong>אזהרה:</strong> לבדוק TOS של Anthropic לפני פריסה ציבורית.
+      </div>
+      <div class="task-tags"><span class="tag">playwright</span><span class="tag">scraping</span><span class="tag">opt-in</span><span class="tag">claude.ai</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#fbbf24;">13.4</div>
+      <div class="task-title">🔔 Usage Alerts</div>
+      <div class="task-desc">
+        התראות חכמות על שימוש:<br>
+        • "70% used — 3 days to reset" → Telegram notification<br>
+        • "Extra usage $100 passed" → Telegram warning<br>
+        • "Heavy usage session (20+ tool calls in 30 min)" → info<br><br>
+        קונפיגרציה בדשבורד: thresholds per metric.
+      </div>
+      <div class="task-tags"><span class="tag">alerts</span><span class="tag">telegram</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#fbbf24;">13.5</div>
+      <div class="task-title">🔐 Privacy &amp; Security</div>
+      <div class="task-desc">
+        קובץ cookies של Claude.ai הוא רגיש מאוד — טיפול הולם:<br>
+        • הצפנה ב-AES-256 עם Windows DPAPI<br>
+        • שמירה רק מקומית (לעולם לא נשלח לשרת חיצוני)<br>
+        • אפשרות למחיקה מיידית מה-UI<br>
+        • הודעה ברורה למשתמש: "Your cookies stay on this machine"
+      </div>
+      <div class="task-tags"><span class="tag">security</span><span class="tag">privacy</span><span class="tag">encryption</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- PHASE 10 — GAP FIX -->
 <div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(188,140,255,0.3);">
   <div class="phase-header" style="background:rgba(188,140,255,0.05);">
