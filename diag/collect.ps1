@@ -10,7 +10,6 @@
 # ============================================================
 
 param(
-    [string]$OutputDir    = "$env:USERPROFILE\Desktop",
     [string]$InstallDir   = "",
     [string]$SupportEmail = "eranhz26@gmail.com",
     [switch]$NoOpen,
@@ -18,23 +17,6 @@ param(
 )
 
 $ErrorActionPreference = 'SilentlyContinue'
-
-# ─── Resolve real user Desktop (not SYSTEM) ─────────────────
-# When running as Windows Service (SYSTEM account), $env:USERPROFILE points to
-# C:\WINDOWS\system32\config\systemprofile — which is wrong for the logged-in user.
-# We detect the actual logged-in user and use their Desktop instead.
-if ($OutputDir -like "*systemprofile*" -or $env:USERNAME -eq 'SYSTEM' -or $env:USERNAME -match '\$$') {
-    try {
-        $loggedUser = (Get-WmiObject -Class Win32_ComputerSystem).UserName
-        if ($loggedUser -and $loggedUser -match '\\(.+)$') {
-            $realUser = $Matches[1]
-            $realProfile = "C:\Users\$realUser"
-            if (Test-Path "$realProfile\Desktop") {
-                $OutputDir = "$realProfile\Desktop"
-            }
-        }
-    } catch {}
-}
 
 # ─── Auto-detect install directory ──────────────────────────
 if (-not $InstallDir) {
@@ -47,6 +29,10 @@ if (-not $InstallDir) {
         if (Test-Path "$c\agent\tray.js") { $InstallDir = $c; break }
     }
 }
+
+# ─── Output directory: <InstallDir>\support ──────────────────
+$OutputDir = if ($InstallDir) { "$InstallDir\support" } else { "$env:TEMP\flowguard-support" }
+if (-not (Test-Path $OutputDir)) { New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null }
 
 $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 $hostname  = $env:COMPUTERNAME

@@ -1497,12 +1497,29 @@ app.post('/diag/collect', (req, res) => {
   });
 });
 
-// POST /diag/open-folder — open Desktop folder in Explorer
+// POST /diag/open-folder — open support folder in Explorer
 app.post('/diag/open-folder', (req, res) => {
   const { exec } = require('child_process');
-  const desktop = path.join(os.homedir ? os.homedir() : process.env.USERPROFILE, 'Desktop');
-  exec(`explorer.exe "${desktop}"`);
+  const supportDir = path.join(__dirname, '..', 'support');
+  if (!fs.existsSync(supportDir)) fs.mkdirSync(supportDir, { recursive: true });
+  exec(`explorer.exe "${supportDir}"`);
   res.json({ ok: true });
+});
+
+// GET /diag/files — list ZIP files in support folder
+app.get('/diag/files', (req, res) => {
+  const supportDir = path.join(__dirname, '..', 'support');
+  if (!fs.existsSync(supportDir)) return res.json({ files: [] });
+  try {
+    const files = fs.readdirSync(supportDir)
+      .filter(f => f.endsWith('.zip'))
+      .map(f => {
+        const st = fs.statSync(path.join(supportDir, f));
+        return { name: f, sizeKB: Math.round(st.size / 1024 * 100) / 100, date: st.mtime };
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    res.json({ files });
+  } catch (e) { res.json({ files: [], error: e.message }); }
 });
 
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
