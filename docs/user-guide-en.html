@@ -521,6 +521,14 @@
           <div class="info-box-title">Why This Matters</div>
           Code pushed to GitHub with an API key inside can be stolen within minutes. FlowGuard catches this before it happens.
         </div>
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">✨ New in v2.1.3 — Extended Scanning</div>
+          <ul style="margin:6px 0 0 0;padding-left:16px;">
+            <li><strong>Office files</strong> — scans <code>.docx</code>, <code>.xlsx</code>, <code>.pptx</code> (extracts text from internal ZIP structure)</li>
+            <li><strong>Extensionless files</strong> — files like <code>VISA</code>, <code>passwords</code> are now scanned too</li>
+            <li><strong>Search box</strong> — filter results by filename, including Hebrew filenames</li>
+          </ul>
+        </div>
       </div>
 
       <div class="section">
@@ -730,12 +738,29 @@
 
       <div class="section">
         <h3><span class="icon">📂</span> FSWatcher Exclusions</h3>
-        <p>Folders and files that the FSWatcher ignores. Useful for preventing false positives from directories that change constantly.</p>
+        <p>Folders that FSWatcher ignores completely. Prevents false positives from directories that change constantly.</p>
+        <div class="info-box" style="margin-bottom:12px;">
+          <div class="info-box-title">✨ New in v2.1.4 — Toggle Interface</div>
+          Settings now has two equal cards: <strong>Quiet Hours</strong> and <strong>FSWatcher Exclusions</strong>.<br>
+          Each recommended folder has a toggle — you decide what to exclude and what to watch.
+        </div>
         <ul>
-          <li>Defaults: <code>node_modules</code>, <code>.git</code>, <code>backups</code></li>
-          <li>Add a folder via Settings → type the folder name → Add</li>
-          <li>Remove an existing exclusion by clicking ✕</li>
+          <li><strong>Recommended — ON by default:</strong> <code>node_modules</code>, <code>.git</code>, <code>dist</code></li>
+          <li><strong>Recommended — OFF (your choice):</strong> <code>build</code>, <code>out</code>, <code>.next</code>, <code>coverage</code>, <code>.cache</code>, <code>tmp</code></li>
+          <li><strong>Custom:</strong> add any personal folder using the Add field at the bottom of the card</li>
+          <li>All changes save automatically to <code>whitelist.json</code> and take effect immediately</li>
         </ul>
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🧠 New in v2.1.4 — Behavioral Learning</div>
+          FlowGuard learns your work patterns and automatically reduces false positives:<br>
+          <ul style="margin:6px 0 0 0;padding-left:16px;">
+            <li>File touched by Claude this session → <span style="color:#0ea5e9;font-weight:700;">INFO</span> only</li>
+            <li>File changed 3+ times today → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
+            <li>File changed 10+ times → suppressed entirely</li>
+            <li>Nightly backup, scheduled task — auto-detected → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
+          </ul>
+          <strong>Only truly new, unseen files</strong> receive LOW/HIGH alerts.
+        </div>
       </div>
 
       <div class="section">
