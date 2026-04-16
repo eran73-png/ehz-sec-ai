@@ -479,7 +479,7 @@ tr:hover td { background:#f8fafc; }
     </div>
     <div class="topbar-pc" id="pc-name">PC: &#x2014;</div>
     <div class="topbar-icons">
-      <div class="topbar-icon" id="notif-icon" title="Notifications">
+      <div class="topbar-icon" id="notif-icon" title="Notifications" style="cursor:pointer;" onclick="navigate('events'); document.getElementById('notif-dot').style.display='none';">
         &#x1F514;<div class="notif-dot" id="notif-dot" style="display:none"></div>
       </div>
       <div class="topbar-icon" style="background:transparent;border-color:transparent;padding:0;"><img src="flowguard-logo.png" style="width:28px;height:28px;object-fit:contain;"></div>
@@ -1457,7 +1457,7 @@ function toast(msg, type, dur) {
 var allEvents   = [];
 var allSessions = [];
 var currentView = 'dashboard';
-var prevEventCount = 0;
+var prevLatestEventId = null;
 
 // ── Navigation ──
 function navigate(view) {
@@ -1590,11 +1590,12 @@ async function loadLiveEvents() {
       return;
     }
 
-    // Notification dot if new events appeared
-    if (prevEventCount > 0 && events.length > prevEventCount) {
+    // Notification dot if new events appeared (compare latest event ID, not count)
+    var latestId = events[0] ? (events[0]._id || events[0].id) : null;
+    if (prevLatestEventId && latestId && latestId !== prevLatestEventId && currentView !== 'events') {
       document.getElementById('notif-dot').style.display = 'block';
     }
-    prevEventCount = events.length;
+    prevLatestEventId = latestId;
 
     list.innerHTML = events.map(function(ev) {
       var reason = ev.reason || ev.message || ev.description || '\u2014';

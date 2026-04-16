@@ -16,7 +16,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$Version = "1.0.0"
+$Version = "2.1.7"
 
 # ── Paths ────────────────────────────────────────────────────
 $ProjectDir   = Split-Path -Parent $PSScriptRoot
@@ -212,7 +212,7 @@ Write-Host "━━━━━━━━━━━━━━━━━━━━━━�
 Write-Host "  FlowGuard installed successfully!" -ForegroundColor Green
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "  Dashboard:  start dashboard\index.html in browser" -ForegroundColor White
+Write-Host "  Dashboard:  http://localhost:3010/dashboard/index-v2.html" -ForegroundColor White
 Write-Host "  Collector:  http://localhost:3010/health" -ForegroundColor White
 Write-Host "  Level:      Hardening $HardeningLevel active" -ForegroundColor White
 Write-Host ""

@@ -13,13 +13,13 @@ param(
 )
 
 $ErrorActionPreference = 'Continue'
-$Version = "1.0.0"
+$Version = "2.1.7"
 
 # ── Paths ─────────────────────────────────────────────────────
 $ProjectDir   = Split-Path -Parent $PSScriptRoot
 $CollectorDir = Join-Path $ProjectDir "collector"
 $ClaudeConfig = "$env:USERPROFILE\.claude\settings.json"
-$TaskName     = "FlowGuard-Collector"
+# Task names cleaned up in Step 3
 
 # ── Banner ────────────────────────────────────────────────────
 Write-Host ""
@@ -90,18 +90,46 @@ if ($collectorRunning) {
   Write-Host "  [INFO] Collector was not running" -ForegroundColor DarkGray
 }
 
-# ── Step 2: Remove Task Scheduler ────────────────────────────
-Write-Host "[2/5] Removing Task Scheduler entry..." -ForegroundColor Yellow
-$task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
-if ($task) {
-  Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false -ErrorAction SilentlyContinue
-  Write-Host "  [OK] Task '$TaskName' removed" -ForegroundColor Green
+# ── Step 2: Remove Windows Service (NSSM) ───────────────────
+Write-Host "[2/6] Removing Windows Service..." -ForegroundColor Yellow
+$svc = Get-Service -Name "FlowGuardCollector" -ErrorAction SilentlyContinue
+if ($svc) {
+  if ($svc.Status -eq 'Running') {
+    Stop-Service -Name "FlowGuardCollector" -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 2
+  }
+  # Try NSSM first, then sc.exe
+  $nssm = Get-Command nssm -ErrorAction SilentlyContinue
+  if ($nssm) {
+    & nssm remove FlowGuardCollector confirm 2>&1 | Out-Null
+  } else {
+    sc.exe delete FlowGuardCollector 2>&1 | Out-Null
+  }
+  Write-Host "  [OK] Windows Service 'FlowGuardCollector' removed" -ForegroundColor Green
 } else {
-  Write-Host "  [INFO] No scheduled task found" -ForegroundColor DarkGray
+  Write-Host "  [INFO] No Windows Service found" -ForegroundColor DarkGray
+}
+
+# ── Step 3: Remove Task Scheduler entries ────────────────────
+Write-Host "[3/6] Removing Task Scheduler entries..." -ForegroundColor Yellow
+$taskNames = @("FlowGuard-Collector", "FlowGuard-Tray")
+foreach ($tn in $taskNames) {
+  $task = Get-ScheduledTask -TaskName $tn -ErrorAction SilentlyContinue
+  if ($task) {
+    Unregister-ScheduledTask -TaskName $tn -Confirm:$false -ErrorAction SilentlyContinue
+    Write-Host "  [OK] Task '$tn' removed" -ForegroundColor Green
+  }
+}
+
+# ── Step 3b: Remove Startup shortcut ────────────────────────
+$startupLink = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\FlowGuard Tray.lnk"
+if (Test-Path $startupLink) {
+  Remove-Item $startupLink -Force -ErrorAction SilentlyContinue
+  Write-Host "  [OK] Startup shortcut removed" -ForegroundColor Green
 }
 
 # ── Step 3: Remove Claude Code Hooks ─────────────────────────
-Write-Host "[3/5] Removing hooks from Claude Code settings.json..." -ForegroundColor Yellow
+Write-Host "[4/6] Removing hooks from Claude Code settings.json..." -ForegroundColor Yellow
 if (Test-Path $ClaudeConfig) {
   try {
     $raw      = Get-Content $ClaudeConfig -Raw -Encoding UTF8
@@ -121,7 +149,7 @@ if (Test-Path $ClaudeConfig) {
 }
 
 # ── Step 4: Delete Data (optional) ───────────────────────────
-Write-Host "[4/5] Data cleanup..." -ForegroundColor Yellow
+Write-Host "[5/6] Data cleanup..." -ForegroundColor Yellow
 
 $deleteData = $false
 if ($KeepData) {
@@ -164,7 +192,7 @@ if ($deleteData) {
 }
 
 # ── Step 5: Verify ────────────────────────────────────────────
-Write-Host "[5/5] Verifying..." -ForegroundColor Yellow
+Write-Host "[6/6] Verifying..." -ForegroundColor Yellow
 
 $stillRunning = $false
 try {

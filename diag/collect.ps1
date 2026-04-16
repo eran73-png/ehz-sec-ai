@@ -1,5 +1,5 @@
 # ============================================================
-# FlowGuard Diagnostics Collector — v1.0
+# FlowGuard Diagnostics Collector — v2.1.7
 # ============================================================
 # Collects logs, config, and system info into a single ZIP file.
 # All sensitive data (tokens, passwords, usernames) is sanitized.
@@ -155,7 +155,7 @@ if ($setupLogs) {
 Write-Host "[4/8] Collecting config (sanitized)..." -ForegroundColor Yellow
 
 $configFiles = @{
-    "whitelist.json"    = "$InstallDir\whitelist.json"
+    "whitelist.json"    = "$InstallDir\agent\whitelist.json"
     "package.json"      = "$InstallDir\package.json"
     "env-sanitized.txt" = "$InstallDir\.env"
 }

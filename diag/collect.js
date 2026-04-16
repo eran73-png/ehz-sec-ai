@@ -19,7 +19,7 @@ const { execSync, exec } = require('child_process');
 const zlib      = require('zlib');
 
 const SUPPORT_EMAIL = 'eranhz26@gmail.com';
-const VERSION       = '1.0.0';
+const VERSION       = '2.1.7';
 
 // ─── Helpers ────────────────────────────────────────────────
 
@@ -274,13 +274,18 @@ async function main() {
   // 4. Config files
   log('warn', '[4/7] Collecting config (sanitized)...');
   if (installDir) {
-    const cfgFiles = ['whitelist.json', 'package.json', '.env'];
+    const cfgFiles = [
+      { name: 'whitelist.json', path: path.join(installDir, 'agent', 'whitelist.json') },
+      { name: 'package.json',   path: path.join(installDir, 'package.json') },
+      { name: '.env',           path: path.join(installDir, '.env') }
+    ];
     for (const f of cfgFiles) {
-      const p = path.join(installDir, f);
+      const p = f.path;
       if (fs.existsSync(p)) {
         try {
           const content = fs.readFileSync(p, 'utf8');
-          entries.push({ name: `04-config-${f === '.env' ? 'env-sanitized.txt' : f}`, data: Buffer.from(sanitize(content), 'utf8') });
+          const outName = f.name === '.env' ? 'env-sanitized.txt' : f.name;
+          entries.push({ name: `04-config-${outName}`, data: Buffer.from(sanitize(content), 'utf8') });
         } catch {}
       }
     }
@@ -325,9 +330,11 @@ async function main() {
   entries.push({ name: '07-event-log.txt', data: Buffer.from(sanitize(eventLog), 'utf8') });
 
   // ─── Write ZIP ──────────────────────────────────────────
-  const desktop = path.join(os.homedir(), 'Desktop');
+  // Save to <InstallDir>\support\ if available, otherwise Desktop
+  const supportDir = installDir ? path.join(installDir, 'support') : path.join(os.homedir(), 'Desktop');
+  if (!fs.existsSync(supportDir)) fs.mkdirSync(supportDir, { recursive: true });
   const zipName = `FlowGuard-Diag-${hostname}-${stamp}.zip`;
-  const zipPath = path.join(desktop, zipName);
+  const zipPath = path.join(supportDir, zipName);
   createZip(entries, zipPath);
 
   const zipSize = Math.round(fs.statSync(zipPath).size / 1024 * 100) / 100;

@@ -823,6 +823,9 @@ app.post('/audit/scan', async (req, res) => {
 
     const result = await fileAuditScanner.runFileAudit(scanPath, { incremental, since_iso });
 
+    // Track newly scanned file paths (before merge) for Telegram filtering
+    const newlyScannedPaths = new Set((result.all_files || []).map(f => f.path));
+
     // In incremental mode: merge new findings with previous full results
     if (incremental && fs.existsSync(AUDIT_RESULT_FILE)) {
       try {
@@ -847,11 +850,8 @@ app.post('/audit/scan', async (req, res) => {
     // Save result
     fs.writeFileSync(AUDIT_RESULT_FILE, JSON.stringify(result, null, 2), 'utf8');
 
-    // Telegram alert for CRITICAL files (only newly scanned)
-    (incremental ? result.all_files.filter(f => {
-      const prevPaths = new Set();
-      return !prevPaths.has(f.path);
-    }) : result.files).forEach(f => {
+    // Telegram alert for CRITICAL files (only newly scanned, not carried-over)
+    (incremental ? result.all_files.filter(f => newlyScannedPaths.has(f.path)) : result.files).forEach(f => {
       if (f.risk_label === 'CRITICAL') {
         sendTelegram(`🚨 <b>EHZ-SEC-AI — File Audit CRITICAL</b>\n📄 ${f.path}\n⚡ ${f.findings.map(x=>x.reason).join(', ')}`);
       }

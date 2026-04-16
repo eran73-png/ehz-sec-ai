@@ -2232,6 +2232,80 @@
   </div>
 </div>
 
+<!-- MS14 — SECURITY & STABILITY (from QA Review 17.04.2026) -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(239,68,68,0.3);">
+  <div class="phase-header" style="background:rgba(239,68,68,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS14</div>
+    <div class="phase-info">
+      <h3>MS14 — Security &amp; Stability (QA Review)</h3>
+      <p>ממצאי בדיקה מעמיקה מ-17.04.2026 — אבטחה, memory leaks, hash chain, persistence</p>
+    </div>
+    <div class="phase-status" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">📋 מתוכנן</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell" style="border-top:3px solid var(--red);">
+      <div class="task-num" style="color:var(--red);">14.1 🔴</div>
+      <div class="task-title">CORS Security — הגבלת Access-Control</div>
+      <div class="task-desc">
+        כרגע <code>Access-Control-Allow-Origin: *</code> — כל אתר יכול לגשת ל-API.<br>
+        לשנות ל-<code>localhost:3010</code> בלבד, או להוסיף whitelist.<br>
+        <strong>סיכון:</strong> אתר זדוני יכול לקרוא events, למחוק נתונים, להריץ PowerShell.
+      </div>
+      <div class="task-tags"><span class="tag">security</span><span class="tag">CORS</span><span class="tag">critical</span></div>
+    </div>
+    <div class="task-cell" style="border-top:3px solid var(--red);">
+      <div class="task-num" style="color:var(--red);">14.2 🔴</div>
+      <div class="task-title">Hash Chain Corruption Fix</div>
+      <div class="task-desc">
+        System events (RULES_UPDATE_CHECK, RULES_MANUAL_UPDATE) נכנסים עם <code>event_hash: null</code>.<br>
+        שובר את <code>/audit/verify</code> — chain verification מדווח על שגיאה.<br>
+        <strong>תיקון:</strong> לחשב hash גם ל-system events, או לסנן אותם מהverify.
+      </div>
+      <div class="task-tags"><span class="tag">audit</span><span class="tag">hash-chain</span><span class="tag">bug</span></div>
+    </div>
+    <div class="task-cell" style="border-top:3px solid var(--orange);">
+      <div class="task-num" style="color:var(--orange);">14.3 🟠</div>
+      <div class="task-title">Memory Cleanup Intervals</div>
+      <div class="task-desc">
+        3 מבני נתונים גדלים ללא הגבלה:<br>
+        • <code>claudeSessionFiles</code> Set — כל קובץ שנגעה בו Claude<br>
+        • <code>recentHookWrites</code> Map — קבצי hook ישנים לא נמחקים<br>
+        • <code>procBaseline</code> Set — PIDs שלא נוקו<br>
+        <strong>תיקון:</strong> interval כל שעה שמנקה entries ישנים.
+      </div>
+      <div class="task-tags"><span class="tag">memory</span><span class="tag">performance</span></div>
+    </div>
+    <div class="task-cell" style="border-top:3px solid var(--orange);">
+      <div class="task-num" style="color:var(--orange);">14.4 🟠</div>
+      <div class="task-title">Quiet Hours Persistence</div>
+      <div class="task-desc">
+        הגדרות Quiet Hours נשמרות רק בזיכרון — restart מאפס ל-23:00-07:00.<br>
+        <strong>תיקון:</strong> לשמור ב-<code>whitelist.json</code> כמו FSW exclusions.
+      </div>
+      <div class="task-tags"><span class="tag">config</span><span class="tag">persistence</span></div>
+    </div>
+    <div class="task-cell" style="border-top:3px solid var(--orange);">
+      <div class="task-num" style="color:var(--orange);">14.5 🟠</div>
+      <div class="task-title">JSON.parse Safety + Port Error Handling</div>
+      <div class="task-desc">
+        • <code>/domains/history</code> — <code>JSON.parse</code> ללא try/catch, crash אפשרי<br>
+        • <code>app.listen</code> — אין handler ל-EADDRINUSE, crash ללא הודעה ברורה<br>
+        <strong>תיקון:</strong> עטוף ב-try/catch + .on('error') handler.
+      </div>
+      <div class="task-tags"><span class="tag">error-handling</span><span class="tag">stability</span></div>
+    </div>
+    <div class="task-cell" style="border-top:3px solid var(--yellow);">
+      <div class="task-num" style="color:var(--yellow);">14.6 🟡</div>
+      <div class="task-title">Behavioral Learning Hourly Wrap-Around</div>
+      <div class="task-desc">
+        זיהוי Time Pattern — שעה 1 מול שעה 23 לא מזוהה כ±1 שעה.<br>
+        <strong>תיקון:</strong> <code>Math.min(Math.abs(h-current), 24-Math.abs(h-current)) &lt;= 1</code>
+      </div>
+      <div class="task-tags"><span class="tag">behavioral</span><span class="tag">FSWatcher</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- PHASE 10 — GAP FIX -->
 <div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(188,140,255,0.3);">
   <div class="phase-header" style="background:rgba(188,140,255,0.05);">
