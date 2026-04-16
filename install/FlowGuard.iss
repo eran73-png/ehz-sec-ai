@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.1.5"
+#define AppVersion "2.1.6"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -63,6 +63,9 @@ Source: "{#SourceDir}\docs\*";                   DestDir: "{app}\docs";      Fla
 
 ; Scanner
 Source: "{#SourceDir}\scanner\*";                 DestDir: "{app}\scanner"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+; Diagnostics tool (MS11)
+Source: "{#SourceDir}\diag\*";                    DestDir: "{app}\diag";    Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Config
 Source: "{#SourceDir}\config\*";                  DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -138,6 +141,7 @@ begin
       Result := False;
   end;
 end;
+
 
 
 

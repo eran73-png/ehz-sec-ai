@@ -1136,6 +1136,32 @@ tr:hover td { background:#f8fafc; }
           </div>
         </div>
 
+        <!-- Diagnostics & Support card -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">🛠️ Diagnostics &amp; Support</div>
+              <div class="panel-sub">Collect logs and send to support</div>
+            </div>
+          </div>
+          <div class="settings-body">
+            <div style="color:#64748b;font-size:12px;line-height:1.5;margin-bottom:12px;">
+              If FlowGuard is misbehaving or you need help, click below to collect diagnostic information (logs, config, system info) into a sanitized ZIP file.
+              Sensitive data such as tokens and passwords is automatically removed.
+            </div>
+            <div id="diag-status" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.3);border-radius:8px;font-size:12px;color:#0891b2;"></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-accent" onclick="exportDiagnostics()" style="flex:1;">
+                📦 Export &amp; Email Diagnostics
+              </button>
+              <button class="btn btn-outline" onclick="openDiagFolder()" title="Open Desktop in Explorer">📂</button>
+            </div>
+            <div style="margin-top:10px;font-size:11px;color:#94a3b8;">
+              Support: <a href="mailto:eranhz26@gmail.com" style="color:var(--accent);">eranhz26@gmail.com</a>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div><!-- /view-settings -->
@@ -2474,6 +2500,41 @@ async function removeFswCustomExclusion(folder) {
     toast('Removed: ' + folder, 'success');
     loadFswExclusions();
   } catch(e) { toast('Error removing', 'error'); }
+}
+
+// ─── Diagnostics ──────────────────────────────────────────────────
+async function exportDiagnostics() {
+  const statusEl = document.getElementById('diag-status');
+  statusEl.style.display = 'block';
+  statusEl.innerHTML = '<div class="spinner" style="display:inline-block;"></div>&nbsp; Collecting diagnostics... (this can take 5-15 seconds)';
+
+  try {
+    const r = await fetch(API + '/diag/collect', { method: 'POST' });
+    const data = await r.json();
+    if (data.ok) {
+      statusEl.style.background = 'rgba(0,200,83,0.08)';
+      statusEl.style.borderColor = 'rgba(0,200,83,0.3)';
+      statusEl.style.color = '#059669';
+      statusEl.innerHTML =
+        '✅ <b>ZIP created successfully</b><br>' +
+        '<div style="font-family:monospace;font-size:11px;margin-top:6px;">' + esc(data.zipPath) + '</div>' +
+        '<div style="margin-top:8px;font-size:11px;">Size: ' + data.sizeKB + ' KB — your default mail client should now open with the email pre-filled. Drag the ZIP into the email and click Send.</div>';
+      toast('Diagnostics exported', 'success');
+    } else {
+      throw new Error(data.error || 'Unknown error');
+    }
+  } catch (e) {
+    statusEl.style.background = 'rgba(239,68,68,0.08)';
+    statusEl.style.borderColor = 'rgba(239,68,68,0.3)';
+    statusEl.style.color = '#dc2626';
+    statusEl.innerHTML = '❌ Failed: ' + esc(e.message);
+    toast('Export failed', 'error');
+  }
+}
+
+function openDiagFolder() {
+  fetch(API + '/diag/open-folder', { method: 'POST' })
+    .catch(() => toast('Could not open folder', 'error'));
 }
 
 async function loadGitRemoteSettings() {

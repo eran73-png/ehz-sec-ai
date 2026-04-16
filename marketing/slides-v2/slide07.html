@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#060d1a; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+.grid { position:absolute; inset:0;
+  background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size:50px 50px; }
+.corner { position:absolute; width:44px; height:44px; border-color:#00d4ff; border-style:solid; opacity:0.2; }
+.corner-tl { top:28px; left:28px; border-width:2px 0 0 2px; }
+.corner-tr { top:28px; right:28px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:28px; left:28px; border-width:0 0 2px 2px; }
+.corner-br { bottom:28px; right:28px; border-width:0 2px 2px 0; }
+
+.header { position:relative; z-index:10; padding:56px 48px 22px; }
+.label { font-size:12px; letter-spacing:4px; color:#00d4ff; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
+.title { font-size:46px; font-weight:900; color:#fff; line-height:1.1; }
+.title em { color:#00d4ff; font-style:normal; }
+
+/* Dashboard V2 mockup - sidebar layout */
+.dash-wrap {
+  position:relative; z-index:10;
+  margin:0 28px; flex:1;
+  background:#0f1b2d; border:1px solid rgba(0,212,255,0.18);
+  border-radius:14px; overflow:hidden;
+  display:flex; flex-direction:column;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.5), 0 0 60px rgba(0,212,255,0.06);
+}
+
+/* Topbar */
+.db-topbar {
+  background:#fff; padding:0 14px; height:38px;
+  display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid #e2e8f0; flex-shrink:0;
+}
+.db-title { font-size:12px; font-weight:700; color:#0f1b2d; flex:1; }
+.db-badge {
+  display:flex; align-items:center; gap:5px;
+  background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3);
+  border-radius:20px; padding:2px 9px; font-size:9px; font-weight:700; color:#0066cc;
+}
+.db-dot { width:5px; height:5px; border-radius:50%; background:#00c853; }
+.db-pc { font-size:9px; color:#94a3b8; }
+
+/* Body with sidebar */
+.db-body { display:flex; flex:1; overflow:hidden; }
+
+/* Sidebar */
+.db-sidebar {
+  width:128px; background:#0f1b2d; flex-shrink:0;
+  display:flex; flex-direction:column;
+  border-right:1px solid rgba(255,255,255,0.06);
+  padding:10px 0;
+}
+.db-logo { padding:10px 12px 8px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:6px; }
+.db-logo-row { display:flex; align-items:center; gap:7px; }
+.db-logo-icon {
+  width:20px; height:20px; border-radius:5px;
+  background:linear-gradient(135deg,#00d4ff,#0066cc);
+  display:flex; align-items:center; justify-content:center; font-size:10px;
+}
+.db-logo-text { font-size:10px; font-weight:700; color:#fff; }
+
+.db-nav-lbl { font-size:7px; font-weight:700; letter-spacing:1.5px; color:rgba(255,255,255,0.25); text-transform:uppercase; padding:8px 12px 4px; }
+.db-nav-item {
+  display:flex; align-items:center; gap:7px;
+  padding:7px 12px; font-size:10px; color:rgba(255,255,255,0.45);
+  cursor:pointer;
+}
+.db-nav-item.active { color:#00d4ff; background:rgba(0,212,255,0.08); border-left:2px solid #00d4ff; }
+.db-nav-icon { font-size:11px; }
+
+/* Main content */
+.db-main { flex:1; background:#f0f4f8; display:flex; flex-direction:column; gap:8px; padding:10px; overflow:hidden; }
+
+/* Stats */
+.db-stats { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; }
+.db-stat { background:#fff; border-radius:7px; padding:8px 10px; border:1px solid #e2e8f0; }
+.ds-val { font-size:18px; font-weight:900; color:#0f1b2d; }
+.ds-val.red{color:#ef4444;} .ds-val.amber{color:#f59e0b;} .ds-val.cyan{color:#0066cc;} .ds-val.green{color:#00c853;}
+.ds-lbl { font-size:7px; color:#94a3b8; letter-spacing:0.5px; margin-top:1px; text-transform:uppercase; }
+
+/* Events */
+.db-panel { background:#fff; border-radius:8px; border:1px solid #e2e8f0; flex:1; overflow:hidden; }
+.db-panel-hdr { padding:7px 10px; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; gap:8px; }
+.db-panel-title { font-size:10px; font-weight:700; color:#0f1b2d; flex:1; }
+.db-panel-btn { font-size:8px; padding:2px 8px; border-radius:4px; background:#00d4ff; color:#fff; font-weight:700; }
+.db-events { display:flex; flex-direction:column; gap:0; }
+.db-ev { display:flex; align-items:center; gap:6px; padding:7px 10px; border-bottom:1px solid #f1f5f9; font-size:9px; }
+.db-sev { padding:2px 6px; border-radius:4px; font-size:8px; font-weight:800; flex-shrink:0; letter-spacing:0.5px; }
+.sev-c { background:rgba(239,68,68,0.15); color:#ef4444; }
+.sev-h { background:rgba(245,158,11,0.15); color:#f59e0b; }
+.sev-m { background:rgba(0,102,204,0.1); color:#0066cc; }
+.sev-i { background:#f1f5f9; color:#64748b; }
+.db-ev-tool { color:#94a3b8; flex-shrink:0; width:50px; }
+.db-ev-msg { color:#374151; flex:1; }
+.db-ev-time { color:#cbd5e1; flex-shrink:0; }
+
+.footer-lbl { position:relative; z-index:10; padding:14px 28px; text-align:center; font-size:12px; color:rgba(255,255,255,0.3); }
+.footer-lbl em { color:#00d4ff; font-style:normal; font-weight:700; }
+.slide-logo{position:absolute;top:34px;left:82px;z-index:50;display:flex;align-items:center;gap:9px;}
+.sl-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 20px rgba(0,212,255,0.35);}
+.sl-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.3px;}
+.sl-name em{color:#00d4ff;font-style:normal;}
+</style>
+</head>
+<body>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+<div class="grid"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="header">
+  <div class="label">📊 Dashboard V2</div>
+  <div class="title">Full Visibility.<br><em>One Screen.</em></div>
+</div>
+
+<div class="dash-wrap">
+  <!-- Topbar -->
+  <div class="db-topbar">
+    <div class="db-title">Security Dashboard</div>
+    <div class="db-pc">PC: ERAN-DEV</div>
+    <div class="db-badge"><div class="db-dot"></div>Online</div>
+  </div>
+
+  <!-- Body -->
+  <div class="db-body">
+    <!-- Sidebar -->
+    <div class="db-sidebar">
+      <div class="db-logo">
+        <div class="db-logo-row">
+          <div class="db-logo-icon">🛡️</div>
+          <div class="db-logo-text">FlowGuard</div>
+        </div>
+      </div>
+      <div class="db-nav-lbl">Monitor</div>
+      <div class="db-nav-item active"><span class="db-nav-icon">📊</span> Dashboard</div>
+      <div class="db-nav-item"><span class="db-nav-icon">📋</span> Events</div>
+      <div class="db-nav-item"><span class="db-nav-icon">📼</span> Sessions</div>
+      <div class="db-nav-item"><span class="db-nav-icon">🌐</span> Web Access</div>
+      <div class="db-nav-lbl">Security</div>
+      <div class="db-nav-item"><span class="db-nav-icon">🗂️</span> File Audit</div>
+      <div class="db-nav-item"><span class="db-nav-icon">🔍</span> Skills</div>
+      <div class="db-nav-item"><span class="db-nav-icon">🔗</span> Git Monitor</div>
+      <div class="db-nav-lbl">System</div>
+      <div class="db-nav-item"><span class="db-nav-icon">📡</span> SIEM</div>
+      <div class="db-nav-item"><span class="db-nav-icon">⚙️</span> Settings</div>
+    </div>
+
+    <!-- Main -->
+    <div class="db-main">
+      <div class="db-stats">
+        <div class="db-stat"><div class="ds-val red">3</div><div class="ds-lbl">Critical</div></div>
+        <div class="db-stat"><div class="ds-val amber">12</div><div class="ds-lbl">High</div></div>
+        <div class="db-stat"><div class="ds-val cyan">847</div><div class="ds-lbl">Events</div></div>
+        <div class="db-stat"><div class="ds-val green">●</div><div class="ds-lbl">Status</div></div>
+      </div>
+
+      <div class="db-panel">
+        <div class="db-panel-hdr">
+          <div class="db-panel-title">Live Events</div>
+          <div class="db-panel-btn">Export</div>
+        </div>
+        <div class="db-events">
+          <div class="db-ev"><span class="db-sev sev-c">CRIT</span><span class="db-ev-tool">Bash</span><span class="db-ev-msg">Encoded PowerShell detected</span><span class="db-ev-time">09:14</span></div>
+          <div class="db-ev"><span class="db-sev sev-h">HIGH</span><span class="db-ev-tool">Write</span><span class="db-ev-msg">API key in config file</span><span class="db-ev-time">09:11</span></div>
+          <div class="db-ev"><span class="db-sev sev-h">HIGH</span><span class="db-ev-tool">WebFetch</span><span class="db-ev-msg">Fetch to raw IP address</span><span class="db-ev-time">09:08</span></div>
+          <div class="db-ev"><span class="db-sev sev-m">MED</span><span class="db-ev-tool">Read</span><span class="db-ev-msg">.env file accessed</span><span class="db-ev-time">09:05</span></div>
+          <div class="db-ev"><span class="db-sev sev-i">INFO</span><span class="db-ev-tool">WebSearch</span><span class="db-ev-msg">Search: "reverse shell python"</span><span class="db-ev-time">08:59</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-lbl">Real-time · <em>Export to Excel</em> · Session Replay · 9 Views</div>
+</body>
+</html>

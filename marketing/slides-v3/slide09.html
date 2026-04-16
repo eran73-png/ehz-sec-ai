@@ -1,0 +1,56 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#060d1a;width:1920px;height:1080px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;}
+body{width:1920px;height:1080px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:60px 60px;}
+.glow{position:absolute;width:900px;height:700px;background:radial-gradient(ellipse,rgba(0,212,255,0.06) 0%,transparent 65%);top:40%;left:50%;transform:translate(-50%,-50%);}
+.corner{position:absolute;width:50px;height:50px;border-color:#00d4ff;border-style:solid;opacity:0.22;}
+.corner-tl{top:32px;left:32px;border-width:2px 0 0 2px;}.corner-tr{top:32px;right:32px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:32px;left:32px;border-width:0 0 2px 2px;}.corner-br{bottom:32px;right:32px;border-width:0 2px 2px 0;}
+.slide-logo{position:absolute;top:36px;left:36px;z-index:50;display:flex;align-items:center;gap:10px;}
+.sl-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.sl-name{font-size:17px;font-weight:800;color:#fff;}.sl-name em{color:#00d4ff;font-style:normal;}
+
+.content{position:relative;z-index:10;padding:70px 100px 60px;display:flex;flex-direction:column;height:100%;}
+.header{margin-bottom:44px;}
+.label{font-size:13px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase;font-weight:700;margin-bottom:14px;}
+.title{font-size:52px;font-weight:900;color:#fff;line-height:1.1;}.title em{color:#00d4ff;font-style:normal;}
+.sub{font-size:18px;color:rgba(255,255,255,0.38);margin-top:10px;}
+
+.levels{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:20px;flex:1;}
+.level{display:flex;align-items:center;gap:26px;padding:30px 34px;border-radius:16px;border:1px solid;}
+.lv1{background:rgba(100,116,139,0.06);border-color:rgba(100,116,139,0.2);}
+.lv2{background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.2);}
+.lv3{background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.22);}
+.lv4{background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.25);border-width:2px;box-shadow:0 0 40px rgba(239,68,68,0.1);}
+.lv-icon{font-size:44px;flex-shrink:0;}
+.lv-body{flex:1;}
+.lv-num{font-size:11px;font-weight:800;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
+.lv1 .lv-num{color:#64748b;}.lv2 .lv-num{color:#22c55e;}.lv3 .lv-num{color:#f59e0b;}.lv4 .lv-num{color:#ef4444;}
+.lv-name{font-size:24px;font-weight:800;color:#fff;margin-bottom:6px;}
+.lv-desc{font-size:15px;color:rgba(255,255,255,0.4);line-height:1.5;}
+.lv-badge{padding:8px 20px;border-radius:100px;font-size:13px;font-weight:800;flex-shrink:0;letter-spacing:1px;}
+.lv1 .lv-badge{background:rgba(100,116,139,0.15);color:#94a3b8;}
+.lv2 .lv-badge{background:rgba(34,197,94,0.15);color:#22c55e;}
+.lv3 .lv-badge{background:rgba(245,158,11,0.15);color:#f59e0b;}
+.lv4 .lv-badge{background:rgba(239,68,68,0.2);color:#ef4444;}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+
+<div class="content">
+  <div class="header">
+    <div class="label">🔒 Protection Levels</div>
+    <div class="title"><em>4 Levels.</em> Switch Instantly. No Restart.</div>
+    <div class="sub">From monitor-only to full lockdown — switch from the dashboard in one click</div>
+  </div>
+  <div class="levels">
+    <div class="level lv1"><div class="lv-icon">👁️</div><div class="lv-body"><div class="lv-num">Level 1</div><div class="lv-name">Monitor Only</div><div class="lv-desc">Log and alert — no intervention. Full observability with zero friction.</div></div><div class="lv-badge">LOG</div></div>
+    <div class="level lv2"><div class="lv-icon">🛡️</div><div class="lv-body"><div class="lv-num">Level 2</div><div class="lv-name">Soft Guard</div><div class="lv-desc">Alert on HIGH+. Block only confirmed critical threats automatically.</div></div><div class="lv-badge">SOFT</div></div>
+    <div class="level lv3"><div class="lv-icon">🔐</div><div class="lv-body"><div class="lv-num">Level 3</div><div class="lv-name">Hard Guard</div><div class="lv-desc">Block all critical + high-risk actions. Require manual approval to proceed.</div></div><div class="lv-badge">HARD</div></div>
+    <div class="level lv4"><div class="lv-icon">🚨</div><div class="lv-body"><div class="lv-num">Level 4</div><div class="lv-name">Full Lockdown</div><div class="lv-desc">Maximum restriction — whitelist-only operation. Zero unauthorized actions.</div></div><div class="lv-badge">LOCK</div></div>
+  </div>
+</div>
+</body></html>

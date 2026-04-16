@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#060d1a; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+.grid { position:absolute; inset:0;
+  background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size:50px 50px; }
+.glow { position:absolute; width:500px; height:400px; background:radial-gradient(ellipse, rgba(0,212,255,0.06) 0%, transparent 65%); top:20%; left:50%; transform:translate(-50%,-50%); }
+.corner { position:absolute; width:44px; height:44px; border-color:#00d4ff; border-style:solid; opacity:0.25; }
+.corner-tl { top:28px; left:28px; border-width:2px 0 0 2px; }
+.corner-tr { top:28px; right:28px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:28px; left:28px; border-width:0 0 2px 2px; }
+.corner-br { bottom:28px; right:28px; border-width:0 2px 2px 0; }
+
+.content { position:relative; z-index:10; padding:62px 48px 48px; display:flex; flex-direction:column; height:100%; }
+
+.label { font-size:12px; letter-spacing:4px; color:#00d4ff; text-transform:uppercase; font-weight:700; margin-bottom:18px; }
+.title { font-size:46px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:44px; }
+.title em { color:#00d4ff; font-style:normal; }
+
+.engines { display:flex; flex-direction:column; gap:13px; flex:1; }
+
+.engine {
+  display:flex; align-items:center; gap:18px;
+  padding:18px 22px; border-radius:12px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(0,212,255,0.12);
+  border-left:3px solid #00d4ff;
+}
+.en { font-size:26px; flex-shrink:0; }
+.e-num { font-size:11px; font-weight:800; color:rgba(0,212,255,0.5); letter-spacing:2px; margin-bottom:4px; text-transform:uppercase; }
+.e-name { font-size:16px; font-weight:700; color:#fff; margin-bottom:3px; }
+.e-desc { font-size:12px; color:rgba(255,255,255,0.38); }
+
+.footer-stat {
+  margin-top:20px; padding:18px 24px;
+  background:rgba(0,212,255,0.07); border:1px solid rgba(0,212,255,0.2);
+  border-radius:12px; display:flex; align-items:center; justify-content:center; gap:14px;
+  font-size:16px; font-weight:700; color:#00d4ff;
+}
+.footer-stat span { font-size:22px; }
+.slide-logo{position:absolute;top:34px;left:82px;z-index:50;display:flex;align-items:center;gap:9px;}
+.sl-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 20px rgba(0,212,255,0.35);}
+.sl-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.3px;}
+.sl-name em{color:#00d4ff;font-style:normal;}
+</style>
+</head>
+<body>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+<div class="grid"></div>
+<div class="glow"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="label">⚡ Detection</div>
+  <div class="title"><em>6 Engines</em><br>Running<br>Simultaneously.</div>
+
+  <div class="engines">
+    <div class="engine">
+      <div class="en">📋</div>
+      <div>
+        <div class="e-num">Engine 01</div>
+        <div class="e-name">Signature Rules</div>
+        <div class="e-desc">Known attack patterns — reverse shells, encoded payloads, exfiltration</div>
+      </div>
+    </div>
+    <div class="engine">
+      <div class="en">🔑</div>
+      <div>
+        <div class="e-num">Engine 02</div>
+        <div class="e-name">Secrets &amp; DLP</div>
+        <div class="e-desc">API keys, passwords, private keys — exposed before they leave</div>
+      </div>
+    </div>
+    <div class="engine">
+      <div class="en">📊</div>
+      <div>
+        <div class="e-num">Engine 03</div>
+        <div class="e-name">Behavioral Analysis</div>
+        <div class="e-desc">Anomaly detection — bulk deletes, unusual access patterns</div>
+      </div>
+    </div>
+    <div class="engine">
+      <div class="en">🗂️</div>
+      <div>
+        <div class="e-num">Engine 04</div>
+        <div class="e-name">Scope Monitor</div>
+        <div class="e-desc">File access outside project scope flagged instantly</div>
+      </div>
+    </div>
+    <div class="engine">
+      <div class="en">🔗</div>
+      <div>
+        <div class="e-num">Engine 05</div>
+        <div class="e-name">Git Guardian</div>
+        <div class="e-desc">Remote push monitoring — only approved destinations allowed</div>
+      </div>
+    </div>
+    <div class="engine">
+      <div class="en">🦠</div>
+      <div>
+        <div class="e-num">Engine 06</div>
+        <div class="e-name">YARA Scanner</div>
+        <div class="e-desc">Every written file scanned for malware signatures in real-time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-stat"><span>⚡</span> All 6 run in parallel — under 1ms overhead</div>
+</div>
+</body>
+</html>

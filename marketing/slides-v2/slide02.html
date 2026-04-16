@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#060d1a; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+.grid { position:absolute; inset:0;
+  background-image: linear-gradient(rgba(239,68,68,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(239,68,68,0.04) 1px, transparent 1px);
+  background-size:50px 50px; }
+.glow { position:absolute; width:600px; height:500px; background:radial-gradient(ellipse, rgba(239,68,68,0.08) 0%, transparent 65%); top:25%; left:50%; transform:translate(-50%,-50%); }
+.corner { position:absolute; width:44px; height:44px; border-color:#ef4444; border-style:solid; opacity:0.25; }
+.corner-tl { top:28px; left:28px; border-width:2px 0 0 2px; }
+.corner-tr { top:28px; right:28px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:28px; left:28px; border-width:0 0 2px 2px; }
+.corner-br { bottom:28px; right:28px; border-width:0 2px 2px 0; }
+
+.content { position:relative; z-index:10; padding:64px 48px 48px; display:flex; flex-direction:column; height:100%; }
+
+.label { font-size:12px; letter-spacing:4px; color:#ef4444; text-transform:uppercase; font-weight:700; margin-bottom:20px; }
+
+.title { font-size:50px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:52px; }
+.title em { color:#ef4444; font-style:normal; }
+
+.threats { display:flex; flex-direction:column; gap:16px; flex:1; }
+
+.threat {
+  display:flex; align-items:flex-start; gap:20px;
+  padding:22px 24px; border-radius:12px;
+  background:rgba(239,68,68,0.05);
+  border:1px solid rgba(239,68,68,0.18);
+  border-left:3px solid #ef4444;
+}
+.ti { font-size:30px; flex-shrink:0; margin-top:1px; }
+.tb-title { font-size:17px; font-weight:700; color:#fff; margin-bottom:5px; }
+.tb-desc { font-size:13px; color:rgba(255,255,255,0.42); line-height:1.55; }
+
+.alert-box {
+  margin-top:20px; padding:24px 28px;
+  background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3);
+  border-radius:14px; text-align:center;
+  font-size:20px; font-weight:800; color:#ef4444; line-height:1.4;
+}
+.slide-logo{position:absolute;top:34px;left:82px;z-index:50;display:flex;align-items:center;gap:9px;}
+.sl-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 20px rgba(0,212,255,0.35);}
+.sl-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.3px;}
+.sl-name em{color:#00d4ff;font-style:normal;}
+</style>
+</head>
+<body>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+<div class="grid"></div>
+<div class="glow"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="label">⚠ The Problem</div>
+  <div class="title">AI Tools Have<br><em>Unrestricted</em><br>Access.</div>
+
+  <div class="threats">
+    <div class="threat">
+      <div class="ti">🔑</div>
+      <div>
+        <div class="tb-title">API Keys &amp; Secrets</div>
+        <div class="tb-desc">Claude reads .env files, credentials, private keys — with zero oversight</div>
+      </div>
+    </div>
+    <div class="threat">
+      <div class="ti">📁</div>
+      <div>
+        <div class="tb-title">Full File System Access</div>
+        <div class="tb-desc">Reads, writes and modifies any file on your workstation</div>
+      </div>
+    </div>
+    <div class="threat">
+      <div class="ti">🌐</div>
+      <div>
+        <div class="tb-title">Unrestricted Web Access</div>
+        <div class="tb-desc">Downloads scripts, fetches external URLs — no audit trail</div>
+      </div>
+    </div>
+    <div class="threat">
+      <div class="ti">⚙️</div>
+      <div>
+        <div class="tb-title">Executes Shell Commands</div>
+        <div class="tb-desc">Runs Bash, PowerShell — anything, anytime, on your machine</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    No monitoring. No alerts. No audit trail.<br>Until now.
+  </div>
+</div>
+</body>
+</html>

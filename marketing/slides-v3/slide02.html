@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#060d1a;width:1920px;height:1080px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;}
+body{width:1920px;height:1080px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(239,68,68,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(239,68,68,0.04) 1px,transparent 1px);background-size:60px 60px;}
+.glow{position:absolute;width:900px;height:700px;background:radial-gradient(ellipse,rgba(239,68,68,0.08) 0%,transparent 65%);top:30%;left:50%;transform:translate(-50%,-50%);}
+.corner{position:absolute;width:50px;height:50px;border-color:#ef4444;border-style:solid;opacity:0.25;}
+.corner-tl{top:32px;left:32px;border-width:2px 0 0 2px;}.corner-tr{top:32px;right:32px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:32px;left:32px;border-width:0 0 2px 2px;}.corner-br{bottom:32px;right:32px;border-width:0 2px 2px 0;}
+.slide-logo{position:absolute;top:36px;left:36px;z-index:50;display:flex;align-items:center;gap:10px;}
+.sl-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.sl-name{font-size:17px;font-weight:800;color:#fff;}.sl-name em{color:#00d4ff;font-style:normal;}
+
+.content{position:relative;z-index:10;padding:80px 100px 60px;display:flex;flex-direction:column;height:100%;}
+.header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:50px;}
+.label{font-size:13px;letter-spacing:4px;color:#ef4444;text-transform:uppercase;font-weight:700;}
+.title{font-size:60px;font-weight:900;color:#fff;line-height:1.1;}
+.title em{color:#ef4444;font-style:normal;}
+.alert-box{padding:18px 28px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:20px;font-weight:800;color:#ef4444;}
+
+.grid-threats{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:20px;flex:1;}
+.threat{display:flex;align-items:flex-start;gap:22px;padding:28px 30px;border-radius:14px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.18);border-left:4px solid #ef4444;}
+.ti{font-size:38px;flex-shrink:0;}
+.tt{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;}
+.td{font-size:15px;color:rgba(255,255,255,0.42);line-height:1.5;}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+
+<div class="content">
+  <div class="header">
+    <div><div class="label">⚠ The Problem</div><div class="title">AI Tools Have <em>Unrestricted</em> Access.</div></div>
+    <div class="alert-box">No monitoring. No alerts. No audit trail. Until now.</div>
+  </div>
+  <div class="grid-threats">
+    <div class="threat"><div class="ti">🔑</div><div><div class="tt">API Keys &amp; Secrets</div><div class="td">Claude reads .env files, credentials, private keys — with zero oversight or alerting</div></div></div>
+    <div class="threat"><div class="ti">📁</div><div><div class="tt">Full File System Access</div><div class="td">Reads, writes and modifies any file on your workstation — no boundaries</div></div></div>
+    <div class="threat"><div class="ti">🌐</div><div><div class="tt">Unrestricted Web Access</div><div class="td">Downloads scripts, fetches external URLs, exfiltrates data — no audit trail</div></div></div>
+    <div class="threat"><div class="ti">⚙️</div><div><div class="tt">Executes Shell Commands</div><div class="td">Runs Bash, PowerShell, anything, anytime — full system access</div></div></div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#060d1a; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+.grid { position:absolute; inset:0;
+  background-image: linear-gradient(rgba(245,158,11,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.03) 1px, transparent 1px);
+  background-size:50px 50px; }
+.glow { position:absolute; width:560px; height:400px; background:radial-gradient(ellipse, rgba(245,158,11,0.07) 0%, transparent 65%); top:25%; left:50%; transform:translate(-50%,-50%); }
+.corner { position:absolute; width:44px; height:44px; border-color:#f59e0b; border-style:solid; opacity:0.25; }
+.corner-tl { top:28px; left:28px; border-width:2px 0 0 2px; }
+.corner-tr { top:28px; right:28px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:28px; left:28px; border-width:0 0 2px 2px; }
+.corner-br { bottom:28px; right:28px; border-width:0 2px 2px 0; }
+
+.content { position:relative; z-index:10; padding:62px 48px 48px; display:flex; flex-direction:column; height:100%; }
+
+.label { font-size:12px; letter-spacing:4px; color:#f59e0b; text-transform:uppercase; font-weight:700; margin-bottom:18px; }
+.title { font-size:46px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:14px; }
+.title em { color:#f59e0b; font-style:normal; }
+.subtitle { font-size:17px; color:rgba(255,255,255,0.4); margin-bottom:44px; line-height:1.5; }
+
+/* Skill card - fake terminal */
+.skill-terminal {
+  background:#0a1628; border:1px solid rgba(245,158,11,0.2);
+  border-radius:14px; overflow:hidden; margin-bottom:28px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+.skill-bar {
+  background:#111d30; padding:11px 18px;
+  display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid rgba(245,158,11,0.15);
+}
+.dot { width:10px; height:10px; border-radius:50%; }
+.dot-r{background:#ef4444;} .dot-y{background:#f59e0b;} .dot-g{background:#22c55e;}
+.bar-title { flex:1; text-align:center; font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:1px; }
+.skill-body { padding:18px 20px; font-family:'Courier New',monospace; font-size:12px; }
+.sl { line-height:1.9; }
+.sc { color:rgba(0,212,255,0.7); }
+.sw { color:#f59e0b; }
+.se { color:#ef4444; font-weight:700; }
+.sg { color:#22c55e; }
+.sa { color:rgba(255,255,255,0.4); }
+
+/* Feature list */
+.features { display:flex; flex-direction:column; gap:14px; flex:1; }
+.feat {
+  display:flex; align-items:center; gap:16px;
+  padding:16px 20px; border-radius:11px;
+  background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.15);
+}
+.fi { font-size:24px; flex-shrink:0; }
+.ft { font-size:15px; font-weight:700; color:#fff; margin-bottom:3px; }
+.fd { font-size:12px; color:rgba(255,255,255,0.38); }
+.slide-logo{position:absolute;top:34px;left:82px;z-index:50;display:flex;align-items:center;gap:9px;}
+.sl-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 20px rgba(0,212,255,0.35);}
+.sl-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.3px;}
+.sl-name em{color:#00d4ff;font-style:normal;}
+</style>
+</head>
+<body>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+<div class="grid"></div>
+<div class="glow"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="label">🔍 Skills Scanner</div>
+  <div class="title">Custom Skills<br>Are a <em>New</em><br>Attack Surface.</div>
+  <div class="subtitle">Every skill can run code on your machine.<br>FlowGuard watches them all.</div>
+
+  <div class="skill-terminal">
+    <div class="skill-bar">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <div class="bar-title">🔍 FlowGuard — Skills Scanner</div>
+    </div>
+    <div class="skill-body">
+      <div class="sl"><span class="sc">scanning</span> <span class="sa">commit.md</span><span class="sg">  ✓ CLEAN  [sha: a4f2c]</span></div>
+      <div class="sl"><span class="sc">scanning</span> <span class="sa">review-pr.md</span><span class="sg">  ✓ CLEAN  [sha: 9e1b7]</span></div>
+      <div class="sl"><span class="sc">scanning</span> <span class="sa">deploy.md</span><span class="sw">  ⚠ MODIFIED</span></div>
+      <div class="sl"><span class="sw">  → hash changed: 8f3a1 → d92ec</span></div>
+      <div class="sl"><span class="sc">scanning</span> <span class="sa">build.md</span><span class="se">  ✗ MALWARE PATTERN</span></div>
+      <div class="sl"><span class="se">  → YARA match: reverse_shell_python</span></div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feat">
+      <div class="fi">🔏</div>
+      <div>
+        <div class="ft">Hash Integrity Check</div>
+        <div class="fd">Any unauthorized modification is detected immediately</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="fi">🦠</div>
+      <div>
+        <div class="ft">Malware Pattern Detection</div>
+        <div class="fd">YARA rules scan every skill file for malicious code</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="fi">🔔</div>
+      <div>
+        <div class="ft">Instant Alert on Change</div>
+        <div class="fd">Telegram notification the moment a skill is tampered with</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

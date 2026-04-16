@@ -1,0 +1,112 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#060d1a;width:1920px;height:1080px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;}
+body{width:1920px;height:1080px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:60px 60px;}
+.corner{position:absolute;width:50px;height:50px;border-color:#00d4ff;border-style:solid;opacity:0.2;}
+.corner-tl{top:32px;left:32px;border-width:2px 0 0 2px;}.corner-tr{top:32px;right:32px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:32px;left:32px;border-width:0 0 2px 2px;}.corner-br{bottom:32px;right:32px;border-width:0 2px 2px 0;}
+.slide-logo{position:absolute;top:36px;left:36px;z-index:50;display:flex;align-items:center;gap:10px;}
+.sl-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.sl-name{font-size:17px;font-weight:800;color:#fff;}.sl-name em{color:#00d4ff;font-style:normal;}
+
+.hdr{position:relative;z-index:10;padding:60px 100px 24px;display:flex;align-items:center;justify-content:space-between;}
+.label{font-size:13px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase;font-weight:700;margin-bottom:12px;}
+.title{font-size:52px;font-weight:900;color:#fff;}.title em{color:#00d4ff;font-style:normal;}
+.hdr-right{font-size:16px;color:rgba(255,255,255,0.35);}
+.hdr-right em{color:#00d4ff;font-style:normal;font-weight:700;}
+
+/* Dashboard mockup */
+.dash{position:relative;z-index:10;margin:0 80px;flex:1;background:#0f1b2d;border:1px solid rgba(0,212,255,0.2);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 100px rgba(0,0,0,0.6),0 0 80px rgba(0,212,255,0.06);margin-bottom:30px;}
+
+/* Topbar */
+.db-top{background:#fff;height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid #e2e8f0;flex-shrink:0;}
+.db-topttl{font-size:14px;font-weight:700;color:#0f1b2d;flex:1;}
+.db-badge{display:flex;align-items:center;gap:5px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:700;color:#0066cc;}
+.db-dot{width:6px;height:6px;border-radius:50%;background:#00c853;}
+.db-pc{font-size:10px;color:#94a3b8;}
+
+/* Body */
+.db-body{display:flex;flex:1;overflow:hidden;}
+/* Sidebar */
+.db-sb{width:160px;background:#0f1b2d;border-right:1px solid rgba(255,255,255,0.06);padding:12px 0;flex-shrink:0;}
+.db-sb-logo{padding:10px 14px 10px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.db-sb-icon{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:11px;}
+.db-sb-name{font-size:12px;font-weight:700;color:#fff;}
+.db-sb-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.25);text-transform:uppercase;padding:8px 14px 4px;}
+.db-sb-item{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:11px;color:rgba(255,255,255,0.45);}
+.db-sb-item.active{color:#00d4ff;background:rgba(0,212,255,0.08);border-left:2px solid #00d4ff;}
+/* Main */
+.db-main{flex:1;background:#f0f4f8;padding:12px;display:flex;flex-direction:column;gap:10px;overflow:hidden;}
+.db-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.ds{background:#fff;border-radius:8px;padding:10px 14px;border:1px solid #e2e8f0;}
+.ds-v{font-size:26px;font-weight:900;color:#0f1b2d;}.ds-v.red{color:#ef4444;}.ds-v.amber{color:#f59e0b;}.ds-v.cyan{color:#0066cc;}.ds-v.green{color:#00c853;}
+.ds-l{font-size:9px;color:#94a3b8;letter-spacing:0.5px;margin-top:2px;text-transform:uppercase;}
+.db-panel{background:#fff;border-radius:10px;border:1px solid #e2e8f0;flex:1;overflow:hidden;}
+.db-ph{padding:10px 14px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;}
+.db-ptt{font-size:12px;font-weight:700;color:#0f1b2d;flex:1;}
+.db-pbtn{font-size:10px;padding:4px 12px;border-radius:6px;background:#00d4ff;color:#fff;font-weight:700;}
+.db-evs{display:flex;flex-direction:column;}
+.ev{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid #f8fafc;font-size:11px;}
+.sv{padding:3px 8px;border-radius:4px;font-size:9px;font-weight:800;flex-shrink:0;letter-spacing:0.5px;}
+.sc{background:rgba(239,68,68,0.12);color:#ef4444;}.sh{background:rgba(245,158,11,0.12);color:#f59e0b;}.sm{background:rgba(0,102,204,0.1);color:#0066cc;}.si{background:#f1f5f9;color:#64748b;}
+.et{color:#94a3b8;flex-shrink:0;width:60px;}.em{color:#374151;flex:1;}.etime{color:#cbd5e1;flex-shrink:0;}
+
+.ft{position:relative;z-index:10;text-align:center;font-size:14px;color:rgba(255,255,255,0.3);padding:0 0 20px;}
+.ft em{color:#00d4ff;font-style:normal;font-weight:700;}
+</style></head><body>
+<div class="grid"></div>
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+
+<div class="hdr">
+  <div><div class="label">📊 Dashboard V2</div><div class="title">Full Visibility. <em>One Screen.</em></div></div>
+  <div class="hdr-right">Real-time updates · <em>Export to Excel</em> · Session Replay · 9 Views</div>
+</div>
+
+<div class="dash">
+  <div class="db-top">
+    <div class="db-topttl">Security Dashboard</div>
+    <div class="db-pc">PC: ERAN-WORKSTATION</div>
+    <div class="db-badge"><div class="db-dot"></div> Collector Online</div>
+  </div>
+  <div class="db-body">
+    <div class="db-sb">
+      <div class="db-sb-logo"><div class="db-sb-icon">🛡️</div><div class="db-sb-name">FlowGuard</div></div>
+      <div class="db-sb-lbl">Monitor</div>
+      <div class="db-sb-item active">📊 Dashboard</div>
+      <div class="db-sb-item">📋 Events</div>
+      <div class="db-sb-item">📼 Sessions</div>
+      <div class="db-sb-item">🌐 Web Access</div>
+      <div class="db-sb-lbl">Security</div>
+      <div class="db-sb-item">🗂️ File Audit</div>
+      <div class="db-sb-item">🔍 Skills</div>
+      <div class="db-sb-item">🔗 Git Monitor</div>
+      <div class="db-sb-lbl">System</div>
+      <div class="db-sb-item">📡 SIEM</div>
+      <div class="db-sb-item">⚙️ Settings</div>
+    </div>
+    <div class="db-main">
+      <div class="db-stats">
+        <div class="ds"><div class="ds-v red">3</div><div class="ds-l">Critical</div></div>
+        <div class="ds"><div class="ds-v amber">12</div><div class="ds-l">High</div></div>
+        <div class="ds"><div class="ds-v cyan">847</div><div class="ds-l">Total Events</div></div>
+        <div class="ds"><div class="ds-v green">●</div><div class="ds-l">Collector OK</div></div>
+      </div>
+      <div class="db-panel">
+        <div class="db-ph"><div class="db-ptt">Live Events</div><div class="db-pbtn">Export Excel</div></div>
+        <div class="db-evs">
+          <div class="ev"><span class="sv sc">CRIT</span><span class="et">Bash</span><span class="em">Encoded PowerShell payload detected</span><span class="etime">09:14</span></div>
+          <div class="ev"><span class="sv sh">HIGH</span><span class="et">Write</span><span class="em">AWS_SECRET_KEY written to non-secure path</span><span class="etime">09:11</span></div>
+          <div class="ev"><span class="sv sh">HIGH</span><span class="et">WebFetch</span><span class="em">Fetch to raw IP address: 45.33.32.156</span><span class="etime">09:08</span></div>
+          <div class="ev"><span class="sv sm">MED</span><span class="et">Read</span><span class="em">.env file accessed — credentials exposure risk</span><span class="etime">09:05</span></div>
+          <div class="ev"><span class="sv sm">MED</span><span class="et">Bash</span><span class="em">Suspicious pattern: Israeli phone number in output</span><span class="etime">09:02</span></div>
+          <div class="ev"><span class="sv si">INFO</span><span class="et">WebSearch</span><span class="em">Search: "reverse shell python one liner"</span><span class="etime">08:59</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ft">Real-time · <em>Export to Excel</em> · Session Replay · Git Monitor · Web Access · File Audit</div>
+</body></html>

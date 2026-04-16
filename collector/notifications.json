@@ -1,7 +1,5 @@
 {
-  "telegram": {
-    "enabled": true
-  },
+  "telegram": {},
   "email": {
     "enabled": false,
     "smtp_host": "",
@@ -12,5 +10,9 @@
     "to": "",
     "smtp_secure": false
   },
-  "git_remotes": []
+  "git_remotes": [],
+  "desktop": true,
+  "token": "",
+  "chatId": "",
+  "minLevel": "CRITICAL"
 }

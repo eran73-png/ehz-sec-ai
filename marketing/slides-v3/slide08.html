@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#060d1a;width:1920px;height:1080px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;}
+body{width:1920px;height:1080px;display:flex;align-items:center;position:relative;overflow:hidden;}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:60px 60px;}
+.glow{position:absolute;width:800px;height:700px;background:radial-gradient(ellipse,rgba(0,212,255,0.07) 0%,transparent 65%);top:50%;left:65%;transform:translate(-50%,-50%);}
+.corner{position:absolute;width:50px;height:50px;border-color:#00d4ff;border-style:solid;opacity:0.22;}
+.corner-tl{top:32px;left:32px;border-width:2px 0 0 2px;}.corner-tr{top:32px;right:32px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:32px;left:32px;border-width:0 0 2px 2px;}.corner-br{bottom:32px;right:32px;border-width:0 2px 2px 0;}
+.slide-logo{position:absolute;top:36px;left:36px;z-index:50;display:flex;align-items:center;gap:10px;}
+.sl-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.sl-name{font-size:17px;font-weight:800;color:#fff;}.sl-name em{color:#00d4ff;font-style:normal;}
+
+.layout{position:relative;z-index:10;display:flex;align-items:center;gap:80px;padding:0 100px;width:100%;}
+.left{width:380px;flex-shrink:0;}
+.label{font-size:13px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase;font-weight:700;margin-bottom:18px;}
+.title{font-size:52px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:28px;}.title em{color:#00d4ff;font-style:normal;}
+.channels{display:flex;flex-direction:column;gap:16px;}
+.ch{padding:22px 26px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(0,212,255,0.12);}
+.ch-icon{font-size:32px;margin-bottom:10px;}
+.ch-name{font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;}
+.ch-desc{font-size:14px;color:rgba(255,255,255,0.38);}
+.ch-speed{font-size:13px;color:#00d4ff;font-weight:700;margin-top:8px;}
+
+.center{flex:1;display:flex;justify-content:center;}
+.phone{width:380px;background:#111d30;border-radius:26px;border:1px solid rgba(0,212,255,0.2);overflow:hidden;box-shadow:0 30px 100px rgba(0,0,0,0.5),0 0 60px rgba(0,212,255,0.08);}
+.ph-bar{background:#0a1628;padding:16px 22px;display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(0,212,255,0.1);}
+.ph-av{font-size:26px;}.ph-name{font-size:15px;font-weight:700;color:#fff;}.ph-st{font-size:12px;color:rgba(0,212,255,0.6);}
+.ph-msgs{padding:18px 16px;display:flex;flex-direction:column;gap:12px;}
+.msg{background:#1a2a40;border-radius:14px 14px 14px 2px;padding:14px 18px;border-left:3px solid;}
+.msg-c{border-color:#ef4444;}.msg-h{border-color:#f59e0b;}.msg-i{border-color:#00d4ff;}
+.msg-sev{font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:6px;}
+.msg-c .msg-sev{color:#ef4444;}.msg-h .msg-sev{color:#f59e0b;}.msg-i .msg-sev{color:#00d4ff;}
+.msg-tool{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.msg-reason{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4;margin-bottom:6px;}
+.msg-time{font-size:10px;color:rgba(255,255,255,0.22);text-align:right;}
+
+.right{width:380px;flex-shrink:0;display:flex;flex-direction:column;gap:20px;justify-content:center;}
+.stat-big{padding:30px 28px;border-radius:16px;text-align:center;background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.2);}
+.sb-val{font-size:56px;font-weight:900;color:#00d4ff;}
+.sb-lbl{font-size:15px;color:rgba(255,255,255,0.5);margin-top:6px;}
+.stat-sm{padding:20px 24px;border-radius:14px;text-align:center;background:rgba(255,255,255,0.02);border:1px solid rgba(0,212,255,0.1);}
+.ss-val{font-size:32px;font-weight:900;color:#fff;}.ss-lbl{font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;letter-spacing:1px;}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+
+<div class="layout">
+  <div class="left">
+    <div class="label">🔔 Instant Alerts</div>
+    <div class="title">Critical Event?<br>You Know in<br><em>2 Seconds.</em></div>
+    <div class="channels">
+      <div class="ch"><div class="ch-icon">✈️</div><div class="ch-name">Telegram</div><div class="ch-desc">Instant push to any device, anywhere</div><div class="ch-speed">Under 2 seconds delivery</div></div>
+      <div class="ch"><div class="ch-icon">📧</div><div class="ch-name">Email</div><div class="ch-desc">Corporate environments &amp; SIEM integration</div><div class="ch-speed">SMTP / Exchange support</div></div>
+    </div>
+  </div>
+  <div class="center">
+    <div class="phone">
+      <div class="ph-bar"><div class="ph-av">✈️</div><div><div class="ph-name">FlowGuard Bot</div><div class="ph-st">● online</div></div></div>
+      <div class="ph-msgs">
+        <div class="msg msg-c"><div class="msg-sev">🔴 CRITICAL</div><div class="msg-tool">Bash — Encoded PowerShell</div><div class="msg-reason">Base64-encoded command detected in shell execution</div><div class="msg-time">09:14:22</div></div>
+        <div class="msg msg-h"><div class="msg-sev">🟡 HIGH</div><div class="msg-tool">Write — API Key Exposure</div><div class="msg-reason">AWS_SECRET_KEY written to non-secure path</div><div class="msg-time">09:11:05</div></div>
+        <div class="msg msg-i"><div class="msg-sev">🔵 INFO</div><div class="msg-tool">FlowGuard v2.0.0 — Active</div><div class="msg-reason">Collector online · 847 events today · All engines running</div><div class="msg-time">09:00:00</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="stat-big"><div class="sb-val">&lt;2s</div><div class="sb-lbl">Alert delivery time</div></div>
+    <div class="stat-sm"><div class="ss-val">24/7</div><div class="ss-lbl">MONITORING</div></div>
+    <div class="stat-sm"><div class="ss-val">∞</div><div class="ss-lbl">EVENT HISTORY</div></div>
+  </div>
+</div>
+</body></html>

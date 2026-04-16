@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#060d1a; width:720px; height:1280px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; }
+body { width:720px; height:1280px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+
+.grid { position:absolute; inset:0;
+  background-image: linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+  background-size:50px 50px; }
+.glow-big { position:absolute; width:800px; height:800px; background:radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 60%); top:50%; left:50%; transform:translate(-50%,-50%); }
+.ring { position:absolute; border-radius:50%; border:1px solid rgba(0,212,255,0.1); top:50%; left:50%; transform:translate(-50%,-50%); }
+.ring1 { width:600px; height:600px; }
+.ring2 { width:440px; height:440px; border-color:rgba(0,212,255,0.07); }
+.corner { position:absolute; width:50px; height:50px; border-color:#00d4ff; border-style:solid; opacity:0.35; }
+.corner-tl { top:28px; left:28px; border-width:2px 0 0 2px; }
+.corner-tr { top:28px; right:28px; border-width:2px 2px 0 0; }
+.corner-bl { bottom:28px; left:28px; border-width:0 0 2px 2px; }
+.corner-br { bottom:28px; right:28px; border-width:0 2px 2px 0; }
+
+.content { position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 50px; width:100%; }
+
+/* Logo */
+.logo-big {
+  width:100px; height:100px; border-radius:26px;
+  background:linear-gradient(135deg, #00d4ff, #0066cc);
+  display:flex; align-items:center; justify-content:center; font-size:50px;
+  margin-bottom:28px;
+  box-shadow: 0 0 100px rgba(0,212,255,0.45), 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.brand { font-size:64px; font-weight:900; color:#fff; letter-spacing:-2px; line-height:1; margin-bottom:8px; text-shadow:0 0 80px rgba(0,212,255,0.35); }
+.brand em { color:#00d4ff; font-style:normal; }
+.tagline { font-size:18px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:44px; }
+.divider { width:100px; height:2px; background:linear-gradient(90deg,transparent,#00d4ff,transparent); margin-bottom:44px; }
+
+/* Checkmarks */
+.checks { display:flex; flex-direction:column; gap:13px; width:100%; margin-bottom:44px; }
+.chk {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 22px; border-radius:12px; text-align:left;
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+}
+.chk-icon { font-size:18px; flex-shrink:0; }
+.chk-text { font-size:14px; color:rgba(255,255,255,0.65); }
+.chk-text b { color:#fff; }
+
+/* CTA box */
+.cta {
+  width:100%; padding:28px 32px;
+  background:rgba(0,212,255,0.08); border:1.5px solid rgba(0,212,255,0.3);
+  border-radius:16px; margin-bottom:24px;
+  box-shadow: 0 0 40px rgba(0,212,255,0.1);
+}
+.cta-title { font-size:20px; font-weight:900; color:#00d4ff; margin-bottom:20px; letter-spacing:0.5px; }
+.cta-rows { display:flex; flex-direction:column; gap:12px; }
+.cta-row { display:flex; align-items:center; justify-content:center; gap:12px; font-size:22px; color:#fff; font-weight:800; }
+.cta-icon { font-size:24px; }
+
+.brand-foot { font-size:12px; letter-spacing:3px; color:rgba(0,212,255,0.45); text-transform:uppercase; font-weight:700; }
+.slide-logo{position:absolute;top:34px;left:82px;z-index:50;display:flex;align-items:center;gap:9px;}
+.sl-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 20px rgba(0,212,255,0.35);}
+.sl-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.3px;}
+.sl-name em{color:#00d4ff;font-style:normal;}
+</style>
+</head>
+<body>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+<div class="grid"></div>
+<div class="glow-big"></div>
+<div class="ring ring1"></div>
+<div class="ring ring2"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="content">
+  <div class="logo-big">🛡️</div>
+  <div class="brand">Flow<em>Guard</em></div>
+  <div class="tagline">Claude Code Security Monitor</div>
+  <div class="divider"></div>
+
+  <div class="checks">
+    <div class="chk"><div class="chk-icon">✅</div><div class="chk-text"><b>6 Detection Engines</b> — real-time, zero latency</div></div>
+    <div class="chk"><div class="chk-icon">✅</div><div class="chk-text"><b>Skills Scanner</b> — hash integrity + malware detection</div></div>
+    <div class="chk"><div class="chk-icon">✅</div><div class="chk-text"><b>Instant Telegram alerts</b> — wherever you are</div></div>
+    <div class="chk"><div class="chk-icon">✅</div><div class="chk-text"><b>Local deploy</b> — your data never leaves your machine</div></div>
+    <div class="chk"><div class="chk-icon">✅</div><div class="chk-text"><b>One-click install</b> — up and running in minutes</div></div>
+  </div>
+
+  <div class="cta">
+    <div class="cta-title">Get Protected Today</div>
+    <div class="cta-rows">
+      <div class="cta-row"><span class="cta-icon">📞</span> 054-4825276</div>
+      <div class="cta-row"><span class="cta-icon">🌐</span> EHZ-AI Security Solutions</div>
+    </div>
+  </div>
+
+  <div class="brand-foot">FlowGuard · Protecting AI Workflows</div>
+</div>
+</body>
+</html>

@@ -1469,6 +1469,42 @@ app.delete('/fsw/exclude/custom', (req, res) => {
   } catch(e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
+// ─── Diagnostics (MS11) ──────────────────────────────────────────────────────
+
+// POST /diag/collect — run the diagnostics collector and open mail client
+app.post('/diag/collect', (req, res) => {
+  const { exec } = require('child_process');
+  const diagScript = path.join(__dirname, '../diag/collect.ps1');
+
+  if (!fs.existsSync(diagScript)) {
+    return res.status(500).json({ ok: false, error: 'collect.ps1 not found at ' + diagScript });
+  }
+
+  const cmd = `powershell -ExecutionPolicy Bypass -File "${diagScript}"`;
+  exec(cmd, { timeout: 120000 }, (err, stdout, stderr) => {
+    if (err) {
+      return res.status(500).json({ ok: false, error: err.message, stderr: stderr });
+    }
+    // Parse stdout to find ZIP path and size
+    const pathMatch = stdout.match(/File:\s+(.+\.zip)/i);
+    const sizeMatch = stdout.match(/Size:\s+([\d.]+)\s*KB/i);
+    res.json({
+      ok: true,
+      zipPath: pathMatch ? pathMatch[1].trim() : 'Desktop (see Explorer)',
+      sizeKB: sizeMatch ? parseFloat(sizeMatch[1]) : 0,
+      stdout: stdout
+    });
+  });
+});
+
+// POST /diag/open-folder — open Desktop folder in Explorer
+app.post('/diag/open-folder', (req, res) => {
+  const { exec } = require('child_process');
+  const desktop = path.join(os.homedir ? os.homedir() : process.env.USERPROFILE, 'Desktop');
+  exec(`explorer.exe "${desktop}"`);
+  res.json({ ok: true });
+});
+
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
 const FSW_ROOT      = 'C:/Claude-Repo';

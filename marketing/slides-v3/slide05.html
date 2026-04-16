@@ -1,0 +1,60 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#060d1a;width:1920px;height:1080px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;}
+body{width:1920px;height:1080px;display:flex;align-items:center;position:relative;overflow:hidden;}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:60px 60px;}
+.glow{position:absolute;width:800px;height:700px;background:radial-gradient(ellipse,rgba(0,212,255,0.07) 0%,transparent 65%);top:50%;left:60%;transform:translate(-50%,-50%);}
+.corner{position:absolute;width:50px;height:50px;border-color:#00d4ff;border-style:solid;opacity:0.22;}
+.corner-tl{top:32px;left:32px;border-width:2px 0 0 2px;}.corner-tr{top:32px;right:32px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:32px;left:32px;border-width:0 0 2px 2px;}.corner-br{bottom:32px;right:32px;border-width:0 2px 2px 0;}
+.slide-logo{position:absolute;top:36px;left:36px;z-index:50;display:flex;align-items:center;gap:10px;}
+.sl-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#00d4ff,#0066cc);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.sl-name{font-size:17px;font-weight:800;color:#fff;}.sl-name em{color:#00d4ff;font-style:normal;}
+
+.layout{position:relative;z-index:10;display:flex;align-items:center;gap:80px;padding:0 100px;width:100%;}
+.left{width:420px;flex-shrink:0;}
+.label{font-size:13px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase;font-weight:700;margin-bottom:18px;}
+.title{font-size:52px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:28px;}.title em{color:#00d4ff;font-style:normal;}
+.stats{display:flex;flex-direction:column;gap:14px;}
+.stat{padding:18px 22px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(0,212,255,0.1);text-align:center;}
+.sv{font-size:36px;font-weight:900;color:#00d4ff;}.sl2{font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;letter-spacing:1px;}
+
+.right{flex:1;display:flex;flex-direction:column;gap:0;align-items:center;}
+.flow-step{width:100%;padding:24px 30px;border-radius:16px;display:flex;align-items:center;gap:22px;}
+.fs-before{background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);}
+.fs-hook{background:rgba(0,212,255,0.1);border:2px solid #00d4ff;box-shadow:0 0 50px rgba(0,212,255,0.2);}
+.fs-after{background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.18);}
+.fs-icon{font-size:36px;flex-shrink:0;}
+.fs-body{flex:1;}
+.fs-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:5px;}
+.fs-desc{font-size:14px;color:rgba(255,255,255,0.4);line-height:1.5;}
+.fs-badge{padding:7px 18px;border-radius:100px;font-size:12px;font-weight:800;flex-shrink:0;letter-spacing:1px;}
+.badge-hook{background:#00d4ff;color:#0a1628;}
+.badge-pre{background:rgba(0,212,255,0.12);color:#00d4ff;border:1px solid rgba(0,212,255,0.3);}
+.badge-post{background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.3);}
+.arrow{font-size:28px;color:rgba(0,212,255,0.3);padding:8px 0;}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div class="slide-logo"><div class="sl-icon">🛡️</div><div class="sl-name">Flow<em>Guard</em></div></div>
+
+<div class="layout">
+  <div class="left">
+    <div class="label">🔗 Hook System</div>
+    <div class="title">Every Tool Call.<br><em>Intercepted.</em><br>Before &amp; After.</div>
+    <div class="stats">
+      <div class="stat"><div class="sv">&lt;1ms</div><div class="sl2">OVERHEAD PER CALL</div></div>
+      <div class="stat"><div class="sv">100%</div><div class="sl2">TOOL COVERAGE</div></div>
+      <div class="stat"><div class="sv">0</div><div class="sl2">MISSED CALLS</div></div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="flow-step fs-before"><div class="fs-icon">🤖</div><div class="fs-body"><div class="fs-title">Claude sends tool call</div><div class="fs-desc">Bash, Read, Write, WebFetch, WebSearch, Agent — every single one</div></div><div class="fs-badge badge-pre">PRE-HOOK</div></div>
+    <div class="arrow">↓</div>
+    <div class="flow-step fs-hook"><div class="fs-icon">🛡️</div><div class="fs-body"><div class="fs-title">FlowGuard Hook fires</div><div class="fs-desc">6 engines analyze simultaneously — classify severity — log — alert if critical</div></div><div class="fs-badge badge-hook">FLOWGUARD</div></div>
+    <div class="arrow">↓</div>
+    <div class="flow-step fs-after"><div class="fs-icon">✅</div><div class="fs-body"><div class="fs-title">Execution + post-scan</div><div class="fs-desc">Tool executes, output analyzed, file changes audited, session recorded</div></div><div class="fs-badge badge-post">POST-HOOK</div></div>
+  </div>
+</div>
+</body></html>
