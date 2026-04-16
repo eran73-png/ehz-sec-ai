@@ -1906,93 +1906,75 @@
   </div>
 </div>
 
-<!-- MS11 — DIAGNOSTICS & SUPPORT -->
-<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(239,68,68,0.3);">
-  <div class="phase-header" style="background:rgba(239,68,68,0.05);">
-    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#ef4444,#ea580c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS11</div>
+<!-- MS11 — DIAGNOSTICS & SUPPORT (COMPLETED) -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
+  <div class="phase-header" style="background:rgba(16,185,129,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#059669);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS11</div>
     <div class="phase-info">
-      <h3>MS11 — Diagnostics &amp; Support Tool</h3>
-      <p>כלי אבחון ותמיכה למקרים של כשלון התקנה או באגים בשטח</p>
+      <h3>MS11 ✅ — Diagnostics &amp; Support Tool</h3>
+      <p>כלי אבחון ותמיכה למקרים של כשלון התקנה או באגים בשטח · <strong>הושלם 16.04.2026</strong></p>
     </div>
-    <div class="phase-status" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">🚀 בעבודה</div>
+    <div class="phase-status" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.3);">✅ הושלם</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell">
-      <div class="task-num" style="color:#ef4444;">11.1</div>
+      <div class="task-num" style="color:#10b981;">11.1 ✅</div>
       <div class="task-title">📦 Diagnostics Collector Script</div>
       <div class="task-desc">
-        <code>FlowGuard-Diagnostics.ps1</code> — סקריפט PowerShell שנארז עם ההתקנה.<br><br>
-        <strong>אוסף:</strong><br>
-        • Inno Setup install log (%TEMP%\Setup Log*.txt)<br>
-        • Windows Event Log — source "FlowGuard Collector"<br>
-        • Service logs (stdout/stderr)<br>
-        • config: whitelist.json, package.json, .env (מצונזר — ללא tokens)<br>
-        • System info: OS version, Node.js version, user permissions, admin status<br>
-        • Folder structure: קבצים ב-C:\Program Files\FlowGuard\<br>
-        • פלט ל-ZIP: <code>FlowGuard-Diag-&lt;hostname&gt;-&lt;date&gt;.zip</code>
+        <code>diag/collect.ps1</code> — PowerShell collector שנארז עם ההתקנה. אוסף 8 קטגוריות: system info, folder structure, installer logs, config, service logs, event log, service status, port check. פלט: <code>FlowGuard-Diag-&lt;hostname&gt;-&lt;timestamp&gt;.zip</code> על Desktop.
       </div>
       <div class="task-tags"><span class="tag">powershell</span><span class="tag">diagnostics</span><span class="tag">zip</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num" style="color:#ef4444;">11.2</div>
-      <div class="task-title">☁️ Upload Endpoint (Vercel)</div>
+      <div class="task-num" style="color:#10b981;">11.2 ✅</div>
+      <div class="task-title">📧 Email Integration (mailto)</div>
       <div class="task-desc">
-        Serverless function ב-Vercel: <code>POST /api/diag</code><br><br>
-        <strong>מקבל:</strong> ZIP + hostname + email<br>
-        <strong>שומר:</strong> Vercel Blob Storage או S3<br>
-        <strong>מודיע:</strong> Telegram לערן — "New diagnostic report from &lt;hostname&gt;"<br><br>
-        <strong>אבטחה:</strong> טוקן חד-פעמי, rate limit 5/hour לכל IP, מחיקה אוטומטית אחרי 30 יום.
+        <strong>החלטנו לא ללכת עם Vercel — פשוט יותר:</strong><br>
+        הסקריפט פותח אוטומטית את לקוח המייל של המשתמש (Outlook/Gmail web) עם To, Subject, Body ממולאים. המשתמש גורר את ה-ZIP ולוחץ Send. אפס תשתית, אפס credentials. תומך בכל לקוחות המייל.<br><br>
+        <strong>Support:</strong> <code>eranhz26@gmail.com</code> (ניתן להחליף ב-Config)
       </div>
-      <div class="task-tags"><span class="tag">vercel</span><span class="tag">serverless</span><span class="tag">upload</span></div>
+      <div class="task-tags"><span class="tag">mailto</span><span class="tag">no-backend</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num" style="color:#ef4444;">11.3</div>
+      <div class="task-num" style="color:#10b981;">11.3 ✅</div>
       <div class="task-title">🖱️ Dashboard Button — Export Diagnostics</div>
       <div class="task-desc">
-        כפתור ב-Settings: "Export &amp; Upload Diagnostics"<br><br>
-        • לוחצים → מריץ את הסקריפט → מעלה → מציג לינק/קוד אסמכתא<br>
-        • המשתמש שולח את קוד האסמכתא בטלגרם/מייל<br>
-        • ערן פותח את הדוח בלוח בקרה מיוחד ב-Vercel
+        כרטיס חדש ב-Settings: "🛠️ Diagnostics &amp; Support" עם כפתור "📦 Export &amp; Email Diagnostics". לחיצה → מריץ <code>collect.ps1</code> → מציג סטטוס → ZIP + מייל נפתחים אוטומטית.<br>
+        API חדשים: <code>POST /diag/collect</code>, <code>POST /diag/open-folder</code>.
       </div>
       <div class="task-tags"><span class="tag">dashboard</span><span class="tag">ui</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num" style="color:#ef4444;">11.4</div>
-      <div class="task-title">🆘 Standalone Mode (התקנה כשלה)</div>
+      <div class="task-num" style="color:#10b981;">11.4 ✅</div>
+      <div class="task-title">🆘 Standalone EXE — Recovery</div>
       <div class="task-desc">
-        כשההתקנה נכשלה, FlowGuard לא פועל כלל — איך לאסוף לוגים?<br><br>
-        <strong>פתרון:</strong><br>
-        • <code>FlowGuard-Diagnostics.exe</code> עצמאי בדף ההורדה<br>
-        • רץ ללא FlowGuard מותקן<br>
-        • אוסף רק קבצים גלובליים (Setup logs, Event Viewer)<br>
-        • מעלה לאותו endpoint
+        <code>FlowGuard-Diagnostics.exe</code> (37.6MB) — גרסה עצמאית ב-Node.js (pkg bundle). רצה ללא FlowGuard מותקן, דף נחיתה <code>troubleshoot.html</code> באתר.<br>
+        <strong>זמין ב:</strong> <a href="https://flowguard-site.vercel.app/troubleshoot.html" style="color:var(--accent);" target="_blank">flowguard-site.vercel.app/troubleshoot.html</a>
       </div>
-      <div class="task-tags"><span class="tag">standalone</span><span class="tag">recovery</span></div>
+      <div class="task-tags"><span class="tag">standalone</span><span class="tag">nodejs</span><span class="tag">pkg</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num" style="color:#ef4444;">11.5</div>
+      <div class="task-num" style="color:#10b981;">11.5 ✅</div>
       <div class="task-title">🔒 Sanitization — הסרת מידע רגיש</div>
       <div class="task-desc">
-        לפני שליחת הדוח — להסיר:<br>
-        • TELEGRAM_TOKEN / TELEGRAM_CHAT_ID מה-.env<br>
-        • API keys, passwords, tokens<br>
-        • שמות משתמשים מחוץ להקשר (username → [USER])<br>
-        • נתיבים אישיים (C:\Users\XXX → C:\Users\[USER])<br><br>
-        המשתמש מאשר לפני העלאה: "Preview contents" button.
+        פונקציית <code>Sanitize-Text</code> / <code>sanitize()</code> מסירה לפני אריזה:<br>
+        • TELEGRAM_TOKEN / TELEGRAM_CHAT_ID<br>
+        • API keys, secrets, passwords, bearer tokens<br>
+        • Bot token patterns (<code>digits:alphanumeric</code>)<br>
+        • שם משתמש → <code>[USER]</code> | נתיבים אישיים → <code>C:\Users\[USER]</code><br>
+        המשתמש רואה את ה-ZIP על Desktop לפני שליחה — יכול לבדוק תוכן.
       </div>
-      <div class="task-tags"><span class="tag">privacy</span><span class="tag">security</span><span class="tag">sanitization</span></div>
+      <div class="task-tags"><span class="tag">privacy</span><span class="tag">security</span></div>
     </div>
     <div class="task-cell">
-      <div class="task-num" style="color:#ef4444;">11.6</div>
-      <div class="task-title">📊 Admin Dashboard — Diag Reports</div>
+      <div class="task-num" style="color:#10b981;">11.6 ✅</div>
+      <div class="task-title">📊 Admin Dashboard — N/A</div>
       <div class="task-desc">
-        דף פרטי לערן: <code>flowguard-site.vercel.app/admin/diag</code><br><br>
-        • רשימת כל הדיווחים שהתקבלו<br>
-        • filter: hostname, date, error signature<br>
-        • פתיחת ZIP inline + preview של הקבצים<br>
-        • פטור מ-auth בסיסי (Vercel password protection)
+        <strong>לא נדרש — גישה שונה:</strong><br>
+        מאחר ובחרנו בגישת mailto ולא בהעלאה ל-Vercel, הדוחות מגיעים ישירות ל-<strong>Gmail inbox</strong> של <code>eranhz26@gmail.com</code>. ה-inbox הוא ה-"Admin Dashboard" בפועל — עם search, labels, threads, mobile access — הכל ללא בניית UI חדש.<br><br>
+        <em>בעתיד, אם נחליט להעלות ל-Vercel + Resend, נוסיף admin dashboard כחלק מ-MS14.</em>
       </div>
-      <div class="task-tags"><span class="tag">admin</span><span class="tag">dashboard</span><span class="tag">support</span></div>
+      <div class="task-tags"><span class="tag">descoped</span><span class="tag">gmail</span></div>
     </div>
   </div>
 </div>
@@ -4391,6 +4373,28 @@ Claude מבצע tool call
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.7</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">16.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          🎯 <strong>MS11 — Diagnostics &amp; Support Tool (CLOSED):</strong><br>
+          • <strong>11.1</strong> <code>diag/collect.ps1</code> — PowerShell collector (8 categories)<br>
+          • <strong>11.2</strong> Email integration via <code>mailto:</code> — no backend needed<br>
+          • <strong>11.3</strong> Dashboard card in Settings — "Export &amp; Email Diagnostics"<br>
+          • <strong>11.4</strong> Standalone <code>FlowGuard-Diagnostics.exe</code> (37.6MB Node.js bundle)<br>
+          • <strong>11.5</strong> Sanitization — tokens, passwords, username → [USER]<br>
+          • <strong>11.6</strong> Admin Dashboard descoped — Gmail inbox serves as dashboard<br>
+          • New landing page: <a href="https://flowguard-site.vercel.app/troubleshoot.html" style="color:var(--accent);" target="_blank">troubleshoot.html</a><br>
+          • Support email: <code>eranhz26@gmail.com</code>
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.6</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">16.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          MS11 initial rollout — diagnostics collector + dashboard button + email integration. MS11.4 standalone EXE + troubleshoot.html added in v2.1.7.
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
         <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#ef4444,#ea580c);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.1.5</span></td>
         <td style="padding:10px 12px;color:var(--muted);">16.04.2026</td>
         <td style="padding:10px 12px;color:var(--text);">
@@ -4572,7 +4576,7 @@ Claude מבצע tool call
 <!-- FOOTER -->
 <div class="footer">
   <strong>EHZ-AI</strong> | Claude Code Security Monitor | 054-4825276<br>
-  נוצר: אפריל 2026 | גרסה 2.1.5 | עודכן: 16.04.2026
+  נוצר: אפריל 2026 | גרסה 2.1.7 | עודכן: 16.04.2026
 </div>
 
 </body>
