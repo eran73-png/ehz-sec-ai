@@ -273,11 +273,11 @@
 
     <!-- COVER -->
     <section class="cover" id="cover">
-      <div class="cover-badge">EHZ-AI · גרסה 2.0 · אפריל 2026</div>
+      <div class="cover-badge">EHZ-AI · גרסה 2.1.7 · אפריל 2026</div>
       <h1><span>FlowGuard</span><br>מדריך למשתמש</h1>
       <p class="subtitle">AI Security Monitor for Claude Code</p>
       <div class="cover-meta">
-        <div class="cover-meta-item"><strong>גרסה</strong>v2.0.1</div>
+        <div class="cover-meta-item"><strong>גרסה</strong>v2.1.7</div>
         <div class="cover-meta-item"><strong>תאריך</strong>אפריל 2026</div>
         <div class="cover-meta-item"><strong>פיתוח</strong>EHZ-AI</div>
         <div class="cover-meta-item"><strong>מערכת הפעלה</strong>Windows 10/11</div>
@@ -759,6 +759,23 @@
           </ul>
           <strong>רק קבצים חדשים לגמרי שלא נראו קודם</strong> מקבלים LOW/HIGH.
         </div>
+
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🐛 תיקון ב-v2.1.5 — Installer Path Fix</div>
+          תוקן באג קריטי: <code>start-tray.vbs</code> הכיל נתיב קשיח (<code>C:\FlowGuard</code>) שגרם לכשלון בהתקנה לנתיב אחר (למשל <code>C:\Program Files\FlowGuard</code>).<br>
+          כעת FlowGuard עובד עם <strong>כל נתיב התקנה</strong>.
+        </div>
+
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🛠️ חדש ב-v2.1.7 — כלי אבחון ותמיכה (MS11)</div>
+          כלי חדש לאיסוף לוגים ושליחתם לתמיכה:<br>
+          <ul style="margin:6px 0 0 0;padding-right:16px;">
+            <li><strong>כפתור "Export &amp; Email Diagnostics"</strong> ב-Settings — אוסף 8 קטגוריות מידע (system info, install logs, config, service status ועוד) לקובץ ZIP</li>
+            <li><strong>Sanitization אוטומטי</strong> — כל tokens, סיסמאות ושמות משתמשים מוסרים לפני שליחה</li>
+            <li><strong>Email אוטומטי</strong> — לקוח המייל נפתח עם To, Subject ו-Body מוכנים</li>
+            <li><strong>FlowGuard-Diagnostics.exe</strong> — כלי עצמאי שרץ גם כשההתקנה נכשלה. ניתן להורדה מ-<code>flowguard-site.vercel.app/troubleshoot.html</code></li>
+          </ul>
+        </div>
       </div>
 
       <div class="section">
@@ -784,7 +801,7 @@
         <table class="guide-table">
           <thead><tr><th>פריט</th><th>מה זה עושה</th></tr></thead>
           <tbody>
-            <tr><td>FlowGuard v2.0.1</td><td>מציג את הגרסה הנוכחית</td></tr>
+            <tr><td>FlowGuard v2.1.7</td><td>מציג את הגרסה הנוכחית</td></tr>
             <tr><td>Open Dashboard</td><td>פותח את ממשק ה-Dashboard בדפדפן</td></tr>
             <tr><td>🟢 Collector Active</td><td>הסטטוס הנוכחי — ירוק=פעיל, אדום=כבוי</td></tr>
             <tr><td>Stop Service / Start Service</td><td>הפסקה/הפעלה של ה-Collector (דורש UAC)</td></tr>
@@ -917,7 +934,7 @@
 
       <div style="text-align:center;padding:40px 0 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:40px;">
         <div style="font-size:28px;margin-bottom:12px;">🛡️</div>
-        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.0.1</div>
+        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.1.7</div>
         <div style="margin-top:6px;">AI Security Monitor for Claude Code · by EHZ-AI</div>
         <div style="margin-top:4px;">054-4825276</div>
       </div>

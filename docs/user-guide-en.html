@@ -275,11 +275,11 @@
 
     <!-- COVER -->
     <section class="cover" id="cover">
-      <div class="cover-badge">EHZ-AI · Version 2.0 · April 2026</div>
+      <div class="cover-badge">EHZ-AI · Version 2.1.7 · April 2026</div>
       <h1><span>FlowGuard</span><br>User Guide</h1>
       <p class="subtitle">AI Security Monitor for Claude Code</p>
       <div class="cover-meta">
-        <div class="cover-meta-item"><strong>Version</strong>v2.0.1</div>
+        <div class="cover-meta-item"><strong>Version</strong>v2.1.7</div>
         <div class="cover-meta-item"><strong>Date</strong>April 2026</div>
         <div class="cover-meta-item"><strong>Developed by</strong>EHZ-AI</div>
         <div class="cover-meta-item"><strong>Platform</strong>Windows 10/11</div>
@@ -761,6 +761,23 @@
           </ul>
           <strong>Only truly new, unseen files</strong> receive LOW/HIGH alerts.
         </div>
+
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🐛 Fixed in v2.1.5 — Installer Path Bug</div>
+          Fixed a critical bug: <code>start-tray.vbs</code> had a hardcoded path (<code>C:\FlowGuard</code>) that caused installation failure when using a different path (e.g., <code>C:\Program Files\FlowGuard</code>).<br>
+          FlowGuard now works with <strong>any installation path</strong>.
+        </div>
+
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🛠️ New in v2.1.7 — Diagnostics &amp; Support Tool (MS11)</div>
+          A new built-in tool for collecting logs and sending them to support:<br>
+          <ul style="margin:6px 0 0 0;padding-left:16px;">
+            <li><strong>"Export &amp; Email Diagnostics" button</strong> in Settings — collects 8 categories of information (system info, install logs, config, service status, etc.) into a ZIP file</li>
+            <li><strong>Automatic sanitization</strong> — all tokens, passwords, and usernames are removed before packaging</li>
+            <li><strong>Automatic email</strong> — your default mail client opens with To, Subject, and Body pre-filled</li>
+            <li><strong>FlowGuard-Diagnostics.exe</strong> — a standalone tool that runs even when installation failed. Download from <code>flowguard-site.vercel.app/troubleshoot.html</code></li>
+          </ul>
+        </div>
       </div>
 
       <div class="section">
@@ -786,7 +803,7 @@
         <table class="guide-table">
           <thead><tr><th>Item</th><th>What It Does</th></tr></thead>
           <tbody>
-            <tr><td>FlowGuard v2.0.1</td><td>Shows the current version</td></tr>
+            <tr><td>FlowGuard v2.1.7</td><td>Shows the current version</td></tr>
             <tr><td>Open Dashboard</td><td>Opens the Dashboard interface in the browser</td></tr>
             <tr><td>🟢 Collector Active</td><td>Current status — green = active, red = stopped</td></tr>
             <tr><td>Stop Service / Start Service</td><td>Stop/start the Collector (requires UAC)</td></tr>
@@ -919,7 +936,7 @@
 
       <div style="text-align:center;padding:40px 0 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:40px;">
         <div style="font-size:28px;margin-bottom:12px;">🛡️</div>
-        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.0.1</div>
+        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.1.7</div>
         <div style="margin-top:6px;">AI Security Monitor for Claude Code · by EHZ-AI</div>
         <div style="margin-top:4px;">054-4825276</div>
       </div>
