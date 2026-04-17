@@ -19,7 +19,7 @@ const { execSync, exec } = require('child_process');
 const zlib      = require('zlib');
 
 const SUPPORT_EMAIL = 'eranhz26@gmail.com';
-const VERSION       = '2.2.0';
+const VERSION       = '2.3.0';
 
 // ─── Helpers ────────────────────────────────────────────────
 

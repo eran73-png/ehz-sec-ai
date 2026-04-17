@@ -23,6 +23,25 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN  || '';
 const TELEGRAM_CHAT  = process.env.TELEGRAM_CHAT_ID || '';
 const DB_PATH        = path.join(__dirname, 'ccsm.db');
 const NOTIF_PATH     = path.join(__dirname, 'notifications.json');
+const APP_CONFIG_PATH = path.join(__dirname, 'app-config.json');
+
+// ─── App Config (Settings persistence — MS14.8) ─────────────────────────────
+function loadAppConfig() {
+  try { return JSON.parse(fs.readFileSync(APP_CONFIG_PATH, 'utf8')); } catch(_) {}
+  return {
+    blockCritical: false,
+    fsWatcher: true,
+    auditChain: false,
+    logRetention: 30,
+    autoUpdate: true,
+    quietHours: { enabled: true, from: 23, to: 7 },
+    desktopAlerts: false
+  };
+}
+function saveAppConfig(cfg) {
+  fs.writeFileSync(APP_CONFIG_PATH, JSON.stringify(cfg, null, 2), 'utf8');
+}
+let appConfig = loadAppConfig();
 
 const RETENTION_DAYS = 30;
 const MAX_EVENTS     = 10000;
@@ -65,6 +84,18 @@ async function sendEmail(subject, text) {
   } catch(e) {
     console.error('[Email] error:', e.message);
   }
+}
+
+// ─── Desktop Toast Notification (MS14.7) ─────────────────────────────────────
+function sendDesktopAlert(level, tool, reason) {
+  const { exec } = require('child_process');
+  const title = `FlowGuard — ${level}`;
+  const msg   = `${tool}: ${(reason || '').slice(0, 120)}`.replace(/"/g, '\\"');
+  // Use PowerShell to show Windows toast notification
+  const ps = `powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms; $n = New-Object System.Windows.Forms.NotifyIcon; $n.Icon = [System.Drawing.SystemIcons]::Shield; $n.Visible = $true; $n.ShowBalloonTip(5000, '${title}', '${msg}', [System.Windows.Forms.ToolTipIcon]::Warning); Start-Sleep -Seconds 6; $n.Dispose()"`;
+  exec(ps, { timeout: 10000 }, (err) => {
+    if (err) console.log('[Toast] Failed:', err.message);
+  });
 }
 
 // ─── DB Init ─────────────────────────────────────────────────────────────────
@@ -234,9 +265,12 @@ function buildTelegramMsg(ev) {
 const app = express();
 app.use(express.json());
 
-// CORS for dashboard
+// CORS — restricted to localhost only (MS14.1)
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin || '';
+  if (origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
@@ -287,6 +321,10 @@ app.post('/event', (req, res) => {
         const subject = `${doc.level} Alert — ${doc.tool_name}`;
         const text = `EHZ-SEC-AI Security Alert\n\nLevel: ${doc.level}\nTool: ${doc.tool_name}\nReason: ${doc.reason || '—'}\nTime: ${new Date(doc.ts).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })}\nSession: ${doc.session_id}\n\nDashboard: http://localhost:3010/dashboard`;
         sendEmail(subject, text);
+      }
+      // Desktop Toast Notification (MS14.7)
+      if (appConfig.desktopAlerts) {
+        sendDesktopAlert(doc.level, doc.tool_name, doc.reason);
       }
       db.update({ _id: newDoc._id }, { $set: { telegram_sent: true } }, {});
     }
@@ -406,7 +444,7 @@ app.get('/update/check', async (req, res) => {
       session_id: 'system', level: 'INFO', reason: msg,
       rule_type: 'update_check', input_summary: null, output_summary: isNewer ? 'update_available' : 'up_to_date',
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: null }, () => {});
+      prev_hash: lastHash, event_hash: 'system' }, () => {});
     res.json({
       update_available: isNewer,
       current_version:  currentInfo.version,
@@ -418,7 +456,7 @@ app.get('/update/check', async (req, res) => {
       session_id: 'system', level: 'HIGH', reason: `Update check failed: ${e.message}`,
       rule_type: 'update_check', input_summary: null, output_summary: null,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: null }, () => {});
+      prev_hash: lastHash, event_hash: 'system' }, () => {});
     res.status(500).json({ error: e.message });
   }
 });
@@ -452,7 +490,7 @@ app.post('/update/apply', async (req, res) => {
       rule_type: 'manual_update', input_summary: null,
       output_summary: `${info.rules_count} rules loaded`,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: null }, () => {});
+      prev_hash: lastHash, event_hash: 'system' }, () => {});
     res.json({ ok: true, version: info.version, rules_count: info.rules_count });
   } catch(e) {
     db.insert({ ts: Date.now(), hook_type: 'ManualUpdate', tool_name: 'RULES_MANUAL_UPDATE',
@@ -460,7 +498,7 @@ app.post('/update/apply', async (req, res) => {
       reason: `Manual update failed: ${e.message}`,
       rule_type: 'manual_update', input_summary: null, output_summary: null,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: null }, () => {});
+      prev_hash: lastHash, event_hash: 'system' }, () => {});
     res.status(500).json({ ok: false, error: e.message });
   }
 });
@@ -504,7 +542,7 @@ async function runAutoUpdate() {
       rule_type: 'auto_update', input_summary: null,
       output_summary: `${info.rules_count} rules loaded`,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: null }, () => {});
+      prev_hash: lastHash, event_hash: 'system' }, () => {});
     console.log(`[AutoUpdate] ✅ v${info.version} (${info.rules_count} rules)`);
   } catch(e) {
     autoUpdateSchedule.lastRunTs = Date.now();
@@ -514,7 +552,7 @@ async function runAutoUpdate() {
       reason: `Auto-update failed: ${e.message}`,
       rule_type: 'auto_update', input_summary: null, output_summary: null,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: null }, () => {});
+      prev_hash: lastHash, event_hash: 'system' }, () => {});
     console.error('[AutoUpdate] ❌', e.message);
   }
 }
@@ -545,25 +583,43 @@ app.post('/update/schedule', (req, res) => {
   res.json({ ok: true, hours: h });
 });
 
-// GET /config — return current hardening level
+// GET /config — return all settings (MS14.8)
 app.get('/config', (req, res) => {
   let hardening;
   try { hardening = require('../config/hardening'); } catch (_) {}
-  if (!hardening) return res.json({ hardening_level: 1 });
+  if (!hardening) return res.json({ hardening_level: 1, ...appConfig });
   const level = hardening.getLevel();
   const cfg   = hardening.getLevelConfig(level);
-  res.json({ hardening_level: level, name: cfg.name, emoji: cfg.emoji, description: cfg.description });
+  res.json({
+    hardening_level: level, name: cfg.name, emoji: cfg.emoji, description: cfg.description,
+    blockCritical: appConfig.blockCritical,
+    fsWatcher:     appConfig.fsWatcher,
+    auditChain:    appConfig.auditChain,
+    logRetention:  appConfig.logRetention,
+    autoUpdate:    appConfig.autoUpdate,
+    desktopAlerts: appConfig.desktopAlerts
+  });
 });
 
-// POST /config — set hardening level
+// POST /config — save all settings (MS14.8)
 app.post('/config', (req, res) => {
-  const { hardening_level } = req.body || {};
+  const body = req.body || {};
+  const { hardening_level } = body;
   if (hardening_level === undefined) return res.status(400).json({ error: 'missing hardening_level' });
   let hardening;
   try { hardening = require('../config/hardening'); } catch (_) {}
   if (!hardening) return res.status(500).json({ error: 'hardening module not available' });
   const newLevel = hardening.setLevel(hardening_level);
   const cfg      = hardening.getLevelConfig(newLevel);
+
+  // Persist all settings
+  if (body.blockCritical !== undefined) appConfig.blockCritical = !!body.blockCritical;
+  if (body.fsWatcher     !== undefined) appConfig.fsWatcher     = !!body.fsWatcher;
+  if (body.auditChain    !== undefined) appConfig.auditChain    = !!body.auditChain;
+  if (body.logRetention  !== undefined) appConfig.logRetention  = parseInt(body.logRetention) || 30;
+  if (body.autoUpdate    !== undefined) appConfig.autoUpdate    = !!body.autoUpdate;
+  try { saveAppConfig(appConfig); } catch(_) {}
+
   res.json({ ok: true, hardening_level: newLevel, name: cfg.name, emoji: cfg.emoji });
 });
 
@@ -991,7 +1047,8 @@ app.get('/domains/history', (req, res) => {
   db.find({ tool_name: { $in: ['WebFetch', 'WebSearch'] } }).sort({ ts: -1 }).limit(200).exec((err, docs) => {
     if (err) return res.status(500).json({ error: err.message });
     const history = docs.map(d => {
-      const inp = d.tool_input ? (typeof d.tool_input === 'string' ? JSON.parse(d.tool_input) : d.tool_input) : {};
+      let inp = {};
+      try { inp = d.tool_input ? (typeof d.tool_input === 'string' ? JSON.parse(d.tool_input) : d.tool_input) : {}; } catch(_) {}
       // Try to parse input_summary if tool_input missing
       let parsedInput = inp;
       if (!parsedInput.url && !parsedInput.query && d.input_summary) {
@@ -1298,8 +1355,9 @@ app.get('/audit/verify', (req, res) => {
   db.find({ event_hash: { $exists: true } }).sort({ ts: 1 }).exec((err, docs) => {
     if (err) return res.status(500).json({ error: err.message });
 
-    // Only verify events after last chain reset
-    const toCheck = chainResetAt > 0 ? docs.filter(d => d.ts >= chainResetAt) : docs;
+    // Only verify events after last chain reset; skip system events (MS14.2)
+    const toCheck = (chainResetAt > 0 ? docs.filter(d => d.ts >= chainResetAt) : docs)
+      .filter(d => d.event_hash && d.event_hash !== 'system');
     if (!toCheck.length) return res.json({ valid: true, checked: 0, message: 'No signed events yet' });
 
     let prevHash = 'GENESIS';
@@ -1316,7 +1374,7 @@ app.get('/audit/verify', (req, res) => {
 
     res.json({
       valid:      !broken,
-      checked:    docs.length,
+      checked:    toCheck.length,
       broken_at:  broken || null,
       last_hash:  prevHash.slice(0, 16) + '…',
       message:    broken ? '⚠️ Chain broken — log may have been tampered!' : '✅ Chain intact',
@@ -1327,7 +1385,7 @@ app.get('/audit/verify', (req, res) => {
 // ─── Notifications Config (MS8) ──────────────────────────────────────────────
 
 app.get('/notifications/config', (req, res) => {
-  const cfg = { ...notifConfig };
+  const cfg = { ...notifConfig, desktop: !!appConfig.desktopAlerts };
   if (cfg.email) cfg.email = { ...cfg.email, smtp_pass: cfg.email.smtp_pass ? '***' : '' };
   res.json(cfg);
 });
@@ -1342,6 +1400,11 @@ app.post('/notifications/config', (req, res) => {
   if (body.email) notifConfig.email = { ...notifConfig.email, ...body.email };
   if (body.telegram) notifConfig.telegram = { ...notifConfig.telegram, ...body.telegram };
   if (body.git_remotes) notifConfig.git_remotes = body.git_remotes;
+  // Sync desktop alerts to appConfig (MS14.7)
+  if (body.desktop !== undefined) {
+    appConfig.desktopAlerts = !!body.desktop;
+    try { saveAppConfig(appConfig); } catch(_) {}
+  }
   saveNotifConfig(notifConfig);
   res.json({ ok: true });
 });
@@ -1410,8 +1473,11 @@ app.get('/fsw/quiet-hours', (req, res) => {
 app.post('/fsw/quiet-hours', (req, res) => {
   const { enabled, from, to } = req.body || {};
   if (enabled !== undefined) quietHoursConfig.enabled = !!enabled;
-  if (from !== undefined) quietHoursConfig.from = parseInt(from);
-  if (to   !== undefined) quietHoursConfig.to   = parseInt(to);
+  if (from !== undefined) quietHoursConfig.from = Math.max(0, Math.min(23, parseInt(from) || 0));
+  if (to   !== undefined) quietHoursConfig.to   = Math.max(0, Math.min(23, parseInt(to)   || 0));
+  // Persist (MS14.4)
+  appConfig.quietHours = { ...quietHoursConfig };
+  try { saveAppConfig(appConfig); } catch(_) {}
   res.json({ ok: true, ...quietHoursConfig, active: isQuietHour() });
 });
 
@@ -1540,8 +1606,8 @@ function loadFswExclude() {
 }
 let FSW_EXCLUDE = loadFswExclude();
 
-// ─── Quiet Hours ──────────────────────────────────────────────────────────────
-let quietHoursConfig = { enabled: true, from: 23, to: 7 }; // 23:00–07:00
+// ─── Quiet Hours (persisted in appConfig — MS14.4) ───────────────────────────
+let quietHoursConfig = appConfig.quietHours || { enabled: true, from: 23, to: 7 };
 
 function isQuietHour() {
   if (!quietHoursConfig.enabled) return false;
@@ -1588,11 +1654,28 @@ const claudeSessionFiles = new Set(); // path keys
 // Layer 2 — Frequency Counter (per session, reset daily)
 // סופר כמה פעמים כל קובץ השתנה — קובץ שמשתנה הרבה = עבודה רגילה
 const fileChangeCounter = new Map(); // path → count
-// איפוס יומי בחצות
+
+// Memory cleanup interval — every hour (MS14.3)
 setInterval(() => {
+  // Clean old recentHookWrites entries (older than 30 seconds)
+  const now = Date.now();
+  for (const [key, ts] of recentHookWrites) {
+    if (now - ts > 30000) recentHookWrites.delete(key);
+  }
+  // Cap claudeSessionFiles at 5000 entries (remove oldest by keeping last 2000)
+  if (claudeSessionFiles.size > 5000) {
+    const arr = [...claudeSessionFiles];
+    claudeSessionFiles.clear();
+    arr.slice(-2000).forEach(f => claudeSessionFiles.add(f));
+  }
+  // Cap procBaseline at 2000 (PIDs are reused by OS)
+  if (procBaseline.size > 2000) {
+    procBaseline.clear();
+    console.log('[FlowGuard] procBaseline reset (exceeded 2000)');
+  }
+  // Reset fileChangeCounter daily (more accurate — every 24h from midnight)
   fileChangeCounter.clear();
-  console.log('[FlowGuard] Behavioral counters reset (daily)');
-}, 24 * 60 * 60 * 1000);
+}, 60 * 60 * 1000); // every hour
 
 function incrementFileCounter(filePath) {
   const key = filePath.toLowerCase().replace(/\\/g, '/');
@@ -1614,7 +1697,8 @@ async function isKnownTimePattern(filePath) {
     // בדוק: כמה events קרו בשעה דומה (±1h)?
     const sameHourHits = events.filter(e => {
       const h = new Date(e.ts).getHours();
-      return Math.abs(h - currentHour) <= 1 || Math.abs(h - currentHour) >= 23;
+      const diff = Math.abs(h - currentHour);
+      return Math.min(diff, 24 - diff) <= 1; // MS14.6 — correct midnight wrap-around
     });
     // 3+ hits באותה שעה = דפוס חוזר
     return sameHourHits.length >= 3;
@@ -1646,7 +1730,8 @@ async function isScheduledTaskGroup() {
     );
     const sameHourHits = events.filter(e => {
       const h = new Date(e.ts).getHours();
-      return Math.abs(h - currentHour) <= 1 || Math.abs(h - currentHour) >= 23;
+      const diff = Math.abs(h - currentHour);
+      return Math.min(diff, 24 - diff) <= 1; // MS14.6 — correct midnight wrap-around
     });
     return sameHourHits.length >= 3;
   } catch { return false; }
@@ -1934,7 +2019,7 @@ app.post('/siem/config', (req, res) => {
 
 // ─── Start ───────────────────────────────────────────────────────────────────
 
-app.listen(PORT, '127.0.0.1', () => {
+const server = app.listen(PORT, '127.0.0.1', () => {
   console.log(`[EHZ-SEC-AI] Collector listening on http://127.0.0.1:${PORT}`);
   console.log(`[EHZ-SEC-AI] DB: ${DB_PATH}`);
   console.log(`[EHZ-SEC-AI] Telegram: ${TELEGRAM_TOKEN ? 'configured ✓' : 'NOT configured'}`);
@@ -1952,6 +2037,17 @@ app.listen(PORT, '127.0.0.1', () => {
   if (TELEGRAM_TOKEN && TELEGRAM_CHAT) {
     sendTelegram('✅ <b>FlowGuard</b> — Collector started successfully\n🖥️ Claude Code monitoring active\n👁️ FSWatcher active');
   }
+});
+
+// Port error handler (MS14.5)
+server.on('error', (e) => {
+  if (e.code === 'EADDRINUSE') {
+    console.error(`[FlowGuard] ERROR: Port ${PORT} is already in use. Another instance running?`);
+    console.error(`[FlowGuard] Try: net stop FlowGuardCollector, or change PORT in .env`);
+  } else {
+    console.error(`[FlowGuard] Server error:`, e.message);
+  }
+  process.exit(1);
 });
 
 process.on('SIGINT',  () => process.exit(0));
