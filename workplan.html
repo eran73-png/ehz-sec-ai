@@ -2303,6 +2303,28 @@
       </div>
       <div class="task-tags"><span class="tag">behavioral</span><span class="tag">FSWatcher</span></div>
     </div>
+    <div class="task-cell" style="border-top:3px solid var(--orange);">
+      <div class="task-num" style="color:var(--orange);">14.7 🟠</div>
+      <div class="task-title">Desktop Alerts (Windows Toast Notifications)</div>
+      <div class="task-desc">
+        ה-toggle קיים ב-Settings UI אבל אין מימוש בשרת.<br>
+        <strong>נדרש:</strong> Windows toast notifications דרך <code>node-notifier</code> או PowerShell <code>New-BurntToastNotification</code>.<br>
+        • שליחת Toast על כל CRITICAL/HIGH event<br>
+        • הצגת שם הכלי, רמת הסיכון, וסיבה<br>
+        • לחיצה פותחת את ה-Dashboard<br>
+        • שמירת ההגדרה (ON/OFF) ב-config
+      </div>
+      <div class="task-tags"><span class="tag">notifications</span><span class="tag">windows</span><span class="tag">toast</span></div>
+    </div>
+    <div class="task-cell" style="border-top:3px solid var(--yellow);">
+      <div class="task-num" style="color:var(--yellow);">14.8 🟡</div>
+      <div class="task-title">Settings Full Persistence</div>
+      <div class="task-desc">
+        POST /config שומר רק <code>hardening_level</code>. שאר השדות (blockCritical, fsWatcher, auditChain, logRetention, autoUpdate) לא נשמרים ולא משפיעים.<br>
+        <strong>תיקון:</strong> לשמור את כל השדות ב-config file ולטעון אותם ב-startup.
+      </div>
+      <div class="task-tags"><span class="tag">config</span><span class="tag">persistence</span><span class="tag">settings</span></div>
+    </div>
   </div>
 </div>
 

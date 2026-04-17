@@ -2325,7 +2325,7 @@ async function loadConfig() {
 async function saveConfig() {
   try {
     var body = {
-      hardening:    document.getElementById('cfg-hardening').value,
+      hardening_level: document.getElementById('cfg-hardening').value,
       blockCritical: document.getElementById('cfg-block-critical').checked,
       fsWatcher:    document.getElementById('cfg-fsw').checked,
       auditChain:   document.getElementById('cfg-chain').checked,
@@ -2337,7 +2337,8 @@ async function saveConfig() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
-    toast(r.ok ? 'Settings saved' : 'Save failed', r.ok ? 'success' : 'error');
+    var d = await r.json().catch(function() { return {}; });
+    toast(d.ok || r.ok ? 'Settings saved' : ('Save failed: ' + (d.error || '')), d.ok || r.ok ? 'success' : 'error');
   } catch(e) { toast('Cannot save \u2014 API offline', 'error'); }
 }
 
