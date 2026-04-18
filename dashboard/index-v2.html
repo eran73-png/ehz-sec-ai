@@ -1118,6 +1118,51 @@ tr:hover td { background:#f8fafc; }
           </div>
         </div>
 
+        <!-- Email SMTP (v2 parity #8) -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">📧 Email Alerts (SMTP)</div>
+              <div class="panel-sub">Send alerts via email</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="email-enabled" onchange="saveEmailConfig()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="settings-body" id="email-config-body" style="display:none;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+                <div class="setting-label" style="margin-bottom:4px;font-size:11px;">SMTP Host</div>
+                <input class="form-input" type="text" id="email-host" placeholder="smtp.gmail.com">
+              </div>
+              <div>
+                <div class="setting-label" style="margin-bottom:4px;font-size:11px;">Port</div>
+                <input class="form-input" type="number" id="email-port" placeholder="587" value="587">
+              </div>
+              <div>
+                <div class="setting-label" style="margin-bottom:4px;font-size:11px;">Username</div>
+                <input class="form-input" type="text" id="email-user" placeholder="user@gmail.com">
+              </div>
+              <div>
+                <div class="setting-label" style="margin-bottom:4px;font-size:11px;">Password</div>
+                <input class="form-input" type="password" id="email-pass" placeholder="App password...">
+              </div>
+              <div>
+                <div class="setting-label" style="margin-bottom:4px;font-size:11px;">From</div>
+                <input class="form-input" type="text" id="email-from" placeholder="flowguard@yourdomain.com">
+              </div>
+              <div>
+                <div class="setting-label" style="margin-bottom:4px;font-size:11px;">To</div>
+                <input class="form-input" type="text" id="email-to" placeholder="admin@company.com">
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+              <label style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px;"><input type="checkbox" id="email-tls"> TLS/SSL</label>
+              <button class="btn btn-accent btn-sm" onclick="saveEmailConfig()">Save</button>
+              <button class="btn btn-outline btn-sm" onclick="testEmail()">📨 Test Email</button>
+              <span id="email-test-result" style="font-size:11px;"></span>
+            </div>
+          </div>
+        </div>
+
         <!-- Git Remotes -->
         <div class="settings-group">
           <div class="panel-header">
@@ -2376,7 +2421,7 @@ function openGuide(lang) {
 }
 
 async function loadSettings() {
-  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats(), loadAutoUpdateSchedule()]);
+  await Promise.all([loadConfig(), loadNotifConfig(), loadEmailConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats(), loadAutoUpdateSchedule()]);
 }
 
 async function loadConfig() {
@@ -2422,6 +2467,62 @@ async function loadNotifConfig() {
     if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
     if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
   } catch(e) { /* offline */ }
+}
+
+// ─── Email SMTP Config ───────────────────────────────────────────────────────
+async function loadEmailConfig() {
+  try {
+    var d = await fetchJSON('/notifications/config');
+    var em = d.email || {};
+    document.getElementById('email-enabled').checked = !!em.enabled;
+    document.getElementById('email-config-body').style.display = em.enabled ? '' : 'none';
+    if (em.smtp_host) document.getElementById('email-host').value = em.smtp_host;
+    if (em.smtp_port) document.getElementById('email-port').value = em.smtp_port;
+    if (em.smtp_user) document.getElementById('email-user').value = em.smtp_user;
+    if (em.smtp_pass) document.getElementById('email-pass').value = em.smtp_pass;
+    if (em.from)      document.getElementById('email-from').value = em.from;
+    if (em.to)        document.getElementById('email-to').value   = em.to;
+    if (em.smtp_secure) document.getElementById('email-tls').checked = true;
+  } catch(_) {}
+}
+
+async function saveEmailConfig() {
+  var enabled = document.getElementById('email-enabled').checked;
+  document.getElementById('email-config-body').style.display = enabled ? '' : 'none';
+  try {
+    await fetch(API + '/notifications/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: {
+          enabled: enabled,
+          smtp_host: document.getElementById('email-host').value,
+          smtp_port: parseInt(document.getElementById('email-port').value) || 587,
+          smtp_user: document.getElementById('email-user').value,
+          smtp_pass: document.getElementById('email-pass').value,
+          smtp_secure: document.getElementById('email-tls').checked,
+          from: document.getElementById('email-from').value,
+          to:   document.getElementById('email-to').value
+        }
+      })
+    });
+    toast('Email config saved', 'success');
+  } catch(e) { toast('Save failed: ' + e.message, 'error'); }
+}
+
+async function testEmail() {
+  var result = document.getElementById('email-test-result');
+  result.textContent = 'Sending...';
+  result.style.color = '#64748b';
+  try {
+    var r = await fetch(API + '/notifications/test-email', { method: 'POST' });
+    var d = await r.json();
+    result.textContent = d.ok ? '✅ Sent!' : ('❌ ' + (d.error || 'Failed'));
+    result.style.color = d.ok ? '#10b981' : '#ef4444';
+  } catch(e) {
+    result.textContent = '❌ ' + e.message;
+    result.style.color = '#ef4444';
+  }
 }
 
 async function loadFswStats() {
