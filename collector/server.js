@@ -1537,6 +1537,121 @@ app.delete('/fsw/exclude/custom', (req, res) => {
 
 // ─── Diagnostics (MS11) ──────────────────────────────────────────────────────
 
+// ─── Conversation Log Export (Forensics) ─────────────────────────────────────
+
+// POST /sessions/export-conversation — parse Claude JSONL → HTML report
+app.post('/sessions/export-conversation', (req, res) => {
+  const readline = require('readline');
+  const claudeDir = path.join(os.homedir(), '.claude', 'projects');
+
+  // Find the most recent .jsonl file
+  let jsonlFile = null;
+  try {
+    const walkDir = (dir) => {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, entry.name);
+        if (entry.isDirectory()) walkDir(p);
+        else if (entry.name.endsWith('.jsonl')) {
+          const st = fs.statSync(p);
+          if (!jsonlFile || st.mtimeMs > jsonlFile.mtime) {
+            jsonlFile = { path: p, mtime: st.mtimeMs };
+          }
+        }
+      }
+    };
+    walkDir(claudeDir);
+  } catch(e) {
+    return res.status(500).json({ ok: false, error: 'Cannot find Claude projects: ' + e.message });
+  }
+
+  if (!jsonlFile) return res.status(404).json({ ok: false, error: 'No conversation file found' });
+
+  const msgs = [];
+  const rl = readline.createInterface({ input: fs.createReadStream(jsonlFile.path), crlfDelay: Infinity });
+
+  rl.on('line', (line) => {
+    try {
+      const j = JSON.parse(line);
+      if (j.type === 'user' || j.type === 'assistant') {
+        let text = '';
+        if (typeof j.message === 'string') text = j.message;
+        else if (j.message && j.message.content) {
+          if (typeof j.message.content === 'string') text = j.message.content;
+          else if (Array.isArray(j.message.content)) {
+            text = j.message.content.filter(c => c.type === 'text').map(c => c.text).join(' ');
+          }
+        }
+        if (text && text.trim().length > 2) {
+          msgs.push({ role: j.type, ts: j.timestamp || '', text: text.slice(0, 5000) });
+        }
+      }
+    } catch(_) {}
+  });
+
+  rl.on('close', () => {
+    const esc = (s) => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    const userCount = msgs.filter(m => m.role === 'user').length;
+    const asstCount = msgs.filter(m => m.role === 'assistant').length;
+    const firstDate = msgs[0]?.ts ? new Date(msgs[0].ts).toLocaleDateString() : '?';
+    const lastDate  = msgs[msgs.length-1]?.ts ? new Date(msgs[msgs.length-1].ts).toLocaleDateString() : '?';
+
+    let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>FlowGuard — Conversation Forensic Log</title>
+<style>
+body{font-family:Segoe UI,sans-serif;background:#0a1628;color:#e2e8f0;margin:0;padding:20px;}
+.wrap{max-width:900px;margin:0 auto;}
+h1{color:#00d4ff;font-size:22px;}
+.meta{color:#64748b;font-size:12px;margin-bottom:20px;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.stat{background:#0f1e36;border:1px solid #1e3a5f;border-radius:10px;padding:12px;text-align:center;}
+.stat-val{font-size:24px;font-weight:800;color:#00d4ff;}
+.stat-lbl{font-size:10px;color:#64748b;margin-top:4px;}
+.msg{margin-bottom:8px;padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.6;word-wrap:break-word;}
+.user{background:#0ea5e9;color:#fff;margin-left:60px;}
+.assistant{background:#0f1e36;border:1px solid #1e3a5f;margin-right:60px;}
+.ts{font-size:9px;color:#475569;margin-top:4px;}
+.user .ts{color:rgba(255,255,255,0.5);}
+.badge{display:inline-block;background:#ef4444;color:#fff;padding:1px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.footer{text-align:center;color:#334155;font-size:11px;margin-top:40px;padding-top:20px;border-top:1px solid #1e3a5f;}
+</style></head><body><div class="wrap">
+<h1>🔍 FlowGuard — Conversation Forensic Log</h1>
+<div class="meta">Generated: ${new Date().toISOString()} | Source: Claude Code JSONL</div>
+<div class="stats">
+<div class="stat"><div class="stat-val">${userCount}</div><div class="stat-lbl">User Messages</div></div>
+<div class="stat"><div class="stat-val">${asstCount}</div><div class="stat-lbl">AI Responses</div></div>
+<div class="stat"><div class="stat-val">${msgs.length}</div><div class="stat-lbl">Total</div></div>
+<div class="stat"><div class="stat-val" style="font-size:12px;">${firstDate} — ${lastDate}</div><div class="stat-lbl">Date Range</div></div>
+</div>`;
+
+    msgs.forEach(m => {
+      const cls = m.role === 'user' ? 'user' : 'assistant';
+      const time = m.ts ? new Date(m.ts).toLocaleString() : '';
+      html += `<div class="msg ${cls}">${esc(m.text)}<div class="ts">${time}</div></div>`;
+    });
+
+    html += `<div class="footer">FlowGuard Forensic Log | EHZ-AI | ${new Date().toISOString()}</div></div></body></html>`;
+
+    // Save to support folder
+    const supportDir = path.join(__dirname, '..', 'support');
+    if (!fs.existsSync(supportDir)) fs.mkdirSync(supportDir, { recursive: true });
+    const filename = `Conversation-Log-${new Date().toISOString().slice(0,10)}.html`;
+    const outPath = path.join(supportDir, filename);
+    fs.writeFileSync(outPath, html, 'utf8');
+
+    res.json({ ok: true, file: outPath, filename, messages: msgs.length, sizeKB: Math.round(html.length / 1024) });
+  });
+
+  rl.on('error', (e) => {
+    res.status(500).json({ ok: false, error: e.message });
+  });
+});
+
+// GET /sessions/conversation-log/:filename — serve the generated HTML
+app.get('/sessions/conversation-log/:filename', (req, res) => {
+  const filePath = path.join(__dirname, '..', 'support', req.params.filename);
+  if (!fs.existsSync(filePath)) return res.status(404).send('File not found');
+  res.sendFile(filePath);
+});
+
 // POST /diag/collect — run the diagnostics collector and open mail client
 app.post('/diag/collect', (req, res) => {
   const { exec } = require('child_process');

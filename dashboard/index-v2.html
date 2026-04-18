@@ -701,6 +701,7 @@ tr:hover td { background:#f8fafc; }
             <div class="panel-sub" id="sessions-count-label">Loading...</div>
           </div>
           <div class="panel-actions">
+            <button class="btn btn-outline btn-sm" onclick="exportConversationLog()" title="Export full conversation for forensic analysis">🔍 Export Conversation Log</button>
             <button class="btn btn-outline btn-sm" onclick="exportAllSessions()">📄 Export All</button>
             <button class="btn btn-outline btn-sm" onclick="loadSessions()">&#x21BB; Refresh</button>
           </div>
@@ -2588,6 +2589,20 @@ async function loadAutoUpdateSchedule() {
     var sel = document.getElementById('cfg-auto-update-interval');
     if (sel && d.hours !== undefined) sel.value = String(d.hours);
   } catch(_) {}
+}
+
+async function exportConversationLog() {
+  toast('Exporting conversation log...', 'success');
+  try {
+    var r = await fetch(API + '/sessions/export-conversation', { method: 'POST' });
+    var d = await r.json();
+    if (d.ok) {
+      toast('Log saved: ' + d.file, 'success');
+      window.open(API + '/sessions/conversation-log/' + encodeURIComponent(d.filename), '_blank');
+    } else {
+      toast('Export failed: ' + (d.error || ''), 'error');
+    }
+  } catch(e) { toast('Export failed: ' + e.message, 'error'); }
 }
 
 function exportAllSessions() {
