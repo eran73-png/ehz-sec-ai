@@ -1,5 +1,5 @@
 # ============================================================
-# FlowGuard - Windows Service Installer (v2.3.0)
+# FlowGuard - Windows Service Installer (v2.4.0)
 # Registers FlowGuard-Collector as a real Windows Service
 # using NSSM (Non-Sucking Service Manager)
 #

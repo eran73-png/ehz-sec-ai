@@ -134,104 +134,6 @@
   ],
   "discovered_domains": [
     {
-      "domain": "www.glassdoor.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:48.705Z"
-    },
-    {
-      "domain": "en.wikipedia.org",
-      "score": 100,
-      "label": "TRUSTED",
-      "color": "#10b981",
-      "discovered_at": "2026-04-14T20:31:48.706Z"
-    },
-    {
-      "domain": "www.calcalistech.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:48.706Z"
-    },
-    {
-      "domain": "www.ynetnews.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:48.706Z"
-    },
-    {
-      "domain": "www.secrettelaviv.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:48.706Z"
-    },
-    {
-      "domain": "www.clay.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:48.706Z"
-    },
-    {
-      "domain": "www.dnb.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:48.706Z"
-    },
-    {
-      "domain": "www.cvowl.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "www.tealhq.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "www.glassdoor.co.uk",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "www.indeed.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "startup.jobs",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "www.finalroundai.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "resources.workable.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
       "domain": "www.simplilearn.com",
       "score": 65,
       "label": "OK",
@@ -1343,6 +1245,293 @@
       "label": "OK",
       "color": "#84cc16",
       "discovered_at": "2026-04-15T07:31:44.208Z"
+    },
+    {
+      "domain": "forum.bigfix.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:20.570Z"
+    },
+    {
+      "domain": "helpcenter.veeam.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:20.570Z"
+    },
+    {
+      "domain": "www.hcl-software.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:20.571Z"
+    },
+    {
+      "domain": "xsoar.pan.dev",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:20.571Z"
+    },
+    {
+      "domain": "thecxlead.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "www.crescendo.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "www.eesel.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "crisp.chat",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "www.teamsupport.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "www.assembled.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "meetchatty.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "www.intercom.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "fin.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:22.320Z"
+    },
+    {
+      "domain": "www.freshworks.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.465Z"
+    },
+    {
+      "domain": "dupple.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.465Z"
+    },
+    {
+      "domain": "support.freshservice.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.465Z"
+    },
+    {
+      "domain": "www.rezolve.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.465Z"
+    },
+    {
+      "domain": "www.chatwoot.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "botpress.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "pagergpt.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "boei.help",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "www.tidio.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "www.botlibre.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "hostkey.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "intuitionlabs.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "tiledesk.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:23.478Z"
+    },
+    {
+      "domain": "workativ.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:24.647Z"
+    },
+    {
+      "domain": "unthread.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:24.647Z"
+    },
+    {
+      "domain": "www.multimodal.dev",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:24.647Z"
+    },
+    {
+      "domain": "www.g2.com",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:24.648Z"
+    },
+    {
+      "domain": "clearfeed.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:24.648Z"
+    },
+    {
+      "domain": "www.vendr.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:35.804Z"
+    },
+    {
+      "domain": "ravenna.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:35.804Z"
+    },
+    {
+      "domain": "www.selecthub.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:35.804Z"
+    },
+    {
+      "domain": "www.unleash.so",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-17T16:41:35.804Z"
+    },
+    {
+      "domain": "www.moveworks.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:35.804Z"
+    },
+    {
+      "domain": "quickchat.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:36.652Z"
+    },
+    {
+      "domain": "www.getapp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:36.652Z"
+    },
+    {
+      "domain": "www.capterra.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:36.810Z"
+    },
+    {
+      "domain": "sourceforge.net",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:36.810Z"
+    },
+    {
+      "domain": "www.trustradius.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-17T16:41:36.810Z"
     }
   ]
 }

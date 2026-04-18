@@ -1,0 +1,13 @@
+{
+  "blockCritical": false,
+  "fsWatcher": true,
+  "auditChain": false,
+  "logRetention": 30,
+  "autoUpdate": true,
+  "quietHours": {
+    "enabled": true,
+    "from": 23,
+    "to": 7
+  },
+  "desktopAlerts": true
+}

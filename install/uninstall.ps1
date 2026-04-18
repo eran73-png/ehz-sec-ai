@@ -13,7 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Continue'
-$Version = "2.3.0"
+$Version = "2.4.0"
 
 # ── Paths ─────────────────────────────────────────────────────
 $ProjectDir   = Split-Path -Parent $PSScriptRoot

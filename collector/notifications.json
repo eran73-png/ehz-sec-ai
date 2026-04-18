@@ -1,14 +1,14 @@
 {
   "telegram": {},
   "email": {
-    "enabled": false,
+    "enabled": true,
     "smtp_host": "",
     "smtp_port": 587,
     "smtp_user": "",
     "smtp_pass": "",
+    "smtp_secure": false,
     "from": "",
-    "to": "",
-    "smtp_secure": false
+    "to": ""
   },
   "git_remotes": [],
   "desktop": true,

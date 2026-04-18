@@ -19,7 +19,7 @@ const { execSync, exec } = require('child_process');
 const zlib      = require('zlib');
 
 const SUPPORT_EMAIL = 'eranhz26@gmail.com';
-const VERSION       = '2.3.0';
+const VERSION       = '2.4.0';
 
 // ─── Helpers ────────────────────────────────────────────────
 
@@ -330,8 +330,15 @@ async function main() {
   entries.push({ name: '07-event-log.txt', data: Buffer.from(sanitize(eventLog), 'utf8') });
 
   // ─── Write ZIP ──────────────────────────────────────────
-  // Save to <InstallDir>\support\ if available, otherwise Desktop
-  const supportDir = installDir ? path.join(installDir, 'support') : path.join(os.homedir(), 'Desktop');
+  // Save to <InstallDir>\support\ if available, otherwise real user Desktop
+  let fallbackHome = os.homedir();
+  if (fallbackHome.includes('systemprofile')) {
+    try {
+      const logged = execSync('powershell -NoProfile -Command "(Get-CimInstance Win32_ComputerSystem).UserName"', { encoding: 'utf8' }).trim();
+      if (logged.includes('\\')) fallbackHome = path.join('C:', 'Users', logged.split('\\').pop());
+    } catch(_) {}
+  }
+  const supportDir = installDir ? path.join(installDir, 'support') : path.join(fallbackHome, 'Desktop');
   if (!fs.existsSync(supportDir)) fs.mkdirSync(supportDir, { recursive: true });
   const zipName = `FlowGuard-Diag-${hostname}-${stamp}.zip`;
   const zipPath = path.join(supportDir, zipName);
