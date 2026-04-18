@@ -2598,7 +2598,7 @@ async function exportConversationLog() {
     var d = await r.json();
     if (d.ok) {
       toast('Log saved: ' + d.file, 'success');
-      window.open(API + '/sessions/conversation-log/' + encodeURIComponent(d.filename), '_blank');
+      window.open(API + '/support/' + encodeURIComponent(d.filename), '_blank');
     } else {
       toast('Export failed: ' + (d.error || ''), 'error');
     }
