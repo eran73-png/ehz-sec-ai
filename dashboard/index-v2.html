@@ -649,7 +649,8 @@ tr:hover td { background:#f8fafc; }
             <option value="">All Tools</option>
           </select>
           <input class="filter-input" type="text" id="filter-search" placeholder="Search events..." oninput="renderEventsTable()">
-          <select class="filter-select" id="filter-limit" onchange="loadEvents()" style="margin-left:auto;">
+          <button class="btn btn-outline btn-sm" onclick="exportEventsHTML()" style="margin-left:auto;" title="Export events as HTML">📄 Export</button>
+          <select class="filter-select" id="filter-limit" onchange="loadEvents()">
             <option value="100">Last 100</option>
             <option value="200" selected>Last 200</option>
             <option value="500">Last 500</option>
@@ -2395,6 +2396,21 @@ async function loadNotifConfig() {
     if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
     if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
   } catch(e) { /* offline */ }
+}
+
+function exportEventsHTML() {
+  var table = document.querySelector('#view-events .table-wrap');
+  if (!table) { toast('No events to export', 'error'); return; }
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>FlowGuard Events Export</title>' +
+    '<style>body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;}table{width:100%;border-collapse:collapse;font-size:13px;}th,td{padding:8px 12px;border:1px solid #e2e8f0;text-align:left;}th{background:#0f1b2d;color:#fff;}.lvl-CRITICAL{color:#ef4444;font-weight:700;}.lvl-HIGH{color:#f97316;font-weight:700;}.lvl-MEDIUM{color:#f59e0b;}.lvl-INFO{color:#64748b;}.lvl-LOW{color:#94a3b8;}</style></head>' +
+    '<body><h1>FlowGuard — Events Export</h1><p>Generated: ' + new Date().toLocaleString() + '</p>' +
+    table.outerHTML + '</body></html>';
+  var blob = new Blob([html], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FlowGuard-Events-' + new Date().toISOString().slice(0,10) + '.html';
+  a.click();
+  toast('Events exported', 'success');
 }
 
 async function loadLogStats() {
