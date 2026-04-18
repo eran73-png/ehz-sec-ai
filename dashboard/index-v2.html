@@ -1026,7 +1026,15 @@ tr:hover td { background:#f8fafc; }
                 <div class="setting-label">Auto-update Rules <span class="tip-icon" data-tip="Automatically downloads the latest detection rules from the FlowGuard update server. When OFF, you must apply updates manually from the 'Rules &amp; Updates' panel below.">?</span></div>
                 <div class="setting-sublabel">Pull rule updates automatically</div>
               </div>
-              <label class="toggle"><input type="checkbox" id="cfg-auto-update" onchange="saveConfig()"><span class="toggle-slider"></span></label>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <select class="form-select" id="cfg-auto-update-interval" style="width:100px;" onchange="saveAutoUpdateSchedule()">
+                  <option value="0">Off</option>
+                  <option value="4">4h</option>
+                  <option value="8">8h</option>
+                  <option value="12">12h</option>
+                  <option value="24" selected>24h</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -2353,7 +2361,7 @@ function openGuide(lang) {
 }
 
 async function loadSettings() {
-  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats()]);
+  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats(), loadAutoUpdateSchedule()]);
 }
 
 async function loadConfig() {
@@ -2399,6 +2407,26 @@ async function loadNotifConfig() {
     if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
     if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
   } catch(e) { /* offline */ }
+}
+
+async function saveAutoUpdateSchedule() {
+  var hours = parseInt(document.getElementById('cfg-auto-update-interval').value) || 0;
+  try {
+    await fetch(API + '/update/schedule', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hours: hours })
+    });
+    toast(hours ? 'Auto-update: every ' + hours + 'h' : 'Auto-update disabled', 'success');
+  } catch(e) { toast('Failed: ' + e.message, 'error'); }
+}
+
+async function loadAutoUpdateSchedule() {
+  try {
+    var d = await fetchJSON('/update/schedule');
+    var sel = document.getElementById('cfg-auto-update-interval');
+    if (sel && d.hours !== undefined) sel.value = String(d.hours);
+  } catch(_) {}
 }
 
 function exportAllSessions() {
