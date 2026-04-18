@@ -2233,14 +2233,14 @@
 </div>
 
 <!-- MS14 — SECURITY & STABILITY (from QA Review 17.04.2026) -->
-<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(239,68,68,0.3);">
-  <div class="phase-header" style="background:rgba(239,68,68,0.05);">
-    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS14</div>
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
+  <div class="phase-header" style="background:rgba(16,185,129,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#10b981,#059669);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS14</div>
     <div class="phase-info">
-      <h3>MS14 — Security &amp; Stability (QA Review)</h3>
-      <p>ממצאי בדיקה מעמיקה מ-17.04.2026 — אבטחה, memory leaks, hash chain, persistence</p>
+      <h3>MS14 ✅ — Security &amp; Stability (QA Review)</h3>
+      <p>ממצאי בדיקה מעמיקה מ-17.04.2026 — 8 תיקונים · <strong>הושלם 17.04.2026</strong></p>
     </div>
-    <div class="phase-status" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">📋 מתוכנן</div>
+    <div class="phase-status" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.3);">✅ הושלם</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell" style="border-top:3px solid var(--red);">
@@ -4469,6 +4469,21 @@ Claude מבצע tool call
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.3.0</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">17.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          🛡️ <strong>MS14 — Security &amp; Stability (8 fixes):</strong><br>
+          • <strong>14.1</strong> CORS — מוגבל ל-localhost בלבד (היה *)<br>
+          • <strong>14.2</strong> Hash Chain — system events מסומנים ומסוננים מ-verify<br>
+          • <strong>14.3</strong> Memory Cleanup — interval כל שעה, caps על Sets/Maps<br>
+          • <strong>14.4</strong> Quiet Hours — נשמר ב-app-config.json, שורד restart<br>
+          • <strong>14.5</strong> JSON.parse safety + EADDRINUSE port handler<br>
+          • <strong>14.6</strong> Behavioral Learning — midnight wrap-around תוקן<br>
+          • <strong>14.7</strong> Desktop Alerts — Windows Toast via PowerShell<br>
+          • <strong>14.8</strong> Settings Full Persistence — כל ה-toggles נשמרים ב-app-config.json
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
         <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.2.0</span></td>
         <td style="padding:10px 12px;color:var(--muted);">17.04.2026</td>
         <td style="padding:10px 12px;color:var(--text);">
@@ -4688,7 +4703,7 @@ Claude מבצע tool call
 <!-- FOOTER -->
 <div class="footer">
   <strong>EHZ-AI</strong> | Claude Code Security Monitor | 054-4825276<br>
-  נוצר: אפריל 2026 | גרסה 2.2.0 | עודכן: 17.04.2026
+  נוצר: אפריל 2026 | גרסה 2.3.0 | עודכן: 18.04.2026
 </div>
 
 </body>
