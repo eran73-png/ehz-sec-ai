@@ -1542,7 +1542,20 @@ app.delete('/fsw/exclude/custom', (req, res) => {
 // POST /sessions/export-conversation — parse Claude JSONL → HTML report
 app.post('/sessions/export-conversation', (req, res) => {
   const readline = require('readline');
-  const claudeDir = path.join(os.homedir(), '.claude', 'projects');
+  // Resolve real user home (not SYSTEM profile)
+  let userHome = os.homedir();
+  if (userHome.includes('systemprofile') || process.env.USERNAME === 'SYSTEM') {
+    try {
+      const { execSync } = require('child_process');
+      const logged = execSync('powershell -NoProfile -Command "(Get-CimInstance Win32_ComputerSystem).UserName"', { encoding: 'utf8' }).trim();
+      if (logged && logged.includes('\\')) {
+        const realUser = logged.split('\\').pop();
+        const realHome = path.join('C:', 'Users', realUser);
+        if (fs.existsSync(realHome)) userHome = realHome;
+      }
+    } catch(_) {}
+  }
+  const claudeDir = path.join(userHome, '.claude', 'projects');
 
   // Find the most recent .jsonl file
   let jsonlFile = null;

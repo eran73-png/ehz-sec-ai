@@ -2613,9 +2613,22 @@ function exportAllSessions() {
       '<td>' + (s.events || 0) + '</td><td>' + (s.tools ? s.tools.join(', ') : '') + '</td></tr>';
   }).join('');
   var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>FlowGuard Sessions Export</title>' +
-    '<style>body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;}table{width:100%;border-collapse:collapse;font-size:13px;}th,td{padding:8px 12px;border:1px solid #e2e8f0;text-align:left;}th{background:#0f1b2d;color:#fff;}</style></head>' +
-    '<body><h1>FlowGuard — Sessions Export</h1><p>Generated: ' + new Date().toLocaleString() + ' | Total: ' + allSessions.length + '</p>' +
-    '<table><thead><tr><th>Session ID</th><th>Started</th><th>Events</th><th>Tools Used</th></tr></thead><tbody>' + rows + '</tbody></table></body></html>';
+    '<style>body{font-family:Segoe UI,sans-serif;padding:0;margin:0;background:#0a1628;color:#e2e8f0;}' +
+    '.header{background:linear-gradient(135deg,#0a1628,#0f1e36);padding:30px 40px;border-bottom:1px solid #1e3a5f;}' +
+    '.header-row{display:flex;align-items:center;gap:16px;}' +
+    '.shield{width:48px;height:48px;background:linear-gradient(135deg,#00d4ff,#0066cc);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;font-weight:900;}' +
+    'h1{font-size:22px;color:#00d4ff;margin:0;}' +
+    '.meta{color:#64748b;font-size:12px;margin-top:6px;}' +
+    '.content{padding:24px 40px;}' +
+    'table{width:100%;border-collapse:collapse;font-size:13px;background:#0f1e36;border-radius:10px;overflow:hidden;}' +
+    'th{padding:12px 16px;text-align:left;background:linear-gradient(135deg,#00d4ff,#0066cc);color:#fff;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;}' +
+    'td{padding:10px 16px;border-bottom:1px solid #1e3a5f;color:#e2e8f0;}' +
+    'tr:hover td{background:rgba(0,212,255,0.05);}' +
+    '.footer{text-align:center;padding:20px;color:#334155;font-size:11px;border-top:1px solid #1e3a5f;margin-top:30px;}</style></head>' +
+    '<body><div class="header"><div class="header-row"><div class="shield">F</div><div><h1>FlowGuard — Sessions Export</h1>' +
+    '<div class="meta">Generated: ' + new Date().toLocaleString() + ' | Total: ' + allSessions.length + ' sessions | EHZ-AI Security Monitor</div></div></div></div>' +
+    '<div class="content"><table><thead><tr><th>Session ID</th><th>Started</th><th>Events</th><th>Tools Used</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="footer">FlowGuard v2.3.0 | EHZ-AI | Claude Code Security Monitor | 054-4825276</div></body></html>';
   var blob = new Blob([html], { type: 'text/html' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
