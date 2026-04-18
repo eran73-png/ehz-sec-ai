@@ -922,43 +922,61 @@ tr:hover td { background:#f8fafc; }
           </div>
         </div>
         <div style="padding:20px">
+
+          <!-- Supported Platforms -->
+          <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;">Supported Platforms</div>
           <div class="siem-grid">
-            <div class="siem-card">
-              <div class="siem-icon">&#x1F4E4;</div>
-              <div class="siem-label">Syslog Export</div>
-              <div class="siem-sub">Forward events to external SIEM via syslog UDP/TCP</div>
-              <div style="margin-top:12px"><span class="tag tag-gray">Coming Soon</span></div>
+            <div class="siem-card"><div class="siem-icon">&#x1F4CA;</div><div class="siem-label">Splunk</div><div class="siem-sub">HEC token integration</div></div>
+            <div class="siem-card"><div class="siem-icon">&#x1F6E1;&#xFE0F;</div><div class="siem-label">QRadar</div><div class="siem-sub">Syslog CEF forwarding</div></div>
+            <div class="siem-card"><div class="siem-icon">&#x1F50D;</div><div class="siem-label">Elastic / ELK</div><div class="siem-sub">Filebeat / Logstash</div></div>
+            <div class="siem-card"><div class="siem-icon">&#x2601;&#xFE0F;</div><div class="siem-label">Azure Sentinel</div><div class="siem-sub">Log Analytics agent</div></div>
+            <div class="siem-card"><div class="siem-icon">&#x1F310;</div><div class="siem-label">ArcSight</div><div class="siem-sub">SmartConnector CEF</div></div>
+            <div class="siem-card"><div class="siem-icon">&#x1F50C;</div><div class="siem-label">REST API</div><div class="siem-sub">Active at localhost:3010</div><div style="margin-top:6px"><span class="tag tag-green">Active</span></div></div>
+          </div>
+
+          <!-- Live CEF Stream -->
+          <div style="margin-top:20px;padding:16px;background:#0f172a;border-radius:10px;border:1px solid #1e3a5f;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:700;color:#00d4ff;">Live CEF Stream</div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-sm" style="background:#10b981;color:#fff;border:none;font-size:11px;" onclick="startSiemStream()">▶ Start</button>
+                <button class="btn btn-sm" style="background:#ef4444;color:#fff;border:none;font-size:11px;" onclick="stopSiemStream()">⏹ Stop</button>
+                <button class="btn btn-outline btn-sm" style="font-size:11px;color:#94a3b8;border-color:#334155;" onclick="clearSiemLog()">Clear</button>
+                <button class="btn btn-outline btn-sm" style="font-size:11px;color:#94a3b8;border-color:#334155;" onclick="exportCefLog()">Export .cef</button>
+              </div>
             </div>
-            <div class="siem-card">
-              <div class="siem-icon">&#x1FA9D;</div>
-              <div class="siem-label">Webhook Push</div>
-              <div class="siem-sub">Push critical events to Slack, Teams, or custom endpoint</div>
-              <div style="margin-top:12px"><span class="tag tag-gray">Coming Soon</span></div>
+            <div id="siem-console" style="background:#020617;border:1px solid #1e293b;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;color:#10b981;height:200px;overflow-y:auto;white-space:pre-wrap;">Waiting for stream...</div>
+          </div>
+
+          <!-- Syslog Forwarding Config -->
+          <div style="margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border);">
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;">Syslog Forwarding</div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;align-items:end;">
+              <div><div style="font-size:10px;color:#64748b;margin-bottom:3px;">Host / IP</div><input class="form-input" type="text" id="siem-host" placeholder="siem.company.com"></div>
+              <div><div style="font-size:10px;color:#64748b;margin-bottom:3px;">Port</div><input class="form-input" type="number" id="siem-port" value="514" placeholder="514"></div>
+              <div><div style="font-size:10px;color:#64748b;margin-bottom:3px;">Protocol</div><select class="form-select" id="siem-proto"><option value="udp">UDP</option><option value="tcp">TCP</option></select></div>
+              <div><div style="font-size:10px;color:#64748b;margin-bottom:3px;">Format</div><select class="form-select" id="siem-format"><option value="cef">CEF</option><option value="json">JSON</option></select></div>
             </div>
-            <div class="siem-card">
-              <div class="siem-icon">&#x1F4CA;</div>
-              <div class="siem-label">Splunk Integration</div>
-              <div class="siem-sub">HEC token integration for Splunk Enterprise</div>
-              <div style="margin-top:12px"><span class="tag tag-gray">Coming Soon</span></div>
-            </div>
-            <div class="siem-card">
-              <div class="siem-icon">&#x1F50C;</div>
-              <div class="siem-label">REST API</div>
-              <div class="siem-sub">Pull events via REST API &#x2014; active at localhost:3010</div>
-              <div style="margin-top:12px"><span class="tag tag-green">Active</span></div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+              <button class="btn btn-accent btn-sm" onclick="saveSiemConfig()">Save &amp; Enable</button>
+              <span id="siem-save-result" style="font-size:11px;"></span>
             </div>
           </div>
 
+          <!-- REST Endpoints Reference -->
           <div style="margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
             <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px">Available REST Endpoints</div>
             <div style="display:flex;flex-direction:column;gap:6px">
-              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/events?limit=200&amp;level=CRITICAL</div>
-              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/stats</div>
-              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/sessions</div>
-              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/audit/verify</div>
-              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  http://localhost:3010/domains</div>
-              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">POST http://localhost:3010/chain/reset</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  /events?limit=200&amp;level=CRITICAL</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  /stats | /sessions | /domains | /audit/verify</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">GET  /siem/stream  (SSE — live CEF events)</div>
+              <div style="font-family:monospace;font-size:11px;color:#64748b;background:#fff;padding:7px 12px;border-radius:6px;border:1px solid var(--border)">POST /chain/reset | /siem/config</div>
             </div>
+          </div>
+
+          <!-- CEF Format Reference -->
+          <div style="margin-top:12px;padding:12px;background:#fefce8;border:1px solid #fde047;border-radius:8px;font-size:11px;color:#713f12;">
+            <strong>CEF Format:</strong> CEF:0|EHZ-AI|FlowGuard|2.3.0|{rule}|{reason}|{severity}| src={session} tool={tool_name} ts={timestamp}
           </div>
         </div>
       </div>
@@ -1595,6 +1613,7 @@ function navigate(view) {
   if (view === 'skills')     { loadSkills(); }
   if (view === 'gitmonitor') { loadGitMonitor(); }
   if (view === 'projects')   { loadProjects(); }
+  if (view === 'siem')       { loadSiemConfig(); }
   if (view === 'settings')   { loadSettings(); }
 }
 
@@ -3207,6 +3226,80 @@ function closeHelp() {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeHelp();
 });
+
+// ─── SIEM Live Stream ─────────────────────────────────────────────────────────
+var siemEventSource = null;
+var siemLogLines = [];
+
+function startSiemStream() {
+  if (siemEventSource) siemEventSource.close();
+  var con = document.getElementById('siem-console');
+  con.textContent = 'Connecting to SSE stream...\n';
+  siemEventSource = new EventSource(API + '/siem/stream');
+  siemEventSource.addEventListener('cef', function(e) {
+    siemLogLines.push(e.data);
+    if (siemLogLines.length > 500) siemLogLines.shift();
+    con.textContent += e.data + '\n';
+    con.scrollTop = con.scrollHeight;
+  });
+  siemEventSource.onopen = function() { con.textContent += '--- Stream connected ---\n'; };
+  siemEventSource.onerror = function() { con.textContent += '--- Stream disconnected ---\n'; };
+  toast('SIEM stream started', 'success');
+}
+
+function stopSiemStream() {
+  if (siemEventSource) { siemEventSource.close(); siemEventSource = null; }
+  document.getElementById('siem-console').textContent += '\n--- Stream stopped ---\n';
+  toast('SIEM stream stopped', 'success');
+}
+
+function clearSiemLog() {
+  siemLogLines = [];
+  document.getElementById('siem-console').textContent = 'Waiting for stream...';
+}
+
+function exportCefLog() {
+  if (!siemLogLines.length) { toast('No log data to export', 'error'); return; }
+  var blob = new Blob([siemLogLines.join('\n')], { type: 'text/plain' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FlowGuard-CEF-' + new Date().toISOString().slice(0,10) + '.cef';
+  a.click();
+  toast('CEF log exported', 'success');
+}
+
+async function saveSiemConfig() {
+  var result = document.getElementById('siem-save-result');
+  try {
+    var r = await fetch(API + '/siem/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        host:   document.getElementById('siem-host').value,
+        port:   parseInt(document.getElementById('siem-port').value) || 514,
+        proto:  document.getElementById('siem-proto').value,
+        format: document.getElementById('siem-format').value
+      })
+    });
+    var d = await r.json();
+    result.textContent = d.ok ? '✅ Saved' : '❌ Failed';
+    result.style.color = d.ok ? '#10b981' : '#ef4444';
+    toast('SIEM config saved', 'success');
+  } catch(e) {
+    result.textContent = '❌ ' + e.message;
+    result.style.color = '#ef4444';
+  }
+}
+
+async function loadSiemConfig() {
+  try {
+    var d = await fetchJSON('/siem/config');
+    if (d.host) document.getElementById('siem-host').value = d.host;
+    if (d.port) document.getElementById('siem-port').value = d.port;
+    if (d.proto) document.getElementById('siem-proto').value = d.proto;
+    if (d.format) document.getElementById('siem-format').value = d.format;
+  } catch(_) {}
+}
 
 // ─── Projects Explorer ──────────────────────────────────────────────────────
 
