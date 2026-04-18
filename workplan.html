@@ -2232,6 +2232,70 @@
   </div>
 </div>
 
+<!-- MS15 — PROJECTS EXPLORER UPGRADE -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(14,165,233,0.3);">
+  <div class="phase-header" style="background:rgba(14,165,233,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS15</div>
+    <div class="phase-info">
+      <h3>MS15 — Projects Explorer Upgrade</h3>
+      <p>שדרוג Projects Explorer — קישור ל-Workplan + אחוזי התקדמות אוטומטיים</p>
+    </div>
+    <div class="phase-status" style="background:rgba(14,165,233,0.12);color:#0ea5e9;border:1px solid rgba(14,165,233,0.3);">📋 מתוכנן</div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num" style="color:#0ea5e9;">15.1</div>
+      <div class="task-title">🔍 Workplan Auto-Detection</div>
+      <div class="task-desc">
+        ה-API <code>/projects</code> סורק כל תיקיית פרויקט ומחפש <code>workplan.html</code> או <code>WORKPLAN.html</code>.<br>
+        אם קיים → מחזיר <code>workplan_url</code> בנתוני הפרויקט.<br>
+        כרטיס הפרויקט מציג כפתור "📋 Open Workplan" שפותח את הקובץ בדפדפן.
+      </div>
+      <div class="task-tags"><span class="tag">server.js</span><span class="tag">API</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#0ea5e9;">15.2</div>
+      <div class="task-title">📊 Progress Extraction Engine</div>
+      <div class="task-desc">
+        Parser שקורא את ה-workplan.html ומחלץ אחוזי התקדמות:<br>
+        • סופר <code>✅</code> (הושלם) מול סה"כ phase-status badges<br>
+        • סופר task-cells מסומנות כ-done<br>
+        • מחשב: <code>completed / total × 100%</code><br>
+        • מחזיר: <code>{ progress: 78, completed: 14, total: 18 }</code>
+      </div>
+      <div class="task-tags"><span class="tag">parser</span><span class="tag">HTML</span><span class="tag">regex</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#0ea5e9;">15.3</div>
+      <div class="task-title">📈 Progress Bar in Project Cards</div>
+      <div class="task-desc">
+        כרטיס הפרויקט מציג progress bar:<br>
+        <code>███████████░░░ 78% (14/18 milestones)</code><br>
+        • ירוק = 80%+ | צהוב = 50-79% | אדום = &lt;50%<br>
+        • אם אין workplan → לא מוצג progress bar<br>
+        • כפתור 📋 פותח את ה-workplan ישירות
+      </div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">UI</span><span class="tag">progress-bar</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#0ea5e9;">15.4</div>
+      <div class="task-title">🔄 Dashboard v2 Feature Parity</div>
+      <div class="task-desc">
+        השלמת פיצ'רים חסרים מ-index.html הישן (ממצאי השוואה 18.04.2026):<br>
+        • SIEM Full Panel (Live CEF Stream, Syslog config)<br>
+        • Email SMTP Configuration (6 שדות)<br>
+        • Test Telegram / Test Email buttons<br>
+        • Log Management — delete 7d/30d/all<br>
+        • Export HTML (Events) + Export Sessions<br>
+        • Verify Chain badge/button<br>
+        • Audit Summary Cards + Next Scan info<br>
+        • Footer
+      </div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">parity</span><span class="tag">v1-to-v2</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- MS14 — SECURITY & STABILITY (from QA Review 17.04.2026) -->
 <div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
   <div class="phase-header" style="background:rgba(16,185,129,0.05);">
