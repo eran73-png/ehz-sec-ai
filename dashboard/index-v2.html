@@ -688,7 +688,10 @@ tr:hover td { background:#f8fafc; }
             <div class="panel-title">Sessions</div>
             <div class="panel-sub" id="sessions-count-label">Loading...</div>
           </div>
-          <button class="btn btn-outline btn-sm" onclick="loadSessions()">&#x21BB; Refresh</button>
+          <div class="panel-actions">
+            <button class="btn btn-outline btn-sm" onclick="exportAllSessions()">📄 Export All</button>
+            <button class="btn btn-outline btn-sm" onclick="loadSessions()">&#x21BB; Refresh</button>
+          </div>
         </div>
         <div id="sessions-list">
           <div class="empty"><div class="spinner"></div>&nbsp; Loading sessions...</div>
@@ -2396,6 +2399,25 @@ async function loadNotifConfig() {
     if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
     if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
   } catch(e) { /* offline */ }
+}
+
+function exportAllSessions() {
+  var list = document.getElementById('sessions-list');
+  if (!list || !allSessions.length) { toast('No sessions to export', 'error'); return; }
+  var rows = allSessions.map(function(s) {
+    return '<tr><td>' + (s.session_id || '') + '</td><td>' + new Date(s.start).toLocaleString() + '</td>' +
+      '<td>' + (s.events || 0) + '</td><td>' + (s.tools ? s.tools.join(', ') : '') + '</td></tr>';
+  }).join('');
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>FlowGuard Sessions Export</title>' +
+    '<style>body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;}table{width:100%;border-collapse:collapse;font-size:13px;}th,td{padding:8px 12px;border:1px solid #e2e8f0;text-align:left;}th{background:#0f1b2d;color:#fff;}</style></head>' +
+    '<body><h1>FlowGuard — Sessions Export</h1><p>Generated: ' + new Date().toLocaleString() + ' | Total: ' + allSessions.length + '</p>' +
+    '<table><thead><tr><th>Session ID</th><th>Started</th><th>Events</th><th>Tools Used</th></tr></thead><tbody>' + rows + '</tbody></table></body></html>';
+  var blob = new Blob([html], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FlowGuard-Sessions-' + new Date().toISOString().slice(0,10) + '.html';
+  a.click();
+  toast('Sessions exported', 'success');
 }
 
 function exportEventsHTML() {
