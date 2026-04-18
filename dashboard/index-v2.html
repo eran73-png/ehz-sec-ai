@@ -1027,6 +1027,25 @@ tr:hover td { background:#f8fafc; }
           </div>
         </div>
 
+        <!-- Log Management -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">🗑️ Log Management</div>
+              <div class="panel-sub">Delete old events from database</div>
+            </div>
+          </div>
+          <div class="settings-body">
+            <div id="log-stats" style="font-size:12px;color:#64748b;margin-bottom:10px;">Loading stats...</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-outline btn-sm" onclick="clearLogs(7)">Delete &gt; 7 days</button>
+              <button class="btn btn-outline btn-sm" onclick="clearLogs(30)">Delete &gt; 30 days</button>
+              <button class="btn btn-sm" style="background:#ef4444;color:#fff;border:none;" onclick="clearLogs(0)">Delete All</button>
+            </div>
+            <span id="log-delete-result" style="font-size:11px;margin-top:6px;display:block;"></span>
+          </div>
+        </div>
+
         <!-- Notifications -->
         <div class="settings-group">
           <div class="panel-header">
@@ -2330,7 +2349,7 @@ function openGuide(lang) {
 }
 
 async function loadSettings() {
-  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours()]);
+  await Promise.all([loadConfig(), loadNotifConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats()]);
 }
 
 async function loadConfig() {
@@ -2376,6 +2395,38 @@ async function loadNotifConfig() {
     if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
     if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
   } catch(e) { /* offline */ }
+}
+
+async function loadLogStats() {
+  try {
+    var d = await fetchJSON('/stats');
+    var el = document.getElementById('log-stats');
+    if (el) el.textContent = 'Total events: ' + (d.total || 0);
+  } catch(_) {}
+}
+
+async function clearLogs(days) {
+  var msg = days === 0
+    ? 'Delete ALL events? This cannot be undone!'
+    : 'Delete events older than ' + days + ' days?';
+  if (!confirm(msg)) return;
+  var result = document.getElementById('log-delete-result');
+  try {
+    var r = await fetch(API + '/events', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ older_than_days: days })
+    });
+    var d = await r.json();
+    result.textContent = '✅ Deleted ' + (d.deleted || 0) + ' events';
+    result.style.color = '#10b981';
+    toast('Logs cleaned', 'success');
+    loadLogStats();
+    loadDashboard();
+  } catch(e) {
+    result.textContent = '❌ ' + e.message;
+    result.style.color = '#ef4444';
+  }
 }
 
 async function verifyChain() {
