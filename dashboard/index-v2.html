@@ -1054,7 +1054,11 @@ tr:hover td { background:#f8fafc; }
               <div class="setting-label" style="margin-bottom:6px">Chat ID <span class="tip-icon" data-tip="Your personal Telegram Chat ID — the number that identifies where to send messages. To find it: open a chat with @userinfobot on Telegram and it will reply with your ID.">?</span></div>
               <input class="form-input" type="text" id="notif-chat-id" placeholder="Chat ID..." onchange="saveNotifications()">
             </div>
-            <div class="setting-row">
+            <div style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="testTelegram()" id="btn-test-telegram">📨 Test Telegram</button>
+              <span id="test-telegram-result" style="font-size:11px;margin-left:8px;"></span>
+            </div>
+            <div class="setting-row" style="margin-top:12px;">
               <div>
                 <div class="setting-label">Min Alert Level <span class="tip-icon" data-tip="The minimum severity level that triggers a notification. 'Critical only' = fewest alerts. 'High+' = Critical + High events. 'Medium+' = all events including medium risk. Start with High+ to avoid noise.">?</span></div>
               </div>
@@ -2368,6 +2372,30 @@ async function loadNotifConfig() {
     if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
     if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
   } catch(e) { /* offline */ }
+}
+
+async function testTelegram() {
+  var btn = document.getElementById('btn-test-telegram');
+  var result = document.getElementById('test-telegram-result');
+  btn.disabled = true;
+  result.textContent = 'Sending...';
+  result.style.color = '#64748b';
+  try {
+    var r = await fetch(API + '/notifications/test-telegram', { method: 'POST' });
+    var d = await r.json();
+    if (d.ok) {
+      result.textContent = '✅ Message sent!';
+      result.style.color = '#10b981';
+      toast('Telegram test sent', 'success');
+    } else {
+      result.textContent = '❌ ' + (d.error || 'Failed');
+      result.style.color = '#ef4444';
+    }
+  } catch(e) {
+    result.textContent = '❌ ' + e.message;
+    result.style.color = '#ef4444';
+  }
+  btn.disabled = false;
 }
 
 async function saveNotifications() {
