@@ -182,7 +182,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:#f0f4f8; display:
 .view.active { display:flex; }
 
 /* ─── Stats row ─── */
-.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.stats-row { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
 .stat-card { background:#fff; border-radius:12px; padding:16px 18px; border:1px solid var(--border); }
 .stat-label { font-size:10px; font-weight:700; letter-spacing:1px; color:#94a3b8; text-transform:uppercase; margin-bottom:6px; }
 .stat-value { font-size:28px; font-weight:800; color:#0f1b2d; line-height:1; }
@@ -517,6 +517,18 @@ tr:hover td { background:#f8fafc; }
           <div class="stat-value" id="stat-sessions" style="color:#0066cc;">&#x2014;</div>
           <div class="stat-sub">Recorded</div>
           <div class="stat-trend trend-neutral" id="stat-sessions-sub">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">FSWatcher</div>
+          <div class="stat-value" id="stat-fsw" style="color:#10b981;">&#x2014;</div>
+          <div class="stat-sub">Events today</div>
+          <div class="stat-trend trend-neutral" id="stat-fsw-sub">&nbsp;</div>
+        </div>
+        <div class="stat-card" style="cursor:pointer;" onclick="showBaselineDetails()">
+          <div class="stat-label">Baseline</div>
+          <div class="stat-value" id="stat-baseline" style="color:#8b5cf6;">&#x2014;</div>
+          <div class="stat-sub">Processes tracked</div>
+          <div class="stat-trend trend-neutral" id="stat-baseline-sub">Click for details</div>
         </div>
       </div>
 
@@ -1602,6 +1614,9 @@ async function loadStats() {
       document.getElementById(id).textContent = '\u2014';
     });
   }
+  // Also load FSW + Baseline stats
+  loadFswStats();
+  loadBaselineStats();
 }
 
 function calcScore(crit, high, total) {
@@ -2407,6 +2422,32 @@ async function loadNotifConfig() {
     if (cfg.chatId)                 document.getElementById('notif-chat-id').value            = cfg.chatId;
     if (cfg.minLevel)               document.getElementById('notif-min-level').value          = cfg.minLevel;
   } catch(e) { /* offline */ }
+}
+
+async function loadFswStats() {
+  try {
+    var d = await fetchJSON('/fsw/status');
+    document.getElementById('stat-fsw').textContent = d.eventsToday || 0;
+    document.getElementById('stat-fsw-sub').textContent = d.active ? '🟢 Active' : '🔴 Off';
+  } catch(_) {}
+}
+
+async function loadBaselineStats() {
+  try {
+    var d = await fetchJSON('/baseline/status');
+    document.getElementById('stat-baseline').textContent = d.size || 0;
+    document.getElementById('stat-baseline-sub').textContent = 'Click for details';
+  } catch(_) {
+    document.getElementById('stat-baseline').textContent = '—';
+  }
+}
+
+function showBaselineDetails() {
+  fetchJSON('/baseline/status').then(function(d) {
+    alert('Behavioral Baseline\n\nTracked processes: ' + (d.size || 0) +
+      '\nClaude session files: ' + (d.sessionFiles || 0) +
+      '\nFile change counter: ' + (d.fileChanges || 0));
+  }).catch(function() { toast('Baseline data unavailable', 'error'); });
 }
 
 async function saveAutoUpdateSchedule() {
