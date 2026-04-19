@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.4.7"
+#define AppVersion "2.4.8"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -48,7 +48,7 @@ Source: "{#SourceDir}\agent\hook.js";              DestDir: "{app}\agent"; Flags
 Source: "{#SourceDir}\agent\tray.js";              DestDir: "{app}\agent"; Flags: ignoreversion
 Source: "{#SourceDir}\agent\rules.js";             DestDir: "{app}\agent"; Flags: ignoreversion
 Source: "{#SourceDir}\agent\flowguard.ico";        DestDir: "{app}\agent"; Flags: ignoreversion
-Source: "{#SourceDir}\agent\whitelist.json";       DestDir: "{app}\agent"; Flags: ignoreversion
+Source: "{#SourceDir}\agent\whitelist.json";       DestDir: "{app}\agent"; Flags: onlyifdoesntexist
 Source: "{#SourceDir}\agent\skill-registry.json";  DestDir: "{app}\agent"; Flags: ignoreversion
 Source: "{#SourceDir}\agent\file-audit-scanner.js"; DestDir: "{app}\agent"; Flags: ignoreversion
 Source: "{#SourceDir}\agent\domain-reputation.js"; DestDir: "{app}\agent"; Flags: ignoreversion
