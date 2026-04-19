@@ -642,7 +642,7 @@ app.post('/config/project-root', (req, res) => {
   const resolved = path.resolve(project_root);
   if (!fs.existsSync(resolved)) return res.status(400).json({ error: 'directory not found' });
   saveProjectRoot(resolved);
-  FSW_ROOT_CURRENT_CURRENT = resolved;
+  FSW_ROOT_CURRENT = resolved;
   res.json({ ok: true, project_root: resolved });
 });
 
@@ -1812,7 +1812,7 @@ app.get('/diag/files', (req, res) => {
 
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
-let FSW_ROOT_CURRENT_CURRENT = detectProjectRoot();
+let FSW_ROOT_CURRENT = detectProjectRoot();
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
 
 // Always-excluded internal files (not user-configurable)
