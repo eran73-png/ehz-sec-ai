@@ -93,11 +93,15 @@ async function main() {
 
   const hardeningLevel = getHardeningLevel();
 
+  // Extract cwd from Claude Code event for project root auto-detection
+  const cwd = event.cwd || process.cwd();
+
   const payload = {
     ts:               Date.now(),
     hook_type:        hookType,
     tool_name:        tool,
     session_id:       session,
+    cwd,
     level,
     reason,
     rule_type:        ruleType,

@@ -286,9 +286,15 @@ app.post('/event', (req, res) => {
   }
 
   // Auto-learn project root from Claude Code's working directory
-  if (ev.cwd && PROJECTS_ROOT === require('os').homedir()) {
-    saveProjectRoot(ev.cwd);
-    FSW_ROOT_CURRENT = ev.cwd;
+  // Learn if: no project_root saved yet in whitelist, or current root is a user home / system path
+  if (ev.cwd) {
+    const currentIsDefault = !getStoredProjectRoot();
+    const cwdLower = ev.cwd.toLowerCase();
+    const isRealProject = !cwdLower.includes('system32') && !cwdLower.includes('systemprofile');
+    if (currentIsDefault && isRealProject) {
+      saveProjectRoot(ev.cwd);
+      FSW_ROOT_CURRENT = ev.cwd;
+    }
   }
 
   const doc = {
@@ -1091,6 +1097,14 @@ app.get('/domains/history', (req, res) => {
 });
 
 // ─── Projects Explorer (Milestone 6.11) ──────────────────────────────────────
+
+// Check if project_root is explicitly stored in whitelist.json
+function getStoredProjectRoot() {
+  try {
+    const wl = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'whitelist.json'), 'utf8'));
+    return wl.project_root || null;
+  } catch(e) { return null; }
+}
 
 // Auto-detect project root: env → whitelist → learned from hooks → real user home
 function detectProjectRoot() {
