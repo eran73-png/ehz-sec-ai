@@ -1003,6 +1003,23 @@ tr:hover td { background:#f8fafc; }
 
       <div class="settings-grid">
 
+        <!-- Project Root -->
+        <div class="settings-group" style="grid-column:1/-1;">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">📁 Project Directory</div>
+              <div class="panel-sub">Root folder FlowGuard monitors — auto-detected or set manually</div>
+            </div>
+          </div>
+          <div class="settings-body" style="padding:16px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="text" id="project-root-input" placeholder="e.g. C:\Projects or D:\Dev" style="flex:1;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;">
+              <button onclick="saveProjectRoot()" style="padding:8px 18px;background:#3b82f6;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Save</button>
+            </div>
+            <div id="project-root-status" style="margin-top:8px;font-size:12px;color:#64748b;"></div>
+          </div>
+        </div>
+
         <!-- Hardening -->
         <div class="settings-group">
           <div class="panel-header">
@@ -2453,7 +2470,35 @@ function openGuide(lang) {
 }
 
 async function loadSettings() {
-  await Promise.all([loadConfig(), loadNotifConfig(), loadEmailConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats(), loadAutoUpdateSchedule()]);
+  await Promise.all([loadProjectRoot(), loadConfig(), loadNotifConfig(), loadEmailConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats(), loadAutoUpdateSchedule()]);
+}
+
+async function loadProjectRoot() {
+  try {
+    const data = await fetchJSON('/config/project-root');
+    const input = document.getElementById('project-root-input');
+    if (input && data.project_root) {
+      input.value = data.project_root;
+      document.getElementById('project-root-status').textContent = 'Current: ' + data.project_root;
+    }
+  } catch(e) {}
+}
+
+async function saveProjectRoot() {
+  const input = document.getElementById('project-root-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const statusEl = document.getElementById('project-root-status');
+  try {
+    const res = await fetch(API + '/config/project-root', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({project_root: val}) });
+    const data = await res.json();
+    if (data.ok) {
+      statusEl.innerHTML = '<span style="color:#22c55e;">✅ Saved & applied: ' + data.project_root + '</span>';
+      window._projectRoot = data.project_root;
+    } else {
+      statusEl.innerHTML = '<span style="color:#ef4444;">❌ ' + (data.error || 'Failed') + '</span>';
+    }
+  } catch(e) { statusEl.innerHTML = '<span style="color:#ef4444;">❌ ' + e.message + '</span>'; }
 }
 
 async function loadConfig() {

@@ -285,6 +285,12 @@ app.post('/event', (req, res) => {
     return res.status(400).json({ error: 'missing tool_name' });
   }
 
+  // Auto-learn project root from Claude Code's working directory
+  if (ev.cwd && PROJECTS_ROOT === require('os').homedir()) {
+    saveProjectRoot(ev.cwd);
+    FSW_ROOT_CURRENT = ev.cwd;
+  }
+
   const doc = {
     ts:             ev.ts            || Date.now(),
     hook_type:      ev.hook_type     || 'unknown',
@@ -621,6 +627,22 @@ app.post('/config', (req, res) => {
   try { saveAppConfig(appConfig); } catch(_) {}
 
   res.json({ ok: true, hardening_level: newLevel, name: cfg.name, emoji: cfg.emoji });
+});
+
+// POST /config/project-root — set project root directory
+app.post('/config/project-root', (req, res) => {
+  const { project_root } = req.body || {};
+  if (!project_root) return res.status(400).json({ error: 'missing project_root' });
+  const resolved = path.resolve(project_root);
+  if (!fs.existsSync(resolved)) return res.status(400).json({ error: 'directory not found' });
+  saveProjectRoot(resolved);
+  FSW_ROOT_CURRENT_CURRENT = resolved;
+  res.json({ ok: true, project_root: resolved });
+});
+
+// GET /config/project-root — current project root
+app.get('/config/project-root', (req, res) => {
+  res.json({ project_root: PROJECTS_ROOT });
 });
 
 // ─── Skills (Milestone 5) ─────────────────────────────────────────────────────
@@ -1070,7 +1092,64 @@ app.get('/domains/history', (req, res) => {
 
 // ─── Projects Explorer (Milestone 6.11) ──────────────────────────────────────
 
-const PROJECTS_ROOT    = process.env.PROJECT_ROOT || 'C:/Claude-Repo';
+// Auto-detect project root: env → whitelist → learned from hooks → real user home
+function detectProjectRoot() {
+  if (process.env.PROJECT_ROOT) return process.env.PROJECT_ROOT;
+  try {
+    const wl = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'whitelist.json'), 'utf8'));
+    if (wl.project_root) return wl.project_root;
+    if (wl.allowed_paths && wl.allowed_paths.length > 0) return wl.allowed_paths[0];
+  } catch(e) {}
+  // Detect real logged-in user's home (not SYSTEM's home)
+  return detectRealUserHome();
+}
+
+function detectRealUserHome() {
+  const os = require('os');
+  const home = os.homedir();
+  // If running as SYSTEM, home is C:\Windows\system32\config\systemprofile — useless
+  if (home.toLowerCase().includes('system32') || home.toLowerCase().includes('systemprofile')) {
+    if (process.platform === 'win32') {
+      // Try to find real user on all drives
+      const skip = new Set(['public', 'default', 'default user', 'all users', 'administrator']);
+      const drives = ['C', 'D', 'E', 'F', 'G'];
+      for (const drv of drives) {
+        try {
+          const usersDir = drv + ':\\Users';
+          if (!fs.existsSync(usersDir)) continue;
+          const entries = fs.readdirSync(usersDir, { withFileTypes: true });
+          for (const e of entries) {
+            if (!e.isDirectory()) continue;
+            if (skip.has(e.name.toLowerCase())) continue;
+            if (e.name.startsWith('.')) continue;
+            return path.join(usersDir, e.name);
+          }
+        } catch(e) {}
+      }
+    } else {
+      // Linux/macOS
+      try {
+        const entries = fs.readdirSync('/home', { withFileTypes: true });
+        for (const e of entries) {
+          if (e.isDirectory() && !e.name.startsWith('.')) return '/home/' + e.name;
+        }
+      } catch(e) {}
+    }
+  }
+  return home;
+}
+let PROJECTS_ROOT = detectProjectRoot();
+
+// Save learned project root to whitelist.json
+function saveProjectRoot(newRoot) {
+  PROJECTS_ROOT = newRoot;
+  try {
+    const wlPath = path.join(__dirname, '..', 'whitelist.json');
+    const wl = JSON.parse(fs.readFileSync(wlPath, 'utf8'));
+    wl.project_root = newRoot;
+    fs.writeFileSync(wlPath, JSON.stringify(wl, null, 2));
+  } catch(e) { console.error('Failed to save project_root:', e.message); }
+}
 const PROJECTS_NOTES_FILE = path.join(__dirname, 'projects-notes.json');
 const EXCLUDE_PROJ = new Set(['node_modules', '.git', 'backups', 'dist', 'build', '__pycache__']);
 
@@ -1461,7 +1540,7 @@ app.use('/support',   express.static(path.join(__dirname, '..', 'support')));
 app.get('/fsw/status', (req, res) => {
   const startOfDay = new Date(); startOfDay.setHours(0,0,0,0);
   db.count({ tool_name: 'FSWatcher', ts: { $gte: startOfDay.getTime() } }, (err, count) => {
-    res.json({ active: fswActive, watch_path: FSW_ROOT, exclude: [...FSW_EXCLUDE], eventsToday: count || 0 });
+    res.json({ active: fswActive, watch_path: FSW_ROOT_CURRENT, exclude: [...FSW_EXCLUDE], eventsToday: count || 0 });
   });
 });
 
@@ -1719,7 +1798,7 @@ app.get('/diag/files', (req, res) => {
 
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
-const FSW_ROOT      = process.env.PROJECT_ROOT || 'C:/Claude-Repo';
+let FSW_ROOT_CURRENT_CURRENT = detectProjectRoot();
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
 
 // Always-excluded internal files (not user-configurable)
@@ -1894,7 +1973,7 @@ function checkBulkCopy(filename) {
 
 function startFSWatcher() {
   try {
-    const watcher = fs.watch(FSW_ROOT, { recursive: true }, (eventType, filename) => {
+    const watcher = fs.watch(FSW_ROOT_CURRENT, { recursive: true }, (eventType, filename) => {
       if (!filename) return;
       // סינון תיקיות מוחרגות
       const parts = filename.replace(/\\/g, '/').split('/');
@@ -1902,7 +1981,7 @@ function startFSWatcher() {
       // סינון קבצים זמניים
       if (filename.endsWith('.tmp') || filename.endsWith('~')) return;
 
-      const fullPath = path.join(FSW_ROOT, filename).replace(/\\/g, '/');
+      const fullPath = path.join(FSW_ROOT_CURRENT, filename).replace(/\\/g, '/');
 
       // אם נכתב ע"י Claude לאחרונה — לא מייצר event כפול
       if (wasRecentHookWrite(fullPath)) return;
@@ -2006,7 +2085,7 @@ function startFSWatcher() {
 
     watcher.on('error', e => console.error('[FSW] Error:', e.message));
     fswActive = true;
-    console.log(`[FlowGuard] FSWatcher active on ${FSW_ROOT}`);
+    console.log(`[FlowGuard] FSWatcher active on ${FSW_ROOT_CURRENT}`);
   } catch(e) {
     console.error('[FSW] Failed to start:', e.message);
   }

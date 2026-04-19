@@ -32,7 +32,7 @@ function apiGet(urlPath, cb) {
 }
 
 function openDashboard() {
-  exec(`start "" "${DASHBOARD_FILE}"`);
+  exec(`start "" "${COLLECTOR_URL}/dashboard/index-v2.html"`);
 }
 
 function controlService(action, cb) {
