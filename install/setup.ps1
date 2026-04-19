@@ -16,7 +16,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$Version = "2.4.2"
+$Version = "2.4.3"
 
 # ── Paths ────────────────────────────────────────────────────
 $ProjectDir   = Split-Path -Parent $PSScriptRoot
@@ -118,15 +118,23 @@ if (-not $Uninstall) {
     $HardeningLevel = if ($inputLevel -match '^[0-3]$') { $inputLevel } else { "1" }
   }
 
+  # Ask for project root
+  Write-Host ""
+  Write-Host "  [5] Project Root — the folder FlowGuard monitors" -ForegroundColor Cyan
+  Write-Host "      This is where Claude Code works (e.g., C:\Projects, D:\Code)" -ForegroundColor Gray
+  $inputRoot = Read-Host "  Path [C:/Claude-Repo]"
+  $projectRoot = if ($inputRoot) { $inputRoot.Replace('\','/') } else { "C:/Claude-Repo" }
+
   # כתוב .env
   $envLines = @(
     "TELEGRAM_TOKEN=$finalToken",
     "TELEGRAM_CHAT_ID=$finalChatId",
-    "HARDENING_LEVEL=$HardeningLevel"
+    "HARDENING_LEVEL=$HardeningLevel",
+    "PROJECT_ROOT=$projectRoot"
   )
   $envLines | Set-Content $EnvFile -Encoding UTF8
   Write-Host ""
-  Write-Host "[OK] Config saved to .env (Hardening Level: $HardeningLevel)" -ForegroundColor Green
+  Write-Host "[OK] Config saved to .env (Hardening: $HardeningLevel, Root: $projectRoot)" -ForegroundColor Green
 }
 
 # ── Claude settings.json ─────────────────────────────────────

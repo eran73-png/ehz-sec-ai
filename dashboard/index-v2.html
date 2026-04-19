@@ -780,8 +780,8 @@ tr:hover td { background:#f8fafc; }
           <div class="panel-actions" style="flex-wrap:wrap;gap:6px;">
             <!-- Path input + Browse -->
             <div style="display:flex;align-items:center;gap:4px;">
-              <input id="audit-path-input" type="text" value="C:/Claude-Repo" class="form-input"
-                style="width:180px;font-family:monospace;font-size:11px;" placeholder="C:/Claude-Repo" />
+              <input id="audit-path-input" type="text" value="" class="form-input"
+                style="width:180px;font-family:monospace;font-size:11px;" placeholder="Loading..." />
               <button class="btn btn-outline btn-sm" onclick="browseAuditPath()" title="Browse folder">📁 Browse</button>
               <input type="file" id="audit-folder-picker" webkitdirectory style="display:none" onchange="auditFolderSelected(this)">
             </div>
@@ -1783,6 +1783,18 @@ async function loadRecentSessions() {
 }
 
 async function dashboardRefresh() {
+  // Load project root from server (so paths work on any machine)
+  try {
+    var h = await fetchJSON('/health');
+    if (h.project_root) {
+      window._projectRoot = h.project_root;
+      var auditInput = document.getElementById('audit-path-input');
+      if (auditInput && !auditInput.value) {
+        auditInput.value = h.project_root;
+        auditInput.placeholder = h.project_root;
+      }
+    }
+  } catch(_) {}
   await Promise.all([checkCollector(), loadStats(), loadLiveEvents(), loadRecentSessions()]);
 }
 
@@ -2301,7 +2313,7 @@ function auditFolderSelected(input) {
 
 async function runAuditScan() {
   var btn       = document.getElementById('audit-scan-btn');
-  var scanPath  = (document.getElementById('audit-path-input').value || '').trim() || 'C:/Claude-Repo';
+  var scanPath  = (document.getElementById('audit-path-input').value || '').trim() || window._projectRoot || 'C:/Claude-Repo';
   var incremental = auditScanMode === 'incremental';
   btn.innerHTML = '<span class="spinner"></span>&nbsp;' + (incremental ? 'Scanning changes...' : 'Scanning...');
   btn.disabled = true;
@@ -3375,7 +3387,8 @@ function renderProjectCard(node) {
   var expanded = projectsExpanded.has(node.path);
   var hasChildren = node.children && node.children.length > 0;
   var icon = folderIcon(node.name);
-  var shortPath = (node.path || '').replace(/^C:\/Claude-Repo\/?/, '');
+  var rootPattern = (window._projectRoot || 'C:/Claude-Repo').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var shortPath = (node.path || '').replace(new RegExp('^' + rootPattern + '/?'), '');
   var noteVal = (node.note || '').replace(/"/g, '&quot;');
   var safeId = btoa(node.path).replace(/[^a-z0-9]/gi, '');
 

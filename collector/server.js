@@ -1070,7 +1070,7 @@ app.get('/domains/history', (req, res) => {
 
 // ─── Projects Explorer (Milestone 6.11) ──────────────────────────────────────
 
-const PROJECTS_ROOT    = 'C:/Claude-Repo';
+const PROJECTS_ROOT    = process.env.PROJECT_ROOT || 'C:/Claude-Repo';
 const PROJECTS_NOTES_FILE = path.join(__dirname, 'projects-notes.json');
 const EXCLUDE_PROJ = new Set(['node_modules', '.git', 'backups', 'dist', 'build', '__pycache__']);
 
@@ -1450,7 +1450,7 @@ app.post('/notifications/test-telegram', (req, res) => {
 });
 
 // GET /health
-app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
+app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now(), project_root: PROJECTS_ROOT }));
 
 // GET /dashboard — serve dashboard HTML (for tray icon)
 app.use('/dashboard', express.static(path.join(__dirname, '..', 'dashboard')));
@@ -1719,7 +1719,7 @@ app.get('/diag/files', (req, res) => {
 
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
-const FSW_ROOT      = 'C:/Claude-Repo';
+const FSW_ROOT      = process.env.PROJECT_ROOT || 'C:/Claude-Repo';
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
 
 // Always-excluded internal files (not user-configurable)

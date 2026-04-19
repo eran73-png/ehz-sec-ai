@@ -1,5 +1,5 @@
 # ============================================================
-# FlowGuard Diagnostics Collector — v2.4.2
+# FlowGuard Diagnostics Collector — v2.4.3
 # ============================================================
 # Collects logs, config, and system info into a single ZIP file.
 # All sensitive data (tokens, passwords, usernames) is sanitized.

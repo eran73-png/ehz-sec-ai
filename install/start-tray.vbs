@@ -1,4 +1,4 @@
-' FlowGuard Tray Launcher — v2.4.2
+' FlowGuard Tray Launcher — v2.4.3
 ' Dynamically finds FlowGuard install folder (works with ANY install path)
 Set sh = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
