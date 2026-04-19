@@ -1162,7 +1162,7 @@
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
       <div class="task-num" style="color:var(--green);">8.2 ✅</div>
       <div class="task-title">FlowGuard-Setup.exe (Inno Setup)</div>
-      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.1.1.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0 → v2.0.1 → v2.1.0 → v2.1.1</div>
+      <div class="task-desc">חבילת Windows — Inno Setup 6.7.1. גודל: 7MB (LZMA). כולל: node_modules, hooks, NSSM Service, Start Menu, Desktop shortcut, Uninstaller. בדיקת Node.js לפני התקנה. בוצע: 11.04.2026<br><br>גרסה נוכחית: <code>dist/FlowGuard-Setup-v2.4.4.exe</code> | היסטוריה: v1.0.0 → v1.0.8 → v2.0.0 → v2.0.1 → v2.1.0 → v2.1.1 → v2.1.3 → v2.1.4 → v2.1.5 → v2.1.6 → v2.1.7 → v2.2.0 → v2.3.0 → v2.4.0 → v2.4.4</div>
       <div class="task-tags"><span class="tag">installer</span><span class="tag">Windows</span><span class="tag">Inno Setup</span></div>
     </div>
     <div class="task-cell" style="border-left:3px solid #10b981;opacity:0.85;">
@@ -4556,7 +4556,22 @@ Claude מבצע tool call
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.4.0</span></td>
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.4.4</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">19.04.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          🖥️ <strong>Multi-machine deployment fixes:</strong><br>
+          • <strong>Tray fix</strong> — פותח http://localhost:3010/... במקום file:// ישירות מהדיסק<br>
+          • <strong>Projects/File Audit auto-detect</strong> — זיהוי אוטומטי של תיקיית פרויקט מ-Claude Code hooks (cwd), לא hardcoded<br>
+          • <strong>Skills auto-detect</strong> — סריקה של נתיב skills אמיתי לכל מחשב<br>
+          • <strong>IPv6 fix</strong> — Server binds to 0.0.0.0, dashboard uses localhost (לא 127.0.0.1)<br>
+          • <strong>Diagnostics fix</strong> — collect.js עובד גם כש-Collector offline<br>
+          • <strong>start-tray.vbs</strong> — תוקן line 2 error (file not found)<br>
+          • <strong>setup.ps1</strong> — פותח localhost URL אחרי התקנה<br>
+          • נבדק על 2 מחשבים שונים (LAPTOP + DESKTOP, כוננים C ו-D)
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.4.0</span></td>
         <td style="padding:10px 12px;color:var(--muted);">18.04.2026</td>
         <td style="padding:10px 12px;color:var(--text);">
           🔄 <strong>Dashboard v2 Feature Parity (MS15.4) — 9 פיצ'רים חסרים הושלמו:</strong><br>
