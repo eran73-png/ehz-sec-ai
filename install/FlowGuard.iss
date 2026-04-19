@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.4.1"
+#define AppVersion "2.4.2"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -92,9 +92,9 @@ Name: "{app}\logs"
 Name: "{app}\collector"
 
 [Icons]
-Name: "{group}\FlowGuard Dashboard";  Filename: "{app}\dashboard\index-v2.html"; IconFilename: "{app}\agent\flowguard.ico"
+Name: "{group}\FlowGuard Dashboard";  Filename: "http://localhost:3010/dashboard/index-v2.html"; IconFilename: "{app}\agent\flowguard.ico"
 Name: "{group}\Uninstall FlowGuard"; Filename: "{uninstallexe}"
-Name: "{userdesktop}\FlowGuard";      Filename: "{app}\dashboard\index-v2.html"; IconFilename: "{app}\agent\flowguard.ico"; Tasks: desktopicon
+Name: "{userdesktop}\FlowGuard";      Filename: "http://localhost:3010/dashboard/index-v2.html"; IconFilename: "{app}\agent\flowguard.ico"; Tasks: desktopicon
 Name: "{userstartup}\FlowGuard Tray"; Filename: "{app}\install\start-tray.vbs"; IconFilename: "{app}\agent\flowguard.ico"; Tasks: autostart
 
 [Run]
@@ -111,7 +111,7 @@ Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Star
 Filename: "wscript.exe"; Parameters: """{app}\install\start-tray.vbs"""; Flags: nowait runhidden; Tasks: autostart; StatusMsg: "Starting FlowGuard Tray..."
 
 ; 5. Open dashboard after install
-Filename: "{app}\dashboard\index-v2.html"; Flags: postinstall nowait shellexec skipifsilent; Description: "Open FlowGuard Dashboard"
+Filename: "http://localhost:3010/dashboard/index-v2.html"; Flags: postinstall nowait shellexec skipifsilent; Description: "Open FlowGuard Dashboard"
 
 [UninstallRun]
 ; Remove Windows Service
@@ -141,6 +141,7 @@ begin
       Result := False;
   end;
 end;
+
 
 
 
