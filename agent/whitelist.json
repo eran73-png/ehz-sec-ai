@@ -134,76 +134,6 @@
   ],
   "discovered_domains": [
     {
-      "domain": "www.simplilearn.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "teravexa.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "www.zippia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:31:54.070Z"
-    },
-    {
-      "domain": "kanini.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:39:18.837Z"
-    },
-    {
-      "domain": "unito.io",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:39:18.838Z"
-    },
-    {
-      "domain": "www.fixify.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:39:18.838Z"
-    },
-    {
-      "domain": "www.getint.io",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:39:18.838Z"
-    },
-    {
-      "domain": "www.okta.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:39:18.838Z"
-    },
-    {
-      "domain": "support.atlassian.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:39:18.838Z"
-    },
-    {
-      "domain": "www.reco.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:39:18.838Z"
-    },
-    {
       "domain": "community.atlassian.com",
       "score": 65,
       "label": "OK",
@@ -1532,6 +1462,76 @@
       "label": "OK",
       "color": "#84cc16",
       "discovered_at": "2026-04-17T16:41:36.810Z"
+    },
+    {
+      "domain": "techcrunch.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "www.anthropic.com",
+      "score": 100,
+      "label": "TRUSTED",
+      "color": "#10b981",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "venturebeat.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "www.theregister.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "siliconangle.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "9to5mac.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "www.macrumors.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "www.testingcatalog.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "gizmodo.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
+    },
+    {
+      "domain": "help.apiyi.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-18T19:06:40.389Z"
     }
   ]
 }

@@ -798,7 +798,7 @@ tr:hover td { background:#f8fafc; }
             </div>
             <!-- Scan + Export -->
             <button class="btn btn-primary btn-sm" onclick="runAuditScan()" id="audit-scan-btn">&#x25BA; Scan now</button>
-            <a href="http://localhost:3010/audit/export" style="text-decoration:none;" target="_blank">
+            <a href="http://127.0.0.1:3010/audit/export" style="text-decoration:none;" target="_blank">
               <button class="btn btn-sm" style="background:transparent;border:1px solid #10b98166;color:#10b981;">&#x2193; Export Excel</button>
             </a>
             <span id="audit-last-scan" style="font-size:11px;color:#94a3b8;"></span>
@@ -1480,7 +1480,7 @@ tr:hover td { background:#f8fafc; }
 <script>
 'use strict';
 
-const API = 'http://localhost:3010';
+const API = 'http://127.0.0.1:3010';
 
 // ── Utility: fetch JSON ──
 async function fetchJSON(path) {
