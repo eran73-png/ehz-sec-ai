@@ -12,7 +12,29 @@ const fs      = require('fs');
 const path    = require('path');
 const crypto  = require('crypto');
 
-const SKILLS_DIR    = path.join(process.env.USERPROFILE || process.env.HOME, '.claude', 'skills');
+const SKILLS_DIR    = detectSkillsDir();
+
+function detectSkillsDir() {
+  const home = process.env.USERPROFILE || process.env.HOME || '';
+  // If running as SYSTEM, find real user's .claude/skills
+  if (home.toLowerCase().includes('system32') || home.toLowerCase().includes('systemprofile')) {
+    const skip = new Set(['public', 'default', 'default user', 'all users', 'administrator']);
+    const drives = ['C', 'D', 'E', 'F', 'G'];
+    for (const drv of drives) {
+      try {
+        const usersDir = drv + ':\\Users';
+        if (!fs.existsSync(usersDir)) continue;
+        const entries = fs.readdirSync(usersDir, { withFileTypes: true });
+        for (const e of entries) {
+          if (!e.isDirectory() || skip.has(e.name.toLowerCase()) || e.name.startsWith('.')) continue;
+          const skillsPath = path.join(usersDir, e.name, '.claude', 'skills');
+          if (fs.existsSync(skillsPath)) return skillsPath;
+        }
+      } catch(_) {}
+    }
+  }
+  return path.join(home, '.claude', 'skills');
+}
 const REGISTRY_FILE = path.join(__dirname, 'skill-registry.json');
 
 // ─── Suspicious Patterns ─────────────────────────────────────────────────────
@@ -141,7 +163,13 @@ function scanAllSkills() {
     return { skills: [], summary: { total: 0, ok: 0, new: 0, changed: 0, suspicious: 0, critical: 0, scanned_at: new Date().toISOString() } };
   }
 
+  // Skip non-skill files (loose files in SKILL/ root that aren't skill folders)
+  const SKIP_FILES = new Set(['README.html', 'README.md', 'control-design.md']);
+
   for (const entry of entries) {
+    // Only scan directories (each skill is a folder with SKILL.md inside)
+    if (!entry.isDirectory() && !entry.isSymbolicLink()) continue;
+    if (SKIP_FILES.has(entry.name)) continue;
     const skillDir = path.join(SKILLS_DIR, entry.name);
     const skill = scanSkill(entry.name, skillDir, registry);
     results.push(skill);

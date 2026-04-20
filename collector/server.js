@@ -693,6 +693,49 @@ app.post('/skills/scan', (req, res) => {
   }
 });
 
+// ─── Skills Folder Watcher ───────────────────────────────────────────────────
+
+if (skillScanner && skillScanner.SKILLS_DIR) {
+  try {
+    const skillsWatchDir = skillScanner.SKILLS_DIR;
+    if (fs.existsSync(skillsWatchDir)) {
+      let skillWatchDebounce = null;
+      fs.watch(skillsWatchDir, { persistent: false }, (eventType, filename) => {
+        if (!filename) return;
+        // Debounce — wait 2s after last change before scanning
+        if (skillWatchDebounce) clearTimeout(skillWatchDebounce);
+        skillWatchDebounce = setTimeout(() => {
+          try {
+            const newPath = path.join(skillsWatchDir, filename);
+            if (fs.existsSync(newPath) && fs.statSync(newPath).isDirectory()) {
+              console.log(`[FlowGuard] New skill detected: ${filename} — auto-scanning...`);
+              const result = skillScanner.scanAllSkills();
+              const newSkill = result.skills.find(s => s.name === filename);
+              if (newSkill) {
+                console.log(`[FlowGuard] ✅ New skill installed: "${newSkill.name}" | Status: ${newSkill.status} | Files: ${newSkill.files.join(', ')}`);
+                // Log to DB as event
+                db.insert({
+                  ts: Date.now(),
+                  hook_type: 'SkillInstalled',
+                  tool_name: 'SkillWatcher',
+                  session_id: 'system',
+                  level: newSkill.status === 'APPROVED' ? 'INFO' : 'HIGH',
+                  reason: `New skill installed: ${newSkill.name}`,
+                  input_summary: JSON.stringify({ name: newSkill.name, status: newSkill.status, files: newSkill.files, hash: newSkill.hash }),
+                  output_summary: newSkill.findings.length ? JSON.stringify(newSkill.findings) : 'Clean — no suspicious patterns',
+                });
+                // Send Telegram notification
+                sendTelegram(`🆕 <b>FlowGuard — New Skill Installed</b>\n🔧 Skill: <code>${newSkill.name}</code>\n📌 Status: ${newSkill.status}\n🔒 Risk: ${newSkill.findings.length ? newSkill.findings.map(f=>f.reason).join(', ') : 'Clean'}`);
+              }
+            }
+          } catch(e) { console.error('[FlowGuard] Skill watch error:', e.message); }
+        }, 2000);
+      });
+      console.log(`[FlowGuard] Skills watcher active on ${skillsWatchDir}`);
+    }
+  } catch(e) { console.error('[FlowGuard] Skills watcher failed:', e.message); }
+}
+
 // ─── File Audit (Milestone 6.3) ──────────────────────────────────────────────
 
 let fileAuditScanner;
