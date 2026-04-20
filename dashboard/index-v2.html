@@ -2548,9 +2548,13 @@ async function loadBrowseDirs(dirPath) {
     }
     list.innerHTML = data.items.map(function(item) {
       var icon = item.type === 'drive' ? '💾' : '📁';
-      return '<div onclick="loadBrowseDirs(\'' + item.path.replace(/'/g, "\\'") + '\')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #1e293b;display:flex;align-items:center;gap:10px;transition:background 0.15s;" onmouseover="this.style.background=\'#334155\'" onmouseout="this.style.background=\'none\'">' +
+      return '<div class="browse-item" data-path="' + item.path.replace(/"/g, '&quot;') + '" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #1e293b;display:flex;align-items:center;gap:10px;transition:background 0.15s;" onmouseover="this.style.background=\'#334155\'" onmouseout="this.style.background=\'none\'">' +
         '<span>' + icon + '</span><span>' + item.name + '</span></div>';
     }).join('');
+    // Attach click handlers via data attributes (avoids backslash issues)
+    list.querySelectorAll('.browse-item').forEach(function(el) {
+      el.addEventListener('click', function() { loadBrowseDirs(this.dataset.path); });
+    });
   } catch(e) {
     list.innerHTML = '<div style="color:#ef4444;padding:20px;">Error: ' + e.message + '</div>';
   }
