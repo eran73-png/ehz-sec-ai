@@ -652,6 +652,34 @@ app.get('/config/project-root', (req, res) => {
   res.json({ project_root: PROJECTS_ROOT });
 });
 
+// GET /browse-dirs?path=C:/ — list directories for server-side folder picker
+app.get('/browse-dirs', (req, res) => {
+  try {
+    let browsePath = req.query.path || '';
+    // Default: list drives on Windows, /home on Linux
+    if (!browsePath) {
+      if (process.platform === 'win32') {
+        const drives = [];
+        for (const letter of 'CDEFG') {
+          const drv = letter + ':\\';
+          try { if (fs.existsSync(drv)) drives.push({ name: drv, path: drv, type: 'drive' }); } catch(e) {}
+        }
+        return res.json({ current: '', items: drives });
+      } else {
+        browsePath = '/home';
+      }
+    }
+    const resolved = path.resolve(browsePath);
+    if (!fs.existsSync(resolved)) return res.json({ current: resolved, items: [] });
+    const entries = fs.readdirSync(resolved, { withFileTypes: true });
+    const dirs = entries
+      .filter(e => e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules' && e.name !== '$Recycle.Bin' && e.name !== 'System Volume Information')
+      .map(e => ({ name: e.name, path: path.join(resolved, e.name).replace(/\\/g, '/'), type: 'dir' }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    res.json({ current: resolved.replace(/\\/g, '/'), items: dirs });
+  } catch(e) { res.json({ current: '', items: [], error: e.message }); }
+});
+
 // ─── Skills (Milestone 5) ─────────────────────────────────────────────────────
 
 let skillScanner;
@@ -937,7 +965,7 @@ app.post('/audit/scan', async (req, res) => {
   if (!fileAuditScanner) return res.status(500).json({ error: 'file-audit-scanner not available' });
   try {
     const body        = req.body || {};
-    const scanPath    = body.scan_path || fileAuditScanner.DEFAULT_SCAN_PATH;
+    const scanPath    = body.scan_path || PROJECTS_ROOT || fileAuditScanner.DEFAULT_SCAN_PATH;
     const incremental = !!body.incremental;
 
     // For incremental: read last scan timestamp from saved result

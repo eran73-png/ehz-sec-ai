@@ -16,7 +16,15 @@ try { unzipper = require('unzipper'); } catch (_) {}
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const DEFAULT_SCAN_PATH = 'C:/Claude-Repo';
+// Dynamic: read from whitelist.json, fallback to C:/Claude-Repo
+function getDefaultScanPath() {
+  try {
+    const wl = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, 'whitelist.json'), 'utf8'));
+    if (wl.project_root) return wl.project_root;
+  } catch(e) {}
+  return process.env.PROJECT_ROOT || 'C:/Claude-Repo';
+}
+const DEFAULT_SCAN_PATH = getDefaultScanPath();
 
 const EXCLUDE_DIRS = new Set([
   'node_modules', '.git', '.svn', 'dist', 'build',
