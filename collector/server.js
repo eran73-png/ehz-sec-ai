@@ -642,7 +642,8 @@ app.post('/config/project-root', (req, res) => {
   const resolved = path.resolve(project_root);
   if (!fs.existsSync(resolved)) return res.status(400).json({ error: 'directory not found' });
   saveProjectRoot(resolved);
-  FSW_ROOT_CURRENT = resolved;
+  // Restart FSW watcher on new path
+  restartFSWatcher();
   res.json({ ok: true, project_root: resolved });
 });
 
@@ -1152,11 +1153,18 @@ function getStoredProjectRoot() {
 // Auto-detect project root: env → whitelist → learned from hooks → real user home
 function detectProjectRoot() {
   if (process.env.PROJECT_ROOT) return process.env.PROJECT_ROOT;
-  try {
-    const wl = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'whitelist.json'), 'utf8'));
-    if (wl.project_root) return wl.project_root;
-    if (wl.allowed_paths && wl.allowed_paths.length > 0) return wl.allowed_paths[0];
-  } catch(e) {}
+  // Try both possible whitelist locations
+  const wlPaths = [
+    path.join(__dirname, '..', 'agent', 'whitelist.json'),
+    path.join(__dirname, '..', 'whitelist.json')
+  ];
+  for (const wlPath of wlPaths) {
+    try {
+      const wl = JSON.parse(fs.readFileSync(wlPath, 'utf8'));
+      if (wl.project_root) { console.log('[CONFIG] project_root from', wlPath, ':', wl.project_root); return wl.project_root; }
+      if (wl.allowed_paths && wl.allowed_paths.length > 0) return wl.allowed_paths[0];
+    } catch(e) {}
+  }
   // Detect real logged-in user's home (not SYSTEM's home)
   return detectRealUserHome();
 }
@@ -1200,12 +1208,23 @@ let PROJECTS_ROOT = detectProjectRoot();
 // Save learned project root to whitelist.json
 function saveProjectRoot(newRoot) {
   PROJECTS_ROOT = newRoot;
+  FSW_ROOT_CURRENT = newRoot;
   try {
-    const wlPath = path.join(__dirname, '..', 'whitelist.json');
+    const wlPath = path.join(__dirname, '..', 'agent', 'whitelist.json');
     const wl = JSON.parse(fs.readFileSync(wlPath, 'utf8'));
     wl.project_root = newRoot;
     fs.writeFileSync(wlPath, JSON.stringify(wl, null, 2));
-  } catch(e) { console.error('Failed to save project_root:', e.message); }
+    console.log('[CONFIG] project_root saved:', newRoot);
+  } catch(e) {
+    // Fallback: try relative path
+    try {
+      const wlPath2 = path.join(__dirname, '..', 'whitelist.json');
+      const wl2 = JSON.parse(fs.readFileSync(wlPath2, 'utf8'));
+      wl2.project_root = newRoot;
+      fs.writeFileSync(wlPath2, JSON.stringify(wl2, null, 2));
+      console.log('[CONFIG] project_root saved (fallback):', newRoot);
+    } catch(e2) { console.error('Failed to save project_root:', e.message, e2.message); }
+  }
 }
 const PROJECTS_NOTES_FILE = path.join(__dirname, 'projects-notes.json');
 const EXCLUDE_PROJ = new Set(['node_modules', '.git', 'backups', 'dist', 'build', '__pycache__']);
@@ -1855,7 +1874,7 @@ app.get('/diag/files', (req, res) => {
 
 // ─── File System Watcher (MS7.1) ─────────────────────────────────────────────
 
-let FSW_ROOT_CURRENT = detectProjectRoot();
+let FSW_ROOT_CURRENT = PROJECTS_ROOT; // Sync with PROJECTS_ROOT (which reads whitelist.json)
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
 
 // Always-excluded internal files (not user-configurable)
@@ -2028,6 +2047,18 @@ function checkBulkCopy(filename) {
   }
 }
 
+let _fswWatcherInstance = null;
+
+function restartFSWatcher() {
+  if (_fswWatcherInstance) {
+    try { _fswWatcherInstance.close(); } catch(e) {}
+    _fswWatcherInstance = null;
+    fswActive = false;
+    console.log('[FSW] Watcher closed for restart');
+  }
+  startFSWatcher();
+}
+
 function startFSWatcher() {
   try {
     const watcher = fs.watch(FSW_ROOT_CURRENT, { recursive: true }, (eventType, filename) => {
@@ -2141,6 +2172,7 @@ function startFSWatcher() {
     });
 
     watcher.on('error', e => console.error('[FSW] Error:', e.message));
+    _fswWatcherInstance = watcher;
     fswActive = true;
     console.log(`[FlowGuard] FSWatcher active on ${FSW_ROOT_CURRENT}`);
   } catch(e) {
