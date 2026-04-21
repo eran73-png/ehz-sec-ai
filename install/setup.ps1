@@ -16,7 +16,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$Version = "2.6.2"
+$Version = "2.6.6"
 
 # ── Paths ────────────────────────────────────────────────────
 $ProjectDir   = Split-Path -Parent $PSScriptRoot
@@ -77,7 +77,7 @@ if (-not $Uninstall) {
 
   # Detect if running in hidden/non-interactive mode (no console for Read-Host)
   $isInteractive = [Environment]::UserInteractive -and -not $Silent
-  try { $isInteractive = $isInteractive -and [Console]::KeyAvailable -ne $null } catch { $isInteractive = $false }
+  try { $isInteractive = $isInteractive -and ($null -ne [Console]::KeyAvailable) } catch { $isInteractive = $false }
 
   # Read existing config from .env if available
   $existingToken  = ""

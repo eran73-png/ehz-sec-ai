@@ -2197,10 +2197,11 @@ async function loadAudit() {
   var tbody = document.getElementById('audit-table-body');
   try {
     var data  = await fetchJSON('/audit');
-    auditAllFiles    = data.files || data.results || data || [];
-    auditAllFilesRaw = data.all_files || auditAllFiles;
-    if (data.lastScan) {
-      document.getElementById('audit-last-scan').textContent = 'Last scan: ' + fmtDT(data.lastScan);
+    auditAllFilesRaw = data.all_files || [];
+    auditAllFiles    = (auditAllFilesRaw.length > 0) ? auditAllFilesRaw : (data.files || data.results || data || []);
+    var scanTime = (data.summary && data.summary.scanned_at) || data.lastScan;
+    if (scanTime) {
+      document.getElementById('audit-last-scan').textContent = 'Last scan: ' + fmtDT(scanTime);
     }
     renderAuditTable();
   } catch(e) {

@@ -1632,8 +1632,17 @@ app.post('/notifications/test-telegram', (req, res) => {
   res.json({ ok: true, msg: 'Telegram message sent' });
 });
 
-// GET /health
-app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now(), project_root: PROJECTS_ROOT }));
+// GET /health — re-read whitelist.json to catch installer changes
+app.get('/health', (req, res) => {
+  const fresh = detectProjectRoot();
+  if (fresh !== PROJECTS_ROOT) {
+    PROJECTS_ROOT = fresh;
+    FSW_ROOT_CURRENT = fresh;
+    restartFSWatcher();
+    console.log('[CONFIG] project_root updated from whitelist:', fresh);
+  }
+  res.json({ ok: true, ts: Date.now(), project_root: PROJECTS_ROOT });
+});
 
 // GET /dashboard — serve dashboard HTML (for tray icon)
 app.use('/dashboard', express.static(path.join(__dirname, '..', 'dashboard')));

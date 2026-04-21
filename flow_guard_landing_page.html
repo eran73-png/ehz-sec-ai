@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowGuard - שכבת ניטור ובקרה ל־Claude Code</title>
+  <meta name="description" content="FlowGuard מספקת ניטור, שליטה ושקיפות מלאה על פעילות Claude Code בזמן אמת." />
+
+  <style>
+    :root{
+      --bg:#05070d;
+      --card:rgba(255,255,255,0.06);
+      --stroke:rgba(255,255,255,0.10);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#60a5fa;
+      --accent2:#a78bfa;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Inter, system-ui, Arial;
+      background: radial-gradient(circle at top, #0b1220, var(--bg));
+      color:var(--text);
+      line-height:1.6;
+      direction:rtl;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:80px 20px;
+    }
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      padding:120px 20px 80px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:8px 14px;
+      border:1px solid var(--stroke);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:20px;
+    }
+
+    h1{
+      font-size:64px;
+      margin:0;
+      background: linear-gradient(90deg,var(--text),var(--accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    h2{
+      font-weight:400;
+      color:var(--muted);
+      margin-top:15px;
+      font-size:20px;
+    }
+
+    .cta{
+      display:inline-block;
+      margin-top:30px;
+      padding:14px 22px;
+      background: linear-gradient(90deg,var(--accent),var(--accent2));
+      border-radius:12px;
+      font-weight:600;
+    }
+
+    h3{
+      font-size:26px;
+      margin-bottom:16px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      padding:20px;
+      border-radius:16px;
+      margin-bottom:16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+    }
+
+    ul{margin:0;padding-right:20px}
+
+    input{
+      padding:12px;
+      width:250px;
+      border-radius:10px;
+      border:1px solid #333;
+      background:transparent;
+      color:white;
+    }
+
+    button{
+      padding:12px 16px;
+      border:none;
+      border-radius:10px;
+      margin-right:10px;
+      background:linear-gradient(90deg,#60a5fa,#a78bfa);
+      color:white;
+      cursor:pointer;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="hero">
+  <div class="badge">שכבת ניטור ובקרה ל־Claude Code</div>
+  <h1>FlowGuard</h1>
+  <h2>רואים, מבינים ושולטים בכל פעולה של Claude Code בזמן אמת</h2>
+  <a class="cta" href="#signup">גישה מוקדמת</a>
+</div>
+
+<div class="container">
+
+  <!-- PROBLEM -->
+  <h3>למה FlowGuard קיים?</h3>
+  <div class="card">
+    Claude Code משנה את הדרך שבה כותבים קוד — אבל יוצר בעיה חדשה של חוסר שקיפות.<br><br>
+    קוד נוצר בלי שליטה מלאה, פעולות מתבצעות אוטומטית, וקשה להבין למה שינויים קורים.<br><br>
+    <b>בארגונים — זה אומר איבוד שליטה על תהליך הפיתוח.</b>
+  </div>
+
+  <!-- VALUE -->
+  <h3>מה FlowGuard עושה</h3>
+  <div class="grid">
+    <div class="card">ניטור בזמן אמת של כל פעולה של Claude Code</div>
+    <div class="card">מעקב מלא אחרי תהליך קבלת החלטות של AI</div>
+    <div class="card">מעקב שינויים בקבצים ו־Git</div>
+    <div class="card">זיהוי סודות ופרצות בקוד</div>
+    <div class="card">זיהוי התנהגות חריגה</div>
+    <div class="card">ניתוח השפעה על המערכת</div>
+  </div>
+
+  <!-- ADVANCED -->
+  <h3>יכולות מתקדמות</h3>
+
+  <div class="card">
+    <b>🔁 Replay מלא של סשנים</b><br>
+    שחזור כל פעולה של Claude Code שלב אחרי שלב
+  </div>
+
+  <div class="card">
+    <b>📜 מקור הקוד (Provenance)</b><br>
+    מעקב האם קוד נוצר על ידי AI או אדם ואיך הוא נוצר
+  </div>
+
+  <div class="card">
+    <b>📊 ניתוח השפעה</b><br>
+    הבנה מה יישבר לפני שמכניסים שינוי לפרודקשן
+  </div>
+
+  <div class="card">
+    <b>⚙️ Policy Engine</b><br>
+    אכיפת חוקים ארגוניים על פעולות AI
+  </div>
+
+  <div class="card">
+    <b>✋ התערבות בזמן אמת</b><br>
+    עצירה או שינוי של פעולות Claude Code בזמן ריצה
+  </div>
+
+  <div class="card">
+    <b>💥 מדד השפעה (Blast Radius)</b><br>
+    כמה מערכות וקבצים מושפעים מכל פעולה
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <h3>איך זה עובד</h3>
+  <div class="card">
+    1. שכבת Hook מיירטת פעולות של Claude Code<br>
+    2. Collector שומר ומנתח אירועים<br>
+    3. שכבת אינטליגנציה מנתחת סיכון והקשר<br>
+    4. Policy Engine אוכף חוקים<br>
+    5. דשבורד מציג הכל בזמן אמת
+  </div>
+
+  <!-- WHY IMPORTANT -->
+  <h3>למה זה חשוב</h3>
+  <div class="card">
+    Claude Code מאפשר מהירות פיתוח גבוהה — אבל בלי שליטה אמיתית.<br><br>
+    בלי FlowGuard אין שקיפות, אין Audit ואין הבנה של מה נכנס לפרודקשן.<br><br>
+    <b>FlowGuard מחזיר שליטה מלאה על פיתוח מבוסס AI.</b>
+  </div>
+
+  <!-- CTA -->
+  <h3>גישה מוקדמת</h3>
+  <div class="card" id="signup">
+    הצטרפו לרשימת ההמתנה של FlowGuard<br><br>
+    <input placeholder="הכנס אימייל" />
+    <button>הצטרף</button>
+  </div>
+
+</div>
+
+</body>
+</html>

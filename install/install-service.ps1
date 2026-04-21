@@ -1,5 +1,5 @@
 # ============================================================
-# FlowGuard - Windows Service Installer (v2.4.3)
+# FlowGuard - Windows Service Installer (v2.6.3)
 # Registers FlowGuard-Collector as a real Windows Service
 # using NSSM (Non-Sucking Service Manager)
 #
@@ -12,9 +12,12 @@ param([switch]$Remove)
 
 $ErrorActionPreference = 'Stop'
 
-# -- Check Administrator (Inno Setup already runs as admin) --
+# -- Auto-elevate if not Administrator (with -Wait so caller blocks) --
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-  Write-Host "[WARN] Not running as Administrator — service install may fail" -ForegroundColor Yellow
+  $argList = @('-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"")
+  if ($Remove) { $argList += '-Remove' }
+  Start-Process powershell -ArgumentList $argList -Verb RunAs -Wait
+  exit $LASTEXITCODE
 }
 
 # -- Paths ---------------------------------------------------
