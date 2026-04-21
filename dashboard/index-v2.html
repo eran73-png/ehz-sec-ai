@@ -2336,20 +2336,19 @@ function setScanMode(mode) {
 }
 
 function browseAuditPath() {
-  document.getElementById('audit-folder-picker').click();
+  // Use server-side folder picker (same as Settings Browse)
+  var modal = document.getElementById('browse-modal');
+  // Override browseSelect to target audit input instead of settings
+  window._browseTarget = 'audit';
+  browseProjectRoot();
 }
 
-function auditFolderSelected(input) {
-  if (input.files && input.files.length > 0) {
-    var path = input.files[0].webkitRelativePath.split('/')[0];
-    var inp = document.getElementById('audit-path-input');
-    if (inp) inp.value = path;
-  }
-}
+// Keep legacy for backwards compat
+function auditFolderSelected(input) {}
 
 async function runAuditScan() {
   var btn       = document.getElementById('audit-scan-btn');
-  var scanPath  = (document.getElementById('audit-path-input').value || '').trim() || window._projectRoot || 'C:/Claude-Repo';
+  var scanPath  = (document.getElementById('audit-path-input').value || '').trim() || window._projectRoot || '';
   var incremental = auditScanMode === 'incremental';
   btn.innerHTML = '<span class="spinner"></span>&nbsp;' + (incremental ? 'Scanning changes...' : 'Scanning...');
   btn.disabled = true;
@@ -2569,9 +2568,16 @@ function browseUp() {
 
 function browseSelect() {
   if (!window._browseCurrent) return;
-  document.getElementById('project-root-input').value = window._browseCurrent;
   closeBrowseModal();
-  saveProjectRoot();
+  if (window._browseTarget === 'audit') {
+    // Set audit path and run scan
+    document.getElementById('audit-path-input').value = window._browseCurrent;
+    window._browseTarget = null;
+  } else {
+    // Set project root and save
+    document.getElementById('project-root-input').value = window._browseCurrent;
+    saveProjectRoot();
+  }
 }
 
 async function saveProjectRoot() {
