@@ -16,7 +16,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$Version = "2.6.0"
+$Version = "2.6.2"
 
 # ── Paths ────────────────────────────────────────────────────
 $ProjectDir   = Split-Path -Parent $PSScriptRoot
@@ -75,21 +75,29 @@ if (-not $Uninstall) {
   Write-Host "  Configuration" -ForegroundColor Cyan
   Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkCyan
 
-  # Telegram Token
-  if ($Silent -and $TelegramToken -ne "") {
-    $finalToken  = $TelegramToken
-    $finalChatId = $TelegramChatId
-    Write-Host "[Silent] Telegram configured from parameters" -ForegroundColor DarkGray
-  } else {
-    # קרא מ-.env קיים אם יש
-    $existingToken  = ""
-    $existingChatId = ""
-    if (Test-Path $EnvFile) {
-      $envContent = Get-Content $EnvFile -Raw
-      if ($envContent -match 'TELEGRAM_TOKEN=(.+)') { $existingToken  = $matches[1].Trim() }
-      if ($envContent -match 'TELEGRAM_CHAT_ID=(.+)') { $existingChatId = $matches[1].Trim() }
-    }
+  # Detect if running in hidden/non-interactive mode (no console for Read-Host)
+  $isInteractive = [Environment]::UserInteractive -and -not $Silent
+  try { $isInteractive = $isInteractive -and [Console]::KeyAvailable -ne $null } catch { $isInteractive = $false }
 
+  # Read existing config from .env if available
+  $existingToken  = ""
+  $existingChatId = ""
+  $existingLevel  = "1"
+  if (Test-Path $EnvFile) {
+    $envContent = Get-Content $EnvFile -Raw
+    if ($envContent -match 'TELEGRAM_TOKEN=(.+)') { $existingToken  = $matches[1].Trim() }
+    if ($envContent -match 'TELEGRAM_CHAT_ID=(.+)') { $existingChatId = $matches[1].Trim() }
+    if ($envContent -match 'HARDENING_LEVEL=(.+)') { $existingLevel  = $matches[1].Trim() }
+  }
+
+  if ($Silent -or -not $isInteractive) {
+    # Silent/hidden mode — use existing values or defaults, no Read-Host
+    $finalToken  = if ($TelegramToken -ne "") { $TelegramToken } else { $existingToken }
+    $finalChatId = if ($TelegramChatId -ne "") { $TelegramChatId } else { $existingChatId }
+    $HardeningLevel = $existingLevel
+    Write-Host "[Auto] Using existing/default config (non-interactive mode)" -ForegroundColor DarkGray
+  } else {
+    # Interactive mode — ask user
     Write-Host ""
     Write-Host "  Telegram Alerts (optional — press Enter to skip)" -ForegroundColor Yellow
     Write-Host ""

@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.6.0"
+#define AppVersion "2.6.2"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -105,8 +105,8 @@ Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\i
 ; 2. Install Windows Service (autostart)
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\install-service.ps1"""; WorkingDir: "{app}\install"; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Installing FlowGuard as Windows Service..."
 
-; 3. Start the service (ensure it's running after install)
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Start-Sleep 2; Start-Service FlowGuardCollector -ErrorAction SilentlyContinue"""; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Starting FlowGuard..."
+; 3. Restart service fresh (stop old + start new with updated config)
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Stop-Service FlowGuardCollector -ErrorAction SilentlyContinue; Start-Sleep 2; Start-Service FlowGuardCollector -ErrorAction SilentlyContinue"""; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Starting FlowGuard service..."
 
 ; 4. Launch Tray immediately after install
 Filename: "wscript.exe"; Parameters: """{app}\install\start-tray.vbs"""; Flags: nowait runhidden; Tasks: autostart; StatusMsg: "Starting FlowGuard Tray..."
