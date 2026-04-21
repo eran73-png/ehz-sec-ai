@@ -662,7 +662,7 @@ app.get('/browse-dirs', (req, res) => {
         const drives = [];
         for (const letter of 'CDEFG') {
           const drv = letter + ':\\';
-          try { if (fs.existsSync(drv)) drives.push({ name: drv, path: drv, type: 'drive' }); } catch(e) {}
+          try { if (fs.existsSync(drv)) drives.push({ name: drv, path: letter + ':/', type: 'drive' }); } catch(e) {}
         }
         return res.json({ current: '', items: drives });
       } else {
@@ -1204,7 +1204,7 @@ function detectRealUserHome() {
   if (home.toLowerCase().includes('system32') || home.toLowerCase().includes('systemprofile')) {
     if (process.platform === 'win32') {
       // Try to find real user on all drives
-      const skip = new Set(['public', 'default', 'default user', 'all users', 'administrator']);
+      const skip = new Set(['public', 'default', 'default user', 'all users']);
       const drives = ['C', 'D', 'E', 'F', 'G'];
       for (const drv of drives) {
         try {
