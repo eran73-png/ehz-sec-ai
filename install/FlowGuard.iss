@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.5.3"
+#define AppVersion "2.5.5"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -79,6 +79,7 @@ Source: "{#SourceDir}\install\autostart.ps1";       DestDir: "{app}\install"; Fl
 Source: "{#SourceDir}\install\install-service.ps1"; DestDir: "{app}\install"; Flags: ignoreversion
 Source: "{#SourceDir}\install\uninstall.ps1";       DestDir: "{app}\install"; Flags: ignoreversion
 Source: "{#SourceDir}\install\start-tray.vbs";     DestDir: "{app}\install"; Flags: ignoreversion
+Source: "{#SourceDir}\install\set-project-root.js"; DestDir: "{app}\install"; Flags: ignoreversion
 
 ; NSSM â€” Windows Service Manager
 Source: "{#SourceDir}\tools\nssm.exe";              DestDir: "{app}\tools";   Flags: ignoreversion
@@ -194,29 +195,25 @@ begin
   end;
 end;
 
-// After install: write project_root to whitelist.json via PowerShell (safe JSON handling)
+// After install: write project_root to whitelist.json via Node.js (reliable JSON handling)
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   ResultCode: Integer;
-  PSCmd: String;
-  EscapedDir: String;
-  WhitelistPath: String;
+  ScriptPath: String;
 begin
   if CurStep = ssPostInstall then
   begin
     ProjectDir := ProjectDirPage.Values[0];
-    WhitelistPath := ExpandConstant('{app}\agent\whitelist.json');
-    // Escape backslashes for JSON
-    EscapedDir := ProjectDir;
-    StringChangeEx(EscapedDir, '\', '/', True);
+    ScriptPath := ExpandConstant('{app}\install\set-project-root.js');
 
-    PSCmd := '$wl = Get-Content ''' + WhitelistPath + ''' -Raw | ConvertFrom-Json; ' +
-             '$wl | Add-Member -NotePropertyName ''project_root'' -NotePropertyValue ''' + EscapedDir + ''' -Force; ' +
-             '$wl | ConvertTo-Json -Depth 10 | Set-Content ''' + WhitelistPath + ''' -Encoding UTF8';
+    Exec('node', '"' + ScriptPath + '" "' + ProjectDir + '"',
+         ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Log('FlowGuard: set-project-root.js exit code: ' + IntToStr(ResultCode) + ' | dir: ' + ProjectDir);
 
-    Exec('powershell.exe', '-ExecutionPolicy Bypass -Command "' + PSCmd + '"',
-         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    Log('FlowGuard: Saved project_root = ' + EscapedDir + ' to whitelist.json (exit code: ' + IntToStr(ResultCode) + ')');
+    if ResultCode <> 0 then
+      MsgBox('Warning: Could not save project directory setting.' + #13#10 +
+             'You can set it manually in Settings after installation.',
+             mbInformation, MB_OK);
   end;
 end;
 
