@@ -12,12 +12,9 @@ param([switch]$Remove)
 
 $ErrorActionPreference = 'Stop'
 
-# -- Auto-elevate if not Administrator -----------------------
+# -- Check Administrator (Inno Setup already runs as admin) --
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-  $argList = @('-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"")
-  if ($Remove) { $argList += '-Remove' }
-  Start-Process powershell -ArgumentList $argList -Verb RunAs
-  exit
+  Write-Host "[WARN] Not running as Administrator — service install may fail" -ForegroundColor Yellow
 }
 
 # -- Paths ---------------------------------------------------
