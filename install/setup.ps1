@@ -16,7 +16,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$Version = "2.4.3"
+$Version = "2.6.0"
 
 # ── Paths ────────────────────────────────────────────────────
 $ProjectDir   = Split-Path -Parent $PSScriptRoot
@@ -118,12 +118,24 @@ if (-not $Uninstall) {
     $HardeningLevel = if ($inputLevel -match '^[0-3]$') { $inputLevel } else { "1" }
   }
 
-  # Ask for project root
-  Write-Host ""
-  Write-Host "  [5] Project Root — the folder FlowGuard monitors" -ForegroundColor Cyan
-  Write-Host "      This is where Claude Code works (e.g., C:\Projects, D:\Code)" -ForegroundColor Gray
-  $inputRoot = Read-Host "  Path [C:/Claude-Repo]"
-  $projectRoot = if ($inputRoot) { $inputRoot.Replace('\','/') } else { "C:/Claude-Repo" }
+  # Read project root from whitelist.json (set by installer) — don't ask again
+  $whitelistFile = Join-Path $ProjectDir "agent\whitelist.json"
+  $projectRoot = "C:/Claude-Repo"
+  if (Test-Path $whitelistFile) {
+    try {
+      $wlJson = Get-Content $whitelistFile -Raw | ConvertFrom-Json
+      if ($wlJson.project_root) {
+        $projectRoot = $wlJson.project_root
+        Write-Host "  [5] Project Root: $projectRoot (from installer)" -ForegroundColor Green
+      }
+    } catch { }
+  }
+  if (-not $Silent -and -not $projectRoot) {
+    Write-Host ""
+    Write-Host "  [5] Project Root — the folder FlowGuard monitors" -ForegroundColor Cyan
+    $inputRoot = Read-Host "  Path [C:/Claude-Repo]"
+    $projectRoot = if ($inputRoot) { $inputRoot.Replace('\','/') } else { "C:/Claude-Repo" }
+  }
 
   # כתוב .env
   $envLines = @(
