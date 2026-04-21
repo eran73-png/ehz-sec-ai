@@ -1819,10 +1819,16 @@ async function dashboardRefresh() {
     var h = await fetchJSON('/health');
     if (h.project_root) {
       window._projectRoot = h.project_root;
+      // Always sync audit input with project_root (single source of truth)
       var auditInput = document.getElementById('audit-path-input');
-      if (auditInput && !auditInput.value) {
+      if (auditInput) {
         auditInput.value = h.project_root;
         auditInput.placeholder = h.project_root;
+      }
+      // Also sync Settings input if on that page
+      var settingsInput = document.getElementById('project-root-input');
+      if (settingsInput) {
+        settingsInput.value = h.project_root;
       }
       // Show setup banner if project_root looks like a user home (not a specific project)
       var pr = h.project_root.toLowerCase().replace(/\\/g, '/');
@@ -2591,6 +2597,12 @@ async function saveProjectRoot() {
     if (data.ok) {
       statusEl.innerHTML = '<span style="color:#22c55e;">✅ Saved & applied: ' + data.project_root + '</span>';
       window._projectRoot = data.project_root;
+      // Sync ALL inputs that use project_root
+      var auditInput = document.getElementById('audit-path-input');
+      if (auditInput) auditInput.value = data.project_root;
+      // Hide setup banner
+      var banner = document.getElementById('setup-banner');
+      if (banner) banner.style.display = 'none';
     } else {
       statusEl.innerHTML = '<span style="color:#ef4444;">❌ ' + (data.error || 'Failed') + '</span>';
     }

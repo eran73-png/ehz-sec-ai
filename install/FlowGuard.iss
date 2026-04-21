@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.5.5"
+#define AppVersion "2.6.0"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -130,12 +130,15 @@ var
   ProjectDirPage: TInputDirWizardPage;
   ProjectDir: String;
 
-// Check Node.js before install
+// Check Node.js + stop existing service before install
 function InitializeSetup(): Boolean;
 var
   ResultCode: Integer;
 begin
   Result := True;
+  // Stop existing service so new config takes effect
+  Exec('net', 'stop FlowGuardCollector', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  // Check Node.js
   if not Exec('node', '--version', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
     if MsgBox(
