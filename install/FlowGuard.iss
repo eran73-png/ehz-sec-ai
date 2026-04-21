@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.5.2"
+#define AppVersion "2.5.3"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -125,6 +125,10 @@ Filename: "powershell.exe"; \
   Flags: runhidden waituntilterminated
 
 [Code]
+var
+  ProjectDirPage: TInputDirWizardPage;
+  ProjectDir: String;
+
 // Check Node.js before install
 function InitializeSetup(): Boolean;
 var
@@ -139,6 +143,80 @@ begin
       'Continue anyway?',
       mbConfirmation, MB_YESNO) = IDNO then
       Result := False;
+  end;
+end;
+
+// Create custom wizard page for Project Directory
+procedure InitializeWizard();
+begin
+  ProjectDirPage := CreateInputDirPage(wpSelectDir,
+    'Select Project Directory',
+    'Where is your code project located?',
+    'FlowGuard will monitor this folder for file changes, security issues, and audit activity.' + #13#10 + #13#10 +
+    'Select the root folder of your project (e.g. C:\MyProject or D:\Code):',
+    False, '');
+  ProjectDirPage.Add('');
+  // Default to C:\ if no better option
+  if DirExists('C:\Claude-Project') then
+    ProjectDirPage.Values[0] := 'C:\Claude-Project'
+  else if DirExists('C:\Projects') then
+    ProjectDirPage.Values[0] := 'C:\Projects'
+  else
+    ProjectDirPage.Values[0] := 'C:\';
+end;
+
+// Validate — must select a real directory, not root drive
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  Result := True;
+  if CurPageID = ProjectDirPage.ID then
+  begin
+    ProjectDir := ProjectDirPage.Values[0];
+    if (ProjectDir = '') or (ProjectDir = 'C:\') or (ProjectDir = 'D:\') then
+    begin
+      MsgBox('Please select a specific project folder, not a drive root.' + #13#10 +
+             'Example: C:\MyProject or D:\Code',
+             mbError, MB_OK);
+      Result := False;
+    end
+    else if not DirExists(ProjectDir) then
+    begin
+      if MsgBox('The folder "' + ProjectDir + '" does not exist.' + #13#10 +
+                'Create it now?',
+                mbConfirmation, MB_YESNO) = IDYES then
+      begin
+        ForceDirectories(ProjectDir);
+        Result := True;
+      end
+      else
+        Result := False;
+    end;
+  end;
+end;
+
+// After install: write project_root to whitelist.json via PowerShell (safe JSON handling)
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ResultCode: Integer;
+  PSCmd: String;
+  EscapedDir: String;
+  WhitelistPath: String;
+begin
+  if CurStep = ssPostInstall then
+  begin
+    ProjectDir := ProjectDirPage.Values[0];
+    WhitelistPath := ExpandConstant('{app}\agent\whitelist.json');
+    // Escape backslashes for JSON
+    EscapedDir := ProjectDir;
+    StringChangeEx(EscapedDir, '\', '/', True);
+
+    PSCmd := '$wl = Get-Content ''' + WhitelistPath + ''' -Raw | ConvertFrom-Json; ' +
+             '$wl | Add-Member -NotePropertyName ''project_root'' -NotePropertyValue ''' + EscapedDir + ''' -Force; ' +
+             '$wl | ConvertTo-Json -Depth 10 | Set-Content ''' + WhitelistPath + ''' -Encoding UTF8';
+
+    Exec('powershell.exe', '-ExecutionPolicy Bypass -Command "' + PSCmd + '"',
+         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Log('FlowGuard: Saved project_root = ' + EscapedDir + ' to whitelist.json (exit code: ' + IntToStr(ResultCode) + ')');
   end;
 end;
 
