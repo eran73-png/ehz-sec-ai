@@ -271,8 +271,8 @@ function checkScopeRule(event) {
     if (!isPathAllowed(rawPath, allowedPaths)) {
       const label = isUNCPath(rawPath) ? 'UNC' : 'Drive';
       return {
-        level:    'HIGH',
-        reason:   `Access outside project (${label}) — path: ${rawPath}`,
+        level:    'CRITICAL',
+        reason:   `⚠️ Claude accessing OUTSIDE project (${label}) — path: ${rawPath}`,
         ruleType: 'scope',
       };
     }
@@ -290,8 +290,8 @@ function checkScopeRule(event) {
         if (!isPathAllowed(p, allowedPaths)) {
           const label = isUNCPath(p) ? 'UNC' : 'Drive';
           return {
-            level:    'HIGH',
-            reason:   `Access outside project (Bash ${label}) — path: ${p}`,
+            level:    'CRITICAL',
+            reason:   `⚠️ Claude accessing OUTSIDE project (Bash ${label}) — path: ${p}`,
             ruleType: 'scope',
           };
         }

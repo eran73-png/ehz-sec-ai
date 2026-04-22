@@ -1,0 +1,206 @@
+{
+  "version": "2.6.6",
+  "date": "2026-04-21T22:50:31.503Z",
+  "target": "http://localhost:3010",
+  "total": 38,
+  "passed": 33,
+  "failed": 5,
+  "percentage": 87,
+  "tests": [
+    {
+      "num": "01",
+      "name": "GET /health — returns ok:true",
+      "pass": true
+    },
+    {
+      "num": "02",
+      "name": "GET /health — project_root is not systemprofile",
+      "pass": true
+    },
+    {
+      "num": "03",
+      "name": "GET /health — has timestamp (ts)",
+      "pass": true
+    },
+    {
+      "num": "04",
+      "name": "GET /events — returns array",
+      "pass": false,
+      "reason": "response is not an array"
+    },
+    {
+      "num": "05",
+      "name": "GET /events?limit=5 — respects limit",
+      "pass": false,
+      "reason": "response is not an array"
+    },
+    {
+      "num": "06",
+      "name": "GET /recent — returns array for live feed",
+      "pass": true
+    },
+    {
+      "num": "07",
+      "name": "GET /stats — returns aggregate counts",
+      "pass": true
+    },
+    {
+      "num": "08",
+      "name": "POST /event — accepts a security event",
+      "pass": true
+    },
+    {
+      "num": "09",
+      "name": "GET /sessions — returns array",
+      "pass": false,
+      "reason": "response is not an array"
+    },
+    {
+      "num": "10",
+      "name": "GET /sessions — each session has required fields",
+      "pass": true
+    },
+    {
+      "num": "11",
+      "name": "GET /audit — returns audit data",
+      "pass": true
+    },
+    {
+      "num": "12",
+      "name": "POST /audit/scan — starts a scan and returns summary",
+      "pass": true
+    },
+    {
+      "num": "13",
+      "name": "GET /audit/schedule — returns schedule config",
+      "pass": true
+    },
+    {
+      "num": "14",
+      "name": "GET /audit/verify — verifies audit chain",
+      "pass": true
+    },
+    {
+      "num": "15",
+      "name": "GET /config — returns config object",
+      "pass": true
+    },
+    {
+      "num": "16",
+      "name": "GET /config/project-root — returns non-empty path",
+      "pass": true
+    },
+    {
+      "num": "17",
+      "name": "POST /config/project-root — save and verify roundtrip",
+      "pass": true
+    },
+    {
+      "num": "18",
+      "name": "POST /config — save hardening config",
+      "pass": true
+    },
+    {
+      "num": "19",
+      "name": "GET /skills — returns skills data",
+      "pass": true
+    },
+    {
+      "num": "20",
+      "name": "POST /skills/scan — triggers skill scan",
+      "pass": true
+    },
+    {
+      "num": "21",
+      "name": "GET /projects — returns project tree",
+      "pass": true
+    },
+    {
+      "num": "22",
+      "name": "GET /projects/notes — returns notes object",
+      "pass": true
+    },
+    {
+      "num": "23",
+      "name": "GET /browse-dirs — returns drives list",
+      "pass": false,
+      "reason": "status 404"
+    },
+    {
+      "num": "24",
+      "name": "GET /browse-dirs?path=C:/ — returns folders",
+      "pass": false,
+      "reason": "status 404"
+    },
+    {
+      "num": "25",
+      "name": "GET /domains — returns domain list",
+      "pass": true
+    },
+    {
+      "num": "26",
+      "name": "GET /domains/history — returns access history",
+      "pass": true
+    },
+    {
+      "num": "27",
+      "name": "GET /config/git-remotes — returns remotes",
+      "pass": true
+    },
+    {
+      "num": "28",
+      "name": "GET /fsw/status — returns active status",
+      "pass": true
+    },
+    {
+      "num": "29",
+      "name": "GET /fsw/quiet-hours — returns quiet hours config",
+      "pass": true
+    },
+    {
+      "num": "30",
+      "name": "GET /fsw/exclude — returns exclusion list",
+      "pass": true
+    },
+    {
+      "num": "31",
+      "name": "GET /siem/config — returns SIEM config",
+      "pass": true
+    },
+    {
+      "num": "32",
+      "name": "GET /notifications/config — returns notification settings",
+      "pass": true
+    },
+    {
+      "num": "33",
+      "name": "GET /silent — returns silent mode state",
+      "pass": true
+    },
+    {
+      "num": "34",
+      "name": "GET /baseline/status — returns baseline info",
+      "pass": true
+    },
+    {
+      "num": "35",
+      "name": "GET /retention — returns retention policy",
+      "pass": true
+    },
+    {
+      "num": "36",
+      "name": "GET /update/status — returns update state",
+      "pass": true
+    },
+    {
+      "num": "37",
+      "name": "GET /update/schedule — returns schedule",
+      "pass": true
+    },
+    {
+      "num": "38",
+      "name": "GET /diag/files — returns diagnostic files list",
+      "pass": true
+    }
+  ]
+}

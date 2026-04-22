@@ -1913,6 +1913,7 @@ app.get('/diag/files', (req, res) => {
 
 let FSW_ROOT_CURRENT = PROJECTS_ROOT; // Sync with PROJECTS_ROOT (which reads whitelist.json)
 const FSW_SENSITIVE = ['.env', '.key', 'secret', 'password', 'credentials', 'private'];
+const fswKnownFiles = new Set(); // Track known files to detect copies (change event for new files)
 
 // Always-excluded internal files (not user-configurable)
 const FSW_ALWAYS_EXCLUDE = new Set(['ccsm.db', 'hook.log', '.ccsm-disable', '.ccsm-silent']);
@@ -2091,6 +2092,7 @@ function restartFSWatcher() {
     try { _fswWatcherInstance.close(); } catch(e) {}
     _fswWatcherInstance = null;
     fswActive = false;
+    fswKnownFiles.clear();
     console.log('[FSW] Watcher closed for restart');
   }
   startFSWatcher();
@@ -2108,8 +2110,8 @@ function startFSWatcher() {
 
       const fullPath = path.join(FSW_ROOT_CURRENT, filename).replace(/\\/g, '/');
 
-      // אם נכתב ע"י Claude לאחרונה — לא מייצר event כפול
-      if (wasRecentHookWrite(fullPath)) return;
+      // Check if action was by Claude Code (recent hook write)
+      const isClaude = wasRecentHookWrite(fullPath);
 
       // debounce — אותו קובץ תוך 3 שניות = event אחד בלבד
       const debounceKey = fullPath.toLowerCase();
@@ -2127,17 +2129,32 @@ function startFSWatcher() {
 
         // Deleted file: rename event + file no longer exists
         const isDeleted = isRename && !fileExists;
-        const isNewFile = isRename && fileExists;
+        // New file: rename+exists OR first-time change event (copy from Explorer triggers 'change' not 'rename')
+        const firstSeen = !fswKnownFiles.has(fileKey);
+        if (fileExists) fswKnownFiles.add(fileKey);
+        const isNewFile = (isRename && fileExists) || (!isRename && fileExists && firstSeen);
 
-        // --- מחיקה ו-sensitive — תמיד HIGH/CRITICAL, ללא בדיקת דפוסים ---
+        // --- מחיקה: ידנית = CRITICAL, Claude = INFO ---
         if (isDeleted) {
+          const delLevel = isClaude ? 'INFO' : 'CRITICAL';
+          const delIcon = isClaude ? '🤖' : '🗑️';
+          const delSource = isClaude ? 'by Claude Code' : 'MANUAL — NOT by Claude';
           db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
-            session_id: 'fsw', level: 'CRITICAL', rule_type: 'fsw', hardening_level: 1,
-            reason: `🗑️ FSW: File DELETED — ${filename}`,
+            session_id: 'fsw', level: delLevel, rule_type: 'fsw', hardening_level: 1,
+            reason: `${delIcon} FSW: File DELETED (${delSource}) — ${filename}`,
             input_summary: fullPath, output_summary: eventType });
-          fswSendTelegram(`🗑️ <b>FlowGuard — File Deleted</b>\n<code>${filename}</code>`);
+          if (!isClaude) fswSendTelegram(`🗑️ <b>FlowGuard — File Deleted (MANUAL)</b>\n<code>${filename}</code>`);
           return;
         }
+        // Claude actions (not deletion) → INFO, skip behavioral learning
+        if (isClaude && !isDeleted) {
+          db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
+            session_id: 'fsw', level: 'INFO', rule_type: 'fsw', hardening_level: 1,
+            reason: `🤖 FSW: Claude Code ${isNewFile ? 'created' : 'modified'} — ${filename}`,
+            input_summary: fullPath, output_summary: eventType });
+          return;
+        }
+
         if (isSensitive) {
           const reason = `🔍 FSW: Sensitive file ${isNewFile ? 'added' : 'modified'} — ${filename}`;
           db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
@@ -2194,17 +2211,17 @@ function startFSWatcher() {
           return; // suppress — no Telegram
         }
 
-        // --- ברירת מחדל: LOW (לא מוכר, לא דפוס, לא sensitive) ---
-        const level  = 'LOW';
+        // --- ברירת מחדל: NEW file (manual copy) = HIGH, modified = LOW ---
+        const level  = isNewFile ? 'HIGH' : 'LOW';
         const reason = isNewFile
-          ? `📥 FSW: New file in project — ${filename}`
+          ? `📥 FSW: New file copied to project (MANUAL) — ${filename}`
           : `📝 FSW: File modified — ${filename}`;
         if (isNewFile) checkBulkCopy(filename);
 
         db.insert({ ts: Date.now(), hook_type: 'FSWatcher', tool_name: 'FSWatcher',
           session_id: 'fsw', level, rule_type: 'fsw', hardening_level: 1,
           reason, input_summary: fullPath, output_summary: eventType });
-        // LOW — no Telegram
+        if (isNewFile) fswSendTelegram(`📥 <b>FlowGuard — New file copied (MANUAL)</b>\n<code>${filename}</code>`);
       }, 3000)); // 3 שניות debounce
     });
 

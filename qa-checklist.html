@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowGuard v2.6.6 — QA Manual Checklist</title>
+<style>
+:root {
+  --bg: #0a1628;
+  --panel: #111d32;
+  --border: #1e3050;
+  --accent: #00d4ff;
+  --green: #00c853;
+  --red: #ef4444;
+  --orange: #f59e0b;
+  --text: #e2e8f0;
+  --muted: #64748b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  padding: 32px 24px 60px;
+}
+
+/* Header */
+.header { text-align: center; margin-bottom: 40px; }
+.header-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #00d4ff, #6366f1);
+  color: #fff; font-size: 10px; font-weight: 700;
+  letter-spacing: 3px; padding: 4px 16px; border-radius: 20px;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.header h1 {
+  font-size: 36px; font-weight: 900;
+  background: linear-gradient(135deg, #e2e8f0, #00d4ff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.header p { color: var(--muted); font-size: 14px; margin-top: 8px; }
+
+/* Progress Bar */
+.progress-bar-wrap {
+  max-width: 700px; margin: 0 auto 40px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px;
+}
+.progress-info {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; font-size: 13px;
+}
+.progress-label { font-weight: 700; color: var(--accent); }
+.progress-count { color: var(--muted); }
+.progress-track {
+  height: 8px; background: rgba(255,255,255,0.06);
+  border-radius: 4px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #00d4ff, #6366f1);
+  border-radius: 4px; transition: width 0.4s ease;
+}
+
+/* Section */
+.section {
+  max-width: 700px; margin: 0 auto 28px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  user-select: none; transition: background 0.15s;
+}
+.section-header:hover { background: rgba(0,212,255,0.04); }
+.section-letter {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(99,102,241,0.2));
+  color: var(--accent); border: 1px solid rgba(0,212,255,0.3);
+}
+.section-title { font-size: 15px; font-weight: 700; flex: 1; }
+.section-badge {
+  font-size: 11px; font-weight: 700; padding: 2px 10px;
+  border-radius: 12px; white-space: nowrap;
+}
+.badge-pending { background: rgba(100,116,139,0.15); color: var(--muted); border: 1px solid rgba(100,116,139,0.3); }
+.badge-partial { background: rgba(245,158,11,0.15); color: var(--orange); border: 1px solid rgba(245,158,11,0.3); }
+.badge-done { background: rgba(0,200,83,0.15); color: var(--green); border: 1px solid rgba(0,200,83,0.3); }
+.section-toggle { font-size: 18px; color: var(--muted); transition: transform 0.2s; }
+.section-header.open .section-toggle { transform: rotate(180deg); }
+
+.section-body { padding: 8px 12px 12px; }
+
+/* Check item */
+.check-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 12px; border-radius: 8px;
+  transition: background 0.15s;
+}
+.check-item:hover { background: rgba(255,255,255,0.03); }
+.check-item input[type="checkbox"] { display: none; }
+.check-box {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 2px solid var(--border); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; margin-top: 1px;
+}
+.check-item input:checked + .check-box {
+  background: var(--accent); border-color: var(--accent);
+}
+.check-box::after {
+  content: ''; display: block; width: 6px; height: 10px;
+  border: solid #0a1628; border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) scale(0); transition: transform 0.15s;
+}
+.check-item input:checked + .check-box::after { transform: rotate(45deg) scale(1); }
+.check-text { font-size: 13px; line-height: 1.6; cursor: pointer; }
+.check-item input:checked ~ .check-text { color: var(--muted); text-decoration: line-through; }
+
+/* Notes */
+.note-area {
+  width: calc(100% - 24px); margin: 8px 12px 4px;
+  background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+  color: var(--text); font-family: inherit; font-size: 12px;
+  resize: vertical; min-height: 40px;
+}
+.note-area::placeholder { color: rgba(100,116,139,0.6); }
+.note-area:focus { outline: none; border-color: rgba(0,212,255,0.4); }
+
+/* Footer */
+.footer {
+  text-align: center; margin-top: 40px; padding: 20px;
+  font-size: 12px; color: var(--muted);
+  border-top: 1px solid var(--border);
+  max-width: 700px; margin-left: auto; margin-right: auto;
+}
+.footer strong { color: var(--green); }
+
+/* Actions */
+.actions {
+  display: flex; gap: 10px; justify-content: center;
+  margin-bottom: 32px; flex-wrap: wrap;
+}
+.btn {
+  padding: 8px 20px; border-radius: 8px; font-size: 13px;
+  font-weight: 700; cursor: pointer; border: none; transition: all 0.15s;
+}
+.btn-accent { background: var(--accent); color: #0a1628; }
+.btn-accent:hover { background: #33ddff; transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+.btn-outline:hover { background: rgba(0,212,255,0.1); }
+.btn-red { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.btn-red:hover { background: rgba(239,68,68,0.25); }
+
+/* Print */
+@media print {
+  body { background: #fff; color: #000; padding: 16px; }
+  .header h1 { -webkit-text-fill-color: #0a1628; }
+  .section { border-color: #ddd; break-inside: avoid; }
+  .section-header { border-bottom-color: #ddd; }
+  .check-box { border-color: #999; }
+  .progress-bar-wrap, .actions { display: none; }
+  .note-area { border-color: #ccc; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">QA Manual Checklist</div>
+  <h1>FlowGuard v2.6.6</h1>
+  <p>AI Security Monitor for Claude Code — Comprehensive Test Plan</p>
+  <p style="color:var(--accent);font-size:12px;margin-top:4px;" id="test-date"></p>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-info">
+    <span class="progress-label">Overall Progress</span>
+    <span class="progress-count" id="progress-text">0 / 0 tests passed</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="btn btn-accent" onclick="expandAll()">Expand All</button>
+  <button class="btn btn-outline" onclick="collapseAll()">Collapse All</button>
+  <button class="btn btn-outline" onclick="exportResults()">Export Report</button>
+  <button class="btn btn-red" onclick="resetAll()">Reset All</button>
+</div>
+
+<div id="sections-container"></div>
+
+<div class="footer">
+  Built by <strong>EHZ-AI</strong> | 054-4825276<br>
+  FlowGuard QA Suite — Generated for v2.6.6
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    id: 'install', letter: 'A', title: 'Installation',
+    items: [
+      'Fresh install prompts user for project directory path',
+      'Selected project directory is saved to agent/whitelist.json',
+      'FlowGuard service (collector) starts automatically after install',
+      'Dashboard opens in browser after successful install (localhost:3010)',
+      'No error banner / warning on first dashboard load',
+      'System tray icon appears (FlowGuard shield icon)',
+      'Tray icon context menu has: Open Dashboard, Pause, Exit',
+      'install/setup.ps1 runs without errors on a clean machine',
+      'Node.js >= 18 requirement is validated during install',
+      'Uninstall (install/uninstall.ps1) removes service cleanly'
+    ]
+  },
+  {
+    id: 'dashboard', letter: 'B', title: 'Dashboard (Main View)',
+    items: [
+      'Dashboard page loads at http://localhost:3010/dashboard/',
+      'All 11 sidebar nav items are visible and clickable (Dashboard, Events, Sessions, Web Access, File Audit, Skills, Git Monitor, Projects, SIEM, Settings, Help)',
+      'Clicking each nav item switches the view (no page reload)',
+      'Active nav item is highlighted with cyan accent (#00d4ff)',
+      'Stats row shows 6 cards: Total Events, Critical, High, Sessions, FSWatcher, Baseline',
+      'Stats cards display real numbers (not 0 or N/A if data exists)',
+      'Live Event Feed panel shows recent events with timestamps',
+      'Security Score panel displays a score (0-100) with colored gauge',
+      'Recent Sessions table shows session entries with start time + duration',
+      'Topbar shows "ONLINE" / "OFFLINE" status badge with pulsing dot',
+      'Topbar shows computer name / hostname',
+      'Notification bell icon is visible in topbar',
+      'Version number displayed somewhere in dashboard (v2.6.6)'
+    ]
+  },
+  {
+    id: 'fsw', letter: 'C', title: 'File System Watcher (FSW)',
+    items: [
+      'FSWatcher shows "Active" status on dashboard stat card',
+      'GET /fsw/status returns { active: true, watch_path: "...", eventsToday: N }',
+      'Create a new .txt file in project directory — event appears in Live Feed within 5s',
+      'Modify an existing file in project directory — event appears in Live Feed',
+      'Delete a file in project directory — event appears in Live Feed',
+      'Events from node_modules/ are NOT captured (excluded by default)',
+      'Events from .git/ are NOT captured (excluded by default)',
+      'FSW exclusion list is configurable via Settings > FSW Exclude',
+      'Adding a custom exclusion folder via POST /fsw/exclude/custom works',
+      'Quiet Hours: setting quiet hours via POST /fsw/quiet-hours pauses alerts',
+      'FSW restarts correctly when project root is changed'
+    ]
+  },
+  {
+    id: 'fileaudit', letter: 'D', title: 'File Audit',
+    items: [
+      'File Audit view loads with path input pre-filled (project root)',
+      '"Scan Now" (Full) button initiates a scan — spinner appears',
+      'Scan completes and results table shows scanned files',
+      'Each file row shows: filename, path, size, risk level, findings',
+      'Clean files show green checkmark / "Clean" tag',
+      'Files with findings show risk badge (CRITICAL / HIGH / MEDIUM / INFO)',
+      'Browse button opens server-side folder picker (GET /browse-dirs)',
+      '"Changed Only" scan mode filters to modified files since last scan',
+      'Export Excel button generates and downloads .xlsx file',
+      'POST /audit/scan returns { ok: true, summary: {...} }',
+      'GET /audit returns { files: [...], all_files: [...] }',
+      'Scan detects test secrets (e.g., fake AWS key AKIAIOSFODNN7EXAMPLE)',
+      'EXCLUDE_DIRS (node_modules, .git, dist, build) are skipped during scan',
+      'Files > 500KB are skipped gracefully',
+      'Office files (.docx, .xlsx) are scanned for secrets if unzipper is available'
+    ]
+  },
+  {
+    id: 'events', letter: 'E', title: 'Events',
+    items: [
+      'Events view loads and shows event list',
+      'GET /events returns an array of event objects',
+      'Each event has: type, tool_name, risk, ts (timestamp), details',
+      'Events are sorted newest-first',
+      'Event risk levels are color-coded (Critical=red, High=orange, Medium=yellow, Info=blue)',
+      'GET /events?limit=10 limits results correctly',
+      'GET /events?tool=Bash filters by tool name',
+      'GET /stats returns correct aggregate counts (total, critical, high)',
+      'DELETE /events clears event history (with confirmation)',
+      'GET /recent returns last N events for Live Feed'
+    ]
+  },
+  {
+    id: 'sessions', letter: 'F', title: 'Sessions',
+    items: [
+      'Sessions view loads and shows session list',
+      'GET /sessions returns an array of session objects',
+      'Each session shows: session ID, start time, duration, event count',
+      'GET /sessions/:id returns detailed session with all events',
+      'Session details are expandable / collapsible in the UI',
+      'Export conversation button works (POST /sessions/export-conversation)',
+      'Conversation log download works (GET /sessions/conversation-log/:filename)'
+    ]
+  },
+  {
+    id: 'webaccess', letter: 'G', title: 'Web Access Monitoring',
+    items: [
+      'Web Access view loads and shows domain list',
+      'GET /domains returns array of tracked domains',
+      'Domains show classification: Trusted / Neutral / Suspicious',
+      'Domain reputation score is visible',
+      'POST /domains adds a new domain to monitoring list',
+      'DELETE /domains/:domain removes a domain',
+      'POST /domains/autodiscover scans for domains automatically',
+      'POST /domains/approve/:domain marks domain as approved',
+      'GET /domains/reputation/:domain returns reputation data',
+      'GET /domains/history returns domain access history'
+    ]
+  },
+  {
+    id: 'skills', letter: 'H', title: 'Skills & MCP',
+    items: [
+      'Skills view loads and shows installed skills table',
+      'GET /skills returns skills data with name, path, size, risk level',
+      'Scan Skills button triggers POST /skills/scan',
+      'Scan completes and updates skills table',
+      'MCP servers are listed (if any configured)',
+      'Skill risk assessment labels are accurate'
+    ]
+  },
+  {
+    id: 'git', letter: 'I', title: 'Git Monitor',
+    items: [
+      'Git Monitor view loads with two panels: Remotes + Events',
+      'Git Remote Monitor shows configured remotes',
+      'GET /config/git-remotes returns list of authorized remotes',
+      'POST /config/git-remotes saves remote configuration',
+      'Git Events panel shows git push/fetch/clone activity',
+      'Unauthorized remote push triggers an alert event'
+    ]
+  },
+  {
+    id: 'projects', letter: 'J', title: 'Projects Explorer',
+    items: [
+      'Projects view loads and shows folder grid',
+      'GET /projects returns directory tree with file/folder counts',
+      'Projects meta shows root path and total counts',
+      'Each folder card shows name, file count, subfolder count',
+      'Refresh button reloads the project tree',
+      'GET /projects/notes returns saved notes per folder',
+      'POST /projects/notes saves a note for a specific folder',
+      'Notes persist across page reloads'
+    ]
+  },
+  {
+    id: 'settings', letter: 'K', title: 'Settings',
+    items: [
+      'Settings view loads with all configuration panels',
+      'Project Directory input shows current project root path',
+      'Browse button opens server-side directory picker',
+      'Save button persists new project root (POST /config/project-root)',
+      'GET /config/project-root returns the saved path',
+      'Saved path persists after service restart',
+      'Hardening Level dropdown has 3 options: SOFT / MEDIUM / HARD',
+      'Changing hardening level saves immediately (POST /config)',
+      'Block Critical Actions toggle works and saves',
+      'File System Watcher toggle enables/disables FSW',
+      'Audit Chain toggle enables/disables cryptographic chain',
+      'Verify Chain button works and shows result',
+      'Log Retention (days) input accepts 1-365 and saves',
+      'Auto-update Rules interval selector works (Off, 4h, 8h, 12h, 24h)',
+      'GET /config returns full configuration object',
+      'Notification settings (Telegram token/chat, Email) are configurable',
+      'Test Telegram button sends a test message (POST /notifications/test-telegram)',
+      'Test Email button sends a test email (POST /notifications/test-email)',
+      'GET /retention returns retention policy data'
+    ]
+  },
+  {
+    id: 'siem', letter: 'L', title: 'SIEM Integration',
+    items: [
+      'SIEM view loads and shows supported platforms grid',
+      'Supported platforms listed: Splunk, QRadar, Elastic/ELK, Azure Sentinel, ArcSight, REST API',
+      'REST API card shows "Active" tag (localhost:3010)',
+      'GET /siem/config returns SIEM configuration',
+      'POST /siem/config saves SIEM settings',
+      'GET /siem/stream serves Server-Sent Events (SSE) stream',
+      'SIEM export format selection works (JSON, CEF, Syslog)'
+    ]
+  },
+  {
+    id: 'notifications', letter: 'M', title: 'Notifications & Alerts',
+    items: [
+      'GET /notifications/config returns notification settings',
+      'POST /notifications/config saves notification preferences',
+      'Telegram alerts fire for CRITICAL events (if token configured)',
+      'Email alerts fire for CRITICAL events (if SMTP configured)',
+      'Silent mode toggle works (POST /silent)',
+      'GET /silent returns current silent mode state',
+      'Notification bell in topbar shows unread count'
+    ]
+  },
+  {
+    id: 'api', letter: 'N', title: 'API Health & Integrity',
+    items: [
+      'GET /health returns { ok: true } with project_root (not systemprofile)',
+      'GET /health response includes timestamp (ts)',
+      'POST /event accepts a new security event and stores it',
+      'GET /baseline/status returns baseline learning status',
+      'POST /chain/reset resets the audit chain',
+      'GET /audit/verify verifies audit chain integrity',
+      'GET /audit/schedule returns scheduled scan configuration',
+      'GET /browse-dirs returns available drives (Windows)',
+      'GET /browse-dirs?path=C:/ returns folder list for given path',
+      'POST /diag/collect creates a diagnostic package',
+      'GET /diag/files lists available diagnostic files',
+      'All API endpoints return proper Content-Type: application/json',
+      'Invalid routes return 404 (not crash)'
+    ]
+  },
+  {
+    id: 'update', letter: 'O', title: 'Auto-Update System',
+    items: [
+      'GET /update/status returns current update state',
+      'GET /update/check checks for available updates',
+      'POST /update/apply applies a pending update',
+      'GET /update/schedule returns auto-update schedule',
+      'POST /update/schedule saves schedule preferences'
+    ]
+  }
+];
+
+// ─── Render ───
+const container = document.getElementById('sections-container');
+
+SECTIONS.forEach(sec => {
+  const div = document.createElement('div');
+  div.className = 'section';
+  div.id = 'sec-' + sec.id;
+
+  let itemsHTML = sec.items.map((text, i) => {
+    const uid = sec.id + '-' + i;
+    return `<label class="check-item">
+      <input type="checkbox" id="${uid}" onchange="updateProgress()">
+      <span class="check-box"></span>
+      <span class="check-text">${text}</span>
+    </label>`;
+  }).join('');
+
+  div.innerHTML = `
+    <div class="section-header" onclick="toggleSection('${sec.id}')">
+      <div class="section-letter">${sec.letter}</div>
+      <div class="section-title">${sec.title} <span style="color:var(--muted);font-weight:400;font-size:12px;">(${sec.items.length})</span></div>
+      <span class="section-badge badge-pending" id="badge-${sec.id}">0/${sec.items.length}</span>
+      <span class="section-toggle">&#9660;</span>
+    </div>
+    <div class="section-body" style="display:none;" id="body-${sec.id}">
+      ${itemsHTML}
+      <textarea class="note-area" placeholder="Notes for ${sec.title}..." id="notes-${sec.id}" oninput="saveState()"></textarea>
+    </div>`;
+  container.appendChild(div);
+});
+
+// ─── Logic ───
+function toggleSection(id) {
+  const body = document.getElementById('body-' + id);
+  const header = body.previousElementSibling;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    header.classList.add('open');
+  } else {
+    body.style.display = 'none';
+    header.classList.remove('open');
+  }
+}
+
+function expandAll() {
+  SECTIONS.forEach(s => {
+    document.getElementById('body-' + s.id).style.display = 'block';
+    document.getElementById('body-' + s.id).previousElementSibling.classList.add('open');
+  });
+}
+
+function collapseAll() {
+  SECTIONS.forEach(s => {
+    document.getElementById('body-' + s.id).style.display = 'none';
+    document.getElementById('body-' + s.id).previousElementSibling.classList.remove('open');
+  });
+}
+
+function updateProgress() {
+  let total = 0, checked = 0;
+  SECTIONS.forEach(sec => {
+    let secTotal = sec.items.length, secChecked = 0;
+    sec.items.forEach((_, i) => {
+      if (document.getElementById(sec.id + '-' + i).checked) secChecked++;
+    });
+    total += secTotal;
+    checked += secChecked;
+
+    const badge = document.getElementById('badge-' + sec.id);
+    badge.textContent = secChecked + '/' + secTotal;
+    badge.className = 'section-badge ' + (secChecked === 0 ? 'badge-pending' : secChecked === secTotal ? 'badge-done' : 'badge-partial');
+  });
+
+  document.getElementById('progress-text').textContent = checked + ' / ' + total + ' tests passed';
+  document.getElementById('progress-fill').style.width = (total ? (checked / total * 100) : 0) + '%';
+  saveState();
+}
+
+function resetAll() {
+  if (!confirm('Reset all checkboxes and notes?')) return;
+  SECTIONS.forEach(sec => {
+    sec.items.forEach((_, i) => { document.getElementById(sec.id + '-' + i).checked = false; });
+    document.getElementById('notes-' + sec.id).value = '';
+  });
+  updateProgress();
+  localStorage.removeItem('flowguard-qa-state');
+}
+
+function saveState() {
+  const state = {};
+  SECTIONS.forEach(sec => {
+    state[sec.id] = {
+      checks: sec.items.map((_, i) => document.getElementById(sec.id + '-' + i).checked),
+      notes: document.getElementById('notes-' + sec.id).value
+    };
+  });
+  localStorage.setItem('flowguard-qa-state', JSON.stringify(state));
+}
+
+function loadState() {
+  try {
+    const state = JSON.parse(localStorage.getItem('flowguard-qa-state'));
+    if (!state) return;
+    SECTIONS.forEach(sec => {
+      if (!state[sec.id]) return;
+      state[sec.id].checks.forEach((val, i) => {
+        const el = document.getElementById(sec.id + '-' + i);
+        if (el) el.checked = val;
+      });
+      const notes = document.getElementById('notes-' + sec.id);
+      if (notes && state[sec.id].notes) notes.value = state[sec.id].notes;
+    });
+  } catch(e) {}
+  updateProgress();
+}
+
+function exportResults() {
+  let report = 'FlowGuard v2.6.6 QA Report\n';
+  report += 'Date: ' + new Date().toLocaleString() + '\n';
+  report += '='.repeat(50) + '\n\n';
+
+  let total = 0, passed = 0;
+  SECTIONS.forEach(sec => {
+    report += sec.letter + '. ' + sec.title.toUpperCase() + '\n';
+    report += '-'.repeat(40) + '\n';
+    sec.items.forEach((text, i) => {
+      const ok = document.getElementById(sec.id + '-' + i).checked;
+      report += (ok ? '[PASS]' : '[FAIL]') + ' ' + text + '\n';
+      total++;
+      if (ok) passed++;
+    });
+    const notes = document.getElementById('notes-' + sec.id).value.trim();
+    if (notes) report += '\nNotes: ' + notes + '\n';
+    report += '\n';
+  });
+
+  report += '='.repeat(50) + '\n';
+  report += 'TOTAL: ' + passed + '/' + total + ' tests passed (' + Math.round(passed/total*100) + '%)\n';
+
+  const blob = new Blob([report], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'flowguard-qa-report-' + new Date().toISOString().slice(0,10) + '.txt';
+  a.click();
+}
+
+// Init
+document.getElementById('test-date').textContent = 'Test Date: ' + new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+loadState();
+</script>
+</body>
+</html>
