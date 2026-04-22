@@ -4838,10 +4838,171 @@ Claude מבצע tool call
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- QA TEST SUITE v1.0.2 — 62 AUTOMATED TESTS (100% PASS)                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-title">🧪 QA Test Suite v1.0.2 — 62 Automated Tests</div>
+
+<div style="background:#0d2818;border:2px solid #22c55e;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+  <span style="color:#22c55e;font-size:24px;font-weight:800;">✅ 62/62 PASS (100%)</span>
+  <span style="color:#64748b;margin-left:16px;">FlowGuard v2.6.7 | 22.04.2026</span>
+</div>
+
+<p style="color:#94a3b8;margin-bottom:16px;">
+  כלי: <code>FlowGuard-QA-Test-v1.0.2.exe</code> — EXE עצמאי, אין תלויות. מייצר <code>qa-results.csv</code> (Excel) + <code>qa-results.json</code>.<br>
+  להרצה: <code>node qa-test.js</code> או הרצת ה-EXE ישירות. דורש שירות FlowGuard פעיל על port 3010.
+</p>
+
+<table style="width:100%;border-collapse:collapse;font-size:13px;">
+<thead>
+<tr style="background:#1e293b;color:#e2e8f0;">
+  <th style="padding:8px 12px;text-align:left;border-bottom:2px solid #334155;">#</th>
+  <th style="padding:8px 12px;text-align:left;border-bottom:2px solid #334155;">Category</th>
+  <th style="padding:8px 12px;text-align:left;border-bottom:2px solid #334155;">Test Name</th>
+  <th style="padding:8px 12px;text-align:left;border-bottom:2px solid #334155;">Description</th>
+  <th style="padding:8px 12px;text-align:center;border-bottom:2px solid #334155;">Status</th>
+</tr>
+</thead>
+<tbody>
+<!-- A. Health & Core -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">A. Health &amp; Core</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">01</td><td>Health</td><td>GET /health — returns ok:true</td><td style="color:#94a3b8;">שירות FlowGuard פעיל ומגיב</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">02</td><td>Health</td><td>GET /health — project_root is valid</td><td style="color:#94a3b8;">תיקיית פרויקט מוגדרת (לא systemprofile)</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">03</td><td>Health</td><td>GET /health — has valid timestamp</td><td style="color:#94a3b8;">שעון השרת תקין</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- B. Events -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">B. Events</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">04</td><td>Events</td><td>GET /events — returns event data</td><td style="color:#94a3b8;">SQLite DB מחזיר אירועים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">05</td><td>Events</td><td>GET /events?limit=5 — respects limit</td><td style="color:#94a3b8;">pagination עובד</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">06</td><td>Events</td><td>GET /recent — returns live feed</td><td style="color:#94a3b8;">Live Event Feed data</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">07</td><td>Events</td><td>GET /stats — returns statistics</td><td style="color:#94a3b8;">סטטיסטיקות סיכום</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">08</td><td>Events</td><td>POST /event — accepts event</td><td style="color:#94a3b8;">קליטת אירוע מ-hook</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- C. Sessions -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">C. Sessions</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">09</td><td>Sessions</td><td>GET /sessions — returns list</td><td style="color:#94a3b8;">רשימת סשנים של Claude Code</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">10</td><td>Sessions</td><td>GET /sessions — has ID field</td><td style="color:#94a3b8;">כל סשן עם מזהה ייחודי</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- D. File Audit -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">D. File Audit</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">11</td><td>File Audit</td><td>GET /audit — returns results</td><td style="color:#94a3b8;">תוצאות סריקה אחרונה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">12</td><td>File Audit</td><td>POST /audit/scan — executes scan</td><td style="color:#94a3b8;">סריקת תקינות קבצים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">13</td><td>File Audit</td><td>GET /audit/schedule — scan schedule</td><td style="color:#94a3b8;">לוח זמנים סריקה שבועית</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">14</td><td>File Audit</td><td>GET /audit/verify — hash chain</td><td style="color:#94a3b8;">אימות שרשרת hash</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- E. Configuration -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">E. Configuration</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">15</td><td>Config</td><td>GET /config — full config</td><td style="color:#94a3b8;">הגדרות מלאות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">16</td><td>Config</td><td>GET /config/project-root</td><td style="color:#94a3b8;">נתיב פרויקט</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">17</td><td>Config</td><td>POST /config/project-root — roundtrip</td><td style="color:#94a3b8;">שמירה וקריאה חזרה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">18</td><td>Config</td><td>POST /config — save hardening</td><td style="color:#94a3b8;">שמירת רמת הקשחה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- E2. Settings Page -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">E2. Settings Page</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">19</td><td>Settings</td><td>Hardening Mode readable</td><td style="color:#94a3b8;">קריאת מצב הקשחה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">20</td><td>Settings</td><td>Hardening Mode save roundtrip</td><td style="color:#94a3b8;">שמירה ואימות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">21</td><td>Settings</td><td>FSWatcher toggle readable</td><td style="color:#94a3b8;">מצב FSW פעיל/כבוי</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">22</td><td>Settings</td><td>Audit Chain verify</td><td style="color:#94a3b8;">אימות שרשרת</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">23</td><td>Settings</td><td>Log Retention readable</td><td style="color:#94a3b8;">מדיניות שמירת לוגים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">24</td><td>Settings</td><td>Notifications config</td><td style="color:#94a3b8;">הגדרות התראות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">25</td><td>Settings</td><td>Silent mode toggle</td><td style="color:#94a3b8;">מצב שקט</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">26</td><td>Settings</td><td>Git Remotes readable</td><td style="color:#94a3b8;">רשימת Git remotes מורשים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">27</td><td>Settings</td><td>FSW Exclusions readable</td><td style="color:#94a3b8;">רשימת תיקיות מוחרגות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">28</td><td>Settings</td><td>FSW Quiet Hours</td><td style="color:#94a3b8;">שעות שקטות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">29</td><td>Settings</td><td>Auto-update status</td><td style="color:#94a3b8;">עדכון אוטומטי</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">30</td><td>Settings</td><td>SIEM config readable</td><td style="color:#94a3b8;">הגדרות SIEM</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">31</td><td>Settings</td><td>Log Management — event count</td><td style="color:#94a3b8;">ספירת אירועים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- F. Skills -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">F. Skills Intelligence</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">32</td><td>Skills</td><td>GET /skills — installed skills</td><td style="color:#94a3b8;">סקילים ו-MCP מותקנים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">33</td><td>Skills</td><td>POST /skills/scan — fresh scan</td><td style="color:#94a3b8;">סריקת סקילים מחדש</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- G. Projects -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">G. Projects Explorer</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">34</td><td>Projects</td><td>GET /projects — project tree</td><td style="color:#94a3b8;">עץ תיקיות פרויקט</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">35</td><td>Projects</td><td>GET /projects/notes — notes</td><td style="color:#94a3b8;">הערות לפרויקטים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- H. Browse -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">H. Browse Directories</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">36</td><td>Browse</td><td>GET /browse-dirs — drives list</td><td style="color:#94a3b8;">רשימת כוננים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">37</td><td>Browse</td><td>GET /browse-dirs?path=C:/</td><td style="color:#94a3b8;">תיקיות בכונן C</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- I. Web Access -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">I. Web Access / Domains</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">38</td><td>Web Access</td><td>GET /domains — monitored domains</td><td style="color:#94a3b8;">דומיינים מנוטרים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">39</td><td>Web Access</td><td>GET /domains/history</td><td style="color:#94a3b8;">היסטוריית גישה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- J. Git Monitor -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">J. Git Monitor</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">40</td><td>Git</td><td>GET /config/git-remotes</td><td style="color:#94a3b8;">Git remotes מורשים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- K. FSWatcher -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">K. File System Watcher</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">41</td><td>FSW</td><td>GET /fsw/status — active</td><td style="color:#94a3b8;">FSW פעיל</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">42</td><td>FSW</td><td>GET /fsw/quiet-hours</td><td style="color:#94a3b8;">שעות שקטות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">43</td><td>FSW</td><td>GET /fsw/exclude — exclusions</td><td style="color:#94a3b8;">תיקיות מוחרגות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">44</td><td>FSW</td><td>FSW: create file → event</td><td style="color:#94a3b8;">יצירת קובץ → event מזוהה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">45</td><td>FSW</td><td>FSW: delete file → event</td><td style="color:#94a3b8;">מחיקת קובץ → event מזוהה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">46</td><td>FSW</td><td>Manual copy → HIGH</td><td style="color:#94a3b8;">העתקה ידנית → HIGH + Telegram</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">47</td><td>FSW</td><td>Manual delete → CRITICAL</td><td style="color:#94a3b8;">מחיקה ידנית → CRITICAL + Telegram</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- K3. Web Access Logging -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">K3. Web Access Logging</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">48</td><td>Web Access</td><td>Discovered domains exist</td><td style="color:#94a3b8;">דומיינים שנגישה אליהם</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">49</td><td>Web Access</td><td>Domains have trust scores</td><td style="color:#94a3b8;">ציון אמון + label לכל דומיין</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">50</td><td>Web Access</td><td>Web Access history available</td><td style="color:#94a3b8;">היסטוריית גישה לאינטרנט</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- K4. Sensitive Data -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">K4. Sensitive Data Detection</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">51</td><td>Sensitive</td><td>Credit card → HIGH alert</td><td style="color:#94a3b8;">כרטיס אשראי בקובץ → זיהוי</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">52</td><td>Sensitive</td><td>Password file → HIGH</td><td style="color:#94a3b8;">קובץ סיסמאות → sensitive</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">53</td><td>Sensitive</td><td>.env file → HIGH</td><td style="color:#94a3b8;">קובץ .env → sensitive</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">54</td><td>Sensitive</td><td>Secret keys → audit detects</td><td style="color:#94a3b8;">AWS keys בקוד → סריקה מזהה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- L. SIEM -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">L. SIEM Export</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">55</td><td>SIEM</td><td>GET /siem/config</td><td style="color:#94a3b8;">הגדרות SIEM</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- M. Notifications -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">M. Notifications</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">56</td><td>Notifications</td><td>GET /notifications/config</td><td style="color:#94a3b8;">הגדרות התראות</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">57</td><td>Notifications</td><td>GET /silent — silent mode</td><td style="color:#94a3b8;">מצב שקט</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- N. Baseline -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">N. Behavioral Learning</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">58</td><td>Baseline</td><td>GET /baseline/status</td><td style="color:#94a3b8;">סטטוס למידה התנהגותית</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- O. Retention -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">O. Log Management</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">59</td><td>Retention</td><td>GET /retention</td><td style="color:#94a3b8;">מדיניות שמירת לוגים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- P. Update -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">P. Update System</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">60</td><td>Update</td><td>GET /update/status</td><td style="color:#94a3b8;">בדיקת עדכונים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">61</td><td>Update</td><td>GET /update/schedule</td><td style="color:#94a3b8;">לוח עדכונים</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+
+<!-- Q. Diagnostics -->
+<tr style="background:#0f172a;"><td colspan="5" style="padding:8px 12px;color:#00d4ff;font-weight:700;">Q. Diagnostics</td></tr>
+<tr><td style="padding:6px 12px;border-bottom:1px solid #1e293b;">62</td><td>Diagnostics</td><td>GET /diag/files</td><td style="color:#94a3b8;">רשימת קבצי דיאגנוסטיקה</td><td style="text-align:center;color:#22c55e;">✅</td></tr>
+</tbody>
+</table>
+
+<div style="margin-top:20px;padding:12px 16px;background:#1e293b;border-radius:8px;color:#94a3b8;font-size:12px;">
+  <strong style="color:#e2e8f0;">Event Level Policy (v2.6.7):</strong><br>
+  🗑️ Manual delete → CRITICAL + Telegram<br>
+  📥 Manual copy to project → HIGH + Telegram<br>
+  🤖 Claude delete → INFO<br>
+  🤖 Claude modify → INFO<br>
+  ⚠️ Claude outside project → CRITICAL<br>
+  🔍 Sensitive file (.env, password, secret) → HIGH
+</div>
+
 <!-- FOOTER -->
 <div class="footer">
   <strong>EHZ-AI</strong> | Claude Code Security Monitor | 054-4825276<br>
-  נוצר: אפריל 2026 | גרסה 2.4.0 | עודכן: 18.04.2026
+  נוצר: אפריל 2026 | גרסה 2.6.7 | עודכן: 22.04.2026
 </div>
 
 </body>
