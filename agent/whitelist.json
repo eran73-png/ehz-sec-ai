@@ -134,1404 +134,1404 @@
   ],
   "discovered_domains": [
     {
-      "domain": "www.glassdoor.co.in",
-      "score": 50,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-14T20:41:44.377Z"
-    },
-    {
-      "domain": "www.softwareadvice.com",
+      "domain": "www.carlogos.org",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.377Z"
+      "discovered_at": "2026-04-23T13:06:11.160Z"
     },
     {
-      "domain": "www.proofhub.com",
+      "domain": "medium.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.377Z"
+      "discovered_at": "2026-04-23T13:06:11.160Z"
     },
     {
-      "domain": "www.greatplacetowork.com",
+      "domain": "autoworldjournal.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.377Z"
+      "discovered_at": "2026-04-23T13:06:11.160Z"
     },
     {
-      "domain": "workspace.google.com",
-      "score": 100,
-      "label": "TRUSTED",
-      "color": "#10b981",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
-    },
-    {
-      "domain": "www.computerworld.com",
+      "domain": "www.polarismarketresearch.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
+      "discovered_at": "2026-04-23T13:06:11.160Z"
     },
     {
-      "domain": "www.happeo.com",
+      "domain": "www.qyresearch.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
+      "discovered_at": "2026-04-23T13:06:11.160Z"
     },
     {
-      "domain": "keystonecorp.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
-    },
-    {
-      "domain": "www.geeksforgeeks.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
-    },
-    {
-      "domain": "jumpcloud.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
-    },
-    {
-      "domain": "thedigitalnonprofit.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
-    },
-    {
-      "domain": "www.trustedtechteam.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
-    },
-    {
-      "domain": "www.zluri.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:44.594Z"
-    },
-    {
-      "domain": "www.4cornerresources.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:45.659Z"
-    },
-    {
-      "domain": "www.wiz.io",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:45.659Z"
-    },
-    {
-      "domain": "www.huntress.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:45.659Z"
-    },
-    {
-      "domain": "enhancv.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:45.659Z"
-    },
-    {
-      "domain": "www.manageengine.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:54.659Z"
-    },
-    {
-      "domain": "www.theknowledgeacademy.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:54.659Z"
-    },
-    {
-      "domain": "itsm.tools",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-14T20:41:54.659Z"
-    },
-    {
-      "domain": "minteddesign.zendesk.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:55.858Z"
-    },
-    {
-      "domain": "homestaycom.zendesk.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:55.858Z"
-    },
-    {
-      "domain": "payoneer.custhelp.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:55.858Z"
-    },
-    {
-      "domain": "payoneer.pissedconsumer.com",
+      "domain": "www.xy-carhire.com",
       "score": 60,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:55.858Z"
+      "discovered_at": "2026-04-23T13:06:11.160Z"
     },
     {
-      "domain": "mindrift.zendesk.com",
+      "domain": "www.sap.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:55.858Z"
+      "discovered_at": "2026-04-23T13:06:24.124Z"
     },
     {
-      "domain": "docs.datadoghq.com",
+      "domain": "telematics.cioapplications.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:06:24.124Z"
+    },
+    {
+      "domain": "iotbusinessnews.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:56.746Z"
+      "discovered_at": "2026-04-23T13:06:24.124Z"
     },
     {
-      "domain": "okta.com",
+      "domain": "leverx.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:56.746Z"
+      "discovered_at": "2026-04-23T13:06:24.124Z"
     },
     {
-      "domain": "webflow.nextmv.io",
+      "domain": "www.cioapplications.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:56.746Z"
+      "discovered_at": "2026-04-23T13:06:24.124Z"
     },
     {
-      "domain": "www.datadoghq.com",
+      "domain": "targatelematics.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:41:56.746Z"
+      "discovered_at": "2026-04-23T13:06:24.124Z"
     },
     {
-      "domain": "infohub.custhelp.com",
+      "domain": "www.ermtelematics.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:06.148Z"
+      "discovered_at": "2026-04-23T13:06:24.124Z"
     },
     {
-      "domain": "docs.oracle.com",
+      "domain": "transportation.machine.co.il",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:06.148Z"
+      "discovered_at": "2026-04-23T13:06:29.901Z"
     },
     {
-      "domain": "cx.rightnow.com",
+      "domain": "business.colmobil.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:06:29.901Z"
+    },
+    {
+      "domain": "bydauto.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:06:29.901Z"
+    },
+    {
+      "domain": "www.mako.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:06:29.901Z"
+    },
+    {
+      "domain": "www.pv-magazine.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:00.388Z"
+    },
+    {
+      "domain": "sodiumbatteryhub.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:06.148Z"
+      "discovered_at": "2026-04-23T13:07:00.388Z"
     },
     {
-      "domain": "virtuos.custhelp.com",
+      "domain": "carnewschina.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:06.148Z"
+      "discovered_at": "2026-04-23T13:07:00.388Z"
     },
     {
-      "domain": "www.oracle.com",
+      "domain": "carboncredits.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:06.148Z"
+      "discovered_at": "2026-04-23T13:07:00.388Z"
     },
     {
-      "domain": "dev.to",
+      "domain": "www.ess-news.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:00.388Z"
+    },
+    {
+      "domain": "cars.walla.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:01.252Z"
+    },
+    {
+      "domain": "www.ice.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:01.252Z"
+    },
+    {
+      "domain": "bizzness.net",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:01.252Z"
+    },
+    {
+      "domain": "newzim.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:01.252Z"
+    },
+    {
+      "domain": "www.israelhayom.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:01.252Z"
+    },
+    {
+      "domain": "www.epconsulting.info",
       "score": 45,
       "label": "NEUTRAL",
       "color": "#f59e0b",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:07:04.102Z"
     },
     {
-      "domain": "www.getmonetizely.com",
+      "domain": "industry.org.il",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:07:04.102Z"
     },
     {
-      "domain": "www.graphapp.ai",
+      "domain": "www.duns100.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:04.102Z"
+    },
+    {
+      "domain": "jerusalem.mynet.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:04.102Z"
+    },
+    {
+      "domain": "www.efraty.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:07:04.102Z"
     },
     {
-      "domain": "betterstack.com",
+      "domain": "infinity.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:04.102Z"
+    },
+    {
+      "domain": "chart.bursagraph.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:07:04.102Z"
+    },
+    {
+      "domain": "www.emagia.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:07:04.102Z"
     },
     {
-      "domain": "signoz.io",
+      "domain": "www.swarco.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:31:59.934Z"
     },
     {
-      "domain": "sematext.com",
+      "domain": "www.bus.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:31:59.934Z"
+    },
+    {
+      "domain": "www.cicts.org",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:31:59.934Z"
     },
     {
-      "domain": "www.landbase.com",
+      "domain": "fliphtml5.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:32:00.244Z"
     },
     {
-      "domain": "www.atatus.com",
+      "domain": "www.sherut.net",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:08.569Z"
+      "discovered_at": "2026-04-23T13:32:00.244Z"
     },
     {
-      "domain": "us.seibert.group",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-14T20:42:17.218Z"
+      "domain": "haipo.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:00.244Z"
     },
     {
-      "domain": "ttpsc.com",
+      "domain": "totbu.bandbrenewable.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:17.218Z"
+      "discovered_at": "2026-04-23T13:32:00.244Z"
     },
     {
-      "domain": "www.clovity.com",
+      "domain": "www.bgu.ac.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:00.244Z"
+    },
+    {
+      "domain": "www.jobmaster.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:00.244Z"
+    },
+    {
+      "domain": "tcm.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:00.244Z"
+    },
+    {
+      "domain": "racheliharel.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-14T20:42:17.218Z"
+      "discovered_at": "2026-04-23T13:32:00.244Z"
     },
     {
-      "domain": "www.crunchbase.com",
+      "domain": "www.israel-it.org",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:00.454Z"
+    },
+    {
+      "domain": "www.yosha.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:00.454Z"
+    },
+    {
+      "domain": "www.export.gov.il",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.097Z"
-    },
-    {
-      "domain": "www.seedtable.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.098Z"
+      "discovered_at": "2026-04-23T13:32:00.828Z"
     },
     {
       "domain": "www.israel21c.org",
       "score": 60,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.098Z"
-    },
-    {
-      "domain": "iamondemand.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.098Z"
-    },
-    {
-      "domain": "www.timesofisrael.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.098Z"
-    },
-    {
-      "domain": "www.wake-up.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.746Z"
-    },
-    {
-      "domain": "www.kycisrael.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.746Z"
-    },
-    {
-      "domain": "hrtoday.in",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-15T07:30:39.746Z"
-    },
-    {
-      "domain": "www.cyberdb.co",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.746Z"
-    },
-    {
-      "domain": "www.cybereason.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:39.746Z"
-    },
-    {
-      "domain": "pitchmeai.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:52.214Z"
-    },
-    {
-      "domain": "il.linkedin.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:52.214Z"
-    },
-    {
-      "domain": "www.cybersecurityjobs.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:52.214Z"
-    },
-    {
-      "domain": "www.cyberseek.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:30:52.214Z"
-    },
-    {
-      "domain": "jobs.weekday.works",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-15T07:30:52.214Z"
-    },
-    {
-      "domain": "thehackernews.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "www.securityweek.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "krebsonsecurity.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "www.brightdefense.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "cybersecurityventures.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "reports.weforum.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "www.kerberus.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "www.csis.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:05.415Z"
-    },
-    {
-      "domain": "www.helpnetsecurity.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:14.836Z"
-    },
-    {
-      "domain": "www.cybersecurityjobsite.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:14.836Z"
-    },
-    {
-      "domain": "acsmi.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:14.836Z"
-    },
-    {
-      "domain": "www.techneeds.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:14.836Z"
-    },
-    {
-      "domain": "www.zoominfo.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:16.314Z"
-    },
-    {
-      "domain": "www.sygnia.co",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:28.399Z"
-    },
-    {
-      "domain": "upsecurity.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:28.399Z"
-    },
-    {
-      "domain": "www.goodfirms.co",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:28.399Z"
-    },
-    {
-      "domain": "www.ciso.inc",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-15T07:31:28.399Z"
-    },
-    {
-      "domain": "www.penligent.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:44.207Z"
-    },
-    {
-      "domain": "app.stationx.net",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:44.207Z"
-    },
-    {
-      "domain": "motionrecruitment.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-15T07:31:44.208Z"
-    },
-    {
-      "domain": "forum.bigfix.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:20.570Z"
-    },
-    {
-      "domain": "helpcenter.veeam.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:20.570Z"
-    },
-    {
-      "domain": "www.hcl-software.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:20.571Z"
-    },
-    {
-      "domain": "xsoar.pan.dev",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:20.571Z"
-    },
-    {
-      "domain": "thecxlead.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "www.crescendo.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "www.eesel.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "crisp.chat",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "www.teamsupport.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "www.assembled.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "meetchatty.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "www.intercom.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "fin.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:22.320Z"
-    },
-    {
-      "domain": "www.freshworks.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.465Z"
-    },
-    {
-      "domain": "dupple.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.465Z"
-    },
-    {
-      "domain": "support.freshservice.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.465Z"
-    },
-    {
-      "domain": "www.rezolve.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.465Z"
-    },
-    {
-      "domain": "www.chatwoot.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "botpress.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "pagergpt.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "boei.help",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "www.tidio.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "www.botlibre.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "hostkey.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "intuitionlabs.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "tiledesk.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:23.478Z"
-    },
-    {
-      "domain": "workativ.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:24.647Z"
-    },
-    {
-      "domain": "unthread.io",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:24.647Z"
-    },
-    {
-      "domain": "www.multimodal.dev",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:24.647Z"
-    },
-    {
-      "domain": "www.g2.com",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:24.648Z"
-    },
-    {
-      "domain": "clearfeed.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:24.648Z"
-    },
-    {
-      "domain": "www.vendr.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:35.804Z"
-    },
-    {
-      "domain": "ravenna.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:35.804Z"
-    },
-    {
-      "domain": "www.selecthub.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:35.804Z"
-    },
-    {
-      "domain": "www.unleash.so",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-17T16:41:35.804Z"
-    },
-    {
-      "domain": "www.moveworks.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:35.804Z"
-    },
-    {
-      "domain": "quickchat.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:36.652Z"
-    },
-    {
-      "domain": "www.getapp.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:36.652Z"
-    },
-    {
-      "domain": "www.capterra.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:36.810Z"
-    },
-    {
-      "domain": "sourceforge.net",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:36.810Z"
-    },
-    {
-      "domain": "www.trustradius.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-17T16:41:36.810Z"
-    },
-    {
-      "domain": "techcrunch.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "www.anthropic.com",
-      "score": 100,
-      "label": "TRUSTED",
-      "color": "#10b981",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "venturebeat.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "www.theregister.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "siliconangle.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "9to5mac.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "www.macrumors.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "www.testingcatalog.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "gizmodo.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "help.apiyi.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-18T19:06:40.389Z"
-    },
-    {
-      "domain": "www.glassdoor.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.756Z"
-    },
-    {
-      "domain": "www.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.756Z"
-    },
-    {
-      "domain": "www.indeed.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.756Z"
-    },
-    {
-      "domain": "www.tealhq.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.756Z"
-    },
-    {
-      "domain": "nvidia.wd5.myworkdayjobs.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.756Z"
-    },
-    {
-      "domain": "jobs.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.756Z"
-    },
-    {
-      "domain": "developer.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.988Z"
-    },
-    {
-      "domain": "patchmanager.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.989Z"
-    },
-    {
-      "domain": "www.sunbirddcim.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.989Z"
-    },
-    {
-      "domain": "www.gigabyte.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.989Z"
-    },
-    {
-      "domain": "www.getguru.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.989Z"
-    },
-    {
-      "domain": "www.se.com",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.989Z"
-    },
-    {
-      "domain": "www.device42.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:28.989Z"
-    },
-    {
-      "domain": "docs.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.069Z"
-    },
-    {
-      "domain": "www.ynetnews.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.947Z"
+      "discovered_at": "2026-04-23T13:32:00.828Z"
     },
     {
       "domain": "www.calcalistech.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.947Z"
+      "discovered_at": "2026-04-23T13:32:00.828Z"
     },
     {
-      "domain": "thetechcapital.com",
+      "domain": "techcrunch.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.947Z"
+      "discovered_at": "2026-04-23T13:32:00.828Z"
     },
     {
-      "domain": "www.datacenterdynamics.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.947Z"
-    },
-    {
-      "domain": "www.tehrantimes.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.947Z"
-    },
-    {
-      "domain": "www.eweek.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.947Z"
-    },
-    {
-      "domain": "finance.yahoo.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:30.947Z"
-    },
-    {
-      "domain": "www.nextplatform.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:32.826Z"
-    },
-    {
-      "domain": "www.serversimply.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:32.826Z"
-    },
-    {
-      "domain": "jarvislabs.ai",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:32.826Z"
-    },
-    {
-      "domain": "blogs.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:32.826Z"
-    },
-    {
-      "domain": "azure.microsoft.com",
-      "score": 100,
-      "label": "TRUSTED",
-      "color": "#10b981",
-      "discovered_at": "2026-04-20T07:05:32.826Z"
-    },
-    {
-      "domain": "datacentremagazine.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:32.826Z"
-    },
-    {
-      "domain": "introl.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:32.826Z"
-    },
-    {
-      "domain": "www.datacentermap.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:46.901Z"
-    },
-    {
-      "domain": "www.jns.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:46.901Z"
-    },
-    {
-      "domain": "americanisraelite.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:46.901Z"
-    },
-    {
-      "domain": "www.thejc.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:46.901Z"
-    },
-    {
-      "domain": "il.indeed.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:47.874Z"
-    },
-    {
-      "domain": "www.ziprecruiter.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:47.874Z"
-    },
-    {
-      "domain": "consider.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:47.874Z"
-    },
-    {
-      "domain": "www.weka.io",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:51.441Z"
-    },
-    {
-      "domain": "docs.netapp.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:51.441Z"
-    },
-    {
-      "domain": "support.purestorage.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T07:05:51.441Z"
-    },
-    {
-      "domain": "resources.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:12.245Z"
-    },
-    {
-      "domain": "images.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:12.245Z"
-    },
-    {
-      "domain": "nvidianews.nvidia.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:31.319Z"
-    },
-    {
-      "domain": "www.pcnation.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:33.116Z"
-    },
-    {
-      "domain": "www.router-switch.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:33.116Z"
-    },
-    {
-      "domain": "hardwarenation.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:33.116Z"
-    },
-    {
-      "domain": "www.naddod.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:33.116Z"
-    },
-    {
-      "domain": "www.tes-itsolutions.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:33.116Z"
-    },
-    {
-      "domain": "www.bestwifimall.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:33.116Z"
-    },
-    {
-      "domain": "www.qats.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:34.377Z"
-    },
-    {
-      "domain": "stlpartners.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:34.377Z"
-    },
-    {
-      "domain": "blog.se.com",
+      "domain": "www.optimumit.co.il",
       "score": 70,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:34.377Z"
+      "discovered_at": "2026-04-23T13:32:01.097Z"
     },
     {
-      "domain": "www.delloro.com",
+      "domain": "setit.tech",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T12:17:34.377Z"
+      "discovered_at": "2026-04-23T13:32:01.097Z"
     },
     {
-      "domain": "gist.github.com",
+      "domain": "www.elite-erp.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:01.097Z"
+    },
+    {
+      "domain": "tachlit.biz",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-23T13:32:01.097Z"
+    },
+    {
+      "domain": "otegroup.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:01.097Z"
+    },
+    {
+      "domain": "www.abra-it.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:01.097Z"
+    },
+    {
+      "domain": "www.grantthornton.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:01.097Z"
+    },
+    {
+      "domain": "en.wikivoyage.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:17.313Z"
+    },
+    {
+      "domain": "info.goisrael.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:17.314Z"
+    },
+    {
+      "domain": "www.egged.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:17.314Z"
+    },
+    {
+      "domain": "spark.mwm.ai",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:17.314Z"
+    },
+    {
+      "domain": "www.uti.edu",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.573Z"
+    },
+    {
+      "domain": "ptt.edu",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "tradecolleges.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "www.wyotech.edu",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "npaworldwide.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "www.glassdoor.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "svarecruitment.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "www.jtech.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "www.challengergray.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.574Z"
+    },
+    {
+      "domain": "www.israel-tech-pr.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.747Z"
+    },
+    {
+      "domain": "aws.amazon.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.747Z"
+    },
+    {
+      "domain": "israelnews.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.747Z"
+    },
+    {
+      "domain": "futuretransport-news.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.747Z"
+    },
+    {
+      "domain": "centro.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.747Z"
+    },
+    {
+      "domain": "www.cbinsights.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.747Z"
+    },
+    {
+      "domain": "optibus.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:18.747Z"
+    },
+    {
+      "domain": "www.sustainable-bus.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:19.428Z"
+    },
+    {
+      "domain": "www.iea.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:19.428Z"
+    },
+    {
+      "domain": "www.bydeurope.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:19.428Z"
+    },
+    {
+      "domain": "globalmasstransit.net",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:19.428Z"
+    },
+    {
+      "domain": "www.electrive.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:19.428Z"
+    },
+    {
+      "domain": "www.archivemarketresearch.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:19.428Z"
+    },
+    {
+      "domain": "www.dialog.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:20.028Z"
+    },
+    {
+      "domain": "www.techit.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:20.028Z"
+    },
+    {
+      "domain": "www.sqlink.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:20.028Z"
+    },
+    {
+      "domain": "www.alljobs.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:20.028Z"
+    },
+    {
+      "domain": "www.drushim.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:20.028Z"
+    },
+    {
+      "domain": "career.rafael.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:20.028Z"
+    },
+    {
+      "domain": "www.mploy.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:20.028Z"
+    },
+    {
+      "domain": "www.chargepoint.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.090Z"
+    },
+    {
+      "domain": "www.masstransitmag.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.090Z"
+    },
+    {
+      "domain": "viriciti.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.090Z"
+    },
+    {
+      "domain": "www.businesswire.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.090Z"
+    },
+    {
+      "domain": "www.afconev.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.941Z"
+    },
+    {
+      "domain": "www.new-techonline.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.941Z"
+    },
+    {
+      "domain": "magazinos.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.941Z"
+    },
+    {
+      "domain": "tahbura-tec.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.941Z"
+    },
+    {
+      "domain": "calcalist360.webflow.io",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.941Z"
+    },
+    {
+      "domain": "zeorouteplanner.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:44.941Z"
+    },
+    {
+      "domain": "ezfleet.energy",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-23T13:32:44.941Z"
+    },
+    {
+      "domain": "experis.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:45.268Z"
+    },
+    {
+      "domain": "www.yna.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:45.268Z"
+    },
+    {
+      "domain": "www.yaelkaplan.net",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:45.268Z"
+    },
+    {
+      "domain": "www.entrypoint.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:45.268Z"
+    },
+    {
+      "domain": "kpmg.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:45.268Z"
+    },
+    {
+      "domain": "www.sciencedirect.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:46.375Z"
+    },
+    {
+      "domain": "arxiv.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:46.375Z"
+    },
+    {
+      "domain": "pubsonline.informs.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:46.375Z"
+    },
+    {
+      "domain": "www.researchgate.net",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:46.375Z"
+    },
+    {
+      "domain": "www.mdpi.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:46.375Z"
+    },
+    {
+      "domain": "www.sciopen.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:46.375Z"
+    },
+    {
+      "domain": "www.trade.gov",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "practiceguides.chambers.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "resourcehub.bakermckenzie.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "www.cybersecurityintelligence.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "www.dataguidance.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "lobehub.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "dig.watch",
+      "score": 45,
+      "label": "NEUTRAL",
+      "color": "#f59e0b",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "www.legal500.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "publications.iadb.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:32:50.035Z"
+    },
+    {
+      "domain": "sapdude.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.422Z"
+    },
+    {
+      "domain": "www.deteringconsulting.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.422Z"
+    },
+    {
+      "domain": "www.cevalogistics.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.422Z"
+    },
+    {
+      "domain": "varasi.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.422Z"
+    },
+    {
+      "domain": "sap.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.422Z"
+    },
+    {
+      "domain": "oxmaint.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.423Z"
+    },
+    {
+      "domain": "community.sap.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.423Z"
+    },
+    {
+      "domain": "superbus.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.566Z"
+    },
+    {
+      "domain": "www.jobkarov.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.566Z"
+    },
+    {
+      "domain": "www.nisha.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.566Z"
+    },
+    {
+      "domain": "jobs.johnbryce.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.566Z"
+    },
+    {
+      "domain": "jobs-in.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.566Z"
+    },
+    {
+      "domain": "www.superbus.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:01.566Z"
+    },
+    {
+      "domain": "www.iiss.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:02.861Z"
+    },
+    {
+      "domain": "www.inss.org.il",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:02.861Z"
+    },
+    {
+      "domain": "en.wikipedia.org",
       "score": 100,
       "label": "TRUSTED",
       "color": "#10b981",
-      "discovered_at": "2026-04-20T19:54:22.649Z"
+      "discovered_at": "2026-04-23T13:33:02.861Z"
     },
     {
-      "domain": "topuser.pro",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-20T19:54:22.649Z"
-    },
-    {
-      "domain": "www.supportrevolution.com",
+      "domain": "www.ginc.org",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:22.649Z"
+      "discovered_at": "2026-04-23T13:33:02.861Z"
     },
     {
-      "domain": "signup.oraclecloud.com",
+      "domain": "shavitglobal.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:22.649Z"
+      "discovered_at": "2026-04-23T13:33:02.861Z"
     },
     {
-      "domain": "community.oracle.com",
+      "domain": "cybilportal.org",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:23.865Z"
+      "discovered_at": "2026-04-23T13:33:02.861Z"
     },
     {
-      "domain": "franckpachot.medium.com",
+      "domain": "www.nids.mod.go.jp",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:02.861Z"
+    },
+    {
+      "domain": "www.zenobe.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:23.865Z"
+      "discovered_at": "2026-04-23T13:33:03.003Z"
     },
     {
-      "domain": "lowendtalk.com",
+      "domain": "www.softwareag.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:23.865Z"
+      "discovered_at": "2026-04-23T13:33:03.217Z"
     },
     {
-      "domain": "www.voip-info.org",
+      "domain": "www.wexnerfoundation.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:03.217Z"
+    },
+    {
+      "domain": "www.linkedin.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:03.217Z"
+    },
+    {
+      "domain": "portal.cor.europa.eu",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:03.217Z"
+    },
+    {
+      "domain": "www.nbn.org.il",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:03.217Z"
+    },
+    {
+      "domain": "iisd.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:03.217Z"
+    },
+    {
+      "domain": "exact-ts.com",
       "score": 60,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:23.868Z"
+      "discovered_at": "2026-04-23T13:33:03.217Z"
     },
     {
-      "domain": "lowendspirit.com",
+      "domain": "tours.superbus.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.435Z"
+    },
+    {
+      "domain": "uniguardgps.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:23.868Z"
+      "discovered_at": "2026-04-23T13:33:27.435Z"
     },
     {
-      "domain": "docs.public.oneportal.content.oci.oraclecloud.com",
-      "score": 50,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-20T19:54:23.868Z"
+      "domain": "y-it.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.435Z"
     },
     {
-      "domain": "www.linux.org",
+      "domain": "www.efobus.com",
       "score": 65,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:26.623Z"
+      "discovered_at": "2026-04-23T13:33:27.435Z"
     },
     {
-      "domain": "www.techtarget.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:26.623Z"
-    },
-    {
-      "domain": "forums.oracle.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:41.989Z"
-    },
-    {
-      "domain": "techtutelage.net",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:41.989Z"
-    },
-    {
-      "domain": "news.ycombinator.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:41.989Z"
-    },
-    {
-      "domain": "blog.51sec.org",
+      "domain": "akeyless-sys.com",
       "score": 60,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:54:41.989Z"
+      "discovered_at": "2026-04-23T13:33:27.435Z"
     },
     {
-      "domain": "www.51sec.org",
+      "domain": "tandemwise.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.435Z"
+    },
+    {
+      "domain": "www.themarker.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.435Z"
+    },
+    {
+      "domain": "moovit.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.435Z"
+    },
+    {
+      "domain": "tracer.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.435Z"
+    },
+    {
+      "domain": "www.pointer4u.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.435Z"
+    },
+    {
+      "domain": "blilious.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.461Z"
+    },
+    {
+      "domain": "thegerontechnologist.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:27.461Z"
+    },
+    {
+      "domain": "www.viola-group.com",
       "score": 60,
       "label": "OK",
       "color": "#84cc16",
-      "discovered_at": "2026-04-20T19:55:06.811Z"
+      "discovered_at": "2026-04-23T13:33:27.461Z"
     },
     {
-      "domain": "foundryvtt.wiki",
-      "score": 45,
-      "label": "NEUTRAL",
-      "color": "#f59e0b",
-      "discovered_at": "2026-04-20T19:55:06.812Z"
+      "domain": "www.betterfleet.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:30.134Z"
+    },
+    {
+      "domain": "buscmms.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:30.134Z"
+    },
+    {
+      "domain": "www.sibros.tech",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:30.134Z"
+    },
+    {
+      "domain": "stratioautomotive.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:30.134Z"
+    },
+    {
+      "domain": "pitstopconnect.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:30.134Z"
+    },
+    {
+      "domain": "uptake.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:30.134Z"
+    },
+    {
+      "domain": "preteckt.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:30.134Z"
+    },
+    {
+      "domain": "www.goldendragon.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:35.242Z"
+    },
+    {
+      "domain": "auto-chen-m.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:35.242Z"
+    },
+    {
+      "domain": "www.megapro.org.il",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:35.242Z"
+    },
+    {
+      "domain": "he.wikipedia.org",
+      "score": 100,
+      "label": "TRUSTED",
+      "color": "#10b981",
+      "discovered_at": "2026-04-23T13:33:35.310Z"
+    },
+    {
+      "domain": "www.hamichlol.org.il",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:35.310Z"
+    },
+    {
+      "domain": "www.autocom.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:35.310Z"
+    },
+    {
+      "domain": "www.port2port.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:35.310Z"
+    },
+    {
+      "domain": "passportnews.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T13:33:35.310Z"
+    },
+    {
+      "domain": "oodpm.wordpress.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:42.750Z"
+    },
+    {
+      "domain": "www.colman.ac.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:42.750Z"
+    },
+    {
+      "domain": "sherut-il.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:42.750Z"
+    },
+    {
+      "domain": "adi-system.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:42.750Z"
+    },
+    {
+      "domain": "www.calcalist.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:43.385Z"
+    },
+    {
+      "domain": "www.startisrael.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:43.385Z"
+    },
+    {
+      "domain": "itdp.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:52.243Z"
+    },
+    {
+      "domain": "link.springer.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:52.243Z"
+    },
+    {
+      "domain": "www.wsp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:52.243Z"
+    },
+    {
+      "domain": "www.evaisun.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:52:52.243Z"
+    },
+    {
+      "domain": "www.gov.il",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:06.442Z"
+    },
+    {
+      "domain": "besacenter.org",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:06.442Z"
+    },
+    {
+      "domain": "it-solutions.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:06.662Z"
+    },
+    {
+      "domain": "www.facebook.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:06.662Z"
+    },
+    {
+      "domain": "www.timesofisrael.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:06.727Z"
+    },
+    {
+      "domain": "finder.startupnationcentral.org",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:06.727Z"
+    },
+    {
+      "domain": "blog.optibus.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:26.434Z"
+    },
+    {
+      "domain": "www.maariv.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:35.825Z"
+    },
+    {
+      "domain": "www.be106.net",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:35.825Z"
+    },
+    {
+      "domain": "www.ynet.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:35.825Z"
+    },
+    {
+      "domain": "www.rashuiot.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T17:53:35.825Z"
     }
   ]
 }

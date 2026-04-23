@@ -1180,8 +1180,8 @@ function getStoredProjectRoot() {
 
 // Auto-detect project root: env → whitelist → learned from hooks → real user home
 function detectProjectRoot() {
-  if (process.env.PROJECT_ROOT) return process.env.PROJECT_ROOT;
-  // Try both possible whitelist locations
+  // Priority: whitelist.json > .env > auto-detect
+  // whitelist.json is the single source of truth (set by installer)
   const wlPaths = [
     path.join(__dirname, '..', 'agent', 'whitelist.json'),
     path.join(__dirname, '..', 'whitelist.json')
@@ -1189,10 +1189,16 @@ function detectProjectRoot() {
   for (const wlPath of wlPaths) {
     try {
       const wl = JSON.parse(fs.readFileSync(wlPath, 'utf8'));
-      if (wl.project_root) { console.log('[CONFIG] project_root from', wlPath, ':', wl.project_root); return wl.project_root; }
+      if (wl.project_root) {
+        const normalized = wl.project_root.replace(/\\/g, '/');
+        console.log('[CONFIG] project_root from whitelist:', normalized);
+        return normalized;
+      }
       if (wl.allowed_paths && wl.allowed_paths.length > 0) return wl.allowed_paths[0];
     } catch(e) {}
   }
+  // Fallback to .env
+  if (process.env.PROJECT_ROOT) return process.env.PROJECT_ROOT;
   // Detect real logged-in user's home (not SYSTEM's home)
   return detectRealUserHome();
 }

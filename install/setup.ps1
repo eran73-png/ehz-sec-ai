@@ -1,5 +1,5 @@
 # ============================================================
-# FlowGuard — Installer (MS8.3 + MS8.4)
+# FlowGuard - Installer (MS8.3 + MS8.4)
 # AI Security Monitor for Claude Code | by EHZ-AI
 #
 # Usage (interactive):  .\setup.ps1
@@ -16,9 +16,9 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$Version = "2.6.7"
+$Version = "2.7.0"
 
-# ── Paths ────────────────────────────────────────────────────
+# -- Paths ---------------------------------------------------
 $ProjectDir   = Split-Path -Parent $PSScriptRoot
 $HookScript   = Join-Path $ProjectDir "agent\hook.js"
 $CollectorDir = Join-Path $ProjectDir "collector"
@@ -27,20 +27,16 @@ $ClaudeConfig = "$env:USERPROFILE\.claude\settings.json"
 $nodeCmd      = Get-Command node -ErrorAction SilentlyContinue
 $NodeExe      = if ($nodeCmd) { $nodeCmd.Source } else { $null }
 
-# ── Banner ───────────────────────────────────────────────────
+# -- Banner --------------------------------------------------
 Write-Host ""
-Write-Host "  ███████╗██╗      ██████╗ ██╗    ██╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗ " -ForegroundColor Cyan
-Write-Host "  ██╔════╝██║     ██╔═══██╗██║    ██║██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗" -ForegroundColor Cyan
-Write-Host "  █████╗  ██║     ██║   ██║██║ █╗ ██║██║  ███╗██║   ██║███████║██████╔╝██║  ██║" -ForegroundColor Cyan
-Write-Host "  ██╔══╝  ██║     ██║   ██║██║███╗██║██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║" -ForegroundColor Cyan
-Write-Host "  ██║     ███████╗╚██████╔╝╚███╔███╔╝╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝" -ForegroundColor Cyan
-Write-Host "  ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ " -ForegroundColor Cyan
-Write-Host ""
-Write-Host "  FlowGuard v$Version — AI Security Monitor for Claude Code" -ForegroundColor White
+Write-Host "  ========================================" -ForegroundColor Cyan
+Write-Host "  FlowGuard v$Version" -ForegroundColor Cyan
+Write-Host "  AI Security Monitor for Claude Code" -ForegroundColor White
 Write-Host "  by EHZ-AI | 054-4825276" -ForegroundColor DarkGray
+Write-Host "  ========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# ── Checks ───────────────────────────────────────────────────
+# -- Checks --------------------------------------------------
 if (-not $NodeExe) {
   Write-Host "[ERROR] Node.js not found. Install from https://nodejs.org/ (v18+)" -ForegroundColor Red
   exit 1
@@ -54,28 +50,32 @@ if (-not (Test-Path $HookScript)) {
 }
 Write-Host "[OK] hook.js found" -ForegroundColor Green
 
-# ── npm install ──────────────────────────────────────────────
+# -- npm install ---------------------------------------------
 Write-Host ""
-Write-Host "[*] Installing dependencies..." -ForegroundColor Yellow
-Push-Location $ProjectDir
-  $npmOut = npm install --omit=dev 2>&1
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "[ERROR] npm install failed" -ForegroundColor Red
-    Write-Host $npmOut
-    Pop-Location
-    exit 1
-  }
-Pop-Location
-Write-Host "[OK] Dependencies installed" -ForegroundColor Green
+# Skip npm install if node_modules already exists (installer copies them)
+$nodeModules = Join-Path $ProjectDir "node_modules"
+if (Test-Path $nodeModules) {
+  Write-Host "[OK] Dependencies already installed (from installer)" -ForegroundColor Green
+} else {
+  Write-Host "[*] Installing dependencies..." -ForegroundColor Yellow
+  Push-Location $ProjectDir
+    $npmOut = npm install --omit=dev 2>&1
+    if ($LASTEXITCODE -ne 0) {
+      Write-Host "[WARN] npm install failed - continuing anyway" -ForegroundColor Yellow
+    } else {
+      Write-Host "[OK] Dependencies installed" -ForegroundColor Green
+    }
+  Pop-Location
+}
 
-# ── Config Wizard (MS8.4) ────────────────────────────────────
+# -- Config Wizard -------------------------------------------
 if (-not $Uninstall) {
   Write-Host ""
-  Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkCyan
+  Write-Host "  ----------------------------------------" -ForegroundColor DarkCyan
   Write-Host "  Configuration" -ForegroundColor Cyan
-  Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkCyan
+  Write-Host "  ----------------------------------------" -ForegroundColor DarkCyan
 
-  # Detect if running in hidden/non-interactive mode (no console for Read-Host)
+  # Detect if running in hidden/non-interactive mode
   $isInteractive = [Environment]::UserInteractive -and -not $Silent
   try { $isInteractive = $isInteractive -and ($null -ne [Console]::KeyAvailable) } catch { $isInteractive = $false }
 
@@ -91,15 +91,15 @@ if (-not $Uninstall) {
   }
 
   if ($Silent -or -not $isInteractive) {
-    # Silent/hidden mode — use existing values or defaults, no Read-Host
+    # Silent/hidden mode - use existing values or defaults
     $finalToken  = if ($TelegramToken -ne "") { $TelegramToken } else { $existingToken }
     $finalChatId = if ($TelegramChatId -ne "") { $TelegramChatId } else { $existingChatId }
     $HardeningLevel = $existingLevel
     Write-Host "[Auto] Using existing/default config (non-interactive mode)" -ForegroundColor DarkGray
   } else {
-    # Interactive mode — ask user
+    # Interactive mode - ask user
     Write-Host ""
-    Write-Host "  Telegram Alerts (optional — press Enter to skip)" -ForegroundColor Yellow
+    Write-Host "  Telegram Alerts (optional - press Enter to skip)" -ForegroundColor Yellow
     Write-Host ""
 
     $prompt1 = if ($existingToken) { "  Telegram Bot Token [$existingToken]: " } else { "  Telegram Bot Token: " }
@@ -112,7 +112,7 @@ if (-not $Uninstall) {
       $finalChatId = if ($inputChatId -ne "") { $inputChatId } else { $existingChatId }
     } else {
       $finalChatId = ""
-      Write-Host "  [INFO] Telegram skipped — alerts will be dashboard-only" -ForegroundColor DarkGray
+      Write-Host "  [INFO] Telegram skipped - alerts will be dashboard-only" -ForegroundColor DarkGray
     }
 
     # Hardening Level
@@ -126,7 +126,7 @@ if (-not $Uninstall) {
     $HardeningLevel = if ($inputLevel -match '^[0-3]$') { $inputLevel } else { "1" }
   }
 
-  # Read project root from whitelist.json (set by installer) — don't ask again
+  # Read project root from whitelist.json (set by installer)
   $whitelistFile = Join-Path $ProjectDir "agent\whitelist.json"
   $projectRoot = "C:/Claude-Repo"
   if (Test-Path $whitelistFile) {
@@ -140,24 +140,23 @@ if (-not $Uninstall) {
   }
   if (-not $Silent -and -not $projectRoot) {
     Write-Host ""
-    Write-Host "  [5] Project Root — the folder FlowGuard monitors" -ForegroundColor Cyan
+    Write-Host "  [5] Project Root - the folder FlowGuard monitors" -ForegroundColor Cyan
     $inputRoot = Read-Host "  Path [C:/Claude-Repo]"
     $projectRoot = if ($inputRoot) { $inputRoot.Replace('\','/') } else { "C:/Claude-Repo" }
   }
 
-  # כתוב .env
+  # Write .env (PROJECT_ROOT not here - whitelist.json is the single source)
   $envLines = @(
     "TELEGRAM_TOKEN=$finalToken",
     "TELEGRAM_CHAT_ID=$finalChatId",
-    "HARDENING_LEVEL=$HardeningLevel",
-    "PROJECT_ROOT=$projectRoot"
+    "HARDENING_LEVEL=$HardeningLevel"
   )
-  $envLines | Set-Content $EnvFile -Encoding UTF8
+  $envLines | Set-Content $EnvFile -Encoding ASCII
   Write-Host ""
   Write-Host "[OK] Config saved to .env (Hardening: $HardeningLevel, Root: $projectRoot)" -ForegroundColor Green
 }
 
-# ── Claude settings.json ─────────────────────────────────────
+# -- Claude settings.json -----------------------------------
 Write-Host ""
 $ClaudeDir = "$env:USERPROFILE\.claude"
 if (-not (Test-Path $ClaudeDir)) { New-Item -ItemType Directory -Path $ClaudeDir | Out-Null }
@@ -168,7 +167,7 @@ if (Test-Path $ClaudeConfig) {
     $raw = Get-Content $ClaudeConfig -Raw -Encoding UTF8
     $settings = $raw | ConvertFrom-Json -AsHashtable
   } catch {
-    Write-Host "[WARN] settings.json invalid — creating new" -ForegroundColor Yellow
+    Write-Host "[WARN] settings.json invalid - creating new" -ForegroundColor Yellow
     $settings = @{}
   }
 }
@@ -198,7 +197,7 @@ if ($Uninstall) {
   exit 0
 }
 
-# ── Start Collector ──────────────────────────────────────────
+# -- Start Collector -----------------------------------------
 Write-Host ""
 Write-Host "[*] Starting Collector..." -ForegroundColor Yellow
 
@@ -230,15 +229,15 @@ if ($healthOk) {
       Write-Host "[OK] Collector running on http://localhost:3010" -ForegroundColor Green
     }
   } catch {
-    Write-Host "[WARN] Collector did not respond — check logs\collector-error.log" -ForegroundColor Yellow
+    Write-Host "[WARN] Collector did not respond - check logs\collector-error.log" -ForegroundColor Yellow
   }
 }
 
-# ── Done ─────────────────────────────────────────────────────
+# -- Done ----------------------------------------------------
 Write-Host ""
-Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
+Write-Host "  ========================================" -ForegroundColor Cyan
 Write-Host "  FlowGuard installed successfully!" -ForegroundColor Green
-Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
+Write-Host "  ========================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "  Dashboard:  http://localhost:3010/dashboard/index-v2.html" -ForegroundColor White
 Write-Host "  Collector:  http://localhost:3010/health" -ForegroundColor White

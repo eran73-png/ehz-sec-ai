@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.6.7"
+#define AppVersion "2.7.0"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -70,6 +70,9 @@ Source: "{#SourceDir}\diag\*";                    DestDir: "{app}\diag";    Flag
 ; Config
 Source: "{#SourceDir}\config\*";                  DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
 
+; QA Test Suite
+Source: "{#SourceDir}\qa\*";                      DestDir: "{app}\qa"; Flags: ignoreversion recursesubdirs createallsubdirs
+
 ; node_modules (all dependencies)
 Source: "{#SourceDir}\node_modules\*";             DestDir: "{app}\node_modules"; Flags: ignoreversion recursesubdirs createallsubdirs
 
@@ -100,13 +103,13 @@ Name: "{userstartup}\FlowGuard Tray"; Filename: "{app}\install\start-tray.vbs"; 
 
 [Run]
 ; 1. Run setup wizard (configure Telegram + hooks)
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\setup.ps1"""; WorkingDir: "{app}"; Flags: runhidden waituntilterminated; StatusMsg: "Configuring FlowGuard..."
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\setup.ps1"" -Silent"; WorkingDir: "{app}"; Flags: runhidden waituntilterminated; StatusMsg: "Configuring FlowGuard..."
 
 ; 2. Install Windows Service (autostart)
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\install\install-service.ps1"""; WorkingDir: "{app}\install"; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Installing FlowGuard as Windows Service..."
 
-; 3. Restart service fresh (stop old + start new with updated config)
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Stop-Service FlowGuardCollector -ErrorAction SilentlyContinue; Start-Sleep 2; Start-Service FlowGuardCollector -ErrorAction SilentlyContinue"""; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Starting FlowGuard service..."
+; 3. Restart service fresh (stop + wait + start clean)
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Stop-Service FlowGuardCollector -Force -ErrorAction SilentlyContinue; Start-Sleep 5; Start-Service FlowGuardCollector -ErrorAction SilentlyContinue; Start-Sleep 3"""; Flags: runhidden waituntilterminated; Tasks: autostart; StatusMsg: "Starting FlowGuard service..."
 
 ; 4. Launch Tray immediately after install
 Filename: "wscript.exe"; Parameters: """{app}\install\start-tray.vbs"""; Flags: nowait runhidden; Tasks: autostart; StatusMsg: "Starting FlowGuard Tray..."
