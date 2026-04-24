@@ -238,7 +238,7 @@
       <div class="fg-badge">FG</div>
       <div>
         <div class="fg-name">FlowGuard</div>
-        <div class="fg-sub">User Guide v2.0</div>
+        <div class="fg-sub">User Guide v2.7.0</div>
       </div>
     </div>
 
@@ -255,8 +255,10 @@
       <a class="toc-link" href="#ch4"><span class="num">4</span> File Audit</a>
       <a class="toc-link" href="#ch5"><span class="num">5</span> Git Monitor</a>
       <a class="toc-link" href="#ch6"><span class="num">6</span> Settings — Every Control</a>
-      <a class="toc-link" href="#ch7"><span class="num">7</span> System Tray</a>
-      <a class="toc-link" href="#ch8"><span class="num">8</span> Telegram Alerts</a>
+      <a class="toc-link" href="#ch7"><span class="num">7</span> Projects Explorer &amp; Web Access</a>
+      <a class="toc-link" href="#ch8"><span class="num">8</span> System Tray</a>
+      <a class="toc-link" href="#ch9"><span class="num">9</span> Telegram Alerts</a>
+      <a class="toc-link" href="#ch10"><span class="num">10</span> Diagnostics</a>
     </div>
 
     <div class="toc-section">
@@ -275,11 +277,11 @@
 
     <!-- COVER -->
     <section class="cover" id="cover">
-      <div class="cover-badge">EHZ-AI · Version 2.4.0 · April 2026</div>
+      <div class="cover-badge">EHZ-AI · Version 2.7.0 · April 2026</div>
       <h1><span>FlowGuard</span><br>User Guide</h1>
       <p class="subtitle">AI Security Monitor for Claude Code</p>
       <div class="cover-meta">
-        <div class="cover-meta-item"><strong>Version</strong>v2.4.0</div>
+        <div class="cover-meta-item"><strong>Version</strong>v2.7.0</div>
         <div class="cover-meta-item"><strong>Date</strong>April 2026</div>
         <div class="cover-meta-item"><strong>Developed by</strong>EHZ-AI</div>
         <div class="cover-meta-item"><strong>Platform</strong>Windows 10/11</div>
@@ -343,14 +345,18 @@
       <div class="section">
         <h3><span class="icon">📋</span> What Does FlowGuard Monitor?</h3>
         <table class="guide-table">
-          <thead><tr><th>What Is Monitored</th><th>Description</th></tr></thead>
+          <thead><tr><th>What Is Monitored</th><th>Severity</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td>Every tool Claude uses</td><td>Edit, Bash, WebFetch, Read, Write and more — all are logged</td></tr>
-            <tr><td>Dangerous commands</td><td>curl|bash, base64 decode, deletion commands — flagged as CRITICAL</td></tr>
-            <tr><td>File changes</td><td>FSWatcher tracks files that were copied, deleted, or manually modified</td></tr>
-            <tr><td>Network access</td><td>WebFetch, WebSearch — every URL accessed</td></tr>
-            <tr><td>Git operations</td><td>Push to unauthorized servers triggers an immediate alert</td></tr>
-            <tr><td>Secrets in code</td><td>File Audit detects API keys, passwords, and PII in files</td></tr>
+            <tr><td>Every tool Claude uses</td><td><span class="badge info">INFO</span></td><td>Edit, Bash, WebFetch, Read, Write and more — all are logged</td></tr>
+            <tr><td>Dangerous commands</td><td><span class="badge critical">CRITICAL</span></td><td>curl|bash, base64 decode, deletion commands — flagged as CRITICAL</td></tr>
+            <tr><td>File changes</td><td>—</td><td>FSWatcher tracks files that were copied, deleted, or manually modified</td></tr>
+            <tr><td>Manual file copy into project</td><td><span class="badge high">HIGH</span></td><td>A new file copied into the project directory outside of Claude Code</td></tr>
+            <tr><td>Manual file deletion</td><td><span class="badge critical">CRITICAL</span></td><td>A file manually deleted from the project directory</td></tr>
+            <tr><td>Claude actions outside project</td><td><span class="badge critical">CRITICAL</span></td><td>Claude Code accesses files or folders outside the defined Project Directory</td></tr>
+            <tr><td>Deletion by Claude</td><td><span class="badge info">INFO</span></td><td>Claude Code deletes a file inside the project — logged for documentation</td></tr>
+            <tr><td>Network access</td><td>—</td><td>WebFetch, WebSearch — every URL accessed, with trust scores</td></tr>
+            <tr><td>Git operations</td><td><span class="badge high">HIGH</span></td><td>Push to unauthorized servers triggers an immediate alert</td></tr>
+            <tr><td>Secrets in code</td><td>—</td><td>File Audit detects API keys, passwords, and PII in files</td></tr>
           </tbody>
         </table>
       </div>
@@ -360,10 +366,10 @@
         <table class="guide-table">
           <thead><tr><th>Level</th><th>What It Means</th><th>Example</th></tr></thead>
           <tbody>
-            <tr><td><span class="badge critical">CRITICAL</span></td><td>Immediate danger — requires attention right now</td><td>curl|bash, file deletion, Private Key in code</td></tr>
-            <tr><td><span class="badge high">HIGH</span></td><td>Significant anomaly that requires investigation</td><td>GitHub Token in code, MongoDB credentials</td></tr>
+            <tr><td><span class="badge critical">CRITICAL</span></td><td>Immediate danger — requires attention right now</td><td>curl|bash, manual file deletion, Private Key in code</td></tr>
+            <tr><td><span class="badge high">HIGH</span></td><td>Significant anomaly that requires investigation</td><td>GitHub Token in code, manual file copy into project</td></tr>
             <tr><td><span class="badge medium">MEDIUM</span></td><td>Suspicious — worth reviewing</td><td>HTTP (not HTTPS), eval(), Israeli phone number in code</td></tr>
-            <tr><td><span class="badge info">INFO</span></td><td>Informational only — routine logging</td><td>New process started, session began</td></tr>
+            <tr><td><span class="badge info">INFO</span></td><td>Informational only — routine logging</td><td>New process started, session began, deletion by Claude</td></tr>
           </tbody>
         </table>
       </div>
@@ -399,7 +405,7 @@
           <div class="step">
             <div class="step-num"></div>
             <div class="step-body">
-              <strong>Run FlowGuard-Setup.exe</strong>
+              <strong>Run FlowGuard-Setup-v2.7.0.exe</strong>
               <p>Right-click → "Run as administrator". Approve the UAC prompt.</p>
             </div>
           </div>
@@ -413,24 +419,21 @@
           <div class="step">
             <div class="step-num"></div>
             <div class="step-body">
-              <strong>Config Wizard — Configure Telegram</strong>
-              <p>Enter your Bot Token and Chat ID to receive alerts. You can skip this and configure it later via the Dashboard.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-num"></div>
-            <div class="step-body">
-              <strong>Choose Hardening Level</strong>
-              <p>SOFT (monitoring only) / MEDIUM / HARD (active blocking). Start with SOFT.</p>
+              <strong>Choose Project Directory</strong>
+              <p>The installer asks you to select your project folder. This is the directory FlowGuard monitors. Click Browse and choose your code folder (e.g., <code>C:\Claude-Project</code>). This field is mandatory.</p>
             </div>
           </div>
           <div class="step">
             <div class="step-num"></div>
             <div class="step-body">
               <strong>Done — FlowGuard is running</strong>
-              <p>The Collector starts as a Windows Service. The FlowGuard icon appears in the System Tray. Open the Dashboard from the tray icon.</p>
+              <p>Installation completes automatically — Hooks are installed, the Collector starts as a Windows Service, and the Dashboard opens in your browser.</p>
             </div>
           </div>
+        </div>
+        <div class="info-box tip">
+          <div class="info-box-title">Tip</div>
+          Telegram and Hardening Level settings can be configured later via Settings in the Dashboard.
         </div>
       </div>
 
@@ -462,9 +465,10 @@
             <tr><td>Dashboard</td><td>General overview: Events today, severity levels, active Sessions, Collector status</td></tr>
             <tr><td>Events</td><td>All recorded events — filter by level, tool, text search, and choose quantity (100–All)</td></tr>
             <tr><td>Sessions</td><td>Every Claude Code conversation — start time, end time, how many actions were performed</td></tr>
-            <tr><td>Web Access</td><td>Sites that were accessed, approved sites vs. newly discovered ones</td></tr>
+            <tr><td>Web Access</td><td>Domains accessed, trust scores, approved sites vs. newly discovered ones</td></tr>
             <tr><td>File Audit</td><td>Scan files to detect secrets and PII</td></tr>
             <tr><td>Git Monitor</td><td>Authorized Git servers + push/fetch history</td></tr>
+            <tr><td>Projects Explorer</td><td>View of project subdirectories with file counts</td></tr>
             <tr><td>Skills Scanner</td><td>Integrity check for Claude Code skills</td></tr>
             <tr><td>Settings</td><td>All settings, Telegram, Quiet Hours, Exclusions</td></tr>
           </tbody>
@@ -516,18 +520,11 @@
 
       <div class="section">
         <h3><span class="icon">🔍</span> What Does File Audit Do?</h3>
-        <p>Scans code files in a folder you choose, looking for sensitive information that should not be in code — API keys, passwords, credit card numbers, and more.</p>
+        <p>Scans code files in the project directory, looking for sensitive information that should not be in code — API keys, passwords, credit card numbers, and more.</p>
+        <p>The scan also covers Office files (<code>.docx</code>, <code>.xlsx</code>, <code>.pptx</code>), extensionless files (such as <code>VISA</code>, <code>passwords</code>), and includes a search box for filtering results by filename (including Hebrew filenames).</p>
         <div class="info-box danger">
           <div class="info-box-title">Why This Matters</div>
           Code pushed to GitHub with an API key inside can be stolen within minutes. FlowGuard catches this before it happens.
-        </div>
-        <div class="info-box" style="margin-top:12px;">
-          <div class="info-box-title">✨ New in v2.1.3 — Extended Scanning</div>
-          <ul style="margin:6px 0 0 0;padding-left:16px;">
-            <li><strong>Office files</strong> — scans <code>.docx</code>, <code>.xlsx</code>, <code>.pptx</code> (extracts text from internal ZIP structure)</li>
-            <li><strong>Extensionless files</strong> — files like <code>VISA</code>, <code>passwords</code> are now scanned too</li>
-            <li><strong>Search box</strong> — filter results by filename, including Hebrew filenames</li>
-          </ul>
         </div>
       </div>
 
@@ -538,7 +535,7 @@
             <div class="step-num"></div>
             <div class="step-body">
               <strong>Select a folder</strong>
-              <p>Click "Browse" to choose a folder, or leave the default (C:/Claude-Repo).</p>
+              <p>Click "Browse" to choose a folder, or leave the default (Project Directory).</p>
             </div>
           </div>
           <div class="step">
@@ -647,6 +644,16 @@
       </div>
 
       <div class="section">
+        <h3><span class="icon">📂</span> Project Directory</h3>
+        <p>The root folder that FlowGuard monitors. Set during installation and can be changed in Settings.</p>
+        <p>Clicking the <strong>Browse</strong> button opens a server-side folder picker that lets you select a new directory. All monitoring — FSWatcher, File Audit, Projects Explorer — is based on this directory.</p>
+        <div class="info-box tip">
+          <div class="info-box-title">Tip</div>
+          Changing the Project Directory requires a Collector restart so the FSWatcher begins monitoring the new folder.
+        </div>
+      </div>
+
+      <div class="section">
         <h3><span class="icon">🔒</span> Security Settings</h3>
         <table class="guide-table">
           <thead><tr><th>Setting</th><th>Description</th><th>Recommendation</th></tr></thead>
@@ -739,45 +746,25 @@
       <div class="section">
         <h3><span class="icon">📂</span> FSWatcher Exclusions</h3>
         <p>Folders that FSWatcher ignores completely. Prevents false positives from directories that change constantly.</p>
-        <div class="info-box" style="margin-bottom:12px;">
-          <div class="info-box-title">✨ New in v2.1.4 — Toggle Interface</div>
-          Settings now has two equal cards: <strong>Quiet Hours</strong> and <strong>FSWatcher Exclusions</strong>.<br>
-          Each recommended folder has a toggle — you decide what to exclude and what to watch.
-        </div>
+        <p>In Settings there are two cards: <strong>Quiet Hours</strong> and <strong>FSWatcher Exclusions</strong>. Each recommended folder has a toggle — you decide what to exclude and what to watch.</p>
         <ul>
           <li><strong>Recommended — ON by default:</strong> <code>node_modules</code>, <code>.git</code>, <code>dist</code></li>
           <li><strong>Recommended — OFF (your choice):</strong> <code>build</code>, <code>out</code>, <code>.next</code>, <code>coverage</code>, <code>.cache</code>, <code>tmp</code></li>
           <li><strong>Custom:</strong> add any personal folder using the Add field at the bottom of the card</li>
           <li>All changes save automatically to <code>whitelist.json</code> and take effect immediately</li>
         </ul>
-        <div class="info-box" style="margin-top:12px;">
-          <div class="info-box-title">🧠 New in v2.1.4 — Behavioral Learning</div>
-          FlowGuard learns your work patterns and automatically reduces false positives:<br>
-          <ul style="margin:6px 0 0 0;padding-left:16px;">
-            <li>File touched by Claude this session → <span style="color:#0ea5e9;font-weight:700;">INFO</span> only</li>
-            <li>File changed 3+ times today → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
-            <li>File changed 10+ times → suppressed entirely</li>
-            <li>Nightly backup, scheduled task — auto-detected → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
-          </ul>
-          <strong>Only truly new, unseen files</strong> receive LOW/HIGH alerts.
-        </div>
+      </div>
 
-        <div class="info-box" style="margin-top:12px;">
-          <div class="info-box-title">🐛 Fixed in v2.1.5 — Installer Path Bug</div>
-          Fixed a critical bug: <code>start-tray.vbs</code> had a hardcoded path (<code>C:\FlowGuard</code>) that caused installation failure when using a different path (e.g., <code>C:\Program Files\FlowGuard</code>).<br>
-          FlowGuard now works with <strong>any installation path</strong>.
-        </div>
-
-        <div class="info-box" style="margin-top:12px;">
-          <div class="info-box-title">🛠️ New in v2.4.0 — Diagnostics &amp; Support Tool (MS11)</div>
-          A new built-in tool for collecting logs and sending them to support:<br>
-          <ul style="margin:6px 0 0 0;padding-left:16px;">
-            <li><strong>"Export &amp; Email Diagnostics" button</strong> in Settings — collects 8 categories of information (system info, install logs, config, service status, etc.) into a ZIP file</li>
-            <li><strong>Automatic sanitization</strong> — all tokens, passwords, and usernames are removed before packaging</li>
-            <li><strong>Automatic email</strong> — your default mail client opens with To, Subject, and Body pre-filled</li>
-            <li><strong>FlowGuard-Diagnostics.exe</strong> — a standalone tool that runs even when installation failed. Download from <code>flowguard-site.vercel.app/troubleshoot.html</code></li>
-          </ul>
-        </div>
+      <div class="section">
+        <h3><span class="icon">🧠</span> Behavioral Learning</h3>
+        <p>FlowGuard learns your work patterns and automatically reduces false positives:</p>
+        <ul>
+          <li>File touched by Claude this session → <span style="color:#0ea5e9;font-weight:700;">INFO</span> only</li>
+          <li>File changed 3+ times today → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
+          <li>File changed 10+ times → suppressed entirely</li>
+          <li>Nightly backup, scheduled task — auto-detected → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
+        </ul>
+        <p><strong>Only truly new, unseen files</strong> receive LOW/HIGH alerts.</p>
       </div>
 
       <div class="section">
@@ -787,10 +774,49 @@
       </div>
     </section>
 
-    <!-- ══ CH7 — System Tray ══ -->
+    <!-- ══ CH7 — Projects Explorer & Web Access ══ -->
     <section class="chapter" id="ch7">
       <div class="chapter-header">
         <div class="chapter-num">7</div>
+        <div class="chapter-title-block">
+          <h2>Projects Explorer &amp; Web Access</h2>
+          <div class="chapter-sub">View project structure and monitor internet access</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">📁</span> Projects Explorer</h3>
+        <p>Displays all subdirectories within the Project Directory, along with the number of files in each folder. Provides a quick overview of the project structure and helps identify large or unusual directories.</p>
+        <ul>
+          <li>Each folder is shown with its name, file count, and total size</li>
+          <li>Folders are filtered by FSWatcher Exclusions (node_modules, .git, etc. are not displayed)</li>
+          <li>Clicking a folder opens the list of files inside it</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🌐</span> Web Access</h3>
+        <p>Shows all domains accessed by Claude Code through WebFetch and WebSearch, along with trust scores.</p>
+        <table class="guide-table">
+          <thead><tr><th>Column</th><th>What It Is</th></tr></thead>
+          <tbody>
+            <tr><td>Domain</td><td>The domain name that was accessed</td></tr>
+            <tr><td>Trust Score</td><td>Trust score — based on access count, reputation, and usage patterns</td></tr>
+            <tr><td>First Seen</td><td>When this domain was first seen</td></tr>
+            <tr><td>Access Count</td><td>How many times this domain was accessed</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box tip">
+          <div class="info-box-title">Tip</div>
+          Domains with a low Trust Score are marked in yellow or red — it is worth investigating why Claude Code accessed them.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CH8 — System Tray ══ -->
+    <section class="chapter" id="ch8">
+      <div class="chapter-header">
+        <div class="chapter-num">8</div>
         <div class="chapter-title-block">
           <h2>System Tray</h2>
           <div class="chapter-sub">Quick control without opening the Dashboard</div>
@@ -803,7 +829,7 @@
         <table class="guide-table">
           <thead><tr><th>Item</th><th>What It Does</th></tr></thead>
           <tbody>
-            <tr><td>FlowGuard v2.4.0</td><td>Shows the current version</td></tr>
+            <tr><td>FlowGuard v2.7.0</td><td>Shows the current version</td></tr>
             <tr><td>Open Dashboard</td><td>Opens the Dashboard interface in the browser</td></tr>
             <tr><td>🟢 Collector Active</td><td>Current status — green = active, red = stopped</td></tr>
             <tr><td>Stop Service / Start Service</td><td>Stop/start the Collector (requires UAC)</td></tr>
@@ -817,10 +843,10 @@
       </div>
     </section>
 
-    <!-- ══ CH8 — Telegram ══ -->
-    <section class="chapter" id="ch8">
+    <!-- ══ CH9 — Telegram ══ -->
+    <section class="chapter" id="ch9">
       <div class="chapter-header">
-        <div class="chapter-num">8</div>
+        <div class="chapter-num">9</div>
         <div class="chapter-title-block">
           <h2>Setting Up Telegram</h2>
           <div class="chapter-sub">Receive alerts directly on your phone</div>
@@ -869,6 +895,48 @@
       </div>
     </section>
 
+    <!-- ══ CH10 — Diagnostics ══ -->
+    <section class="chapter" id="ch10">
+      <div class="chapter-header">
+        <div class="chapter-num">10</div>
+        <div class="chapter-title-block">
+          <h2>Diagnostics</h2>
+          <div class="chapter-sub">Diagnostic and support tools</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🔧</span> FlowGuard-FullDiag.ps1</h3>
+        <p>A full PowerShell diagnostic script for troubleshooting. Run from <code>C:\FlowGuard\diag\</code>:</p>
+        <ul>
+          <li>Collects information about the OS, services, logs, settings, and Hooks</li>
+          <li>Checks connectivity to the Collector, Telegram, and detection rules</li>
+          <li>Generates a clean HTML report with all findings</li>
+          <li>Automatic sanitization — tokens, passwords, and usernames are removed before sending</li>
+        </ul>
+        <div class="info-box tip">
+          <div class="info-box-title">Tip</div>
+          You can also use the "Export &amp; Email Diagnostics" button in Settings — it collects the same information into a ZIP file and opens your mail client ready to send.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3><span class="icon">🧪</span> QA Test Suite</h3>
+        <p>An automated testing tool — <strong>FlowGuard-QA-Test.exe</strong> — runs a series of checks on the installation:</p>
+        <ul>
+          <li>Collector service check (active, responding, correct port)</li>
+          <li>Hooks check (correctly installed in Claude Code)</li>
+          <li>FSWatcher check (monitoring the project directory)</li>
+          <li>Telegram check (valid connection, test message)</li>
+          <li>Audit Chain check (record integrity)</li>
+        </ul>
+        <div class="info-box">
+          <div class="info-box-title">When to Use?</div>
+          Run QA Test after a new installation, version update, or when something is not working as expected.
+        </div>
+      </div>
+    </section>
+
     <!-- ══ FAQ ══ -->
     <section class="chapter" id="faq">
       <div class="chapter-header">
@@ -904,6 +972,14 @@
           <li>In the code — use <code>process.env.API_KEY</code> instead of the literal value</li>
         </ol>
       </div>
+      <div class="section">
+        <h3>File Audit shows "No audit data" — what do I do?</h3>
+        <p>Click the <strong>Scan Now</strong> button to run a scan. Make sure the path in File Audit matches the Project Directory you configured — if they do not match, the scan will not find any files.</p>
+      </div>
+      <div class="section">
+        <h3>Web Access history is empty — why?</h3>
+        <p>WebFetch history is only shown when Claude Code makes web requests through the Hooks. Regular browser browsing is not logged — only WebFetch and WebSearch actions performed by Claude Code are recorded here.</p>
+      </div>
     </section>
 
     <!-- ══ GLOSSARY ══ -->
@@ -930,15 +1006,18 @@
             <tr><td>Bot Token</td><td>Access key for a Telegram bot — obtained from @BotFather</td></tr>
             <tr><td>Chat ID</td><td>Unique identifier of a Telegram conversation — obtained from @userinfobot</td></tr>
             <tr><td>Quiet Hours</td><td>Silence window — FlowGuard does not send Telegram messages but continues to log</td></tr>
+            <tr><td>Project Directory</td><td>The root folder monitored by FlowGuard — set during installation and can be changed in Settings</td></tr>
+            <tr><td>Web Access</td><td>Monitoring of domains accessed by Claude Code, with trust scores</td></tr>
+            <tr><td>Projects Explorer</td><td>A visual view of the project folder structure with file counts</td></tr>
           </tbody>
         </table>
       </div>
 
       <div style="text-align:center;padding:40px 0 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:40px;">
         <div style="font-size:28px;margin-bottom:12px;">🛡️</div>
-        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.4.0</div>
+        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.7.0</div>
         <div style="margin-top:6px;">AI Security Monitor for Claude Code · by EHZ-AI</div>
-        <div style="margin-top:4px;">054-4825276</div>
+        <div style="margin-top:4px;">April 2026 · 054-4825276</div>
       </div>
     </section>
 
