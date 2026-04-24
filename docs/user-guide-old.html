@@ -236,7 +236,7 @@
       <div class="fg-badge">FG</div>
       <div>
         <div class="fg-name">FlowGuard</div>
-        <div class="fg-sub">מדריך למשתמש v2.7.0</div>
+        <div class="fg-sub">מדריך למשתמש v2.0</div>
       </div>
     </div>
 
@@ -253,10 +253,8 @@
       <a class="toc-link" href="#ch4"><span class="num">4</span> File Audit</a>
       <a class="toc-link" href="#ch5"><span class="num">5</span> Git Monitor</a>
       <a class="toc-link" href="#ch6"><span class="num">6</span> Settings — כל כפתור</a>
-      <a class="toc-link" href="#ch7"><span class="num">7</span> Projects Explorer ו-Web Access</a>
-      <a class="toc-link" href="#ch8"><span class="num">8</span> System Tray</a>
-      <a class="toc-link" href="#ch9"><span class="num">9</span> Telegram Alerts</a>
-      <a class="toc-link" href="#ch10"><span class="num">10</span> Diagnostics</a>
+      <a class="toc-link" href="#ch7"><span class="num">7</span> System Tray</a>
+      <a class="toc-link" href="#ch8"><span class="num">8</span> Telegram Alerts</a>
     </div>
 
     <div class="toc-section">
@@ -275,11 +273,11 @@
 
     <!-- COVER -->
     <section class="cover" id="cover">
-      <div class="cover-badge">EHZ-AI · גרסה 2.7.0 · אפריל 2026</div>
+      <div class="cover-badge">EHZ-AI · גרסה 2.1.7 · אפריל 2026</div>
       <h1><span>FlowGuard</span><br>מדריך למשתמש</h1>
       <p class="subtitle">AI Security Monitor for Claude Code</p>
       <div class="cover-meta">
-        <div class="cover-meta-item"><strong>גרסה</strong>v2.7.0</div>
+        <div class="cover-meta-item"><strong>גרסה</strong>v2.4.0</div>
         <div class="cover-meta-item"><strong>תאריך</strong>אפריל 2026</div>
         <div class="cover-meta-item"><strong>פיתוח</strong>EHZ-AI</div>
         <div class="cover-meta-item"><strong>מערכת הפעלה</strong>Windows 10/11</div>
@@ -343,18 +341,14 @@
       <div class="section">
         <h3><span class="icon">📋</span> מה FlowGuard מנטר?</h3>
         <table class="guide-table">
-          <thead><tr><th>מה מנוטר</th><th>רמת חומרה</th><th>הסבר</th></tr></thead>
+          <thead><tr><th>מה מנוטר</th><th>הסבר</th></tr></thead>
           <tbody>
-            <tr><td>כל כלי שקלוד משתמש בו</td><td><span class="badge info">INFO</span></td><td>Edit, Bash, WebFetch, Read, Write ועוד — כולם נרשמים</td></tr>
-            <tr><td>פקודות מסוכנות</td><td><span class="badge critical">CRITICAL</span></td><td>curl|bash, base64 decode, פקודות מחיקה — מסומנות CRITICAL</td></tr>
-            <tr><td>שינויים בקבצים</td><td>—</td><td>FSWatcher עוקב אחרי קבצים שהועתקו, נמחקו, או שונו ידנית</td></tr>
-            <tr><td>העתקת קובץ ידנית לפרויקט</td><td><span class="badge high">HIGH</span></td><td>קובץ חדש שמועתק לתיקיית הפרויקט שלא דרך Claude Code</td></tr>
-            <tr><td>מחיקת קובץ ידנית</td><td><span class="badge critical">CRITICAL</span></td><td>קובץ שנמחק ידנית מתיקיית הפרויקט</td></tr>
-            <tr><td>פעולות Claude מחוץ לפרויקט</td><td><span class="badge critical">CRITICAL</span></td><td>Claude Code ניגש לקבצים או תיקיות מחוץ לתיקיית הפרויקט המוגדרת</td></tr>
-            <tr><td>מחיקה על ידי Claude</td><td><span class="badge info">INFO</span></td><td>Claude Code מוחק קובץ בתוך הפרויקט — נרשם לתיעוד</td></tr>
-            <tr><td>גישה לרשת</td><td>—</td><td>WebFetch, WebSearch — כל URL שנגשים אליו, עם ציון אמון</td></tr>
-            <tr><td>Git operations</td><td><span class="badge high">HIGH</span></td><td>Push לשרתים לא מורשים מזהיר מיידית</td></tr>
-            <tr><td>סקרטים בקוד</td><td>—</td><td>File Audit מזהה API keys, סיסמאות, PII בקבצים</td></tr>
+            <tr><td>כל כלי שקלוד משתמש בו</td><td>Edit, Bash, WebFetch, Read, Write ועוד — כולם נרשמים</td></tr>
+            <tr><td>פקודות מסוכנות</td><td>curl|bash, base64 decode, פקודות מחיקה — מסומנות CRITICAL</td></tr>
+            <tr><td>שינויים בקבצים</td><td>FSWatcher עוקב אחרי קבצים שהועתקו, נמחקו, או שונו ידנית</td></tr>
+            <tr><td>גישה לרשת</td><td>WebFetch, WebSearch — כל URL שנגשים אליו</td></tr>
+            <tr><td>Git operations</td><td>Push לשרתים לא מורשים מזהיר מיידית</td></tr>
+            <tr><td>סקרטים בקוד</td><td>File Audit מזהה API keys, סיסמאות, PII בקבצים</td></tr>
           </tbody>
         </table>
       </div>
@@ -364,10 +358,10 @@
         <table class="guide-table">
           <thead><tr><th>רמה</th><th>מה זה אומר</th><th>דוגמה</th></tr></thead>
           <tbody>
-            <tr><td><span class="badge critical">CRITICAL</span></td><td>סכנה מיידית — דורש תשומת לב עכשיו</td><td>curl|bash, מחיקת קבצים ידנית, Private Key בקוד</td></tr>
-            <tr><td><span class="badge high">HIGH</span></td><td>חריג משמעותי שדורש בדיקה</td><td>GitHub Token בקוד, העתקת קובץ ידנית לפרויקט</td></tr>
+            <tr><td><span class="badge critical">CRITICAL</span></td><td>סכנה מיידית — דורש תשומת לב עכשיו</td><td>curl|bash, מחיקת קבצים, Private Key בקוד</td></tr>
+            <tr><td><span class="badge high">HIGH</span></td><td>חריג משמעותי שדורש בדיקה</td><td>GitHub Token בקוד, MongoDB credentials</td></tr>
             <tr><td><span class="badge medium">MEDIUM</span></td><td>מפוקפק — כדאי לבדוק</td><td>HTTP (לא HTTPS), eval(), טלפון ישראלי בקוד</td></tr>
-            <tr><td><span class="badge info">INFO</span></td><td>מידע בלבד — תיעוד שגרתי</td><td>תהליך חדש, סשן התחיל, מחיקה ע"י Claude</td></tr>
+            <tr><td><span class="badge info">INFO</span></td><td>מידע בלבד — תיעוד שגרתי</td><td>תהליך חדש, סשן התחיל</td></tr>
           </tbody>
         </table>
       </div>
@@ -403,7 +397,7 @@
           <div class="step">
             <div class="step-num"></div>
             <div class="step-body">
-              <strong>הרץ את FlowGuard-Setup-v2.7.0.exe</strong>
+              <strong>הרץ את FlowGuard-Setup.exe</strong>
               <p>לחץ ימני → "הפעל כמנהל". אשר את חלון ה-UAC.</p>
             </div>
           </div>
@@ -417,21 +411,24 @@
           <div class="step">
             <div class="step-num"></div>
             <div class="step-body">
-              <strong>בחר תיקיית פרויקט (Project Directory)</strong>
-              <p>ה-installer מבקש לבחור את תיקיית הפרויקט שלך. זוהי התיקייה ש-FlowGuard מנטר. לחץ Browse ובחר את תיקיית הקוד שלך (למשל <code>C:\Claude-Project</code>). שדה זה הוא חובה.</p>
+              <strong>Config Wizard — הגדרת Telegram</strong>
+              <p>הכנס Bot Token ו-Chat ID לקבלת התראות. ניתן לדלג ולהגדיר מאוחר יותר דרך ה-Dashboard.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>בחר Hardening Level</strong>
+              <p>SOFT (ניטור בלבד) / MEDIUM / HARD (חסימה פעילה). מתחילים ב-SOFT.</p>
             </div>
           </div>
           <div class="step">
             <div class="step-num"></div>
             <div class="step-body">
               <strong>סיום — FlowGuard פועל</strong>
-              <p>ההתקנה מסתיימת אוטומטית — Hooks מותקנים, ה-Collector מופעל כ-Windows Service, ו-Dashboard נפתח בדפדפן.</p>
+              <p>ה-Collector מופעל כ-Windows Service. אייקון FlowGuard מופיע ב-System Tray. פתח את ה-Dashboard מהאייקון.</p>
             </div>
           </div>
-        </div>
-        <div class="info-box tip">
-          <div class="info-box-title">טיפ</div>
-          הגדרות Telegram ו-Hardening Level ניתנות להגדרה מאוחר יותר דרך Settings ב-Dashboard.
         </div>
       </div>
 
@@ -463,10 +460,9 @@
             <tr><td>Dashboard</td><td>סקירה כללית: Events היום, רמות חומרה, Sessions פעילות, סטטוס Collector</td></tr>
             <tr><td>Events</td><td>כל האירועים שתועדו — ניתן לסנן לפי רמה, כלי, חיפוש טקסט, ולבחור כמות (100–All)</td></tr>
             <tr><td>Sessions</td><td>כל שיחה עם Claude Code — תחילה, סיום, כמה פעולות בוצעו</td></tr>
-            <tr><td>Web Access</td><td>דומיינים שנגשת אליהם, ציוני אמון, אתרים מאושרים vs חדשים</td></tr>
+            <tr><td>Web Access</td><td>אתרים שנגשת אליהם, אתרים מאושרים vs שהתגלו חדשים</td></tr>
             <tr><td>File Audit</td><td>סריקת קבצים לזיהוי סקרטים ו-PII</td></tr>
             <tr><td>Git Monitor</td><td>שרתי Git מורשים + היסטוריית push/fetch</td></tr>
-            <tr><td>Projects Explorer</td><td>תצוגת תת-תיקיות בפרויקט עם מספרי קבצים</td></tr>
             <tr><td>Skills Scanner</td><td>בדיקת תקינות הסקילים של Claude Code</td></tr>
             <tr><td>Settings</td><td>כל ההגדרות, Telegram, Quiet Hours, Exclusions</td></tr>
           </tbody>
@@ -518,11 +514,18 @@
 
       <div class="section">
         <h3><span class="icon">🔍</span> מה File Audit עושה?</h3>
-        <p>סורק קבצי קוד בתיקיית הפרויקט ומחפש מידע רגיש שלא אמור להיות בקוד — API keys, סיסמאות, מספרי כרטיס אשראי, ועוד.</p>
-        <p>הסריקה כוללת גם קבצי Office (<code>.docx</code>, <code>.xlsx</code>, <code>.pptx</code>), קבצים ללא סיומת (כמו <code>VISA</code>, <code>passwords</code>), ותיבת חיפוש לסינון לפי שם קובץ (כולל עברית).</p>
+        <p>סורק קבצי קוד בתיקייה שתבחר ומחפש מידע רגיש שלא אמור להיות בקוד — API keys, סיסמאות, מספרי כרטיס אשראי, ועוד.</p>
         <div class="info-box danger">
           <div class="info-box-title">למה זה חשוב?</div>
           קוד שמועלה ל-GitHub עם API key בפנים — גנוב תוך דקות. FlowGuard מזהה את זה לפני שזה קורה.
+        </div>
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">✨ חדש ב-v2.1.3 — סריקה מורחבת</div>
+          <ul style="margin:6px 0 0 0;padding-right:16px;">
+            <li><strong>קבצי Office</strong> — סריקת <code>.docx</code>, <code>.xlsx</code>, <code>.pptx</code> (פתיחת ZIP פנימי וחיפוש בתוכן)</li>
+            <li><strong>קבצים ללא סיומת</strong> — קבצים כמו <code>VISA</code>, <code>passwords</code> נסרקים גם הם</li>
+            <li><strong>חיפוש בתוצאות</strong> — תיבת חיפוש לסינון לפי שם קובץ (כולל עברית)</li>
+          </ul>
         </div>
       </div>
 
@@ -533,7 +536,7 @@
             <div class="step-num"></div>
             <div class="step-body">
               <strong>בחר תיקייה</strong>
-              <p>לחץ "Browse" לבחור תיקייה, או השאר את ברירת המחדל (תיקיית הפרויקט).</p>
+              <p>לחץ "Browse" לבחור תיקייה, או השאר את ברירת המחדל (C:/Claude-Repo).</p>
             </div>
           </div>
           <div class="step">
@@ -642,16 +645,6 @@
       </div>
 
       <div class="section">
-        <h3><span class="icon">📂</span> Project Directory</h3>
-        <p>תיקיית השורש ש-FlowGuard מנטר. מוגדרת בזמן ההתקנה, וניתנת לשינוי ב-Settings.</p>
-        <p>לחיצה על כפתור <strong>Browse</strong> פותחת בוחר תיקיות בצד השרת ומאפשרת לבחור תיקייה חדשה. כל הניטור — FSWatcher, File Audit, Projects Explorer — מבוסס על תיקייה זו.</p>
-        <div class="info-box tip">
-          <div class="info-box-title">טיפ</div>
-          שינוי Project Directory דורש Restart ל-Collector כדי שה-FSWatcher יתחיל לנטר את התיקייה החדשה.
-        </div>
-      </div>
-
-      <div class="section">
         <h3><span class="icon">🔒</span> Security Settings</h3>
         <table class="guide-table">
           <thead><tr><th>הגדרה</th><th>הסבר</th><th>המלצה</th></tr></thead>
@@ -744,25 +737,45 @@
       <div class="section">
         <h3><span class="icon">📂</span> FSWatcher Exclusions</h3>
         <p>תיקיות שה-FSWatcher מתעלם מהן לחלוטין. שימושי כדי למנוע false positives מתיקיות שמשתנות כל הזמן.</p>
-        <p>ב-Settings ישנם שני כרטיסים: <strong>Quiet Hours</strong> ו-<strong>FSWatcher Exclusions</strong>. כל תיקייה מומלצת מוצגת עם toggle — המשתמש מחליט מה לכלול ומה לא.</p>
+        <div class="info-box" style="margin-bottom:12px;">
+          <div class="info-box-title">✨ חדש ב-v2.1.4 — ממשק Toggles</div>
+          ב-Settings ישנם שני כרטיסים: <strong>Quiet Hours</strong> ו-<strong>FSWatcher Exclusions</strong>.<br>
+          כל תיקייה מומלצת מוצגת עם toggle — המשתמש מחליט מה לכלול ומה לא.
+        </div>
         <ul>
           <li><strong>מומלצות — ON כברירת מחדל:</strong> <code>node_modules</code>, <code>.git</code>, <code>dist</code></li>
           <li><strong>מומלצות — OFF (המשתמש מחליט):</strong> <code>build</code>, <code>out</code>, <code>.next</code>, <code>coverage</code>, <code>.cache</code>, <code>tmp</code></li>
           <li><strong>Custom:</strong> הוסף כל תיקייה אישית דרך שדה ה-Add בתחתית הכרטיס</li>
           <li>כל השינויים נשמרים אוטומטית ב-<code>whitelist.json</code> ונכנסים לתוקף מיידית</li>
         </ul>
-      </div>
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🧠 חדש ב-v2.1.4 — Behavioral Learning</div>
+          FlowGuard לומד דפוסי עבודה ומפחית false positives אוטומטית:<br>
+          <ul style="margin:6px 0 0 0;padding-right:16px;">
+            <li>קובץ שנגעה בו Claude בסשן הזה → <span style="color:#0ea5e9;font-weight:700;">INFO</span> בלבד</li>
+            <li>קובץ שמשתנה 3+ פעמים ביום → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
+            <li>קובץ שמשתנה 10+ פעמים → לא מוצג (suppress)</li>
+            <li>גיבוי לילי, scheduled task — מזוהה אוטומטית → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
+          </ul>
+          <strong>רק קבצים חדשים לגמרי שלא נראו קודם</strong> מקבלים LOW/HIGH.
+        </div>
 
-      <div class="section">
-        <h3><span class="icon">🧠</span> Behavioral Learning</h3>
-        <p>FlowGuard לומד דפוסי עבודה ומפחית false positives אוטומטית:</p>
-        <ul>
-          <li>קובץ שנגעה בו Claude בסשן הזה → <span style="color:#0ea5e9;font-weight:700;">INFO</span> בלבד</li>
-          <li>קובץ שמשתנה 3+ פעמים ביום → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
-          <li>קובץ שמשתנה 10+ פעמים → לא מוצג (suppress)</li>
-          <li>גיבוי לילי, scheduled task — מזוהה אוטומטית → <span style="color:#0ea5e9;font-weight:700;">INFO</span></li>
-        </ul>
-        <p><strong>רק קבצים חדשים לגמרי שלא נראו קודם</strong> מקבלים LOW/HIGH.</p>
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🐛 תיקון ב-v2.1.5 — Installer Path Fix</div>
+          תוקן באג קריטי: <code>start-tray.vbs</code> הכיל נתיב קשיח (<code>C:\FlowGuard</code>) שגרם לכשלון בהתקנה לנתיב אחר (למשל <code>C:\Program Files\FlowGuard</code>).<br>
+          כעת FlowGuard עובד עם <strong>כל נתיב התקנה</strong>.
+        </div>
+
+        <div class="info-box" style="margin-top:12px;">
+          <div class="info-box-title">🛠️ חדש ב-v2.4.0 — כלי אבחון ותמיכה (MS11)</div>
+          כלי חדש לאיסוף לוגים ושליחתם לתמיכה:<br>
+          <ul style="margin:6px 0 0 0;padding-right:16px;">
+            <li><strong>כפתור "Export &amp; Email Diagnostics"</strong> ב-Settings — אוסף 8 קטגוריות מידע (system info, install logs, config, service status ועוד) לקובץ ZIP</li>
+            <li><strong>Sanitization אוטומטי</strong> — כל tokens, סיסמאות ושמות משתמשים מוסרים לפני שליחה</li>
+            <li><strong>Email אוטומטי</strong> — לקוח המייל נפתח עם To, Subject ו-Body מוכנים</li>
+            <li><strong>FlowGuard-Diagnostics.exe</strong> — כלי עצמאי שרץ גם כשההתקנה נכשלה. ניתן להורדה מ-<code>flowguard-site.vercel.app/troubleshoot.html</code></li>
+          </ul>
+        </div>
       </div>
 
       <div class="section">
@@ -772,49 +785,10 @@
       </div>
     </section>
 
-    <!-- ══ CH7 — Projects Explorer ו-Web Access ══ -->
+    <!-- ══ CH7 — System Tray ══ -->
     <section class="chapter" id="ch7">
       <div class="chapter-header">
         <div class="chapter-num">7</div>
-        <div class="chapter-title-block">
-          <h2>Projects Explorer ו-Web Access</h2>
-          <div class="chapter-sub">תצוגת מבנה הפרויקט וניטור גישה לאינטרנט</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h3><span class="icon">📁</span> Projects Explorer</h3>
-        <p>מציג את כל תת-התיקיות בתיקיית הפרויקט (Project Directory) עם מספר הקבצים בכל תיקייה. מאפשר לראות במבט מהיר את מבנה הפרויקט ולזהות תיקיות גדולות או חריגות.</p>
-        <ul>
-          <li>כל תיקייה מוצגת עם שם, מספר קבצים, וגודל כולל</li>
-          <li>תיקיות מסוננות לפי ה-FSWatcher Exclusions (node_modules, .git וכו' לא מוצגות)</li>
-          <li>לחיצה על תיקייה פותחת את רשימת הקבצים שבתוכה</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h3><span class="icon">🌐</span> Web Access</h3>
-        <p>מציג את כל הדומיינים שגולו על ידי Claude Code דרך WebFetch ו-WebSearch, יחד עם ציוני אמון (Trust Score).</p>
-        <table class="guide-table">
-          <thead><tr><th>עמודה</th><th>מה זה</th></tr></thead>
-          <tbody>
-            <tr><td>Domain</td><td>שם הדומיין שנגשת אליו</td></tr>
-            <tr><td>Trust Score</td><td>ציון אמון — מבוסס על מספר גישות, מוניטין, ודפוסי שימוש</td></tr>
-            <tr><td>First Seen</td><td>מתי הדומיין הזה נראה לראשונה</td></tr>
-            <tr><td>Access Count</td><td>כמה פעמים נגשת לדומיין הזה</td></tr>
-          </tbody>
-        </table>
-        <div class="info-box tip">
-          <div class="info-box-title">טיפ</div>
-          דומיינים עם Trust Score נמוך מסומנים בצהוב או אדום — כדאי לבדוק למה Claude Code ניגש אליהם.
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ CH8 — System Tray ══ -->
-    <section class="chapter" id="ch8">
-      <div class="chapter-header">
-        <div class="chapter-num">8</div>
         <div class="chapter-title-block">
           <h2>System Tray</h2>
           <div class="chapter-sub">שליטה מהירה בלי לפתוח את ה-Dashboard</div>
@@ -827,7 +801,7 @@
         <table class="guide-table">
           <thead><tr><th>פריט</th><th>מה זה עושה</th></tr></thead>
           <tbody>
-            <tr><td>FlowGuard v2.7.0</td><td>מציג את הגרסה הנוכחית</td></tr>
+            <tr><td>FlowGuard v2.4.0</td><td>מציג את הגרסה הנוכחית</td></tr>
             <tr><td>Open Dashboard</td><td>פותח את ממשק ה-Dashboard בדפדפן</td></tr>
             <tr><td>🟢 Collector Active</td><td>הסטטוס הנוכחי — ירוק=פעיל, אדום=כבוי</td></tr>
             <tr><td>Stop Service / Start Service</td><td>הפסקה/הפעלה של ה-Collector (דורש UAC)</td></tr>
@@ -841,10 +815,10 @@
       </div>
     </section>
 
-    <!-- ══ CH9 — Telegram ══ -->
-    <section class="chapter" id="ch9">
+    <!-- ══ CH8 — Telegram ══ -->
+    <section class="chapter" id="ch8">
       <div class="chapter-header">
-        <div class="chapter-num">9</div>
+        <div class="chapter-num">8</div>
         <div class="chapter-title-block">
           <h2>הגדרת Telegram</h2>
           <div class="chapter-sub">קבל התראות ישירות לנייד שלך</div>
@@ -893,48 +867,6 @@
       </div>
     </section>
 
-    <!-- ══ CH10 — Diagnostics ══ -->
-    <section class="chapter" id="ch10">
-      <div class="chapter-header">
-        <div class="chapter-num">10</div>
-        <div class="chapter-title-block">
-          <h2>Diagnostics</h2>
-          <div class="chapter-sub">כלי אבחון ותמיכה</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h3><span class="icon">🔧</span> FlowGuard-FullDiag.ps1</h3>
-        <p>סקריפט PowerShell מלא לאבחון בעיות. הרץ מתוך <code>C:\FlowGuard\diag\</code> :</p>
-        <ul>
-          <li>אוסף מידע על מערכת ההפעלה, שירותים, לוגים, הגדרות ו-Hooks</li>
-          <li>בודק קישוריות ל-Collector, Telegram, וחוקי זיהוי</li>
-          <li>מייצר דוח HTML מסודר עם כל הממצאים</li>
-          <li>Sanitization אוטומטי — tokens, סיסמאות ושמות משתמשים מוסרים לפני שליחה</li>
-        </ul>
-        <div class="info-box tip">
-          <div class="info-box-title">טיפ</div>
-          ניתן גם להפעיל את כפתור "Export &amp; Email Diagnostics" ב-Settings — שאוסף את אותו מידע לקובץ ZIP ופותח את לקוח המייל מוכן לשליחה.
-        </div>
-      </div>
-
-      <div class="section">
-        <h3><span class="icon">🧪</span> QA Test Suite</h3>
-        <p>כלי בדיקות אוטומטי — <strong>FlowGuard-QA-Test.exe</strong> — מריץ סדרת בדיקות על ההתקנה:</p>
-        <ul>
-          <li>בדיקת שירות Collector (פעיל, מגיב, port תקין)</li>
-          <li>בדיקת Hooks (מותקנים נכון ב-Claude Code)</li>
-          <li>בדיקת FSWatcher (עוקב אחרי תיקיית הפרויקט)</li>
-          <li>בדיקת Telegram (חיבור תקין, הודעת test)</li>
-          <li>בדיקת Audit Chain (שלמות הרשומות)</li>
-        </ul>
-        <div class="info-box">
-          <div class="info-box-title">מתי להשתמש?</div>
-          הרץ QA Test אחרי התקנה חדשה, עדכון גרסה, או כשמשהו לא עובד כצפוי.
-        </div>
-      </div>
-    </section>
-
     <!-- ══ FAQ ══ -->
     <section class="chapter" id="faq">
       <div class="chapter-header">
@@ -970,14 +902,6 @@
           <li>בקוד — השתמש ב-<code>process.env.API_KEY</code> במקום הערך הישיר</li>
         </ol>
       </div>
-      <div class="section">
-        <h3>File Audit מראה "No audit data" — מה עושים?</h3>
-        <p>לחץ על כפתור <strong>Scan Now</strong> כדי להפעיל סריקה. ודא שהנתיב ב-File Audit תואם את ה-Project Directory שהגדרת — אם הם לא תואמים, הסריקה לא תמצא קבצים.</p>
-      </div>
-      <div class="section">
-        <h3>היסטוריית Web Access ריקה — למה?</h3>
-        <p>היסטוריית WebFetch מוצגת רק כש-Claude Code מבצע בקשות web דרך ה-Hooks. גלישה רגילה בדפדפן לא נרשמת — רק פעולות WebFetch ו-WebSearch ש-Claude Code מבצע מתועדות כאן.</p>
-      </div>
     </section>
 
     <!-- ══ GLOSSARY ══ -->
@@ -1004,18 +928,15 @@
             <tr><td>Bot Token</td><td>מפתח גישה לבוט טלגרם — מתקבל מ-@BotFather</td></tr>
             <tr><td>Chat ID</td><td>מזהה ייחודי של שיחת טלגרם — מתקבל מ-@userinfobot</td></tr>
             <tr><td>Quiet Hours</td><td>שעות דממה — FlowGuard לא שולח Telegram אבל ממשיך לתעד</td></tr>
-            <tr><td>Project Directory</td><td>תיקיית השורש שמנוטרת על ידי FlowGuard — מוגדרת בהתקנה וניתנת לשינוי ב-Settings</td></tr>
-            <tr><td>Web Access</td><td>ניטור דומיינים שגולו על ידי Claude Code עם ציוני אמון (Trust Score)</td></tr>
-            <tr><td>Projects Explorer</td><td>תצוגה ויזואלית של מבנה תיקיות הפרויקט עם מספרי קבצים</td></tr>
           </tbody>
         </table>
       </div>
 
       <div style="text-align:center;padding:40px 0 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:40px;">
         <div style="font-size:28px;margin-bottom:12px;">🛡️</div>
-        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.7.0</div>
+        <div style="font-weight:700;color:var(--cyan);font-size:15px;">FlowGuard v2.4.0</div>
         <div style="margin-top:6px;">AI Security Monitor for Claude Code · by EHZ-AI</div>
-        <div style="margin-top:4px;">אפריל 2026 · 054-4825276</div>
+        <div style="margin-top:4px;">054-4825276</div>
       </div>
     </section>
 
