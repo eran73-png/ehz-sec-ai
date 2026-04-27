@@ -2334,6 +2334,113 @@
   </div>
 </div>
 
+<!-- MS16 — LICENSING & TRIAL SYSTEM -->
+<div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(168,85,247,0.3);">
+  <div class="phase-header" style="background:rgba(168,85,247,0.05);">
+    <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#a855f7,#7c3aed);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS16</div>
+    <div class="phase-info">
+      <h3>MS16 — Licensing &amp; Trial System</h3>
+      <p>מנגנון רישוי — Trial 60 יום → Free tier מוגבל → Pro עם License Key. גרסה: v2.8.0</p>
+    </div>
+    <div class="phase-status" style="background:rgba(168,85,247,0.12);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">📋 מתוכנן</div>
+  </div>
+
+  <div style="padding:14px 20px;background:rgba(168,85,247,0.05);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted2);">
+    <strong>קונספט:</strong> המשתמש מתקין → 60 יום Trial (הכל פתוח, בלי שעון). 5 ימים לפני הסוף → התראה (Dashboard + Telegram). אחרי 60 יום → Free tier מוגבל. License Key → Pro ללא הגבלה.<br>
+    <strong>עיקרון:</strong> המשתמש לא יודע שיש Trial עד 5 ימים לפני הסוף.
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">16.1</div>
+      <div class="task-title">📄 license.json + checkLicense()</div>
+      <div class="task-desc">
+        קובץ <code>license.json</code> נוצר בהתקנה:<br>
+        <code>{ install_date, key: "TRIAL", plan: "trial", valid: true }</code><br><br>
+        פונקציה <code>checkLicense()</code>:<br>
+        • מחשבת <code>today - install_date</code><br>
+        • ≤55 יום → trial, כל הפיצ'רים פתוחים, בלי שום אינדיקציה<br>
+        • 56-60 יום → trial, התראה "Trial ends in X days"<br>
+        • >60 יום → free tier, פיצ'רים ננעלים<br>
+        • key תקף → pro, הכל פתוח ללא הגבלה
+      </div>
+      <div class="task-tags"><span class="tag">license</span><span class="tag">core</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">16.2</div>
+      <div class="task-title">🔒 isFeatureEnabled(feature)</div>
+      <div class="task-desc">
+        גייטינג פיצ'רים לפי פלאן:<br><br>
+        <strong>Free (אחרי Trial):</strong><br>
+        • Dashboard + Logs ✅<br>
+        • File Audit ✅<br>
+        • Basic Rules ✅<br><br>
+        <strong>Pro בלבד (ננעל ב-Free):</strong><br>
+        • Telegram Alerts ❌<br>
+        • Skills Intelligence ❌<br>
+        • Behavioral Learning ❌<br>
+        • Multi-Machine ❌<br>
+        • QA Suite ❌<br>
+        • Export SIEM ❌
+      </div>
+      <div class="task-tags"><span class="tag">feature-gating</span><span class="tag">plans</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">16.3</div>
+      <div class="task-title">🖥️ License Tab בדשבורד</div>
+      <div class="task-desc">
+        טאב חדש בדשבורד — "License":<br>
+        • Plan: Trial / Free / Pro<br>
+        • Status: Active / Expired<br>
+        • שדה "Enter License Key" + כפתור Activate<br>
+        • כפתור "Buy Pro" → לינק לאתר<br>
+        • <strong>אין</strong> שעון/countdown ביום 1-55 (שקוף)<br>
+        • יום 56+: באנר צהוב "Trial ends in X days"<br>
+        • יום 61+: באנר אדום "Trial ended — upgrade or continue with Free"
+      </div>
+      <div class="task-tags"><span class="tag">dashboard</span><span class="tag">UI</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">16.4</div>
+      <div class="task-title">🔔 התראות Trial Expiry</div>
+      <div class="task-desc">
+        5 ימים לפני סיום:<br>
+        • Telegram: "⚠️ FlowGuard Trial ends in X days — enter license key to continue Pro features"<br>
+        • Dashboard: באנר צהוב קבוע בראש הדף<br>
+        • יום האחרון: Telegram + Dashboard באדום
+      </div>
+      <div class="task-tags"><span class="tag">telegram</span><span class="tag">alerts</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">16.5</div>
+      <div class="task-title">🔑 License Key Validation</div>
+      <div class="task-desc">
+        שלב ראשון — validation מקומי:<br>
+        • פורמט: <code>FG-XXXX-XXXX-XXXX</code><br>
+        • בדיקת checksum (אחרון 4 ספרות = hash של הראשונים)<br>
+        • Key תקף → plan = "pro", valid = true<br><br>
+        שלב שני (עתידי) — validation מרחוק:<br>
+        • בדיקה מול שרת רישוי (API)<br>
+        • binding למכונה (machine ID)<br>
+        • תפוגה שנתית
+      </div>
+      <div class="task-tags"><span class="tag">license-key</span><span class="tag">validation</span></div>
+    </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">16.6</div>
+      <div class="task-title">📜 GitHub License — BSL</div>
+      <div class="task-desc">
+        שינוי רישיון GitHub מ-MIT ל-BSL (Business Source License):<br>
+        • קוד פתוח לצפייה ושימוש אישי<br>
+        • אסור שימוש מסחרי תחרותי<br>
+        • אחרי 3 שנים → MIT אוטומטית<br>
+        • כמו HashiCorp, Sentry, CockroachDB
+      </div>
+      <div class="task-tags"><span class="tag">license</span><span class="tag">github</span><span class="tag">BSL</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- MS14 — SECURITY & STABILITY (from QA Review 17.04.2026) -->
 <div class="phase-block" style="margin-bottom:24px;border:1px solid rgba(16,185,129,0.3);">
   <div class="phase-header" style="background:rgba(16,185,129,0.05);">
