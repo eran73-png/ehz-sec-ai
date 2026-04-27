@@ -134,195 +134,6 @@
   ],
   "discovered_domains": [
     {
-      "domain": "www.carlogos.org",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:11.160Z"
-    },
-    {
-      "domain": "medium.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:11.160Z"
-    },
-    {
-      "domain": "autoworldjournal.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:11.160Z"
-    },
-    {
-      "domain": "www.polarismarketresearch.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:11.160Z"
-    },
-    {
-      "domain": "www.qyresearch.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:11.160Z"
-    },
-    {
-      "domain": "www.xy-carhire.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:11.160Z"
-    },
-    {
-      "domain": "www.sap.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:24.124Z"
-    },
-    {
-      "domain": "telematics.cioapplications.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:24.124Z"
-    },
-    {
-      "domain": "iotbusinessnews.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:24.124Z"
-    },
-    {
-      "domain": "leverx.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:24.124Z"
-    },
-    {
-      "domain": "www.cioapplications.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:24.124Z"
-    },
-    {
-      "domain": "targatelematics.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:24.124Z"
-    },
-    {
-      "domain": "www.ermtelematics.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:24.124Z"
-    },
-    {
-      "domain": "transportation.machine.co.il",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:29.901Z"
-    },
-    {
-      "domain": "business.colmobil.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:29.901Z"
-    },
-    {
-      "domain": "bydauto.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:29.901Z"
-    },
-    {
-      "domain": "www.mako.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:06:29.901Z"
-    },
-    {
-      "domain": "www.pv-magazine.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:00.388Z"
-    },
-    {
-      "domain": "sodiumbatteryhub.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:00.388Z"
-    },
-    {
-      "domain": "carnewschina.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:00.388Z"
-    },
-    {
-      "domain": "carboncredits.com",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:00.388Z"
-    },
-    {
-      "domain": "www.ess-news.com",
-      "score": 60,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:00.388Z"
-    },
-    {
-      "domain": "cars.walla.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:01.252Z"
-    },
-    {
-      "domain": "www.ice.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:01.252Z"
-    },
-    {
-      "domain": "bizzness.net",
-      "score": 65,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:01.252Z"
-    },
-    {
-      "domain": "newzim.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:01.252Z"
-    },
-    {
-      "domain": "www.israelhayom.co.il",
-      "score": 70,
-      "label": "OK",
-      "color": "#84cc16",
-      "discovered_at": "2026-04-23T13:07:01.252Z"
-    },
-    {
       "domain": "www.epconsulting.info",
       "score": 45,
       "label": "NEUTRAL",
@@ -1532,6 +1343,195 @@
       "label": "OK",
       "color": "#84cc16",
       "discovered_at": "2026-04-23T17:53:35.825Z"
+    },
+    {
+      "domain": "metronit.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:04:02.082Z"
+    },
+    {
+      "domain": "moovitapp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:04:02.082Z"
+    },
+    {
+      "domain": "maxusofficial.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:04:07.230Z"
+    },
+    {
+      "domain": "www.globes.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:04:07.230Z"
+    },
+    {
+      "domain": "aiways.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:04:07.230Z"
+    },
+    {
+      "domain": "www.blenergy.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:05:23.931Z"
+    },
+    {
+      "domain": "rocketreach.co",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:05:23.931Z"
+    },
+    {
+      "domain": "optibus.b-cdn.net",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:19:54.328Z"
+    },
+    {
+      "domain": "www.getapp.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:19:56.470Z"
+    },
+    {
+      "domain": "www.itsinternational.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-23T21:19:56.470Z"
+    },
+    {
+      "domain": "jobsearchinisrael.blogspot.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "adam-milo.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "adam-milo.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "www.adam-milo.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "www.youtube.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "psychometric-success.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "www.psychometricinstitute.com.au",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "www.assessmentcentrehq.com",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:54.714Z"
+    },
+    {
+      "domain": "www.machon-noam.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:57.641Z"
+    },
+    {
+      "domain": "machon-hadas.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:57.641Z"
+    },
+    {
+      "domain": "prepare.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:57.641Z"
+    },
+    {
+      "domain": "www.psychometry.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:57.641Z"
+    },
+    {
+      "domain": "www.ehc-test.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:57.641Z"
+    },
+    {
+      "domain": "shikum.mod.gov.il",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:57.641Z"
+    },
+    {
+      "domain": "etgar-hr.com",
+      "score": 60,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:59.833Z"
+    },
+    {
+      "domain": "machon-hadar.co.il",
+      "score": 70,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:59.833Z"
+    },
+    {
+      "domain": "govextra.gov.il",
+      "score": 65,
+      "label": "OK",
+      "color": "#84cc16",
+      "discovered_at": "2026-04-27T06:07:59.833Z"
     }
   ]
 }
