@@ -16,6 +16,10 @@ const crypto     = require('crypto');
 const nodemailer = require('nodemailer');
 const os         = require('os');
 
+// ─── License (MS16) ─────────────────────────────────────────────────────────
+const license = require('./license');
+license.initLicense();
+
 // ─── Config ─────────────────────────────────────────────────────────────────
 
 const PORT           = process.env.PORT           || 3010;
@@ -237,6 +241,8 @@ setInterval(checkDailyReport, 60 * 1000);
 
 function sendTelegram(text) {
   if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT) return;
+  // Feature gating: Telegram alerts locked in free plan (except license warnings)
+  if (!text.includes('FlowGuard Trial') && !text.includes('Collector started') && !license.isFeatureEnabled('telegram_alerts')) return;
 
   const body = JSON.stringify({ chat_id: TELEGRAM_CHAT, text, parse_mode: 'HTML' });
   const req  = https.request({
@@ -2395,6 +2401,38 @@ const server = app.listen(PORT, '127.0.0.1', () => {
     sendTelegram('✅ <b>FlowGuard</b> — Collector started successfully\n🖥️ Claude Code monitoring active\n👁️ FSWatcher active');
   }
 });
+
+// ─── License API (MS16) ──────────────────────────────────────────────────────
+app.get('/license/status', (req, res) => {
+  const status = license.checkLicense();
+  status.pro_features = license.PRO_FEATURES;
+  res.json(status);
+});
+
+app.post('/license/activate', (req, res) => {
+  const { key } = req.body || {};
+  if (!key) return res.status(400).json({ success: false, error: 'Missing key' });
+  const result = license.activateLicense(key);
+  res.json(result);
+});
+
+app.get('/license/feature/:name', (req, res) => {
+  const enabled = license.isFeatureEnabled(req.params.name);
+  res.json({ feature: req.params.name, enabled });
+});
+
+// ─── License Trial Warning — check on startup & every hour ───────────────────
+function checkTrialWarning() {
+  const status = license.checkLicense();
+  if (status.showWarning && TELEGRAM_TOKEN && TELEGRAM_CHAT) {
+    sendTelegram(`⚠️ <b>FlowGuard Trial</b> — ${status.message}`);
+  }
+  if (status.expired && status.plan === 'free' && TELEGRAM_TOKEN && TELEGRAM_CHAT) {
+    sendTelegram('🔒 <b>FlowGuard Trial ended</b> — Free plan active. Pro features locked. Enter license key to unlock.');
+  }
+}
+setTimeout(checkTrialWarning, 10000); // 10s after startup
+setInterval(checkTrialWarning, 60 * 60 * 1000); // every hour
 
 // Port error handler (MS14.5)
 server.on('error', (e) => {

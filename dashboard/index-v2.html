@@ -445,6 +445,7 @@ tr:hover td { background:#f8fafc; }
   <div class="sidebar-label">System</div>
   <div class="nav-item" data-view="projects"><span class="icon">&#x1F4C1;</span><span>Projects</span></div>
   <div class="nav-item" data-view="siem"><span class="icon">&#x1F4E1;</span><span>SIEM</span></div>
+  <div class="nav-item" data-view="license"><span class="icon">&#x1F511;</span><span>License</span></div>
   <div class="nav-item" data-view="settings"><span class="icon">&#x2699;&#xFE0F;</span><span>Settings</span></div>
   <div class="nav-item" data-view="help"><span class="icon">&#x1F4D6;</span><span>Help</span></div>
 
@@ -1010,6 +1011,71 @@ tr:hover td { background:#f8fafc; }
         <div style="text-align:center;padding:40px;color:#94a3b8;grid-column:1/-1;">Loading...</div>
       </div>
     </div><!-- /view-projects -->
+
+    <!-- ══════════ VIEW: LICENSE ══════════ -->
+    <div class="view" id="view-license">
+      <div class="view-header">
+        <h2>License</h2>
+        <div class="view-actions">
+          <button class="action-btn" onclick="loadLicenseStatus()">Refresh</button>
+        </div>
+      </div>
+
+      <!-- Trial warning banner (hidden by default) -->
+      <div id="license-warning-banner" style="display:none;margin-bottom:16px;padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;"></div>
+
+      <!-- License info card -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+        <div class="card" style="padding:24px;">
+          <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Current Plan</div>
+          <div id="license-plan" style="font-size:32px;font-weight:900;color:#00d4ff;">Loading...</div>
+          <div id="license-status-text" style="font-size:13px;color:#94a3b8;margin-top:8px;"></div>
+        </div>
+        <div class="card" style="padding:24px;">
+          <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Status</div>
+          <div id="license-valid" style="font-size:32px;font-weight:900;color:#10b981;">—</div>
+          <div id="license-days" style="font-size:13px;color:#94a3b8;margin-top:8px;"></div>
+        </div>
+      </div>
+
+      <!-- Feature comparison -->
+      <div class="card" style="padding:24px;margin-bottom:24px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:16px;">Features by Plan</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+              <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:700;">Feature</th>
+              <th style="text-align:center;padding:8px 12px;color:#64748b;font-weight:700;">Free</th>
+              <th style="text-align:center;padding:8px 12px;color:#00d4ff;font-weight:700;">Trial / Pro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:8px 12px;">Dashboard + Logs</td><td style="text-align:center;color:#10b981;">&#10003;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr style="background:rgba(255,255,255,0.02);"><td style="padding:8px 12px;">File Audit</td><td style="text-align:center;color:#10b981;">&#10003;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr><td style="padding:8px 12px;">Basic Rules</td><td style="text-align:center;color:#10b981;">&#10003;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr style="background:rgba(255,255,255,0.02);"><td style="padding:8px 12px;">Telegram Alerts</td><td style="text-align:center;color:#ef4444;">&#10007;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr><td style="padding:8px 12px;">Skills Intelligence</td><td style="text-align:center;color:#ef4444;">&#10007;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr style="background:rgba(255,255,255,0.02);"><td style="padding:8px 12px;">Behavioral Learning</td><td style="text-align:center;color:#ef4444;">&#10007;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr><td style="padding:8px 12px;">Multi-Machine</td><td style="text-align:center;color:#ef4444;">&#10007;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr style="background:rgba(255,255,255,0.02);"><td style="padding:8px 12px;">QA Suite</td><td style="text-align:center;color:#ef4444;">&#10007;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+            <tr><td style="padding:8px 12px;">Export SIEM</td><td style="text-align:center;color:#ef4444;">&#10007;</td><td style="text-align:center;color:#10b981;">&#10003;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Activate license key -->
+      <div class="card" style="padding:24px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Activate License Key</div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input type="text" id="license-key-input" placeholder="FG-XXXX-XXXX-XXXX" style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#e2e8f0;font-size:14px;font-family:monospace;letter-spacing:1px;">
+          <button onclick="activateLicenseKey()" style="padding:10px 24px;border-radius:8px;border:none;background:linear-gradient(135deg,#00d4ff,#6366f1);color:#fff;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">Activate</button>
+        </div>
+        <div id="license-activate-msg" style="font-size:12px;margin-top:8px;display:none;"></div>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
+          <a href="https://flowguard-site.vercel.app" target="_blank" style="color:#00d4ff;font-size:13px;text-decoration:none;font-weight:600;">Buy Pro License &rarr;</a>
+        </div>
+      </div>
+    </div>
 
     <!-- ══════════ VIEW: SETTINGS ══════════ -->
     <div class="view" id="view-settings">
@@ -1633,7 +1699,7 @@ function navigate(view) {
   var titles = {
     dashboard: 'Security Dashboard', events: 'Events', sessions: 'Sessions',
     webaccess: 'Web Access', fileaudit: 'File Audit', skills: 'Skills',
-    gitmonitor: 'Git Monitor', projects: 'Projects', siem: 'SIEM', settings: 'Settings', help: 'Help'
+    gitmonitor: 'Git Monitor', projects: 'Projects', siem: 'SIEM', license: 'License', settings: 'Settings', help: 'Help'
   };
   document.getElementById('topbar-title').textContent = titles[view] || 'FlowGuard';
   currentView = view;
@@ -1646,6 +1712,7 @@ function navigate(view) {
   if (view === 'gitmonitor') { loadGitMonitor(); }
   if (view === 'projects')   { loadProjects(); }
   if (view === 'siem')       { loadSiemConfig(); }
+  if (view === 'license')    { loadLicenseStatus(); }
   if (view === 'settings')   { loadSettings(); }
 }
 
@@ -3631,6 +3698,102 @@ async function loadProjects(reuseCache) {
   document.getElementById('projects-grid').innerHTML =
     (d.tree || []).map(renderProjectCard).join('');
 }
+
+// ── License (MS16) ──
+function loadLicenseStatus() {
+  fetch(BASE + '/license/status').then(function(r){return r.json()}).then(function(d) {
+    var planNames = { trial: 'Trial Pro', free: 'Free Community', pro: 'Pro' };
+    var planColors = { trial: '#00d4ff', free: '#64748b', pro: '#10b981' };
+    document.getElementById('license-plan').textContent = planNames[d.plan] || d.plan;
+    document.getElementById('license-plan').style.color = planColors[d.plan] || '#fff';
+
+    if (d.plan === 'pro') {
+      document.getElementById('license-valid').textContent = 'Active';
+      document.getElementById('license-valid').style.color = '#10b981';
+      document.getElementById('license-days').textContent = 'All features unlocked';
+      document.getElementById('license-status-text').textContent = d.message || '';
+    } else if (d.expired) {
+      document.getElementById('license-valid').textContent = 'Expired';
+      document.getElementById('license-valid').style.color = '#ef4444';
+      document.getElementById('license-days').textContent = 'Enter license key to unlock Pro features';
+      document.getElementById('license-status-text').textContent = 'Trial ended';
+    } else {
+      document.getElementById('license-valid').textContent = 'Active';
+      document.getElementById('license-valid').style.color = '#10b981';
+      document.getElementById('license-days').textContent = d.daysLeft != null ? d.daysLeft + ' days remaining' : '';
+      document.getElementById('license-status-text').textContent = '';
+    }
+
+    // Warning banner
+    var banner = document.getElementById('license-warning-banner');
+    if (d.showWarning) {
+      banner.style.display = 'block';
+      banner.style.background = 'rgba(245,158,11,0.1)';
+      banner.style.border = '1px solid rgba(245,158,11,0.3)';
+      banner.style.color = '#f59e0b';
+      banner.textContent = d.message;
+    } else if (d.expired) {
+      banner.style.display = 'block';
+      banner.style.background = 'rgba(239,68,68,0.1)';
+      banner.style.border = '1px solid rgba(239,68,68,0.3)';
+      banner.style.color = '#ef4444';
+      banner.textContent = d.message;
+    } else {
+      banner.style.display = 'none';
+    }
+  }).catch(function(e) {
+    document.getElementById('license-plan').textContent = 'Error';
+    document.getElementById('license-plan').style.color = '#ef4444';
+  });
+}
+
+function activateLicenseKey() {
+  var key = document.getElementById('license-key-input').value.trim().toUpperCase();
+  var msg = document.getElementById('license-activate-msg');
+  if (!key) { msg.style.display = 'block'; msg.style.color = '#ef4444'; msg.textContent = 'Enter a license key'; return; }
+
+  fetch(BASE + '/license/activate', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({key: key})
+  }).then(function(r){return r.json()}).then(function(d) {
+    msg.style.display = 'block';
+    if (d.success) {
+      msg.style.color = '#10b981';
+      msg.textContent = d.message;
+      loadLicenseStatus();
+    } else {
+      msg.style.color = '#ef4444';
+      msg.textContent = d.error;
+    }
+  }).catch(function(e) {
+    msg.style.display = 'block'; msg.style.color = '#ef4444'; msg.textContent = 'Connection error';
+  });
+}
+
+// Check license on dashboard load — show warning banner at top if needed
+function checkLicenseBanner() {
+  fetch(BASE + '/license/status').then(function(r){return r.json()}).then(function(d) {
+    if (d.showWarning || d.expired) {
+      var topBanner = document.createElement('div');
+      topBanner.id = 'global-license-banner';
+      topBanner.style.cssText = 'padding:10px 20px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;';
+      if (d.showWarning) {
+        topBanner.style.background = 'rgba(245,158,11,0.15)';
+        topBanner.style.color = '#f59e0b';
+        topBanner.textContent = d.message;
+      } else {
+        topBanner.style.background = 'rgba(239,68,68,0.15)';
+        topBanner.style.color = '#ef4444';
+        topBanner.textContent = d.message;
+      }
+      topBanner.onclick = function() { navigate('license'); };
+      var existing = document.getElementById('global-license-banner');
+      if (existing) existing.remove();
+      document.querySelector('.main-content').prepend(topBanner);
+    }
+  }).catch(function(){});
+}
+setTimeout(checkLicenseBanner, 2000);
 </script>
 
 </body>

@@ -1,6 +1,6 @@
 {
   "name": "flowguard",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "FlowGuard — AI Security Monitor for Claude Code | by EHZ-AI",
   "main": "collector/server.js",
   "scripts": {
