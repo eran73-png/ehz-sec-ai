@@ -2438,6 +2438,25 @@
       </div>
       <div class="task-tags"><span class="tag">license</span><span class="tag">github</span><span class="tag">BSL</span></div>
     </div>
+    <div class="task-cell">
+      <div class="task-num" style="color:#a855f7;">16.7</div>
+      <div class="task-title">🛡️ הגנה מפני פריצת License</div>
+      <div class="task-desc">
+        הקוד הוא JS/Node.js לא מקומפל — כל משתמש יכול לשנות license.json או checkLicense(). רמות הגנה לבחירה:<br><br>
+        <strong>שלב 1 (מינימלי):</strong><br>
+        • license.json מוצפן (לא plain text) עם מפתח מקומי<br>
+        • install_date נשמר גם ב-DB (לא רק בקובץ)<br><br>
+        <strong>שלב 2 (שרת validation):</strong><br>
+        • License Key נבדק מול API בשרת Oracle (פעם ביום)<br>
+        • אם API לא זמין → grace period 7 ימים<br><br>
+        <strong>שלב 3 (מתקדם — כשיש לקוחות):</strong><br>
+        • pkg/nexe → קומפילציה ל-EXE (לא ניתן לקרוא קוד)<br>
+        • Machine ID binding — מפתח צמוד למחשב ספציפי<br>
+        • Heartbeat — בדיקה מול שרת כל 24 שעות<br><br>
+        <strong>⚠️ החלטה:</strong> לא להשקיע בהגנה כבדה לפני שיש לקוחות משלמים. להתחיל עם שלב 1-2.
+      </div>
+      <div class="task-tags"><span class="tag">security</span><span class="tag">anti-tamper</span><span class="tag">obfuscation</span></div>
+    </div>
   </div>
 </div>
 
