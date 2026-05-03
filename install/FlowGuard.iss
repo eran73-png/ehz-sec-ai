@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName    "FlowGuard"
-#define AppVersion "2.9.0"
+#define AppVersion "2.9.1"
 #define AppPublisher "FlowGuard"
 #define AppURL     "https://ehz-server.duckdns.org"
 #define SourceDir  "C:\Claude-Repo\agents\EHZ-SEC-AI"
@@ -56,6 +56,8 @@ Source: "{#SourceDir}\agent\skill-scanner.js";     DestDir: "{app}\agent"; Flags
 
 ; Collector
 Source: "{#SourceDir}\collector\server.js";        DestDir: "{app}\collector"; Flags: ignoreversion
+Source: "{#SourceDir}\collector\license.js";       DestDir: "{app}\collector"; Flags: ignoreversion
+Source: "{#SourceDir}\collector\updater.js";       DestDir: "{app}\collector"; Flags: ignoreversion
 
 ; Dashboard
 Source: "{#SourceDir}\dashboard\*";               DestDir: "{app}\dashboard"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -87,9 +89,10 @@ Source: "{#SourceDir}\install\set-project-root.js"; DestDir: "{app}\install"; Fl
 ; NSSM â€” Windows Service Manager
 Source: "{#SourceDir}\tools\nssm.exe";              DestDir: "{app}\tools";   Flags: ignoreversion
 
-; package.json + README
+; package.json + README + License
 Source: "{#SourceDir}\package.json";              DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceDir}\README.md";                 DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}\license.json";              DestDir: "{app}"; Flags: onlyifdoesntexist
 
 [Dirs]
 Name: "{app}\logs"
@@ -222,6 +225,7 @@ begin
              mbInformation, MB_OK);
   end;
 end;
+
 
 
 
