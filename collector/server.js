@@ -20,6 +20,9 @@ const os         = require('os');
 const license = require('./license');
 license.initLicense();
 
+// ─── Updater (MS10) ─────────────────────────────────────────────────────────
+const updater = require('./updater');
+
 // ─── Config ─────────────────────────────────────────────────────────────────
 
 const PORT           = process.env.PORT           || 3010;
@@ -439,7 +442,9 @@ function extractVersion(src) {
 }
 
 app.get('/update/status', (req, res) => {
-  res.json(getRulesInfo());
+  const info = getRulesInfo();
+  info.app_version = updater.getCurrentVersion();
+  res.json(info);
 });
 
 app.get('/update/check', async (req, res) => {
@@ -600,6 +605,73 @@ app.post('/update/schedule', (req, res) => {
   saveScheduleHours(h);
   res.json({ ok: true, hours: h });
 });
+
+// ── FlowGuard Version Update (MS10) ──────────────────────────────────────────
+
+app.get('/version/status', (req, res) => {
+  const state = updater.loadState();
+  res.json({
+    currentVersion: updater.getCurrentVersion(),
+    latestVersion: state.latestVersion || null,
+    updateAvailable: state.updateAvailable || false,
+    lastCheck: state.lastCheck || null,
+    lastApplied: state.lastApplied || null,
+    changelog: state.changelog || '',
+    releaseName: state.releaseName || '',
+  });
+});
+
+app.get('/version/check', async (req, res) => {
+  try {
+    const result = await updater.checkForUpdate();
+    res.json(result);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/version/apply', async (req, res) => {
+  try {
+    const result = await updater.applyUpdate();
+    db.insert({ ts: Date.now(), hook_type: 'VersionUpdate', tool_name: 'FLOWGUARD_UPDATE',
+      session_id: 'system', level: 'INFO',
+      reason: `FlowGuard updated to v${result.version}`,
+      rule_type: 'version_update', input_summary: null,
+      output_summary: `Backup: ${result.backupPath}`,
+      telegram_sent: false, created_at: new Date().toISOString(),
+      prev_hash: lastHash, event_hash: 'system' }, () => {});
+    res.json(result);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/version/rollback', async (req, res) => {
+  try {
+    const result = await updater.rollback();
+    res.json(result);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Daily auto-check (every 24h)
+setInterval(async () => {
+  try {
+    const result = await updater.checkForUpdate();
+    if (result.updateAvailable) {
+      console.log(`[Updater] New version available: v${result.latestVersion}`);
+      // Send Telegram notification
+      if (TELEGRAM_TOKEN && TELEGRAM_CHAT) {
+        const msg = `⬆️ FlowGuard Update Available\n\nCurrent: v${result.currentVersion}\nNew: v${result.latestVersion}\n\n${result.changelog.slice(0, 200)}`;
+        const payload = JSON.stringify({ chat_id: TELEGRAM_CHAT, text: msg });
+        const tReq = https.request({ hostname: 'api.telegram.org', path: `/bot${TELEGRAM_TOKEN}/sendMessage`,
+          method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        tReq.write(payload); tReq.end();
+      }
+    }
+  } catch(_) {}
+}, 24 * 60 * 60 * 1000);
 
 // GET /config — return all settings (MS14.8)
 app.get('/config', (req, res) => {

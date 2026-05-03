@@ -1306,15 +1306,60 @@ tr:hover td { background:#f8fafc; }
           <div class="settings-body">
             <div class="setting-row">
               <div>
-                <div class="setting-label">Current Version <span class="tip-icon" data-tip="The version of FlowGuard's detection rule engine currently installed. Click 'Check' to see if a newer version with improved rules is available.">?</span></div>
+                <div class="setting-label">Rules Version</div>
                 <div class="setting-sublabel" id="update-current-version">Loading...</div>
               </div>
-              <button class="btn btn-outline btn-sm" onclick="checkUpdates()">Check</button>
+              <button class="btn btn-outline btn-sm" onclick="checkUpdates()">Check Rules</button>
             </div>
             <div id="update-available" style="display:none;padding:10px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
-              <div style="font-size:12px;font-weight:700;color:#16a34a">Update Available</div>
+              <div style="font-size:12px;font-weight:700;color:#16a34a">Rules Update Available</div>
               <div style="font-size:11px;color:#64748b;margin-top:2px" id="update-version-label"></div>
               <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="applyUpdate()">Apply Update</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FlowGuard Version Update (MS10) -->
+        <div class="settings-group">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">&#x2B06; FlowGuard Version</div>
+              <div class="panel-sub">Auto-update to the latest FlowGuard release</div>
+            </div>
+          </div>
+          <div class="settings-body">
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Installed Version</div>
+                <div class="setting-sublabel" id="fg-current-version" style="font-weight:700;color:#3b82f6;">Loading...</div>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="checkFlowGuardUpdate()">Check for Update</button>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Latest Available</div>
+                <div class="setting-sublabel" id="fg-latest-version" style="color:#94a3b8;">-</div>
+              </div>
+              <div class="setting-sublabel" id="fg-last-check" style="color:#94a3b8;font-size:10px;"></div>
+            </div>
+            <div id="fg-update-banner" style="display:none;padding:12px;background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:10px;border:1px solid rgba(59,130,246,0.3);margin-top:4px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:18px;">&#x2B06;</span>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:#3b82f6;" id="fg-update-title">New version available</div>
+                  <div style="font-size:11px;color:#94a3b8;margin-top:2px;max-height:60px;overflow-y:auto;white-space:pre-wrap;" id="fg-update-changelog"></div>
+                </div>
+                <div style="display:flex;gap:6px;">
+                  <button class="btn btn-primary btn-sm" onclick="applyFlowGuardUpdate()">Update Now</button>
+                </div>
+              </div>
+            </div>
+            <div id="fg-update-progress" style="display:none;padding:12px;text-align:center;">
+              <div class="spinner" style="display:inline-block;margin-right:8px;"></div>
+              <span style="color:#64748b;font-size:12px;">Downloading and applying update...</span>
+            </div>
+            <div id="fg-rollback-row" style="display:none;margin-top:4px;">
+              <button class="btn btn-outline btn-sm" style="color:#f59e0b;border-color:#f59e0b;" onclick="rollbackFlowGuard()">Rollback to Previous Version</button>
             </div>
           </div>
         </div>
@@ -2564,7 +2609,7 @@ function openGuide(lang) {
 }
 
 async function loadSettings() {
-  await Promise.all([loadProjectRoot(), loadConfig(), loadNotifConfig(), loadEmailConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats(), loadAutoUpdateSchedule()]);
+  await Promise.all([loadProjectRoot(), loadConfig(), loadNotifConfig(), loadEmailConfig(), loadGitRemoteSettings(), loadUpdateStatus(), loadVersionStatus(), loadFswExclusions(), loadQuietHours(), loadLogStats(), loadAutoUpdateSchedule()]);
 }
 
 async function loadProjectRoot() {
@@ -3221,6 +3266,85 @@ async function applyUpdate() {
     toast('Update applied \u2014 restart may be required', 'success');
     document.getElementById('update-available').style.display = 'none';
   } catch(e) { toast('Update failed', 'error'); }
+}
+
+// ── FlowGuard Version Update (MS10) ──
+
+async function loadVersionStatus() {
+  try {
+    var data = await fetchJSON('/version/status');
+    document.getElementById('fg-current-version').textContent = 'v' + data.currentVersion;
+    if (data.latestVersion) {
+      document.getElementById('fg-latest-version').textContent = 'v' + data.latestVersion;
+    }
+    if (data.lastCheck) {
+      document.getElementById('fg-last-check').textContent = 'Last checked: ' + timeAgo(data.lastCheck);
+    }
+    if (data.updateAvailable) {
+      document.getElementById('fg-update-banner').style.display = 'block';
+      document.getElementById('fg-update-title').textContent = 'v' + data.latestVersion + ' available';
+      document.getElementById('fg-update-changelog').textContent = data.changelog || '';
+    } else {
+      document.getElementById('fg-update-banner').style.display = 'none';
+    }
+    if (data.lastApplied) {
+      document.getElementById('fg-rollback-row').style.display = 'block';
+    }
+  } catch(e) {
+    document.getElementById('fg-current-version').textContent = 'Error';
+  }
+}
+
+async function checkFlowGuardUpdate() {
+  try {
+    toast('Checking for updates...', 'info');
+    var data = await fetchJSON('/version/check');
+    document.getElementById('fg-current-version').textContent = 'v' + data.currentVersion;
+    document.getElementById('fg-latest-version').textContent = 'v' + data.latestVersion;
+    document.getElementById('fg-last-check').textContent = 'Just now';
+    if (data.updateAvailable) {
+      document.getElementById('fg-update-banner').style.display = 'block';
+      document.getElementById('fg-update-title').textContent = 'v' + data.latestVersion + ' available';
+      document.getElementById('fg-update-changelog').textContent = data.changelog || '';
+      toast('Update available: v' + data.latestVersion, 'success');
+    } else {
+      document.getElementById('fg-update-banner').style.display = 'none';
+      toast('FlowGuard is up to date (v' + data.currentVersion + ')', 'info');
+    }
+  } catch(e) { toast('Failed to check for updates', 'error'); }
+}
+
+async function applyFlowGuardUpdate() {
+  if (!confirm('Update FlowGuard? A backup will be created automatically.')) return;
+  document.getElementById('fg-update-progress').style.display = 'block';
+  document.getElementById('fg-update-banner').style.display = 'none';
+  try {
+    var data = await fetch(API + '/version/apply', { method: 'POST' }).then(function(r){return r.json()});
+    document.getElementById('fg-update-progress').style.display = 'none';
+    if (data.ok) {
+      toast('Updated to v' + data.version + ' — restarting...', 'success');
+      document.getElementById('fg-rollback-row').style.display = 'block';
+      setTimeout(function() { location.reload(); }, 5000);
+    } else {
+      toast('Update failed: ' + (data.error || 'Unknown error'), 'error');
+    }
+  } catch(e) {
+    document.getElementById('fg-update-progress').style.display = 'none';
+    toast('Update failed: ' + e.message, 'error');
+  }
+}
+
+async function rollbackFlowGuard() {
+  if (!confirm('Rollback to previous version? Current version will be replaced.')) return;
+  try {
+    var data = await fetch(API + '/version/rollback', { method: 'POST' }).then(function(r){return r.json()});
+    if (data.ok) {
+      toast('Rolled back successfully — restarting...', 'success');
+      setTimeout(function() { location.reload(); }, 5000);
+    } else {
+      toast('Rollback failed: ' + (data.error || 'Unknown error'), 'error');
+    }
+  } catch(e) { toast('Rollback failed: ' + e.message, 'error'); }
 }
 
 // ════════ AUTO-REFRESH ════════
