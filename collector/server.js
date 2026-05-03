@@ -1274,22 +1274,53 @@ function readNotes() {
 }
 
 function getFolderStats(dirPath) {
-  let files = 0, folders = 0, lastMod = 0;
+  let files = 0, folders = 0, lastMod = 0, totalSize = 0;
   try {
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
     for (const e of entries) {
       if (EXCLUDE_PROJ.has(e.name)) continue;
-      if (e.isDirectory()) { folders++; }
+      if (e.isDirectory()) {
+        folders++;
+        try { totalSize += getDirSize(path.join(dirPath, e.name)); } catch(_) {}
+      }
       else {
         files++;
         try {
-          const m = fs.statSync(path.join(dirPath, e.name)).mtimeMs;
-          if (m > lastMod) lastMod = m;
+          const st = fs.statSync(path.join(dirPath, e.name));
+          if (st.mtimeMs > lastMod) lastMod = st.mtimeMs;
+          totalSize += st.size;
         } catch(_) {}
       }
     }
   } catch(_) {}
-  return { files, folders, lastMod };
+  return { files, folders, lastMod, size: totalSize };
+}
+
+function getDirSize(dirPath) {
+  let total = 0;
+  try {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    for (const e of entries) {
+      if (EXCLUDE_PROJ.has(e.name)) continue;
+      const fp = path.join(dirPath, e.name);
+      if (e.isDirectory()) total += getDirSize(fp);
+      else { try { total += fs.statSync(fp).size; } catch(_) {} }
+    }
+  } catch(_) {}
+  return total;
+}
+
+function getDirSizeFull(dirPath) {
+  let total = 0;
+  try {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    for (const e of entries) {
+      const fp = path.join(dirPath, e.name);
+      if (e.isDirectory()) total += getDirSizeFull(fp);
+      else { try { total += fs.statSync(fp).size; } catch(_) {} }
+    }
+  } catch(_) {}
+  return total;
 }
 
 function buildProjectTree(rootPath, depth = 0) {
@@ -1310,6 +1341,7 @@ function buildProjectTree(rootPath, depth = 0) {
       path:     fullPath,
       files:    stats.files,
       folders:  stats.folders,
+      size:     stats.size,
       last_mod: stats.lastMod ? new Date(stats.lastMod).toISOString() : null,
       note:     notes[fullPath] || '',
       children: [],
@@ -1325,7 +1357,22 @@ function buildProjectTree(rootPath, depth = 0) {
 app.get('/projects', (req, res) => {
   try {
     const tree = buildProjectTree(PROJECTS_ROOT);
-    res.json({ root: PROJECTS_ROOT, tree, count: tree.length });
+    // Root stats — cached, calculated async in background
+    if (global._rootStats === undefined) {
+      global._rootStats = null;
+      require('child_process').exec(
+        'powershell -NoProfile -Command "' +
+        "$f=Get-ChildItem -Path '" + PROJECTS_ROOT + "' -Recurse -File -EA SilentlyContinue;" +
+        "$d=Get-ChildItem -Path '" + PROJECTS_ROOT + "' -Recurse -Directory -EA SilentlyContinue;" +
+        "@{size=($f|Measure-Object Length -Sum).Sum;files=$f.Count;folders=$d.Count}|ConvertTo-Json" +
+        '"', { timeout: 120000 },
+        (err, stdout) => {
+          try { global._rootStats = JSON.parse(stdout); }
+          catch(_) { global._rootStats = { size: 0, files: 0, folders: 0 }; }
+        }
+      );
+    }
+    res.json({ root: PROJECTS_ROOT, tree, count: tree.length, rootStats: global._rootStats });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
