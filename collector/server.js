@@ -691,7 +691,7 @@ app.get('/browse-dirs', (req, res) => {
 let skillScanner;
 try { skillScanner = require('../agent/skill-scanner'); } catch (_) {}
 
-// GET /skills — last scan results (from registry file)
+// GET /skills — last scan results (only skills that actually exist on disk)
 app.get('/skills', (req, res) => {
   if (!skillScanner) return res.status(500).json({ error: 'skill-scanner not available' });
   try {
@@ -699,7 +699,16 @@ app.get('/skills', (req, res) => {
     const registry = require('fs').existsSync(registryPath)
       ? JSON.parse(require('fs').readFileSync(registryPath, 'utf8'))
       : {};
-    res.json({ skills: registry, count: Object.keys(registry).length });
+    // Filter: only return skills that still exist on disk
+    const skillsDir = skillScanner.SKILLS_DIR;
+    const filtered = {};
+    for (const [name, data] of Object.entries(registry)) {
+      const skillPath = require('path').join(skillsDir, name);
+      if (require('fs').existsSync(skillPath)) {
+        filtered[name] = data;
+      }
+    }
+    res.json({ skills: filtered, count: Object.keys(filtered).length, skillsDir });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
