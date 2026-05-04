@@ -1,7 +1,7 @@
 {
-  "lastCheck": "2026-05-03T13:34:47.188Z",
+  "lastCheck": "2026-05-04T13:26:14.317Z",
   "latestVersion": "V2.9.0",
-  "currentVersion": "2.9.0",
+  "currentVersion": "2.9.1",
   "updateAvailable": false,
   "downloadUrl": "https://api.github.com/repos/eran73-png/ehz-sec-ai/zipball/V2.9.0",
   "changelog": "## What's New in v2.9.0\r\n\r\n### MS10: Auto-Update System\r\n- Check for new versions from the dashboard\r\n- One-click update with automatic backup\r\n- Rollback to previous version\r\n- Auto-check every 24h + Telegram notification\r\n\r\n### MS16: Licensing & Trial (v2.8.0)\r\n- 60-day Trial Pro\r\n- License key activation\r\n- Feature gating (Free vs Pro)\r\n\r\n### Other\r\n- Project Explorer: folder size + stats bar\r\n- Skills: only shows installed skills\r\n- Google Sign-In mobile fix\r\n",

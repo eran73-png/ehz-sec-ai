@@ -154,10 +154,12 @@ async function applyUpdate() {
   }
   console.log(`[Updater] Backed up v${current} to ${backupPath}`);
 
-  // 4. Extract zip
+  // 4. Extract zip — use safe paths (no user input in shell commands)
   console.log('[Updater] Extracting...');
   try {
-    execSync(`powershell -NoProfile -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${tmpDir}/extracted' -Force"`, { timeout: 60000 });
+    const safeZip = path.resolve(zipPath).replace(/'/g, "''");
+    const safeDest = path.resolve(tmpDir, 'extracted').replace(/'/g, "''");
+    execSync(`powershell -NoProfile -Command "Expand-Archive -Path '${safeZip}' -DestinationPath '${safeDest}' -Force"`, { timeout: 60000 });
   } catch(e) {
     throw new Error('Failed to extract update: ' + e.message);
   }

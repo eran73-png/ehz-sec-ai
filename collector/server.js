@@ -96,9 +96,10 @@ async function sendEmail(subject, text) {
 // ─── Desktop Toast Notification (MS14.7) ─────────────────────────────────────
 function sendDesktopAlert(level, tool, reason) {
   const { exec } = require('child_process');
-  const title = `FlowGuard — ${level}`;
-  const msg   = `${tool}: ${(reason || '').slice(0, 120)}`.replace(/"/g, '\\"');
-  // Use PowerShell to show Windows toast notification
+  // Sanitize inputs — escape single quotes for PowerShell, strip control chars
+  const sanitize = (s) => String(s || '').replace(/['\r\n`$]/g, '').slice(0, 120);
+  const title = sanitize(`FlowGuard — ${level}`);
+  const msg   = sanitize(`${tool}: ${reason || ''}`);
   const ps = `powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms; $n = New-Object System.Windows.Forms.NotifyIcon; $n.Icon = [System.Drawing.SystemIcons]::Shield; $n.Visible = $true; $n.ShowBalloonTip(5000, '${title}', '${msg}', [System.Windows.Forms.ToolTipIcon]::Warning); Start-Sleep -Seconds 6; $n.Dispose()"`;
   exec(ps, { timeout: 10000 }, (err) => {
     if (err) console.log('[Toast] Failed:', err.message);
@@ -494,9 +495,16 @@ app.post('/update/apply', async (req, res) => {
         r.on('end', () => resolve(d));
       }).on('error', reject);
     });
-    // Validate — ensure content is real rules.js and not an error page
+    // Validate — ensure content is real rules.js and not malicious
     if (!src.includes('module.exports') || !src.includes('checkRules')) {
       throw new Error(`Invalid content from GitHub (${src.length} bytes) — not written`);
+    }
+    // Security: block dangerous patterns in downloaded code
+    const dangerPatterns = [/child_process/, /\bexec\s*\(/, /\bspawn\s*\(/, /eval\s*\(/, /Function\s*\(/];
+    for (const dp of dangerPatterns) {
+      if (dp.test(src)) {
+        throw new Error(`Security: downloaded rules.js contains blocked pattern: ${dp}`);
+      }
     }
     // Backup current rules.js
     const fs2 = require('fs');
@@ -748,6 +756,12 @@ app.get('/browse-dirs', (req, res) => {
       }
     }
     const resolved = path.resolve(browsePath);
+    // Security: block sensitive system directories
+    const blocked = ['windows', 'system32', 'syswow64', 'programdata', 'recovery', '$recycle.bin', 'system volume information'];
+    const lowerResolved = resolved.toLowerCase().replace(/\\/g, '/');
+    if (blocked.some(b => lowerResolved.includes('/' + b))) {
+      return res.status(403).json({ current: resolved, items: [], error: 'Access denied' });
+    }
     if (!fs.existsSync(resolved)) return res.json({ current: resolved, items: [] });
     const entries = fs.readdirSync(resolved, { withFileTypes: true });
     const dirs = entries
@@ -1993,7 +2007,9 @@ h1{color:#00d4ff;font-size:22px;}
 
 // GET /sessions/conversation-log/:filename — serve the generated HTML
 app.get('/sessions/conversation-log/:filename', (req, res) => {
-  const filePath = path.join(__dirname, '..', 'support', req.params.filename);
+  const supportDir = path.resolve(__dirname, '..', 'support');
+  const filePath = path.resolve(supportDir, req.params.filename);
+  if (!filePath.startsWith(supportDir)) return res.status(403).send('Forbidden');
   if (!fs.existsSync(filePath)) return res.status(404).send('File not found');
   res.sendFile(filePath);
 });
