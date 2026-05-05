@@ -1,6 +1,6 @@
 'use strict';
 /**
- * FlowGuard License Manager — v2.9.2
+ * FlowGuard License Manager — v2.9.3
  * Trial 60 days → Free tier → Pro with License Key
  */
 

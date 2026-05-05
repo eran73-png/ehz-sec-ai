@@ -6,8 +6,8 @@
  * exports.checkRules(event) → { level, reason, ruleType } | null
  */
 
-const RULES_VERSION   = '1.0.0';
-const RULES_UPDATED   = '2026-04-10';
+const RULES_VERSION   = '2.0.0';
+const RULES_UPDATED   = '2026-05-05';
 module.exports.RULES_VERSION = RULES_VERSION;
 module.exports.RULES_UPDATED = RULES_UPDATED;
 
@@ -375,6 +375,81 @@ function checkGitEnvRules(event) {
   return null;
 }
 
+// ─── Rule 7: Code Quality Scanner (Phase 2) ─────────────────────────────────
+// Scans code written by Claude for security anti-patterns
+
+const CODE_SECURITY_RULES = [
+  // SQL Injection
+  { level: 'CRITICAL', re: /['"`]\s*\+\s*(?:req\.(?:body|query|params)|input|user)/i, reason: 'SQL injection — string concat with user input' },
+  { level: 'CRITICAL', re: /\$\{(?:req\.(?:body|query|params)|input|user)[^}]*\}/i, reason: 'SQL injection — template literal with user input' },
+  { level: 'HIGH',     re: /(?:query|exec|execute)\s*\(\s*['"`].*\+/i, reason: 'SQL injection risk — dynamic query concatenation' },
+
+  // XSS
+  { level: 'HIGH', re: /\.innerHTML\s*=\s*(?!['"`]<).*(?:req\.|input|user|data|res)/i, reason: 'XSS risk — innerHTML with dynamic data' },
+  { level: 'HIGH', re: /document\.write\s*\(/i, reason: 'XSS risk — document.write()' },
+  { level: 'MEDIUM', re: /\$\(.*\)\.html\s*\((?!['"`])/i, reason: 'XSS risk — jQuery .html() with dynamic content' },
+
+  // Command Injection
+  { level: 'CRITICAL', re: /exec\s*\(\s*['"`].*\$\{/i, reason: 'Command injection — exec with template literal' },
+  { level: 'CRITICAL', re: /exec\s*\(\s*.*\+\s*(?:req\.|input|user|args)/i, reason: 'Command injection — exec with user input' },
+  { level: 'HIGH',     re: /execSync\s*\(\s*['"`].*\$\{/i, reason: 'Command injection — execSync with template literal' },
+  { level: 'MEDIUM',   re: /child_process/i, reason: 'Uses child_process — verify no user input flows in' },
+
+  // Path Traversal
+  { level: 'HIGH', re: /path\.join\s*\([^)]*req\.(params|query|body)/i, reason: 'Path traversal risk — path.join with user input' },
+  { level: 'HIGH', re: /readFile(?:Sync)?\s*\([^)]*req\./i, reason: 'Path traversal risk — readFile with user input' },
+  { level: 'HIGH', re: /sendFile\s*\([^)]*req\./i, reason: 'Path traversal risk — sendFile with user input' },
+
+  // Insecure Crypto
+  { level: 'HIGH', re: /createHash\s*\(\s*['"]md5['"]/i, reason: 'Weak hash — MD5 is broken' },
+  { level: 'HIGH', re: /createHash\s*\(\s*['"]sha1['"]/i, reason: 'Weak hash — SHA1 is deprecated' },
+  { level: 'HIGH', re: /createCipher\b/i, reason: 'Deprecated createCipher — use createCipheriv' },
+  { level: 'MEDIUM', re: /Math\.random\s*\(\s*\).*(?:token|key|secret|password|salt|nonce)/i, reason: 'Insecure random for security — use crypto.randomBytes' },
+
+  // Dangerous Functions
+  { level: 'HIGH', re: /eval\s*\(\s*(?!['"`])/i, reason: 'eval() with dynamic input' },
+  { level: 'HIGH', re: /new\s+Function\s*\(/i, reason: 'new Function() — dynamic code execution' },
+  { level: 'MEDIUM', re: /setTimeout\s*\(\s*['"`]/i, reason: 'setTimeout with string — use function reference' },
+  { level: 'MEDIUM', re: /setInterval\s*\(\s*['"`]/i, reason: 'setInterval with string — use function reference' },
+
+  // Missing Security Headers / Config
+  { level: 'MEDIUM', re: /Access-Control-Allow-Origin.*\*/i, reason: 'CORS wildcard — allows any origin' },
+  { level: 'MEDIUM', re: /disable\s*\(\s*['"]x-powered-by['"]\s*\)/i, reason: 'Good: x-powered-by disabled' },
+
+  // Hardcoded IPs / URLs
+  { level: 'MEDIUM', re: /https?:\/\/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/i, reason: 'Hardcoded IP in URL' },
+
+  // No Error Handling
+  { level: 'LOW', re: /catch\s*\(\s*_?\s*\)\s*\{\s*\}/i, reason: 'Empty catch block — errors silently swallowed' },
+
+  // Logging Sensitive Data
+  { level: 'HIGH', re: /console\.log\s*\(.*(?:password|secret|token|apiKey|api_key|credential)/i, reason: 'Logging sensitive data' },
+];
+
+function checkCodeQuality(event) {
+  const tool = event.tool_name || '';
+  const input = event.tool_input || {};
+
+  // Only scan Write/Edit operations (code Claude is writing)
+  if (!['Write', 'Edit', 'NotebookEdit'].includes(tool)) return null;
+
+  const content = input.content || input.new_string || '';
+  if (!content || content.length < 10) return null;
+
+  // Skip non-code files
+  const filePath = (input.file_path || '').toLowerCase();
+  const codeExts = ['.js', '.ts', '.py', '.jsx', '.tsx', '.php', '.rb', '.java', '.go', '.rs', '.cs', '.html'];
+  if (!codeExts.some(ext => filePath.endsWith(ext))) return null;
+
+  for (const rule of CODE_SECURITY_RULES) {
+    if (rule.re.test(content)) {
+      return { level: rule.level, reason: `Code Review: ${rule.reason}`, ruleType: 'code_quality' };
+    }
+  }
+
+  return null;
+}
+
 // ─── Main Export ─────────────────────────────────────────────────────────────
 
 /**
@@ -431,6 +506,10 @@ function checkRules(event) {
   // 6. Git + Env Monitor (MS7.4)
   const gitEnvResult = checkGitEnvRules(event);
   if (gitEnvResult) return gitEnvResult;
+
+  // 7. Code Quality Scanner (Phase 2)
+  const codeResult = checkCodeQuality(event);
+  if (codeResult) return codeResult;
 
   return null;
 }
