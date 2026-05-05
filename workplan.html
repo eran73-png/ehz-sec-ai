@@ -1999,10 +1999,10 @@
   <div class="phase-header" style="background:rgba(168,85,247,0.05);">
     <div class="phase-num" style="font-size:13px;width:48px;height:48px;background:linear-gradient(135deg,#a855f7,#6366f1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;">MS10</div>
     <div class="phase-info">
-      <h3>MS10 — Auto-Update System</h3>
-      <p>עדכון אוטומטי של FlowGuard — rules engine + app version</p>
+      <h3>MS10 — Auto-Update System ✅</h3>
+      <p>עדכון אוטומטי של FlowGuard — rules engine + app version. הושלם v2.9.0 (03.05.2026)</p>
     </div>
-    <div class="phase-status" style="background:rgba(168,85,247,0.12);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">💡 מתוכנן</div>
+    <div class="phase-status" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.3);">✅ הושלם</div>
   </div>
   <div class="tasks-grid">
     <div class="task-cell">
@@ -4512,7 +4512,7 @@ Claude מבצע tool call
     <div>מערכת ניטור ואבטחה לפעילות Claude Code.</div>
     <div>Agent hooks → Collector → Dashboard → Telegram</div>
     <div style="margin-top:8px;color:var(--text);">## מצב נוכחי</div>
-    <div style="color:var(--green);">✅ Milestones 1–8, MS11 הושלמו | גרסה נוכחית: v2.9.3 | 🌐 אתר + Admin + Google Auth | ⏳ הבא: MS9/MS10</div>
+    <div style="color:var(--green);">✅ Milestones 1–8, MS10, MS11, MS16 הושלמו | גרסה נוכחית: v2.9.3 | 🌐 אתר + Admin + Google Auth | ⏳ הבא: MS9 (Linux)</div>
     <div style="margin-top:8px;color:var(--text);">## התקנה</div>
     <div>ראה workplan.html לתוכנית מלאה</div>
     <div style="margin-top:8px;color:var(--text);">## פותח על ידי</div>
@@ -4696,6 +4696,30 @@ Claude מבצע tool call
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.9.3</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">05.05.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          🛡️ <strong>Code Quality Scanner + Security Fixes:</strong><br>
+          • <strong>Code Quality Scanner (Phase 2A)</strong> — 27 חוקי אבטחה חדשים: SQL injection, XSS, command injection, path traversal, insecure crypto, eval, logging secrets<br>
+          • <strong>Security Fixes</strong> — תיקון path traversal ב-conversation-log, חסימת תיקיות מערכת ב-browse-dirs, סניטציית command injection ב-desktop alerts ו-updater<br>
+          • <strong>RCE Protection</strong> — חסימת patterns מסוכנים (exec, spawn, eval) בקוד שמורד מ-GitHub<br>
+          • Rules v2.0.0 — סורק כל Write/Edit ב-Claude Code לבעיות אבטחה בזמן אמת
+        </td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.9.0</span></td>
+        <td style="padding:10px 12px;color:var(--muted);">03.05.2026</td>
+        <td style="padding:10px 12px;color:var(--text);">
+          ⬆️ <strong>MS10: Auto-Update + MS16: Licensing:</strong><br>
+          • <strong>Auto-Update System</strong> — check/download/apply/rollback מהדשבורד, GitHub Releases, בדיקה כל 24h + Telegram<br>
+          • <strong>Licensing & Trial</strong> — 60 יום trial, license key activation, feature gating, License tab<br>
+          • <strong>Project Explorer</strong> — גודל תיקיות + stats bar (Total Size/Files/Folders)<br>
+          • <strong>Skills Filter</strong> — מציג רק סקילים שקיימים בדיסק<br>
+          • <strong>FlowGuard Site</strong> — Google Sign-In mobile fix (redirect mode), admin username+password<br>
+          • <strong>Installer Fix</strong> — license.js + updater.js נכללים ב-EXE
+        </td>
+      </tr>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
         <td style="padding:10px 12px;"><span style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:2px 10px;border-radius:20px;font-weight:700;font-size:11px;">v2.5.0</span></td>
         <td style="padding:10px 12px;color:var(--muted);">20.04.2026</td>
@@ -4987,7 +5011,7 @@ Claude מבצע tool call
 
 <div style="background:#0d2818;border:2px solid #22c55e;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
   <span style="color:#22c55e;font-size:24px;font-weight:800;">✅ 62/62 PASS (100%)</span>
-  <span style="color:#64748b;margin-left:16px;">FlowGuard v2.9.3 | 03.05.2026</span>
+  <span style="color:#64748b;margin-left:16px;">FlowGuard v2.9.3 | 05.05.2026</span>
 </div>
 
 <p style="color:#94a3b8;margin-bottom:16px;">
