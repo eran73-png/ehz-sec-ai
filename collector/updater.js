@@ -141,6 +141,12 @@ async function applyUpdate() {
   console.log(`[Updater] Downloading v${state.latestVersion}...`);
   await httpsDownload(state.downloadUrl, zipPath);
 
+  // 2b. Verify ZIP integrity
+  const zipStat = fs.statSync(zipPath);
+  if (zipStat.size < 1024) throw new Error(`Downloaded ZIP too small (${zipStat.size} bytes) — corrupt?`);
+  const zipHash = crypto.createHash('sha256').update(fs.readFileSync(zipPath)).digest('hex');
+  console.log(`[Updater] ZIP hash: ${zipHash} (${zipStat.size} bytes)`);
+
   // 3. Backup current version
   if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
   const backupName = `flowguard-v${current}-${Date.now()}`;

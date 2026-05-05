@@ -34,7 +34,7 @@ const APP_CONFIG_PATH = path.join(__dirname, 'app-config.json');
 
 // ─── App Config (Settings persistence — MS14.8) ─────────────────────────────
 function loadAppConfig() {
-  try { return JSON.parse(fs.readFileSync(APP_CONFIG_PATH, 'utf8')); } catch(_) {}
+  try { return JSON.parse(fs.readFileSync(APP_CONFIG_PATH, 'utf8')); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   return {
     blockCritical: false,
     fsWatcher: true,
@@ -73,7 +73,7 @@ function loadNotifConfig() {
     // Deobfuscate SMTP password on load
     if (cfg.email && cfg.email.smtp_pass) cfg.email.smtp_pass = deobfuscate(cfg.email.smtp_pass);
     return cfg;
-  } catch(_) {}
+  } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   return {
     telegram: { enabled: true },
     email: { enabled: false, smtp_host: '', smtp_port: 587, smtp_secure: false,
@@ -512,7 +512,7 @@ function getRulesInfo() {
     const src = require('fs').readFileSync(rulesPath, 'utf8');
     const rulesCount = (src.match(/level\s*:/g) || []).length;
     let appVersion = '?';
-    try { appVersion = require('../package.json').version; } catch(_) {}
+    try { appVersion = require('../package.json').version; } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
     return {
       version:      r.RULES_VERSION || '1.0.0',
       last_updated: r.RULES_UPDATED || null,
@@ -763,7 +763,7 @@ setInterval(async () => {
         tReq.write(payload); tReq.end();
       }
     }
-  } catch(_) {}
+  } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
 }, 24 * 60 * 60 * 1000);
 
 // GET /config — return all settings (MS14.8)
@@ -801,7 +801,7 @@ app.post('/config', (req, res) => {
   if (body.auditChain    !== undefined) appConfig.auditChain    = !!body.auditChain;
   if (body.logRetention  !== undefined) appConfig.logRetention  = parseInt(body.logRetention) || 30;
   if (body.autoUpdate    !== undefined) appConfig.autoUpdate    = !!body.autoUpdate;
-  try { saveAppConfig(appConfig); } catch(_) {}
+  try { saveAppConfig(appConfig); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
 
   res.json({ ok: true, hardening_level: newLevel, name: cfg.name, emoji: cfg.emoji });
 });
@@ -1317,7 +1317,7 @@ app.post('/domains/approve/:domain', (req, res) => {
 
 // ─── Domain Reputation (MS6.10) ──────────────────────────────────────────────
 let domainReputationMod;
-try { domainReputationMod = require('../agent/domain-reputation'); } catch(_) {}
+try { domainReputationMod = require('../agent/domain-reputation'); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
 
 // GET /domains/reputation/:domain — ציון מוניטין דומיין (offline)
 app.get('/domains/reputation/:domain', (req, res) => {
@@ -1334,11 +1334,11 @@ app.get('/domains/history', (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     const history = docs.map(d => {
       let inp = {};
-      try { inp = d.tool_input ? (typeof d.tool_input === 'string' ? JSON.parse(d.tool_input) : d.tool_input) : {}; } catch(_) {}
+      try { inp = d.tool_input ? (typeof d.tool_input === 'string' ? JSON.parse(d.tool_input) : d.tool_input) : {}; } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
       // Try to parse input_summary if tool_input missing
       let parsedInput = inp;
       if (!parsedInput.url && !parsedInput.query && d.input_summary) {
-        try { parsedInput = JSON.parse(d.input_summary); } catch(_) {}
+        try { parsedInput = JSON.parse(d.input_summary); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
       }
       return {
         ts:        d.ts,
@@ -1463,7 +1463,7 @@ function getFolderStats(dirPath) {
       if (EXCLUDE_PROJ.has(e.name)) continue;
       if (e.isDirectory()) {
         folders++;
-        try { totalSize += getDirSize(path.join(dirPath, e.name)); } catch(_) {}
+        try { totalSize += getDirSize(path.join(dirPath, e.name)); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
       }
       else {
         files++;
@@ -1471,10 +1471,10 @@ function getFolderStats(dirPath) {
           const st = fs.statSync(path.join(dirPath, e.name));
           if (st.mtimeMs > lastMod) lastMod = st.mtimeMs;
           totalSize += st.size;
-        } catch(_) {}
+        } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
       }
     }
-  } catch(_) {}
+  } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   return { files, folders, lastMod, size: totalSize };
 }
 
@@ -1486,9 +1486,9 @@ function getDirSize(dirPath) {
       if (EXCLUDE_PROJ.has(e.name)) continue;
       const fp = path.join(dirPath, e.name);
       if (e.isDirectory()) total += getDirSize(fp);
-      else { try { total += fs.statSync(fp).size; } catch(_) {} }
+      else { try { total += fs.statSync(fp).size; } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); } }
     }
-  } catch(_) {}
+  } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   return total;
 }
 
@@ -1499,9 +1499,9 @@ function getDirSizeFull(dirPath) {
     for (const e of entries) {
       const fp = path.join(dirPath, e.name);
       if (e.isDirectory()) total += getDirSizeFull(fp);
-      else { try { total += fs.statSync(fp).size; } catch(_) {} }
+      else { try { total += fs.statSync(fp).size; } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); } }
     }
-  } catch(_) {}
+  } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   return total;
 }
 
@@ -1827,7 +1827,7 @@ app.post('/notifications/config', (req, res) => {
   // Sync desktop alerts to appConfig (MS14.7)
   if (body.desktop !== undefined) {
     appConfig.desktopAlerts = !!body.desktop;
-    try { saveAppConfig(appConfig); } catch(_) {}
+    try { saveAppConfig(appConfig); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   }
   saveNotifConfig(notifConfig);
   res.json({ ok: true });
@@ -1837,13 +1837,9 @@ app.post('/notifications/config', (req, res) => {
 
 const WHITELIST_PATH = path.join(__dirname, '../agent/whitelist.json');
 
-function loadWhitelist() {
-  try { return JSON.parse(fs.readFileSync(WHITELIST_PATH, 'utf8')); } catch(_) { return {}; }
-}
-
-function saveWhitelist(wl) {
-  fs.writeFileSync(WHITELIST_PATH, JSON.stringify(wl, null, 2), 'utf8');
-}
+// loadWhitelist/saveWhitelist — consolidated (use readWhitelist/writeWhitelist above)
+function loadWhitelist() { return readWhitelist(); }
+function saveWhitelist(wl) { writeWhitelist(wl); }
 
 app.get('/config/git-remotes', (req, res) => {
   const wl = loadWhitelist();
@@ -1911,7 +1907,7 @@ app.post('/fsw/quiet-hours', (req, res) => {
   if (to   !== undefined) quietHoursConfig.to   = Math.max(0, Math.min(23, parseInt(to)   || 0));
   // Persist (MS14.4)
   appConfig.quietHours = { ...quietHoursConfig };
-  try { saveAppConfig(appConfig); } catch(_) {}
+  try { saveAppConfig(appConfig); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   res.json({ ok: true, ...quietHoursConfig, active: isQuietHour() });
 });
 
@@ -1987,7 +1983,7 @@ app.post('/sessions/export-conversation', (req, res) => {
         const realHome = path.join('C:', 'Users', realUser);
         if (fs.existsSync(realHome)) userHome = realHome;
       }
-    } catch(_) {}
+    } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   }
   const claudeDir = path.join(userHome, '.claude', 'projects');
 
@@ -2032,7 +2028,7 @@ app.post('/sessions/export-conversation', (req, res) => {
           msgs.push({ role: j.type, ts: j.timestamp || '', text: text.slice(0, 5000) });
         }
       }
-    } catch(_) {}
+    } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   });
 
   rl.on('close', () => {
@@ -2529,7 +2525,7 @@ function startProcessMonitor() {
             : `⚙️ PROC: New process — ${p.Name} (PID ${p.ProcessId})`;
 
           let currentHardeningLevel = 1;
-          try { currentHardeningLevel = require('../config/hardening').getLevel(); } catch(_) {}
+          try { currentHardeningLevel = require('../config/hardening').getLevel(); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
           db.insert({
             ts:            Date.now(),
             hook_type:     'ProcessMonitor',
@@ -2557,7 +2553,7 @@ function startProcessMonitor() {
 const SIEM_CONFIG_PATH = path.join(__dirname, 'siem-config.json');
 
 function loadSiemConfig() {
-  try { return JSON.parse(fs.readFileSync(SIEM_CONFIG_PATH, 'utf8')); } catch(_) {}
+  try { return JSON.parse(fs.readFileSync(SIEM_CONFIG_PATH, 'utf8')); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
   return { host: '', port: 514, proto: 'udp', format: 'cef' };
 }
 function saveSiemConfig(cfg) {
@@ -2566,6 +2562,13 @@ function saveSiemConfig(cfg) {
 
 // SSE clients for live CEF stream
 const siemClients = new Set();
+
+// Cleanup dead SSE clients every 30 seconds (Fix #23)
+setInterval(() => {
+  for (const res of siemClients) {
+    if (res.socket?.destroyed) siemClients.delete(res);
+  }
+}, 30000);
 
 // Broadcast a CEF event to all connected SIEM SSE clients
 function broadcastCEF(eventDoc) {
@@ -2591,7 +2594,7 @@ app.get('/siem/stream', (req, res) => {
   db.find({}).sort({ ts: -1 }).limit(20).exec((err, docs) => {
     if (err || !docs) return;
     [...docs].reverse().forEach(ev => {
-      try { res.write(`event: cef\ndata: ${JSON.stringify(ev)}\n\n`); } catch(_) {}
+      try { res.write(`event: cef\ndata: ${JSON.stringify(ev)}\n\n`); } catch(_e) { if(_e && _e.code !== "ENOENT") console.error("[FlowGuard]", _e.message || _e); }
     });
   });
 

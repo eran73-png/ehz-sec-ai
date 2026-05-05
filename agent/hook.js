@@ -121,6 +121,8 @@ async function main() {
     try {
       const filePath = (event.tool_input || {}).file_path || (event.tool_input || {}).path || '';
       if (filePath && fs.existsSync(filePath)) {
+        const stat = fs.statSync(filePath);
+        if (stat.size > 2 * 1024 * 1024) { /* skip files > 2MB */ } else {
         const content = fs.readFileSync(filePath, 'utf8');
         let writeMatch = null;
         // Run SECRETS_RULES on full file content
@@ -155,6 +157,7 @@ async function main() {
           });
           log(`[WRITE-GUARD] ${writeMatch.level} — ${writeMatch.reason}`);
         }
+      } // end size check
       }
     } catch(e) { log(`write-guard error: ${e.message}`); }
   }
