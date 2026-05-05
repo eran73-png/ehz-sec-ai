@@ -153,9 +153,9 @@ function computeHash(doc, prevHash) {
   return crypto.createHash('sha256').update(payload).digest('hex');
 }
 
-// Load last hash from DB on startup
+// Load last hash from DB on startup — skip system events (they don't have real hashes)
 function initLastHash(cb) {
-  db.find({ event_hash: { $exists: true } }).sort({ ts: -1 }).limit(1).exec((err, docs) => {
+  db.find({ event_hash: { $exists: true, $ne: 'system' } }).sort({ ts: -1 }).limit(1).exec((err, docs) => {
     if (!err && docs.length > 0 && docs[0].event_hash) {
       lastHash = docs[0].event_hash;
       console.log(`[EHZ-SEC-AI] Hash chain loaded — last hash: ${lastHash.slice(0,16)}…`);
@@ -553,7 +553,7 @@ app.get('/update/check', async (req, res) => {
       session_id: 'system', level: 'INFO', reason: msg,
       rule_type: 'update_check', input_summary: null, output_summary: isNewer ? 'update_available' : 'up_to_date',
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: 'system' }, () => {});
+      system_event: true }, () => {});
     res.json({
       update_available: isNewer,
       current_version:  currentInfo.version,
@@ -565,7 +565,7 @@ app.get('/update/check', async (req, res) => {
       session_id: 'system', level: 'HIGH', reason: `Update check failed: ${e.message}`,
       rule_type: 'update_check', input_summary: null, output_summary: null,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: 'system' }, () => {});
+      system_event: true }, () => {});
     res.status(500).json({ error: e.message });
   }
 });
@@ -606,7 +606,7 @@ app.post('/update/apply', async (req, res) => {
       rule_type: 'manual_update', input_summary: null,
       output_summary: `${info.rules_count} rules loaded`,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: 'system' }, () => {});
+      system_event: true }, () => {});
     res.json({ ok: true, version: info.version, rules_count: info.rules_count });
   } catch(e) {
     db.insert({ ts: Date.now(), hook_type: 'ManualUpdate', tool_name: 'RULES_MANUAL_UPDATE',
@@ -614,7 +614,7 @@ app.post('/update/apply', async (req, res) => {
       reason: `Manual update failed: ${e.message}`,
       rule_type: 'manual_update', input_summary: null, output_summary: null,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: 'system' }, () => {});
+      system_event: true }, () => {});
     res.status(500).json({ ok: false, error: e.message });
   }
 });
@@ -658,7 +658,7 @@ async function runAutoUpdate() {
       rule_type: 'auto_update', input_summary: null,
       output_summary: `${info.rules_count} rules loaded`,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: 'system' }, () => {});
+      system_event: true }, () => {});
     console.log(`[AutoUpdate] ✅ v${info.version} (${info.rules_count} rules)`);
   } catch(e) {
     autoUpdateSchedule.lastRunTs = Date.now();
@@ -668,7 +668,7 @@ async function runAutoUpdate() {
       reason: `Auto-update failed: ${e.message}`,
       rule_type: 'auto_update', input_summary: null, output_summary: null,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: 'system' }, () => {});
+      system_event: true }, () => {});
     console.error('[AutoUpdate] ❌', e.message);
   }
 }
@@ -732,7 +732,7 @@ app.post('/version/apply', async (req, res) => {
       rule_type: 'version_update', input_summary: null,
       output_summary: `Backup: ${result.backupPath}`,
       telegram_sent: false, created_at: new Date().toISOString(),
-      prev_hash: lastHash, event_hash: 'system' }, () => {});
+      system_event: true }, () => {});
     res.json(result);
   } catch(e) {
     res.status(500).json({ error: e.message });
@@ -1779,9 +1779,9 @@ app.get('/audit/verify', (req, res) => {
   db.find({ event_hash: { $exists: true } }).sort({ ts: 1 }).exec((err, docs) => {
     if (err) return res.status(500).json({ error: err.message });
 
-    // Only verify events after last chain reset; skip system events (MS14.2)
+    // Only verify events after last chain reset; skip system events
     const toCheck = (chainResetAt > 0 ? docs.filter(d => d.ts >= chainResetAt) : docs)
-      .filter(d => d.event_hash && d.event_hash !== 'system');
+      .filter(d => d.event_hash && d.event_hash !== 'system' && !d.system_event);
     if (!toCheck.length) return res.json({ valid: true, checked: 0, message: 'No signed events yet' });
 
     let prevHash = 'GENESIS';
