@@ -151,7 +151,7 @@ const SECRETS_RULES = [
   { level: 'HIGH',   re: /\b5[1-5][0-9]{14}\b/,                    reason: 'Credit card number (MasterCard)' },
   { level: 'HIGH',   re: /\b3[47][0-9]{13}\b/,                     reason: 'Credit card number (American Express)' },
   { level: 'MEDIUM', re: /\b05[0-9]{1}[-\s]?[0-9]{7}\b/,          reason: 'Israeli phone number (PII)' },
-  { level: 'MEDIUM', re: /\b[0-9]{9}\b/,                           reason: 'Possible Israeli ID number (9 digits)' },
+  { level: 'MEDIUM', re: /(?:id|tz|t\.z\.|zehut|teudat|מספר.?זהות)\s*[=:]\s*\b[0-9]{9}\b/i, reason: 'Possible Israeli ID number (9 digits)' },
 ];
 
 // ─── Rule 3: Context Rules (per tool) ────────────────────────────────────────

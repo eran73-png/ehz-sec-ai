@@ -1,6 +1,6 @@
 'use strict';
 /**
- * FlowGuard License Manager — v2.9.4
+ * FlowGuard License Manager — v2.9.5
  * Trial 60 days → Free tier → Pro with License Key
  */
 
@@ -12,18 +12,35 @@ const LICENSE_PATH = path.join(__dirname, '..', 'license.json');
 const TRIAL_DAYS   = 60;
 const WARN_DAYS    = 5;  // alert 5 days before expiry
 
-// ─── Encryption helpers (simple AES-256 to prevent casual editing) ────────────
-const ENC_KEY = crypto.createHash('sha256').update('FlowGuard-EHZ-AI-2026').digest();
-const ENC_IV  = Buffer.alloc(16, 0);
+// ─── Encryption helpers (machine-specific key + random IV) ───────────────────
+const os = require('os');
+function deriveKey() {
+  // Key derived from machine-specific data — different per installation
+  const seed = 'FG-' + os.hostname() + '-' + os.userInfo().username + '-' + os.platform();
+  return crypto.createHash('sha256').update(seed).digest();
+}
+const ENC_KEY = deriveKey();
 
 function encrypt(text) {
-  const cipher = crypto.createCipheriv('aes-256-cbc', ENC_KEY, ENC_IV);
-  return cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv('aes-256-cbc', ENC_KEY, iv);
+  const encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+  return iv.toString('hex') + ':' + encrypted;  // IV prepended
 }
 
-function decrypt(hex) {
-  const decipher = crypto.createDecipheriv('aes-256-cbc', ENC_KEY, ENC_IV);
-  return decipher.update(hex, 'hex', 'utf8') + decipher.final('utf8');
+function decrypt(data) {
+  if (data.includes(':')) {
+    // New format: IV:ciphertext
+    const [ivHex, encrypted] = data.split(':');
+    const iv = Buffer.from(ivHex, 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', ENC_KEY, iv);
+    return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
+  }
+  // Legacy format (static IV) — migrate on next save
+  const legacyKey = crypto.createHash('sha256').update('FlowGuard-EHZ-AI-2026').digest();
+  const legacyIV = Buffer.alloc(16, 0);
+  const decipher = crypto.createDecipheriv('aes-256-cbc', legacyKey, legacyIV);
+  return decipher.update(data, 'hex', 'utf8') + decipher.final('utf8');
 }
 
 // ─── Load / Save ──────────────────────────────────────────────────────────────
@@ -128,18 +145,24 @@ function isFeatureEnabled(feature) {
 }
 
 // ─── Activate License Key ────────────────────────────────────────────────────
+const LICENSE_SECRET = 'FG-HMAC-2026-EHZ';  // HMAC secret for key validation
+
 function activateLicense(key) {
   // Validate format: FG-XXXX-XXXX-XXXX
   if (!/^FG-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)) {
     return { success: false, error: 'Invalid key format. Expected: FG-XXXX-XXXX-XXXX' };
   }
 
-  // Checksum: last 4 chars = first 4 of SHA256 of first 8 chars
+  // Checksum: last 4 chars = HMAC-SHA256 of first 8 chars (not plain SHA256)
   const parts = key.replace('FG-', '').split('-');
   const payload = parts[0] + parts[1];
-  const expected = crypto.createHash('sha256').update(payload).digest('hex').slice(0, 4).toUpperCase();
+  const expected = crypto.createHmac('sha256', LICENSE_SECRET).update(payload).digest('hex').slice(0, 4).toUpperCase();
   if (parts[2] !== expected) {
-    return { success: false, error: 'Invalid license key' };
+    // Also accept legacy SHA256 checksum for backward compatibility
+    const legacyExpected = crypto.createHash('sha256').update(payload).digest('hex').slice(0, 4).toUpperCase();
+    if (parts[2] !== legacyExpected) {
+      return { success: false, error: 'Invalid license key' };
+    }
   }
 
   const lic = loadLicense() || {};
@@ -153,13 +176,14 @@ function activateLicense(key) {
 
 // ─── Generate a valid key (for admin use) ────────────────────────────────────
 function generateKey() {
+  const bytes = crypto.randomBytes(8);
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let p1 = '', p2 = '';
   for (let i = 0; i < 4; i++) {
-    p1 += chars[Math.floor(Math.random() * chars.length)];
-    p2 += chars[Math.floor(Math.random() * chars.length)];
+    p1 += chars[bytes[i] % chars.length];
+    p2 += chars[bytes[i + 4] % chars.length];
   }
-  const checksum = crypto.createHash('sha256').update(p1 + p2).digest('hex').slice(0, 4).toUpperCase();
+  const checksum = crypto.createHmac('sha256', LICENSE_SECRET).update(p1 + p2).digest('hex').slice(0, 4).toUpperCase();
   return `FG-${p1}-${p2}-${checksum}`;
 }
 

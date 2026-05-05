@@ -1882,7 +1882,7 @@ app.get('/health', (req, res) => {
     restartFSWatcher();
     console.log('[CONFIG] project_root updated from whitelist:', fresh);
   }
-  res.json({ ok: true, ts: Date.now(), project_root: PROJECTS_ROOT });
+  res.json({ ok: true, ts: Date.now(), project_root: PROJECTS_ROOT, username: os.userInfo().username });
 });
 
 // GET /dashboard — serve dashboard HTML (for tray icon)

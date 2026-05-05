@@ -452,7 +452,7 @@ tr:hover td { background:#f8fafc; }
   <div class="sidebar-bottom">
     <div class="avatar">E</div>
     <div class="avatar-info">
-      <div class="avatar-name">Eran</div>
+      <div class="avatar-name" id="user-display-name">Admin</div>
       <div class="avatar-role">Admin</div>
     </div>
   </div>
@@ -1931,6 +1931,10 @@ async function dashboardRefresh() {
   // Load project root from server (so paths work on any machine)
   try {
     var h = await fetchJSON('/health');
+    if (h.username) {
+      var nameEl = document.getElementById('user-display-name');
+      if (nameEl) nameEl.textContent = h.username.charAt(0).toUpperCase() + h.username.slice(1);
+    }
     if (h.project_root) {
       window._projectRoot = h.project_root;
       // Always sync audit input with project_root (single source of truth)
@@ -3876,7 +3880,7 @@ async function loadProjects(reuseCache) {
 
 // ── License (MS16) ──
 function loadLicenseStatus() {
-  fetch(BASE + '/license/status').then(function(r){return r.json()}).then(function(d) {
+  fetch(API + '/license/status').then(function(r){return r.json()}).then(function(d) {
     var planNames = { trial: 'Trial Pro', free: 'Free Community', pro: 'Pro' };
     var planColors = { trial: '#00d4ff', free: '#64748b', pro: '#10b981' };
     document.getElementById('license-plan').textContent = planNames[d.plan] || d.plan;
@@ -3927,7 +3931,7 @@ function activateLicenseKey() {
   var msg = document.getElementById('license-activate-msg');
   if (!key) { msg.style.display = 'block'; msg.style.color = '#ef4444'; msg.textContent = 'Enter a license key'; return; }
 
-  fetch(BASE + '/license/activate', {
+  fetch(API + '/license/activate', {
     method: 'POST', headers: {'Content-Type':'application/json'},
     body: JSON.stringify({key: key})
   }).then(function(r){return r.json()}).then(function(d) {
@@ -3947,7 +3951,7 @@ function activateLicenseKey() {
 
 // Check license on dashboard load — show warning banner at top if needed
 function checkLicenseBanner() {
-  fetch(BASE + '/license/status').then(function(r){return r.json()}).then(function(d) {
+  fetch(API + '/license/status').then(function(r){return r.json()}).then(function(d) {
     if (d.showWarning || d.expired) {
       var topBanner = document.createElement('div');
       topBanner.id = 'global-license-banner';
