@@ -48,13 +48,16 @@ function compareVersions(a, b) {
   return 0;
 }
 
-function httpsGet(url) {
+function httpsGet(url, maxRedirects = 5) {
   return new Promise((resolve, reject) => {
+    if (maxRedirects <= 0) return reject(new Error('Too many redirects'));
     const opts = { headers: { 'User-Agent': 'FlowGuard-Updater' } };
     https.get(url, opts, (res) => {
-      // Follow redirects
       if (res.statusCode === 301 || res.statusCode === 302) {
-        return httpsGet(res.headers.location).then(resolve).catch(reject);
+        const loc = res.headers.location;
+        if (!loc || !loc.startsWith('https://')) return reject(new Error('Unsafe redirect: ' + loc));
+        res.resume();
+        return httpsGet(loc, maxRedirects - 1).then(resolve).catch(reject);
       }
       let data = '';
       if (res.statusCode !== 200) {
@@ -67,12 +70,16 @@ function httpsGet(url) {
   });
 }
 
-function httpsDownload(url, dest) {
+function httpsDownload(url, dest, maxRedirects = 5) {
   return new Promise((resolve, reject) => {
+    if (maxRedirects <= 0) return reject(new Error('Too many redirects'));
     const opts = { headers: { 'User-Agent': 'FlowGuard-Updater' } };
     https.get(url, opts, (res) => {
       if (res.statusCode === 301 || res.statusCode === 302) {
-        return httpsDownload(res.headers.location, dest).then(resolve).catch(reject);
+        const loc = res.headers.location;
+        if (!loc || !loc.startsWith('https://')) return reject(new Error('Unsafe redirect: ' + loc));
+        res.resume();
+        return httpsDownload(loc, dest, maxRedirects - 1).then(resolve).catch(reject);
       }
       if (res.statusCode !== 200) {
         res.resume();

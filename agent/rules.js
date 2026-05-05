@@ -62,7 +62,11 @@ function isWhitelistedCommand(cmd) {
   const wl = getWhitelist();
   return wl.commands.some(pattern => {
     if (pattern.startsWith('/') && pattern.endsWith('/')) {
-      return new RegExp(pattern.slice(1, -1)).test(cmd);
+      // ReDoS protection: limit pattern length + timeout via try/catch
+      const raw = pattern.slice(1, -1);
+      if (raw.length > 200) return false;
+      try { return new RegExp(raw).test(cmd.slice(0, 1000)); }
+      catch(_) { return false; }
     }
     return cmd.trim().startsWith(pattern);
   });

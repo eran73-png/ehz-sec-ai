@@ -55,8 +55,25 @@ const MAX_EVENTS     = 10000;
 
 // ─── Notifications Config ────────────────────────────────────────────────────
 
+// Simple obfuscation for SMTP password at rest (Fix #12)
+const OBFUSCATE_KEY = 'FG-smtp-' + (os.hostname() || 'local');
+function obfuscate(text) {
+  if (!text) return '';
+  return Buffer.from(text).toString('base64') + '.obf';
+}
+function deobfuscate(text) {
+  if (!text) return '';
+  if (text.endsWith('.obf')) return Buffer.from(text.slice(0, -4), 'base64').toString('utf8');
+  return text; // legacy plaintext
+}
+
 function loadNotifConfig() {
-  try { return JSON.parse(fs.readFileSync(NOTIF_PATH, 'utf8')); } catch(_) {}
+  try {
+    const cfg = JSON.parse(fs.readFileSync(NOTIF_PATH, 'utf8'));
+    // Deobfuscate SMTP password on load
+    if (cfg.email && cfg.email.smtp_pass) cfg.email.smtp_pass = deobfuscate(cfg.email.smtp_pass);
+    return cfg;
+  } catch(_) {}
   return {
     telegram: { enabled: true },
     email: { enabled: false, smtp_host: '', smtp_port: 587, smtp_secure: false,
@@ -66,7 +83,12 @@ function loadNotifConfig() {
 }
 
 function saveNotifConfig(cfg) {
-  fs.writeFileSync(NOTIF_PATH, JSON.stringify(cfg, null, 2), 'utf8');
+  // Obfuscate SMTP password before saving
+  const toSave = JSON.parse(JSON.stringify(cfg));
+  if (toSave.email && toSave.email.smtp_pass && !toSave.email.smtp_pass.endsWith('.obf')) {
+    toSave.email.smtp_pass = obfuscate(toSave.email.smtp_pass);
+  }
+  fs.writeFileSync(NOTIF_PATH, JSON.stringify(toSave, null, 2), 'utf8');
 }
 
 let notifConfig = loadNotifConfig();
@@ -275,17 +297,80 @@ function buildTelegramMsg(ev) {
 const app = express();
 app.use(express.json());
 
+// ─── Security Headers (Fix #10) ─────────────────────────────────────────────
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.removeHeader('X-Powered-By');
+  next();
+});
+
 // CORS — restricted to localhost only (MS14.1)
 app.use((req, res, next) => {
   const origin = req.headers.origin || '';
   if (origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) {
     res.header('Access-Control-Allow-Origin', origin);
   }
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
+
+// ─── API Key Auth for write operations (Fix #8) ─────────────────────────────
+const API_KEY_PATH = path.join(__dirname, '..', 'api-key.json');
+function getApiKey() {
+  try { return JSON.parse(fs.readFileSync(API_KEY_PATH, 'utf8')).key; }
+  catch(_) {
+    // Generate on first run
+    const key = crypto.randomBytes(24).toString('hex');
+    fs.writeFileSync(API_KEY_PATH, JSON.stringify({ key, created: new Date().toISOString() }, null, 2), 'utf8');
+    return key;
+  }
+}
+const API_KEY = getApiKey();
+
+function requireApiKey(req, res, next) {
+  // Dashboard (browser) requests from localhost are allowed without key
+  const origin = req.headers.origin || '';
+  if (origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) return next();
+  // Hook requests come from localhost without origin
+  if (!origin && req.ip && (req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1')) return next();
+  // External requests require API key
+  const key = req.headers['x-api-key'];
+  if (key === API_KEY) return next();
+  res.status(401).json({ error: 'API key required' });
+}
+
+// Apply to destructive endpoints
+const PROTECTED_ROUTES = ['/update/apply', '/version/apply', '/version/rollback', '/chain/reset', '/license/activate'];
+PROTECTED_ROUTES.forEach(route => app.use(route, requireApiKey));
+
+// ─── Rate Limiting (Fix #9) ─────────────────────────────────────────────────
+const rateLimitMap = new Map();
+function rateLimit(maxRequests, windowMs) {
+  return (req, res, next) => {
+    const key = req.ip + req.path;
+    const now = Date.now();
+    const entry = rateLimitMap.get(key);
+    if (!entry || now - entry.start > windowMs) {
+      rateLimitMap.set(key, { start: now, count: 1 });
+      return next();
+    }
+    entry.count++;
+    if (entry.count > maxRequests) {
+      return res.status(429).json({ error: 'Too many requests. Try again later.' });
+    }
+    next();
+  };
+}
+// Clean up old entries every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of rateLimitMap) { if (now - v.start > 900000) rateLimitMap.delete(k); }
+}, 300000);
 
 // POST /event — Hook → Collector
 app.post('/event', (req, res) => {
@@ -1339,6 +1424,8 @@ function detectRealUserHome() {
   return home;
 }
 let PROJECTS_ROOT = detectProjectRoot();
+let _rootStatsCache = null;
+let _rootStatsFetchedAt = 0;
 
 // Save learned project root to whitelist.json
 function saveProjectRoot(newRoot) {
@@ -1452,9 +1539,9 @@ function buildProjectTree(rootPath, depth = 0) {
 app.get('/projects', (req, res) => {
   try {
     const tree = buildProjectTree(PROJECTS_ROOT);
-    // Root stats — cached, calculated async in background
-    if (global._rootStats === undefined) {
-      global._rootStats = null;
+    // Root stats — module-level cache with 10-min TTL (Fix #14)
+    if (!_rootStatsCache || (Date.now() - _rootStatsFetchedAt > 600000)) {
+      _rootStatsFetchedAt = Date.now();
       require('child_process').exec(
         'powershell -NoProfile -Command "' +
         "$f=Get-ChildItem -Path '" + PROJECTS_ROOT + "' -Recurse -File -EA SilentlyContinue;" +
@@ -1462,12 +1549,12 @@ app.get('/projects', (req, res) => {
         "@{size=($f|Measure-Object Length -Sum).Sum;files=$f.Count;folders=$d.Count}|ConvertTo-Json" +
         '"', { timeout: 120000 },
         (err, stdout) => {
-          try { global._rootStats = JSON.parse(stdout); }
-          catch(_) { global._rootStats = { size: 0, files: 0, folders: 0 }; }
+          try { _rootStatsCache = JSON.parse(stdout); }
+          catch(_) { _rootStatsCache = { size: 0, files: 0, folders: 0 }; }
         }
       );
     }
-    res.json({ root: PROJECTS_ROOT, tree, count: tree.length, rootStats: global._rootStats });
+    res.json({ root: PROJECTS_ROOT, tree, count: tree.length, rootStats: _rootStatsCache });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -2553,7 +2640,7 @@ app.get('/license/status', (req, res) => {
   res.json(status);
 });
 
-app.post('/license/activate', (req, res) => {
+app.post('/license/activate', rateLimit(5, 15 * 60 * 1000), (req, res) => {
   const { key } = req.body || {};
   if (!key) return res.status(400).json({ success: false, error: 'Missing key' });
   const result = license.activateLicense(key);
